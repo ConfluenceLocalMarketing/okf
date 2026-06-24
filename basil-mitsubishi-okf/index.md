@@ -1,34 +1,18 @@
----
-type: bundle
-title: Basil Mitsubishi OKF Bundle
-description: Open Knowledge Format bundle for Basil Mitsubishi — a full-service Mitsubishi dealership in Buffalo, NY. Covers the dealership, AI discovery endpoints, vehicle inventory, and machine-readable directives.
-resource: https://www.basilmitsubishi.com/
-tags:
-  - okf-bundle
-  - basil-mitsubishi
-  - dealership
-  - buffalo-ny
-timestamp: 2026-06-24
----
-
 # Basil Mitsubishi OKF Bundle
 
-## datasets/
+## Datasets
 
-| File | Type | Description |
-|---|---|---|
-| [dealership.md](datasets/dealership.md) | `organization` | Business profile, hours, contact, services, location |
-| [new-vehicles.md](datasets/new-vehicles.md) | `product-line` | New Mitsubishi model lineup, features, promotions |
-| [used-vehicles.md](datasets/used-vehicles.md) | `product-line` | Pre-owned and certified pre-owned inventory, trade-in |
+- [dealership.md](datasets/dealership.md) — Business profile, hours, contact, services, location
+- [new-vehicles.md](datasets/new-vehicles.md) — New Mitsubishi model lineup, features, promotions
+- [used-vehicles.md](datasets/used-vehicles.md) — Pre-owned and certified pre-owned inventory, trade-in
+- [faq.md](datasets/faq.md) — Frequently asked questions about inventory, financing, and service
 
-## references/
+## References
 
-| File | Type | Description |
-|---|---|---|
-| [llms-txt.md](references/llms-txt.md) | `reference` | llms.txt directive content for AI agent guidance |
-| [ai-discovery-page.md](references/ai-discovery-page.md) | `ai-discovery-page` | Structured semantic endpoints, LLM actions, machine-readable data |
+- [llms-txt.md](references/llms-txt.md) — llms.txt directive content for AI agent guidance
+- [ai-discovery-page.md](references/ai-discovery-page.md) — Structured semantic endpoints, LLM actions, machine-readable data
 
-## tables/
+## Tables
 
 *(empty — add tabular data extracts here)*
 
@@ -37,3 +21,4 @@ timestamp: 2026-06-24
 - **dealership** offers **new-vehicles** and **used-vehicles**
 - **ai-discovery-page** exposes structured data for the **dealership** and both vehicle lines
 - **llms-txt** provides top-level agent guidance for the entire site
+- **faq** answers common questions about inventory, financing, service, and dealership perks

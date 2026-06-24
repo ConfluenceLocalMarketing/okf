@@ -1,37 +1,22 @@
----
-type: index
-title: Basil Resale Sheridan & Transit — OKF Bundle
-description: Open Knowledge Format bundle for Basil Resale Sheridan and Basil Resale Transit — Western New York's largest pre-owned vehicle resale center, part of the Basil Family Dealerships.
-resource: https://www.basilresale.com/
-tags:
-  - okf-bundle
-  - basil-resale
-  - used-cars
-  - williamsville-ny
-  - buffalo-ny
-timestamp: 2026-06-24
----
-
 # Basil Resale Sheridan & Transit OKF Bundle
 
-## datasets/
+## Datasets
 
-| File | Type | Description |
-|---|---|---|
-| [dealership.md](datasets/dealership.md) | `organization` | Business profile, locations, hours, services |
-| [used-vehicles.md](datasets/used-vehicles.md) | `product-line` | Pre-owned inventory, CPO program, vehicle finder |
+- [dealership.md](datasets/dealership.md) — Business profile, locations, hours, services
+- [new-vehicles.md](datasets/new-vehicles.md) — New vehicles through the Basil Family Dealerships network
+- [used-vehicles.md](datasets/used-vehicles.md) — Pre-owned inventory, CPO program, vehicle finder
+- [faq.md](datasets/faq.md) — Frequently asked questions about inventory, financing, and service
 
-## references/
+## References
 
-| File | Type | Description |
-|---|---|---|
-| [ai-discovery-page.md](references/ai-discovery-page.md) | `ai-discovery-page` | Structured semantic endpoints and LLM actions |
+- [ai-discovery-page.md](references/ai-discovery-page.md) — Structured semantic endpoints and LLM actions
 
-## tables/
+## Tables
 
 *(add tabular data here)*
 
 ## Relationships
 
-- **dealership** operates two locations (Sheridan Dr & Transit Rd) and offers **used-vehicles**
+- **dealership** operates two locations (Sheridan Dr & Transit Rd) and offers **new-vehicles** and **used-vehicles**
 - **ai-discovery-page** exposes structured data for the **dealership** and its inventory
+- **faq** answers common questions about the dealership's products and services

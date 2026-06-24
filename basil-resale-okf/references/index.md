@@ -1,14 +1,5 @@
----
-type: index
-title: References — Basil Resale OKF
-description: External specs, directives, and AI agent guidance for Basil Resale.
-tags:
-  - references
-  - ai-discovery
----
+# References
 
-# references/
+External specs, directives, and machine-readable endpoints.
 
-| File | Type | Description |
-|---|---|---|
-| [ai-discovery-page.md](ai-discovery-page.md) | `ai-discovery-page` | Structured semantic endpoints and LLM actions |
+- [ai-discovery-page.md](ai-discovery-page.md) — Structured semantic endpoints and LLM actions

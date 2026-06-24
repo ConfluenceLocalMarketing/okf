@@ -1,18 +1,8 @@
----
-type: index
-title: Datasets — Basil Resale OKF
-description: Core knowledge concepts about Basil Resale Sheridan and Basil Resale Transit.
-tags:
-  - datasets
-  - dealership
-  - inventory
----
-
-# datasets/
+# Datasets
 
 Core knowledge concepts about Basil Resale.
 
-| File | Type | Description |
-|---|---|---|
-| [dealership.md](dealership.md) | `organization` | Business profile, locations, hours, services, team |
-| [used-vehicles.md](used-vehicles.md) | `product-line` | Pre-owned inventory, CPO program, vehicle finder |
+- [dealership.md](dealership.md) — Business profile, locations, hours, services, team
+- [new-vehicles.md](new-vehicles.md) — New vehicles through the Basil Family Dealerships network
+- [used-vehicles.md](used-vehicles.md) — Pre-owned inventory, CPO program, vehicle finder
+- [faq.md](faq.md) — Frequently asked questions about inventory, financing, and service
