@@ -1,7 +1,7 @@
 ---
 type: organization
 title: Basil Mobility
-description: Authorized BraunAbility dealer in Depew, NY specializing in wheelchair accessible vehicles, adaptive equipment, service, and parts — part of the Basil Family Dealerships. (synthesized)
+description: Authorized BraunAbility dealer in Depew, NY specializing in wheelchair accessible vehicles, adaptive equipment, service, and parts — part of the Basil Family Dealerships.
 resource: https://www.basilmobility.com/
 tags:
   - mobility
@@ -12,12 +12,13 @@ tags:
   - buffalo
   - adaptive-equipment
   - auto-service
+  - dealer-inspire
 timestamp: 2026-06-24
 ---
 
 # Basil Mobility
 
-Basil Mobility is an authorized **BraunAbility** dealer located in Depew, NY, serving the Western New York area with wheelchair accessible vehicles, adaptive driving equipment, and full-service maintenance. Part of the Basil Family Dealerships.
+Basil Mobility is an authorized **BraunAbility** dealer located in Depew, NY, serving the Western New York area with wheelchair accessible vehicles, adaptive driving equipment, and full-service maintenance. Part of the Basil Family Dealerships. Website powered by **Dealer Inspire**.
 
 ## Contact
 
@@ -43,26 +44,27 @@ Email: basilcares@basilresale.com
 ## Services
 
 - **Mobility Vehicle Sales** — New BraunAbility wheelchair accessible vans and conversions
-- **Pre-Owned Inventory** — Used vehicles and mobility-equipped cars, priced under $20k available
+- **Pre-Owned Inventory** — Used vehicles and mobility-equipped cars (1,158+ vehicles in inventory), priced under $20k available
 - **Service Center** — Certified technicians trained to service BraunAbility vehicles; routine maintenance, diagnostics, repairs for both vehicle systems and accessibility equipment (ramps, lifts, power doors, securement systems, adaptive driving equipment)
 - **Parts Center** — Genuine replacement parts and components for mobility solutions
-- **Financing** — Through BraunAbility Financial Services; APR as low as 2.99% for up to 72 months (well-qualified buyers); also lease options
+- **Financing** — Through BraunAbility Financial Services; APR as low as 2.99% for up to 72 months (well-qualified buyers); also lease options; up to $3,000 dealer cash available
+- **Wheelchair Van Rentals** — Short and long-term accessible van rentals available
 
 ## BraunAbility Partnership
 
 | Detail | Info |
 |---|---|
 | Status | Authorized BraunAbility Dealer |
-| Conversions | E2, XT, XI power conversions |
-| Base Vehicles | Chrysler Pacifica / Voyager, Toyota |
+| Conversions | E2 (Chrysler Pacifica/Voyager), XT (Toyota), XI (Chrysler Pacifica/Voyager) |
+| Base Vehicles | Chrysler Pacifica / Voyager, Toyota Sienna |
 | Financing Partner | BraunAbility Financial Services |
 | Protection | BraunAbility Protection Plus (service contracts, UltraGard, PrePaid Maintenance) |
 
-BraunAbility is the leading mobility conversion manufacturer, preferred 15:1 by mobility service technicians over other brands.
+BraunAbility is the leading mobility conversion manufacturer, preferred 15:1 by mobility service technicians over other brands. Newer conversions also available on Chevrolet Traverse (coming 2026).
 
 ## Online Tools
 
-- Inventory browsing and filtering
+- Inventory browsing and filtering (1,158+ vehicles)
 - Online finance application (BraunAbility Financial Services)
 - Trade-in value estimator
 - Online service scheduling
@@ -71,3 +73,6 @@ BraunAbility is the leading mobility conversion manufacturer, preferred 15:1 by 
 ## Social
 
 - Facebook: https://www.facebook.com/people/Basil-Mobility/61577505262817/
+
+See [staff.md](staff.md) for staff directory.
+See [service-center.md](service-center.md) for service department details.

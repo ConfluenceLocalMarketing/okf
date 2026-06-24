@@ -2,23 +2,31 @@
 
 ## Datasets
 
-- [dealership.md](datasets/dealership.md) — Business profile, hours, contact, services, location
-- [new-vehicles.md](datasets/new-vehicles.md) — New Mitsubishi model lineup, features, promotions
-- [used-vehicles.md](datasets/used-vehicles.md) — Pre-owned and certified pre-owned inventory, trade-in
-- [faq.md](datasets/faq.md) — Frequently asked questions about inventory, financing, and service
+- [dealership.md](datasets/dealership.md) — Business profile, hours, contact, services, location, staff leadership, perks
+- [new-vehicles.md](datasets/new-vehicles.md) — New Mitsubishi model lineup, features, trims, promotions
+- [used-vehicles.md](datasets/used-vehicles.md) — Pre-owned and certified pre-owned inventory, trade-in, quality assurance
+- [faq.md](datasets/faq.md) — Frequently asked questions about inventory, financing, service, and dealership
+- [staff.md](datasets/staff.md) — Full staff directory including management, sales, service, and parts teams
+- [service-center.md](datasets/service-center.md) — Service center details, routine maintenance, diagnostics, collision repair, parts department
 
 ## References
 
-- [llms-txt.md](references/llms-txt.md) — llms.txt directive content for AI agent guidance
-- [ai-discovery-page.md](references/ai-discovery-page.md) — Structured semantic endpoints, LLM actions, machine-readable data
+- [ai-discovery-page.md](references/ai-discovery-page.md) — Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
+- [llms-txt.md](references/llms-txt.md) — Full llms.txt directive content including PromptGraph LLMForge v1.0, API endpoints, and 10 featured AI prompts
+- [testimonials.md](references/testimonials.md) — 245 customer reviews with 5.0 rating, most-praised staff, and notable excerpts
+- [prompts.md](references/prompts.md) — Complete PromptGraph library of 64 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
 
 ## Tables
 
-*(empty — add tabular data extracts here)*
+- [model-comparison.md](tables/model-comparison.md) — Side-by-side comparison of all new Mitsubishi models including body type, drivetrain, seating, features, trims, and warranty
 
 ## Relationships
 
 - **dealership** offers **new-vehicles** and **used-vehicles**
-- **ai-discovery-page** exposes structured data for the **dealership** and both vehicle lines
+- **dealership** employs **staff** and operates **service-center**
+- **ai-discovery-page** exposes structured data for the **dealership**, both vehicle lines, **testimonials**, and **prompts**
 - **llms-txt** provides top-level agent guidance for the entire site
 - **faq** answers common questions about inventory, financing, service, and dealership perks
+- **model-comparison** provides structured specification data for all **new-vehicles** models
+- **testimonials** reflect customer experiences with **dealership** services, **staff**, and both vehicle lines
+- **prompts** provides AI-consumable Q&A covering all **datasets** concepts

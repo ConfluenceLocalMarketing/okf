@@ -1,3 +1,3 @@
 # Tables
 
-Structured tabular data. Add specification sheets, comparison matrices, pricing tables, and other tabular extracts here.
+- [model-comparison.md](model-comparison.md) — Side-by-side comparison of BraunAbility E2, XT, and XI conversion models
