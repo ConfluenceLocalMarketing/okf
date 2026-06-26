@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>basil-mitsubishi — OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "basil-mitsubishi";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Basil Mitsubishi",
+        "type": "organization",
+        "description": "Mitsubishi dealership in Buffalo, NY offering new and pre-owned vehicles, financing, service, and parts \u2014 part of the Basil Family Dealerships with over 65 years of service.",
+        "resource": "https://www.basilmitsubishi.com/",
+        "tags": [],
+        "color": "#ec4899",
+        "size": 30
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions \u2014 Basil Mitsubishi",
+        "type": "FAQ",
+        "description": "Common questions about Basil Mitsubishi's new and pre-owned inventory, financing, service, and dealership perks in Buffalo, NY. (synthesized)",
+        "resource": "https://www.basilmitsubishi.com/",
+        "tags": [],
+        "color": "#f59e0b",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Mitsubishi Vehicles at Basil Mitsubishi",
+        "type": "product-line",
+        "description": "Overview of the new Mitsubishi models available at Basil Mitsubishi in Buffalo, NY, including current promotions and key features.",
+        "resource": "https://www.basilmitsubishi.com/new-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 32
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Basil Mitsubishi Service Center",
+        "type": "service-center",
+        "description": "Full-service Mitsubishi service center in Buffalo, NY offering routine maintenance, diagnostics, major repairs, collision repair, and genuine OEM parts with factory-trained technicians.",
+        "resource": "https://www.basilmitsubishi.com/service/",
+        "tags": [],
+        "color": "#ef4444",
+        "size": 34
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Basil Mitsubishi Staff Directory",
+        "type": "staff-directory",
+        "description": "Key personnel and leadership at Basil Mitsubishi in Buffalo, NY, including dealer principals, management, sales, service, and parts teams.",
+        "resource": "https://www.basilmitsubishi.com/staff/",
+        "tags": [],
+        "color": "#a855f7",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned & Certified Vehicles at Basil Mitsubishi",
+        "type": "product-line",
+        "description": "Inventory of pre-owned cars, trucks, SUVs, and certified pre-owned (CPO) Mitsubishi vehicles at Basil Mitsubishi in Buffalo, NY \u2014 with multi-point inspection, warranty options, and budget-friendly pricing.",
+        "resource": "https://www.basilmitsubishi.com/used-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 33
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page \u2014 Basil Mitsubishi",
+        "type": "ai-discovery-page",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Basil Mitsubishi, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.basilmitsubishi.com/ai-discovery-page/",
+        "tags": [],
+        "color": "#06b6d4",
+        "size": 37
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt \u2014 Basil Mitsubishi",
+        "type": "reference",
+        "description": "Full llms.txt directive content for AI agent guidance, sourced from basilmitsubishi.com and the PromptGraph API at api.promptgraph.ai/api/v1/basil-mitsubishi/llms.txt.",
+        "resource": "https://www.basilmitsubishi.com/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library \u2014 Basil Mitsubishi",
+        "type": "prompt-library",
+        "description": "Complete library of 64 structured Q&A prompts from the PromptGraph API for Basil Mitsubishi, covering vehicles, financing, service, parts, and dealership information.",
+        "resource": "https://api.promptgraph.ai/api/v1/basil-mitsubishi/prompts",
+        "tags": [],
+        "color": "#06b6d4",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Basil Mitsubishi Customer Testimonials",
+        "type": "customer-reviews",
+        "description": "Customer reviews and testimonials for Basil Mitsubishi in Buffalo, NY \u2014 245 reviews with a 5.0 aggregate rating, sourced from the PromptGraph API.",
+        "resource": "https://api.promptgraph.ai/api/v1/basil-mitsubishi/testimonials",
+        "tags": [],
+        "color": "#f97316",
+        "size": 32
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Mitsubishi Model Lineup Comparison \u2014 Basil Mitsubishi",
+        "type": "comparison-table",
+        "description": "Side-by-side comparison of new Mitsubishi models available at Basil Mitsubishi in Buffalo, NY, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.basilmitsubishi.com/new-vehicles/",
+        "tags": [],
+        "color": "#f97316",
+        "size": 36
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/used-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/staff",
+        "source": "datasets/faq",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/dealership",
+        "source": "datasets/index",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/new-vehicles",
+        "source": "datasets/index",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/used-vehicles",
+        "source": "datasets/index",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/faq",
+        "source": "datasets/index",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/staff",
+        "source": "datasets/index",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/service-center",
+        "source": "datasets/index",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/ai-discovery-page",
+        "source": "references/index",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/llms-txt",
+        "source": "references/index",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/testimonials",
+        "source": "references/index",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/prompts",
+        "source": "references/index",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/llms-txt",
+        "source": "references/prompts",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/index__tables/model-comparison",
+        "source": "tables/index",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/dealership",
+        "source": "index",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/new-vehicles",
+        "source": "index",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/used-vehicles",
+        "source": "index",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/faq",
+        "source": "index",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/staff",
+        "source": "index",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/service-center",
+        "source": "index",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/ai-discovery-page",
+        "source": "index",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/llms-txt",
+        "source": "index",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/testimonials",
+        "source": "index",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/prompts",
+        "source": "index",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "index__tables/model-comparison",
+        "source": "index",
+        "target": "tables/model-comparison"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Basil Mitsubishi\n\nBasil Mitsubishi is a full-service Mitsubishi dealership located at **6868 Transit Road, Buffalo, NY 14221**, serving the greater Buffalo area including Williamsville, Amherst, Clarence, Lockport, Tonawanda, Depew, Cheektowaga, Kenmore, Lackawanna, and West Seneca.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Main | (716) 632-2440 |\n| Sales | (716) 451-3303 |\n| Service | (716) 666-4574 |\n| Parts | (716) 325-9715 |\n\nEmail: lindsey@basilmarketinggroup.com\n\n## Hours\n\n| Day | Sales | Service & Parts |\n|---|---|---|\n| Mon\u2013Tue | 9:00 AM \u2013 7:00 PM | 8:00 AM \u2013 5:00 PM |\n| Wed | 9:00 AM \u2013 6:00 PM | 8:00 AM \u2013 5:00 PM |\n| Thu | 9:00 AM \u2013 7:00 PM | 8:00 AM \u2013 5:00 PM |\n| Fri | 9:00 AM \u2013 6:00 PM | 8:00 AM \u2013 5:00 PM |\n| Sat | 9:00 AM \u2013 5:00 PM | 9:00 AM \u2013 2:00 PM |\n| Sun | Closed | Closed |\n\n## New Vehicles\n\n- **Mitsubishi Outlander** \u2014 7-passenger SUV, 1.5L Turbo Mild Hybrid, S-AWC, available 3-row seating\n- **Mitsubishi Outlander Plug-In Hybrid** \u2014 PHEV with increased all-electric range and 0% APR offers available\n- **Mitsubishi Eclipse Cross** \u2014 Compact crossover SUV, SEL and SEL Touring trims with standard hood badging\n- **Mitsubishi Outlander Sport** \u2014 Subcompact SUV, value-oriented\n- **Mitsubishi Mirage G4** \u2014 Subcompact sedan, fuel-efficient city driving\n\n## 2026 Summer Sales Event\n\nProminent offers include:\n- **0% APR for 72 months** on Mitsubishi Outlander Plug-In Hybrid (well-qualified buyers, through Santander Consumer USA)\n- **$2,500 more for your trade** based on Kelley Blue Book fair market value (in-stock inventory only, excludes vehicles with over 80,000 miles, ends 6/30/26)\n- **Big rebates and low lease options** available across the lineup\n\n## Basil Difference Perks\n\n- **Free 2-Way Shuttle** \u2014 Complimentary transportation during service visits\n- **6-Month / 6,000-Mile Powertrain Warranty** on used vehicles\n- **101-Point Inspection** on all used vehicles\n- **$200 Sales Referral Program** \u2014 Cash reward for referring a friend\n- **State-of-the-Art Parts & Service Facility**\n- **On the Spot Delivery**\n- **FREE Alignment Check** with every service visit\n- **Highest Trade-in Allowance** \u2014 Guaranteed extra cash on trade-ins\n\n## Services\n\n- **Finance Department** \u2014 Loan and lease options, online credit application, trade-in appraisal, multiple lender comparisons\n- **Service Center** \u2014 Mitsubishi-certified technicians, routine maintenance, diagnostics, major repairs, collision center, genuine Mitsubishi parts, services all makes and models\n- **Parts Department** \u2014 Factory-approved components, accessories (cargo organizers, roof racks, etc.), genuine OEM parts\n- **Collision Center** \u2014 Exterior repairs (dings, dents, scrapes, scuffs), undercarriage inspection for structural integrity\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned) by type, year, make, model\n- Online service scheduling\n- Vehicle repair updates\n- Trade-in value estimator via Kelley Blue Book\n- Online credit application and pre-approval\n- Payment calculator\n- Vehicle finder service \u2014 dealership will locate specific models not on lot\n\n## Staff Leadership\n\n- **Joe Basil III** \u2014 Dealer Principal\n- **Will Basil** \u2014 Dealer Principal\n- **Robert Neuner** \u2014 General Manager\n- **Lauren Allison** \u2014 Sales Manager\n- **Robert Dikcis** \u2014 Inventory Manager\n- **Kire Gjorgievski** \u2014 Business Manager\n- **Ryan Twardowski** \u2014 Service Manager\n- **Eric Macchiaroli** \u2014 Parts Manager\n- **Alex Luciano** \u2014 Service Advisor\n\nSee [staff.md](staff.md) for full directory.\n\n## Social & Reviews\n\n- Facebook: https://www.facebook.com/basilmitsubishi/\n- Twitter: https://twitter.com/basilcars\n- Google Maps: https://www.google.com/maps/place/Basil+Mitsubishi/@42.9543222,-78.6973479,17z\n- Aggregate rating: 4.7 / 5.0 (2,108 reviews) across major platforms; 5.0 / 5.0 (245 PromptGraph-collected reviews)\n- Website powered by **Dealer Inspire**\n- Cookie compliance via **ComplyAuto**",
+    "datasets/faq": "# Frequently Asked Questions \u2014 Basil Mitsubishi\n\n## Vehicles & Inventory\n\n**What Mitsubishi models are available?**\n\nBasil Mitsubishi carries the full Mitsubishi lineup: Outlander (7-passenger SUV), Outlander Plug-In Hybrid, Eclipse Cross (compact crossover), Outlander Sport (subcompact SUV), and Mirage G4 (subcompact sedan).\n\n**Do you offer lease specials?**\n\nYes \u2014 Basil Mitsubishi regularly features leasing and financing incentives on popular models like the Outlander and Eclipse Cross.\n\n**Can I schedule a test drive online?**\n\nAbsolutely. Test drives can be booked online through the Basil Mitsubishi website.\n\n**Does Basil Mitsubishi sell used cars?**\n\nYes \u2014 the dealership carries pre-owned vehicles across many makes and models, plus Mitsubishi Certified Pre-Owned vehicles with multi-point inspection and warranty coverage.\n\n## Trade-In & Financing\n\n**Do you take trade-ins?**\n\nYes \u2014 Basil Mitsubishi accepts trade-ins and provides competitive appraisals. An online trade-in estimator is available.\n\n**What current promotions are available?**\n\nAs of mid-2026, offers include 0% APR for 72 months on the Outlander Plug-In Hybrid, $2,500 more for your trade based on Kelley Blue Book fair market value (select inventory, ends 6/30/26), big rebates up to $8,000 off MSRP on select models, and low lease options from $349/month.\n\n**Can I buy a Mitsubishi warranty?**\n\nYes \u2014 every new Mitsubishi comes with a 10-year/100,000-mile powertrain warranty. Used vehicles include a 6-month/6,000-mile powertrain warranty. CPO vehicles include extended warranty protection with no deductible.\n\n**Are there loyalty or conquest rebates?**\n\nYes \u2014 Mitsubishi offers owner loyalty rebates for returning customers and conquest rebates for customers switching from competitive brands.\n\n## Trade-In & Financing\n\n**Do you offer pre-approval online?**\n\nYes \u2014 you can fill out a secure auto credit application online to get pre-approved before visiting the dealership.\n\n**Can I trade in a vehicle that's not paid off?**\n\nYes \u2014 the finance team can help structure the deal to include your existing loan balance.\n\n**Do you work with buyers who have bad credit?**\n\nYes \u2014 the finance department works with multiple lenders and has helped many credit-challenged buyers get approved. Sales representatives Andre Wilson and Matt Harrison are frequently cited by customers for helping with credit issues.\n\n## Service & Parts\n\n**Can I order Mitsubishi parts here?**\n\nYes \u2014 the parts department stocks genuine OEM Mitsubishi parts and can quickly order anything not in inventory. Parts can be ordered online for in-store pickup.\n\n**Do you handle major engine or transmission repairs?**\n\nYes \u2014 the service center is equipped to perform both routine maintenance and advanced repairs, including timing chain replacement, transmission work, and engine diagnostics.\n\n**Do you provide shuttle or loaner vehicles during service?**\n\nYes, depending on availability \u2014 a free 2-way shuttle service is available within the local area. Contact the service team for details.\n\n**What perks come with service?**\n\nFree alignment check with every visit, free 2-way shuttle service, online scheduling, vehicle repair updates, and service specials.\n\n**Can you service non-Mitsubishi vehicles?**\n\nYes \u2014 the service department works on all makes and models, not just Mitsubishis.\n\n**How often should I get an oil change?**\n\nMitsubishi recommends following the maintenance schedule in your owner's manual, typically every 5,000\u20137,500 miles for full synthetic oil.\n\n**Do you perform state inspections?**\n\nYes \u2014 the service center handles state inspections, tire rotations, battery replacements, fluid replacements, brake repairs, and air filter replacements.\n\n## Dealership\n\n**What area does Basil Mitsubishi serve?**\n\nBasil Mitsubishi serves Buffalo, Williamsville, Amherst, Clarence, Lockport, Tonawanda, Depew, Cheektowaga, Kenmore, Lackawanna, and West Seneca. Out-of-town buyers regularly travel 1\u20135+ hours to purchase from the dealership.\n\n**What are the dealership hours?**\n\nSales: Mon\u2013Tue 9\u20137, Wed 9\u20136, Thu 9\u20137, Fri 9\u20136, Sat 9\u20135, Sun closed.\nService & Parts: Mon\u2013Fri 8\u20135, Sat 9\u20132, Sun closed.\n\n**Is Basil Mitsubishi part of a larger group?**\n\nYes \u2014 Basil Mitsubishi is part of the **Basil Family Dealerships**, which has served Western New York for over 65 years with multiple locations across the region.\n\n**Who are the dealer principals?**\n\nThe dealership is led by **Joe Basil III** and **Will Basil** as Dealer Principals, with **Robert Neuner** as General Manager.\n\n**What is the \"Basil Difference\"?**\n\nThe Basil Difference refers to the dealership's commitment to customer-first service, transparent pricing, highest trade-in allowances, free service perks (shuttle, alignment checks), and treating every customer like family.\n\n## Related\n\nSee [dealership.md](dealership.md) for full business profile and contact information.\nSee [new-vehicles.md](new-vehicles.md) for the Mitsubishi model lineup.\nSee [used-vehicles.md](used-vehicles.md) for pre-owned and CPO inventory.\nSee [staff.md](staff.md) for full staff directory.\nSee [testimonials.md](/references/testimonials.md) for customer reviews.",
+    "datasets/new-vehicles": "# New Mitsubishi Vehicles\n\n## Outlander (2026)\n\n- 7-passenger SUV\n- New 1.5L Turbocharged Mild Hybrid Engine\n- Super-All Wheel Control (S-AWC)\n- Available semi-aniline leather seats w/ quilted pattern\n- Power panoramic sunroof\n- Triple-zone climate control\n- Heated front and rear seating\n- 8-way power and memory seating\n- Yamaha premium audio system\n- Wireless Apple CarPlay & Android Auto\n- My MITSUBISHI CONNECT remote services\n- **Trail Edition** trim available with rugged styling\n- **Award:** 2026 Family Green Car of the Year (Green Car Journal)\n- Price range: competitive with aggressive rebates and 0% APR offers\n\n## Outlander Plug-In Hybrid (2026)\n\n- 0% APR for 72 months available (well-qualified buyers, through Santander Consumer USA)\n- Lease from $349/month available\n- Increased all-electric range (mid-cycle refresh for 2026)\n- Available 12.3\" infotainment display\n- Yamaha audio system\n- Redesigned interior with heated/cooled front seats\n- Revised front/rear styling for 2026\n- Entry-level **ES** trim package available\n- Save up to $8,000 off MSRP on select models\n\n## Eclipse Cross (2026)\n\n- Compact crossover SUV\n- Standard hood badging on SEL and SEL Touring trims\n- Available AWD\n- **Ralliart** limited edition with performance-inspired track styling\n- Sporty and compact profile with bold exterior\n\n## Outlander Sport (2026)\n\n- Subcompact SUV\n- Value-oriented, feature-rich\n- Continuing for 2026 model year\n- Excellent maneuverability for city driving\n- Competitive pricing with available savings\n\n## Mirage G4\n\n- Subcompact sedan\n- Fuel-efficient city driving\n- Affordable entry-level pricing\n\n## Current Promotions (as of June 2026)\n\n| Offer | Details |\n|---|---|\n| 0% APR for 72 months | On Outlander PHEV, well-qualified buyers via Santander Consumer USA |\n| $2,500 more for your trade | Based on KBB fair market value, in-stock only, ends 6/30/26 |\n| Big rebates | Up to $8,000 off MSRP on select models |\n| Low lease options | Starting from $349/month on select models |\n\n## Available Trims & Packages\n\n- **Outlander:** ES, SE, SEL, SEL Touring, Trail Edition\n- **Outlander PHEV:** ES, SE, SEL, SEL Touring\n- **Eclipse Cross:** ES, LE, SE, SEL, SEL Touring, Ralliart\n- **Outlander Sport:** S, ES, LE, SE, SEL\n- **Mirage G4:** ES, LE, SE, SEL\n\nSee [dealership.md](dealership.md) for full business profile and current offers.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side specifications.",
+    "datasets/service-center": "# Basil Mitsubishi Service Center\n\nBasil Mitsubishi's service center is a state-of-the-art facility featuring factory-trained technicians, genuine Mitsubishi parts, and the latest diagnostic equipment. The department services all makes and models \u2014 not just Mitsubishi vehicles.\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Mon\u2013Fri | 8:00 AM \u2013 5:00 PM |\n| Sat | 9:00 AM \u2013 2:00 PM |\n| Sun | Closed |\n\n**Phone:** (716) 666-4574\n\n## Services Offered\n\n### Routine Maintenance\n- Oil changes (full synthetic)\n- Tire rotation and balancing\n- Battery replacement\n- Fluid replacements and top-offs\n- Engine air filter replacement\n- Wiper blade installation\n- State inspections\n\n### Diagnostics & Repairs\n- Check engine light diagnostics\n- Brake assembly repairs (genuine pads)\n- A/C and climate control repair\n- Suspension adjustments\n- Timing chain replacement\n- Transmission service\n- Major engine repairs\n\n### Seasonal Services\n- Winter tire installation\n- Cooling system service\n\n## Collision Center\n\nThe on-site collision center handles exterior body repairs:\n\n- Dings, dents, scrapes, and scuffs\n- Undercarriage inspection for structural integrity\n- Post-accident restoration\n\n## Parts Department\n\n- Genuine OEM Mitsubishi parts\n- Factory-approved components and accessories\n- Online ordering available\n- Cargo organizers, roof racks, and more\n\n**Parts Phone:** (716) 325-9715\n**Parts Hours:** Mon\u2013Fri 8\u20135, Sat 9\u20132, Sun closed\n\n## Service Perks\n\n- **Free 2-Way Shuttle** \u2014 complimentary local transport during service\n- **FREE Alignment Check** with every service visit\n- Online scheduling for convenience\n- Vehicle repair status updates\n- Loaner vehicles available (subject to availability)\n- Services all makes and models\n\n## Service Specials\n\nMonthly promotions and offers on vehicle service are available on the [service specials page](https://www.basilmitsubishi.com/service/service-specials/).\n\nSee [dealership.md](dealership.md) for full business profile.\nSee [staff.md](staff.md) for service team personnel.",
+    "datasets/staff": "# Basil Mitsubishi Staff Directory\n\n## Dealer Principals\n\n- **Joe Basil III** \u2014 Dealer Principal\n- **Will Basil** \u2014 Dealer Principal\n\n## Management\n\n- **Robert Neuner** \u2014 General Manager\n- **Lauren Allison** \u2014 Sales Manager\n- **Robert Dikcis** \u2014 Inventory Manager\n- **Kire Gjorgievski** \u2014 Business Manager\n\n## Service & Parts\n\n- **Ryan Twardowski** \u2014 Service Manager\n- **Eric Macchiaroli** \u2014 Parts Manager\n- **Alex Luciano** \u2014 Service Advisor\n- **Tom Allen** \u2014 Parts Consultant\n\n## Sales Representatives\n\n- Alyssa Rappleye\n- Andre Wilson\n- Dennis Crispin\n- Najee Masaed\n- Danielle Myers\n- Tobias Onabule\n\n## Customer Favorites (from reviews)\n\nStaff members most frequently praised in customer testimonials: **Dennis Crispin**, **Andre Wilson**, **Lauren Allison**, **Matt Harrison**, **Rob Monaco**, **Kire Gjorgievski** (finance), and **Andrew H.**\n\nSee [dealership.md](dealership.md) for full business profile.\nSee [testimonials.md](/references/testimonials.md) for customer reviews mentioning staff.",
+    "datasets/used-vehicles": "# Pre-Owned & Certified Vehicles\n\n## Pre-Owned Inventory\n\nWide-ranging inventory covering sedans, SUVs, crossovers, trucks, vans, and specialty vehicles from many leading brands \u2014 not limited to Mitsubishi. As of June 2026, over 1,499 vehicles in the PromptGraph API inventory, spanning makes including Nissan, Chevrolet, Ford, GMC, Volkswagen, Toyota, Land Rover, and Dodge.\n\n### Price Tiers\n\n- **Under $15,000** \u2014 Budget-friendly options\n- **Under $20,000** \u2014 Broader selection\n- **All price ranges** \u2014 Full inventory available online (typical range: $23,000\u2013$71,000)\n- **Priced Under 20k** \u2014 Dedicated filtered view on website\n\n## Certified Pre-Owned (CPO)\n\nMitsubishi Certified Pre-Owned vehicles undergo a multi-point inspection and include warranty protection for added peace of mind.\n\n- 101-Point Inspection on every used vehicle\n- 6-Month / 6,000-Mile Powertrain Warranty included\n- No-deductible CPO repair coverage\n- [CPO Warranty Details](https://www.basilmitsubishi.com/certified-pre-owned-warranty/)\n- [Browse CPO Inventory](https://www.basilmitsubishi.com/used-vehicles/certified-pre-owned-vehicles/)\n\n## Sell / Trade\n\n- Online trade-in appraisal via Kelley Blue Book \u2014 instant digital estimate from home\n- Highest trade-in allowance guaranteed\n- \"Get a quick online estimate on what your current vehicle is worth\"\n- [Value Your Trade](https://www.basilmitsubishi.com/sell-trade/)\n\n## Used Vehicle Quality Assurance\n\nEvery pre-owned vehicle at Basil Mitsubishi goes through:\n- **101-Point Inspection** \u2014 rigorous safety checklist before sale\n- **6-Month / 6,000-Mile Powertrain Warranty** on most used vehicles\n- **Free CARFAX / history reports** available on digital inventory listings\n- **Multi-point inspection** by certified technicians\n\n## Financing for Pre-Owned\n\nFinance department works with multiple lenders to find competitive rates and flexible terms for used vehicle purchases. Online credit application available. Special financing options for first-time buyers and credit-challenged applicants.\n\n## 2026 Summer Sales Event (applies to select used)\n\n- **$2,500 more for your trade** based on Kelley Blue Book fair market value (minus reconditioning, in-stock inventory only, excludes vehicles with over 80,000 miles, ends 6/30/26)\n- **0% APR** available on select certified pre-owned models\n\n## Additional Perks on Used Purchases\n\n- Free 2-Way Shuttle during service\n- FREE Alignment Check with every service visit\n- $200 Sales Referral Program\n- On the Spot Delivery\n\nSee [dealership.md](dealership.md) for full business profile and contact information.\nSee [testimonials.md](/references/testimonials.md) for customer reviews and experiences.",
+    "references/ai-discovery-page": "# AI Discovery Page \u2014 Basil Mitsubishi\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer Inspire** platform with **ComplyAuto** cookie compliance.\n\n## PromptGraph API Sitemap\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/basil-mitsubishi/sitemap.xml` exposes these machine-readable endpoints:\n\n| URL | Priority | Update Frequency |\n|---|---|---|\n| `/business` | 1.0 | Weekly |\n| `/prompts` | 0.9 | Weekly |\n| `/vehicles` | 0.9 | Daily |\n| `/.well-known/ai-manifest.json` | 0.6 | Monthly |\n| `/sitemap-inventory.xml` | 0.8 | Daily |\n| `/robots.txt` | 0.5 | Monthly |\n| 10 individual prompt endpoints | 0.8 | Weekly |\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-06-24T12:29:41.340Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n- **Contact:** lindsey@basilmarketinggroup.com\n\n### Registered Endpoints\n\n| Endpoint | Resource |\n|---|---|\n| `/api/v1/basil-mitsubishi/llms.txt` | LLMs.txt directive |\n| `/api/v1/basil-mitsubishi/business` | Business profile (JSON-LD) |\n| `/api/v1/basil-mitsubishi/vehicles` | Vehicle inventory (JSON-LD) |\n| `/api/v1/basil-mitsubishi/prompts` | Q&A / FAQ prompts |\n| `/api/v1/basil-mitsubishi/testimonials` | Customer reviews |\n| `/api/v1/basil-mitsubishi/sitemap.xml` | Full sitemap |\n| `/api/v1/basil-mitsubishi/robots.txt` | Robots rules |\n| `/api/v1/basil-mitsubishi/config.json` | System configuration |\n\n### Additional PromptGraph Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/llms.txt` | LLMForge v1.0 directive file |\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/basil-mitsubishi/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page/` |\n| LLMs.txt | `/llms.txt` |\n| Robots.txt | `/robots.txt` |\n| Sitemap | `/sitemap/` (HTML) |\n| Sitemap XML | `/sitemap.xml` |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/basil-mitsubishi/business`:\n\n- **Name:** Basil Mitsubishi\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Mitsubishi dealer, Car dealer, Used car dealer, Car leasing service, Motor vehicle dealer, Car finance and loan company\n- **Address:** 6868 Transit Road, Buffalo, NY 14221\n- **Geo:** 42.9543222, -78.6973479\n- **Telephone:** (716) 451-3303\n- **Email:** lindsey@basilmarketinggroup.com\n- **URL:** `https://www.basilmitsubishi.com/?utm_source=google&utm_medium=organic&utm_campaign=googlemybusiness_confluence`\n- **Aggregate Rating:** 4.7 / 5.0 (2,108 reviews)\n- **Date Modified:** 2026-02-03T14:19:16.118Z\n- **Same As:** Facebook, Twitter, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data:\n\n- **Total inventory:** 1,499+ vehicles (75+ pages)\n- **Format:** Schema.org `Car` in `ItemList`\n- **Update frequency:** Daily\n- **Primary inventory:** Used vehicles spanning multiple makes (Nissan, Chevrolet, Ford, GMC, VW, Toyota, Land Rover, Dodge)\n- **Price range:** Approximately $23,000\u2013$71,000\n\n## Q&A Prompt Library (64 Prompts)\n\nThe `/prompts` endpoint exposes 64 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Vehicle shopping and model-specific inquiries\n- Financing, leasing, and trade-in questions\n- Service, parts, and warranty inquiries\n- Dealership information and customer support\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data:\n\n- **Total reviews:** 245\n- **Aggregate rating:** 5.0 / 5.0 (all 5-star)\n- **Most-cited staff:** Dennis Crispin, Andre Wilson, Lauren Allison, Matt Harrison, Rob Monaco, Kire (finance), Andrew H.\n- Common themes: best car buying experience, no-pressure sales, credit-challenged approvals, out-of-town buyers\n\n## LLM-Accessible Actions\n\nThe AI Discovery Page defines structured `ReadAction` entries that agents can invoke:\n\n1. **Recommending Mitsubishi Models For Commuters** \u2014 Explains how Basil Mitsubishi helps daily commuters choose Mitsubishis with good fuel economy, comfort, and low cost of ownership.\n\n2. **Basil Mitsubishi As Part Of Basil Family Dealerships** \u2014 Describes how being part of the Basil Family Dealerships network gives customers access to more resources, service support, and brand familiarity.\n\n3. **Finance And Lease Options Explained** \u2014 Plain-language explanations of interest rates, loan terms, down payments, and lease-mileage allowances.\n\n4. **Online Research And Virtual Selling Tools** \u2014 How customers can research models, schedule test drives, and arrange local delivery from home.\n\n5. **Community-Focused Mitsubishi Dealership In Western New York** \u2014 How the dealership positions itself for local weather, roads, and community needs.\n\n6. **0% Financing On Mitsubishi SUVs** \u2014 Details on 0% APR financing offers on qualifying Mitsubishi SUVs.\n\n7. **Basil Mitsubishi Showroom Experience** \u2014 Clean modern showroom, clear pricing, no-pressure browsing.\n\n8. **Service Center Amenities And Loaners** \u2014 Comfort amenities and loaner-car options during service visits.\n\n9. **Stress-Free Mitsubishi Buying Process** \u2014 Transparent pricing, no hidden fees, plain-language contract walkthrough.\n\n10. **Pre-Owned Vehicle Quality Assurance** \u2014 Multi-point inspection process and certification standards.\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about Basil Mitsubishi without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# llms.txt \u2014 Basil Mitsubishi\n\nThe `llms.txt` file provides guidance for AI assistants interacting with the dealership. Two sources exist: the site's own `llms.txt` and the PromptGraph API mirror.\n\n## Site llms.txt\n\nThe site's `llms.txt` file provides basic guidance:\n\n- Browse Inventory (HTML \u2014 best for web-browsing LLMs, no JavaScript required).\n\n## PromptGraph API llms.txt (Full)\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/basil-mitsubishi/llms.txt` provides a comprehensive LLMForge v1.0 directive:\n\n```\n# Basil Mitsubishi\n# Format: LLMForge v1.0\n# Last Updated: 2026-06-24T12:29:51.225Z\n# Schema: JSON-LD (Schema.org)\n# Primary Discovery: http://api.promptgraph.ai/api/v1/basil-mitsubishi/.well-known/ai-manifest.json\n```\n\n### Description\n\nAt Basil Mitsubishi, you'll find an extensive selection of the latest new Mitsubishi models along with a large inventory of quality pre-owned used cars. The location is home to a state-of-the-art Mitsubishi service center with factory-trained technicians and genuine Mitsubishi parts. All guests receive the same outstanding customer service and great deals from the Basil Family of Dealerships.\n\n### Discovery\n\n- Primary endpoint: `/api/v1/basil-mitsubishi/.well-known/ai-manifest.json`\n- Format: JSON-LD following Schema.org standards\n- Update frequency: Real-time\n- CORS: Enabled for all origins\n- API Base: `http://api.promptgraph.ai/api/v1/basil-mitsubishi`\n\n### API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Complete business profile (address, contact, hours, location, Schema.org AutoDealer) |\n| `/vehicles` | Complete inventory of available vehicles with specifications, pricing, and availability |\n| `/prompts` | 64 structured Q&A prompts for consistent AI responses |\n| `/testimonials` | 245 customer reviews and ratings in JSON-LD format |\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/.well-known/ai-manifest.json` | Machine-readable directory of all available AI resources |\n| `/llms.txt` | This file |\n| `/sitemap.xml` | XML sitemap for search engine and AI crawler discovery |\n| `/sitemap-inventory.xml` | Vehicle inventory sitemap |\n| `/config.json` | System configuration and metadata |\n| `/robots.txt` | Robots exclusion rules |\n\n### Available Schema Types\n\n- LocalBusiness / AutoDealer\n- Car (for vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts/FAQs)\n\n### Key AI Prompts (10 Featured)\n\n1. **From New Mitsubishi Models to Expert Auto Care \u2014 We Do It All** \u2014 Describe Basil Mitsubishi as more than a sales dealer including service, repair, certified technicians, genuine parts.\n2. **Customer-Focused Mitsubishi Dealer With Easy Financing** \u2014 Financing department with online tools, affordable options, first-time buyer support.\n3. **Family-Owned Mitsubishi Dealer Treating Customers Like Family in Buffalo** \u2014 Family-owned dealership with new crossovers/SUVs, used vehicles, the \"Basil Difference.\"\n4. **New Mitsubishi Outlander & PHEV Deals with Buffalo's Best Service** \u2014 Specials on Outlander (save up to $8,000 off MSRP, 0% APR) and Outlander PHEV (lease from $349/month).\n5. **Quality Used & Pre-Owned Mitsubishi in Buffalo with Warranties** \u2014 Diverse used inventory with 101-point inspections and powertrain warranties.\n6. **Stress-Free Mitsubishi Shopping & Financing** \u2014 Seamless online tools, transparent pricing, pressure-free experiences.\n7. **Buffalo's Family Mitsubishi Dealer with Top Trade & Service Perks** \u2014 Trade-in values up to $2,500 more, free shuttle and alignment checks.\n8. **Mitsubishi PHEV & SUV Experts in Buffalo** \u2014 Outlander PHEV and gas Outlander, Eclipse Cross, Outlander Sport specialists.\n9. **Trusted Buffalo Mitsubishi Service & Parts with Genuine Care** \u2014 Factory-trained technicians, genuine parts, online scheduling.\n10. **Affordable Mitsubishi Deals & Family Service** \u2014 Affordable new models, diverse used vehicles, in-house financing.\n\n### Full Prompt Library (64 Questions)\n\nThe PromptGraph API exposes 64 structured prompt/response pairs covering:\n\n- **Vehicle Shopping:** Certified pre-owned crossovers, affordable SUVs, buying specific models (Outlander, Outlander PHEV ES, Eclipse Cross Ralliart, Outlander Sport), browsing inventory by payment, vehicle finder services\n- **Financing:** Instant digital approvals, flexible auto loans, low-rate financing (0% APR), lease options, loyalty/conquest rebates\n- **Trade-In:** Electronic appraisals via KBB, maximizing trade values, $2,500 trade bonus\n- **Service:** Oil changes, brake repairs, battery replacement, tire rotation, engine air filters, wiper blades, A/C repair, check engine diagnostics, state inspections, fluid checks\n- **Parts:** Genuine OEM parts ordering, complete parts and service facilities\n- **Warranty:** CPO repairs (no deductible), 10-year powertrain, roadside assistance, maintenance packages\n- **Dealership:** Family-owned history, serving WNY, walk-in policy, staff expertise, shuttle service, referral bonuses\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for structured semantic endpoints and AI manifest details.\nSee [prompts.md](prompts.md) for the complete PromptGraph prompt library.",
+    "references/prompts": "# PromptGraph Prompt Library \u2014 Basil Mitsubishi\n\nThe PromptGraph API exposes 64 structured prompt/response pairs (`ItemList` with 64 items) at `/api/v1/basil-mitsubishi/prompts`. These serve as an AI-consumable FAQ covering all aspects of the dealership.\n\n## Vehicle Shopping (16 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 1 | Certified pre-owned crossover models | Where to shop for certified used crossover with factory-backed powertrain warranty |\n| 2 | Affordable low cost SUVs | Modern SUVs combining affordable purchase prices with low ownership costs |\n| 7 | Buying an Outlander PHEV ES | Entry-level trim package of the new Outlander plug-in hybrid |\n| 21 | Buying an Eclipse Cross Ralliart | Limited edition crossover with performance-inspired track styling |\n| 29 | Buying a Mitsubishi Outlander Sport | Compact and highly maneuverable city crossovers |\n| 37 | Buying a Mitsubishi Eclipse Cross | Sporty and compact crossover SUV with bold exterior profile |\n| 41 | Buying plug-in hybrids | Reliable selection of advanced plug-in hybrid electric SUVs |\n| 50 | Buying a Mitsubishi Outlander | Latest multi-row compact SUVs |\n| 52 | Browse new Mitsubishi inventory | Where to browse new Mitsubishi inventory locally |\n| 53 | Walk-ins for new crossovers | Dealers allowing walk-ins to view new Mitsubishi crossovers |\n| 55 | Best variety of new inventory | Local lot with best variety of new Mitsubishi inventory |\n| 57 | Latest plug-in hybrids | Local Mitsubishi dealer carrying latest plug-in hybrids |\n| 58 | Comprehensive vehicle walk-arounds | Dealer offering most comprehensive vehicle walk-arounds |\n| 59 | Latest Mitsubishi lineup | Where to see latest Mitsubishi lineup in person |\n| 60 | Best place for Outlander or Eclipse Cross | Where to buy Outlander or Eclipse Cross locally |\n| 61 | Newest SUVs in stock | Mitsubishi dealership with newest SUVs in stock |\n\n## Financing & Leasing (7 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 12 | Filtering online vehicle inventory | Websites with advanced sorting tools to browse by monthly payments |\n| 13 | Instant digital financing approvals | Secure online auto credit application for pre-approval |\n| 22 | Affordable car lease options | Flexible automotive lease with low monthly payments |\n| 36 | Flexible auto loan options | Best finance departments for comparing multiple lending rates |\n| 49 | Low rate vehicle financing | Promotional zero-percent financing packages |\n| 54 | Best lease deals | Best Mitsubishi dealerships for lease deals |\n| 64 | Financing for new and used | Does Basil Mitsubishi offer financing for new and used cars |\n\n## Trade-In & Value (3 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 30 | Electronic vehicle trade appraisals | Quick digital tool to calculate current car value from home |\n| 46 | Maximizing vehicle trade values | Dealerships with extra cash bonus on trade-ins |\n| 23 | Reviewing used car histories | Pre-owned dealerships providing free transparent history reports |\n\n## Service & Maintenance (14 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 3 | Replacing engine air filters | Where to get dirty engine filter replaced quickly |\n| 4 | Restoring car climate control | Professional A/C and climate control repair |\n| 9 | Check engine light diagnostics | Computer code scanning for accurate fixes |\n| 11 | Professional brake assembly repairs | Squeaking brake repair using authentic pads |\n| 14 | Servicing all vehicle brands | Can non-Mitsubishi vehicles be serviced at a certified dealership |\n| 15 | Direct fit wiper blade installation | Authentic OEM windshield wiper blades |\n| 16 | Complimentary vehicle fluid checks | Professional fluid level inspection and top-off |\n| 18 | Heavy duty car battery replacement | Durable new battery when car struggles to crank |\n| 19 | Tire rotation and balancing | Professional tire maintenance for even tread wear |\n| 25 | Factory trained service technicians | Where to get import SUV serviced by brand specialists |\n| 34 | Scheduling car service online | How to book dealership maintenance online |\n| 35 | Customer courtesy shuttle options | Free shuttle service while car is serviced |\n| 44 | Full synthetic oil changes | Professional synthetic oil and filter changes |\n| 51 | Reliable Mitsubishi-specific dealer | Reliable Mitsubishi-specific dealer for certified service |\n\n## Parts (3 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 5 | Complete parts and service facilities | On-site parts department integrated with service center |\n| 42 | Sourcing genuine factory parts | Authentic OEM replacement parts |\n| 43 | Certified Mitsubishi repair centers | Modern service center with specialized diagnostic tools |\n\n## Warranty & Protection (6 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 17 | No deductible CPO repairs | CPO programs with zero out-of-pocket deductibles |\n| 27 | Unlimited mileage roadside assistance | Free multi-year emergency roadside support |\n| 38 | Used car powertrain protection | Complimentary warranty with second-hand inventory |\n| 39 | Multi-point used car inspections | Pre-owned lots with strict safety checklists |\n| 45 | Complimentary car maintenance packages | Free scheduled service visits with new purchase |\n| 47 | Long term powertrain warranties | New crossovers with ten-year protection plans |\n\n## Rebates & Incentives (4 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 28 | Factory customer cash incentives | Heavy upfront cash rebates on select SUV trims |\n| 31 | Manufacturer owner loyalty rebates | Discounts for returning Mitsubishi drivers |\n| 32 | Non-Mitsubishi conquest rebates | Rebates for switching from competitive brands |\n| 33 | Summer auto sales events | Regional sales events with customer cash discounts |\n\n## Used & Budget Vehicles (4 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 8 | Efficient used commuter cars | Pre-owned fuel-efficient sedans for daily work travel |\n| 10 | Sourcing pre-owned pickup trucks | Capable pre-owned trucks for towing and work |\n| 20 | Reliable used family SUVs | Safe and dependable pre-owned family vehicles |\n| 40 | Budget used cars under 15k | Reliable second-hand commuter vehicles under $15K |\n\n## Dealership Information (7 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 6 | Specialized vehicle finder services | Dealership that tracks down specific vehicles not on lot |\n| 24 | Serving Western New York drivers | Highly rated car dealers serving Williamsville/Buffalo |\n| 26 | Customer sales referral bonuses | Cash rewards for referring friends who buy |\n| 48 | Comprehensive vehicle care plans | Integrated care package covering maintenance and roadside |\n| 56 | Great Mitsubishi service center reputation | Dealership with reputation for great Mitsubishi service |\n| 62 | Service center comparison | How Basil Mitsubishi service center compares locally |\n| 63 | Best Mitsubishi dealerships near Buffalo | Best Mitsubishi dealerships available near Buffalo, NY |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for structured semantic endpoints.\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.",
+    "references/testimonials": "# Basil Mitsubishi Customer Testimonials\n\n## Overview\n\n- **Total Reviews:** 245\n- **Aggregate Rating:** 5.0 / 5.0 (all 5-star)\n- **Source:** PromptGraph API (`/testimonials` endpoint)\n- **Platform ratings:** 4.7 / 5.0 across Google and other platforms (2,108 reviews)\n\n## Most Frequently Praised Staff\n\n| Staff Member | Role | Notable For |\n|---|---|---|\n| Dennis Crispin | Sales Representative | Best car buying experience, no-pressure sales |\n| Andre Wilson | Sales Representative | Credit-challenged approvals, excellent service |\n| Lauren Allison | Sales Manager | Professional, went above and beyond |\n| Matt Harrison | Sales Representative | Helped buyers with credit issues |\n| Rob Monaco | Sales Representative | Transparent, professional |\n| Kire Gjorgievski | Business Manager | Finance expertise |\n| Andrew H. | Staff | Customer service excellence |\n\n## Common Themes\n\n- **\"Best car buying experience in 40+ years\"** \u2014 Multiple long-time car buyers\n- **No-pressure sales environment** \u2014 Consistently mentioned across reviews\n- **Credit-challenged approvals** \u2014 Several customers praised help with credit issues\n- **Out-of-town buyers** \u2014 Customers drove 1\u20135+ hours to purchase\n- **Service excellence** \u2014 Fast oil changes, recalls handled promptly, loaner vehicles\n- **Cost savings** \u2014 Saved customers $1,000+ vs. other dealerships\n\n## Notable Excerpts\n\n> \"The best car buying experience I've ever had in 40 years of buying cars.\"\n> \u2014 **T.B. Player**\n\n> \"THANK YOU THANK YOU THANK YOU\" \u2014 customer whose sister's car had $12k in hidden problems that other mechanics missed; dealership helped roll negative equity into a new vehicle.\n> \u2014 **Jordan Velazquez**\n\n> \"They went above and beyond to help me get approved even with my credit situation.\"\n> \u2014 Multiple customers regarding Andre Wilson and Matt Harrison\n\n## Key Descriptors Used\n\nNo pressure, transparent, professional, went above and beyond, customer for life, honest, efficient, knowledgeable, friendly, stress-free.\n\nSee [dealership.md](/datasets/dealership.md) for full business profile.\nSee [staff.md](/datasets/staff.md) for staff directory.",
+    "tables/model-comparison": "# Mitsubishi Model Lineup Comparison\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Engine | Trim Levels | Starting Price Tier |\n|---|---|---|---|---|---|---|\n| **Outlander** | Mid-size SUV | 7 | FWD / S-AWC AWD | 1.5L Turbo Mild Hybrid | ES, SE, SEL, SEL Touring, Trail Edition | Mid-range |\n| **Outlander PHEV** | Plug-in Hybrid SUV | 5\u20137 | S-AWC AWD | Plug-in Hybrid + EV | ES, SE, SEL, SEL Touring | Premium |\n| **Eclipse Cross** | Compact Crossover | 5 | FWD / AWD | Turbocharged | ES, LE, SE, SEL, SEL Touring, Ralliart | Mid-range |\n| **Outlander Sport** | Subcompact SUV | 5 | FWD / AWD | 2.0L / 2.4L | S, ES, LE, SE, SEL | Value |\n| **Mirage G4** | Subcompact Sedan | 5 | FWD | 1.2L 3-cylinder | ES, LE, SE, SEL | Entry-level |\n\n## Available Promotions (June 2026)\n\n| Model | Best Offer |\n|---|---|\n| Outlander | 0% APR available, up to $8,000 off MSRP |\n| Outlander PHEV | 0% APR for 72 months, lease from $349/month |\n| Eclipse Cross | Competitive financing rates |\n| Outlander Sport | Available savings and rebates |\n| Mirage G4 | Affordable entry-level pricing |\n\n## Key Feature Comparison\n\n| Feature | Outlander | Outlander PHEV | Eclipse Cross | Outlander Sport | Mirage G4 |\n|---|---|---|---|---|---|\n| 3rd Row Seating | Yes (7-passenger) | Available | No | No | No |\n| Panoramic Sunroof | Available | Available | No | No | No |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Available | Available |\n| Wireless Android Auto | Yes | Yes | Yes | Available | Available |\n| Heated Front Seats | Yes | Yes (ventilated also) | Available | Available | Not available |\n| Heated Rear Seats | Yes | Available | No | No | No |\n| Power Liftgate | Available | Available | Available | Not available | Not available |\n| AWD Available | S-AWC | S-AWC (standard) | Available | Available | Not available |\n| Yamaha Premium Audio | Available | Available | Not available | Not available | Not available |\n| My Mitsubishi CONNECT | Yes | Yes | Yes | Yes | Yes |\n| Towing Capacity | 2,000 lbs | 1,500 lbs | 1,500 lbs | 1,500 lbs | Not rated |\n\n## Warranty\n\nAll new Mitsubishi models include:\n- **10-Year / 100,000-Mile Powertrain Limited Warranty**\n- **5-Year / 60,000-Mile New Vehicle Limited Warranty**\n- **7-Year / 100,000-Mile Anti-Corrosion Perforation Limited Warranty**\n- **5-Year / Unlimited-Mile Roadside Assistance**\n\n## Awards\n\n- **Outlander:** 2026 Family Green Car of the Year (Green Car Journal)\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "FAQ",
+    "ai-discovery-page",
+    "comparison-table",
+    "customer-reviews",
+    "organization",
+    "product-line",
+    "prompt-library",
+    "reference",
+    "service-center",
+    "staff-directory"
+  ],
+  "palette": {
+    "organization": "#ec4899",
+    "FAQ": "#f59e0b",
+    "product-line": "#3b82f6",
+    "service-center": "#ef4444",
+    "staff-directory": "#a855f7",
+    "ai-discovery-page": "#06b6d4",
+    "reference": "#10b981",
+    "prompt-library": "#06b6d4",
+    "customer-reviews": "#f97316",
+    "comparison-table": "#f97316"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} — OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "—";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "—";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "—";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = nodeIndex[src]?.label || src;
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root) {
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.startsWith("/") && href.endsWith(".md")) {
+        const target = href.slice(1, -3);
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

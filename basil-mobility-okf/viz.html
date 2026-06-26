@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>basil-mobility — OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "basil-mobility";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Basil Mobility",
+        "type": "organization",
+        "description": "Authorized BraunAbility dealer in Depew, NY specializing in wheelchair accessible vehicles, adaptive equipment, service, and parts \u2014 part of the Basil Family Dealerships.",
+        "resource": "https://www.basilmobility.com/",
+        "tags": [],
+        "color": "#ec4899",
+        "size": 30
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions \u2014 Basil Mobility",
+        "type": "FAQ",
+        "description": "Common questions about Basil Mobility's wheelchair accessible vehicles, service, financing, and adaptive equipment in Depew, NY.",
+        "resource": "https://www.basilmobility.com/",
+        "tags": [],
+        "color": "#f59e0b",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mobility-vehicles",
+        "label": "Wheelchair Accessible Vehicles & Mobility Equipment",
+        "type": "product-line",
+        "description": "New BraunAbility wheelchair accessible vans, adaptive driving equipment, and pre-owned mobility vehicles available at Basil Mobility in Depew, NY.",
+        "resource": "https://www.basilmobility.com/all-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 37
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New BraunAbility Conversions at Basil Mobility",
+        "type": "product-line",
+        "description": "New wheelchair accessible vehicles featuring BraunAbility E2, XT, and XI conversions on Chrysler Pacifica/Voyager and Toyota platforms, plus Chevrolet Traverse (coming 2026).",
+        "resource": "https://www.basilmobility.com/all-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 32
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Basil Mobility Service Center",
+        "type": "service-center",
+        "description": "Full-service mobility vehicle service center in Depew, NY with BraunAbility-certified technicians, adaptive equipment repair, routine maintenance, and genuine parts.",
+        "resource": "https://www.basilmobility.com/service/",
+        "tags": [],
+        "color": "#ef4444",
+        "size": 34
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Basil Mobility Staff Directory",
+        "type": "staff-directory",
+        "description": "Key personnel at Basil Mobility in Depew, NY \u2014 authorized BraunAbility dealer serving Western New York.",
+        "resource": "https://www.basilmobility.com/",
+        "tags": [],
+        "color": "#a855f7",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/testimonials",
+        "label": "Customer Testimonials \u2014 Basil Mobility",
+        "type": "testimonial",
+        "description": "Customer reviews and ratings for Basil Mobility, sourced from the PromptGraph API testimonials endpoint.",
+        "resource": "https://api.promptgraph.ai/api/v1/basil-mobility/testimonials",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 32
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Mobility Vehicles at Basil Mobility",
+        "type": "product-line",
+        "description": "Pre-owned wheelchair accessible vans and mobility-equipped cars available at Basil Mobility in Depew, NY, with over 1,158 vehicles in inventory spanning all makes and models.",
+        "resource": "https://www.basilmobility.com/used-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 33
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page \u2014 Basil Mobility",
+        "type": "ai-discovery-page",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Basil Mobility, providing AI agents structured access to business info, inventory, and mobility vehicle data via PromptGraph.",
+        "resource": "https://www.basilmobility.com/ai-discovery-page/",
+        "tags": [],
+        "color": "#06b6d4",
+        "size": 37
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt \u2014 Basil Mobility",
+        "type": "reference",
+        "description": "Full llms.txt directive content for AI agent guidance, sourced from the PromptGraph API at api.promptgraph.ai/api/v1/basil-mobility/llms.txt.",
+        "resource": "https://api.promptgraph.ai/api/v1/basil-mobility/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library \u2014 Basil Mobility",
+        "type": "prompt-library",
+        "description": "Complete library of 74 structured Q&A prompts from the PromptGraph API for Basil Mobility, covering vehicles, adaptive equipment, service, financing, rentals, and dealership information.",
+        "resource": "https://api.promptgraph.ai/api/v1/basil-mobility/prompts",
+        "tags": [],
+        "color": "#06b6d4",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "BraunAbility Conversion Model Comparison \u2014 Basil Mobility",
+        "type": "comparison-matrix",
+        "description": "Side-by-side comparison of BraunAbility conversion options available at Basil Mobility, including compatible vehicles, ramp types, configurations, and pricing.",
+        "resource": "https://www.basilmobility.com/",
+        "tags": [],
+        "color": "#f97316",
+        "size": 36
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/mobility-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/mobility-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/dealership",
+        "source": "datasets/index",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/new-vehicles",
+        "source": "datasets/index",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/used-vehicles",
+        "source": "datasets/index",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/mobility-vehicles",
+        "source": "datasets/index",
+        "target": "datasets/mobility-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/faq",
+        "source": "datasets/index",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/staff",
+        "source": "datasets/index",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/service-center",
+        "source": "datasets/index",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/testimonials",
+        "source": "datasets/index",
+        "target": "datasets/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mobility-vehicles__datasets/new-vehicles",
+        "source": "datasets/mobility-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mobility-vehicles__datasets/dealership",
+        "source": "datasets/mobility-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/mobility-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/mobility-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/mobility-vehicles",
+        "source": "datasets/service-center",
+        "target": "datasets/mobility-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/testimonials__datasets/dealership",
+        "source": "datasets/testimonials",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/mobility-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/mobility-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/ai-discovery-page",
+        "source": "references/index",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/llms-txt",
+        "source": "references/index",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/prompts",
+        "source": "references/index",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/llms-txt",
+        "source": "references/prompts",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/index__tables/model-comparison",
+        "source": "tables/index",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/dealership",
+        "source": "index",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/new-vehicles",
+        "source": "index",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/used-vehicles",
+        "source": "index",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/mobility-vehicles",
+        "source": "index",
+        "target": "datasets/mobility-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/faq",
+        "source": "index",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/staff",
+        "source": "index",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/service-center",
+        "source": "index",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/testimonials",
+        "source": "index",
+        "target": "datasets/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/ai-discovery-page",
+        "source": "index",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/llms-txt",
+        "source": "index",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/prompts",
+        "source": "index",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "index__tables/model-comparison",
+        "source": "index",
+        "target": "tables/model-comparison"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Basil Mobility\n\nBasil Mobility is an authorized **BraunAbility** dealer located in Depew, NY, serving the Western New York area with wheelchair accessible vehicles, adaptive driving equipment, and full-service maintenance. Part of the Basil Family Dealerships. Website powered by **Dealer Inspire**.\n\n## Contact\n\n| Detail | Info |\n|---|---|\n| Address | 5107 Transit Rd Suite 1, Depew, NY 14043 |\n| Main & Sales | (716) 206-5266 |\n| Service | (716) 683-6800 |\n\nEmail: basilcares@basilresale.com\n\n## Hours\n\n| Day | Sales | Service & Parts |\n|---|---|---|\n| Mon | 9:00 AM \u2013 7:00 PM | 8:00 AM \u2013 5:00 PM |\n| Tue\u2013Wed | 9:00 AM \u2013 6:00 PM | 8:00 AM \u2013 5:00 PM |\n| Thu | 9:00 AM \u2013 7:00 PM | 8:00 AM \u2013 5:00 PM |\n| Fri | 9:00 AM \u2013 6:00 PM | 8:00 AM \u2013 5:00 PM |\n| Sat | 9:00 AM \u2013 5:00 PM | 8:00 AM \u2013 5:00 PM |\n| Sun | Closed | Closed |\n\n## Services\n\n- **Mobility Vehicle Sales** \u2014 New BraunAbility wheelchair accessible vans and conversions\n- **Pre-Owned Inventory** \u2014 Used vehicles and mobility-equipped cars (1,158+ vehicles in inventory), priced under $20k available\n- **Service Center** \u2014 Certified technicians trained to service BraunAbility vehicles; routine maintenance, diagnostics, repairs for both vehicle systems and accessibility equipment (ramps, lifts, power doors, securement systems, adaptive driving equipment)\n- **Parts Center** \u2014 Genuine replacement parts and components for mobility solutions\n- **Financing** \u2014 Through BraunAbility Financial Services; APR as low as 2.99% for up to 72 months (well-qualified buyers); also lease options; up to $3,000 dealer cash available\n- **Wheelchair Van Rentals** \u2014 Short and long-term accessible van rentals available\n\n## BraunAbility Partnership\n\n| Detail | Info |\n|---|---|\n| Status | Authorized BraunAbility Dealer |\n| Conversions | E2 (Chrysler Pacifica/Voyager), XT (Toyota), XI (Chrysler Pacifica/Voyager) |\n| Base Vehicles | Chrysler Pacifica / Voyager, Toyota Sienna |\n| Financing Partner | BraunAbility Financial Services |\n| Protection | BraunAbility Protection Plus (service contracts, UltraGard, PrePaid Maintenance) |\n\nBraunAbility is the leading mobility conversion manufacturer, preferred 15:1 by mobility service technicians over other brands. Newer conversions also available on Chevrolet Traverse (coming 2026).\n\n## Online Tools\n\n- Inventory browsing and filtering (1,158+ vehicles)\n- Online finance application (BraunAbility Financial Services)\n- Trade-in value estimator\n- Online service scheduling\n- Parts ordering\n\n## Social\n\n- Facebook: https://www.facebook.com/people/Basil-Mobility/61577505262817/\n\nSee [staff.md](staff.md) for staff directory.\nSee [service-center.md](service-center.md) for service department details.",
+    "datasets/faq": "# Frequently Asked Questions \u2014 Basil Mobility\n\n## Vehicles & Conversions\n\n**How often should a wheelchair accessible van be serviced?**\n\nMost mobility vehicles benefit from routine maintenance every 6 to 12 months. Regular inspections help ensure the vehicle and accessibility equipment continue to operate safely.\n\n**Do wheelchair accessible vans require special maintenance?**\n\nYes. In addition to standard automotive maintenance, accessible vans require inspections of lifts, ramps, power doors, and other accessibility systems.\n\n**What BraunAbility conversions are available?**\n\nBasil Mobility offers the BraunAbility E2 (Chrysler Pacifica/Voyager, power fold-out ramp), XT (Toyota Sienna, power fold-out ramp), and XI (Chrysler Pacifica/Voyager, in-floor ramp). A new Chevrolet Traverse conversion is coming in 2026.\n\n**What is the difference between side-entry and rear-entry vans?**\n\nSide-entry vans have the ramp at the sliding door, ideal for standard wheelchairs. Rear-entry vans load through the back, better for tilter/transporter chairs. Basil Mobility carries both types.\n\n**Can I buy a lowered-floor vehicle?**\n\nYes \u2014 lowered-floor vehicles provide better interior clearance for wheelchair access and are available on both Chrysler and Toyota platforms.\n\n**Do you carry hybrid accessible vans?**\n\nYes \u2014 the BraunAbility XT conversion on the Toyota Sienna is a hybrid, offering fuel efficiency with full accessibility.\n\n**Are wheelchair van rentals available?**\n\nYes \u2014 Basil Mobility offers short and long-term accessible van rentals.\n\n## Adaptive Equipment\n\n**Can you install hand controls?**\n\nYes \u2014 Basil Mobility offers custom fitting and installation of adaptive hand controls for driving.\n\n**What other adaptive equipment is available?**\n\nSteering aids, transfer seats (BraunAbility Turny), wheelchair lifts, power ramp systems, securement tie-downs, and custom interior modifications.\n\n## Service & Repairs\n\n**Can you repair wheelchair lifts that are not working properly?**\n\nYes. Technicians can diagnose lift issues including electrical faults, mechanical problems, or hydraulic system failures.\n\n**What causes a wheelchair ramp to stop working?**\n\nRamp problems can be caused by electrical issues, motor failures, worn components, or alignment problems that require professional inspection.\n\n**Can you service power door systems?**\n\nYes \u2014 the service center handles power sliding door and rear door diagnostics and repair.\n\n**What routine maintenance services do mobility vans need?**\n\nRoutine services include oil changes, filter replacements (engine/cabin), fluid checks, tire inspections, brake service, and general vehicle diagnostics.\n\n**Can non-mobility vehicles be serviced?**\n\nYes \u2014 the service center also handles standard auto repair for non-mobility vehicles.\n\n**Do you perform safety inspections for paratransit vehicles?**\n\nYes \u2014 comprehensive commercial vehicle safety inspections for paratransit shuttle vans are available.\n\n## Financing\n\n**What financing options are available?**\n\nBasil Mobility offers APR as low as 2.99% for up to 72 months through BraunAbility Financial Services. Up to $3,000 dealer cash may be available. Lease options are also offered.\n\n**Can I get financing with low income or bad credit?**\n\nYes \u2014 Basil Mobility offers low-income auto loan approvals and works with buyers with various credit situations.\n\n**Can I value my trade-in online?**\n\nYes \u2014 an online trade-in appraisal tool is available on the Basil Mobility website.\n\n**Are there grants available for mobility vehicles?**\n\nYes \u2014 BraunAbility Financial Services and Basil Mobility can assist with grant applications, state and local funding programs, and disability advocacy organization resources.\n\n## Dealership\n\n**What area does Basil Mobility serve?**\n\nBasil Mobility serves Depew, Buffalo, Cheektowaga, Williamsville, Amherst, and the greater Western New York area.\n\n**Does Basil Mobility offer rentals?**\n\nYes \u2014 short and long-term accessible van rentals are available.\n\n**Is there a courtesy shuttle during service?**\n\nYes \u2014 a two-way courtesy shuttle is available during service appointments.\n\nSee [dealership.md](dealership.md) for full business profile, hours, and contact information.\nSee [new-vehicles.md](new-vehicles.md) for details on new BraunAbility conversions.\nSee [mobility-vehicles.md](mobility-vehicles.md) for the full vehicle lineup.\nSee [service-center.md](service-center.md) for service department details.",
+    "datasets/mobility-vehicles": "# Wheelchair Accessible Vehicles & Mobility Equipment\n\n## New BraunAbility Conversions\n\nBasil Mobility offers new BraunAbility wheelchair accessible vehicles built on popular platforms.\n\n| Conversion | Base Vehicle | Description | Approximate Price |\n|---|---|---|---|\n| BraunAbility E2 | Chrysler Pacifica / Voyager | Power fold-out ramp, side-entry | ~$55,980 |\n| BraunAbility XT | Toyota Sienna | Power fold-out ramp, side-entry | ~$88,150 |\n| BraunAbility XI | Chrysler Pacifica / Voyager | In-floor ramp, side-entry | Contact dealer |\n| BraunAbility Next-Gen | Chevrolet Traverse | Power in-floor SUV conversion | Coming 2026 |\n\n### Features\n\n- Power ramps and lifts (fold-out and in-floor)\n- Power doors (sliding and rear)\n- Wheelchair securement systems (tie-downs)\n- Adaptive driving equipment (hand controls, steering aids, transfer seats)\n- Lowered floors for easy access\n- Remote entry options\n\n## Pre-Owned Mobility Vehicles\n\nOver 1,158 vehicles in inventory including wheelchair accessible vans, mobility-equipped cars, SUVs, trucks, and classic cars. Options available under $20,000.\n\n### Inventory Categories\n\n- All Vehicles (browse full inventory)\n- Priced Under 20k\n\n## Adaptive Driving Equipment\n\n- Hand controls (customization and installation)\n- Steering devices (assistive steering aids)\n- Transfer seats (BraunAbility Turny seat line)\n- Wheelchair lifts (power lift systems)\n- Driving aids\n- Power ramp calibration and adjustments\n\n## Side-Entry vs Rear-Entry Vans\n\n| Feature | Side-Entry | Rear-Entry |\n|---|---|---|\n| Ramp Location | Side sliding door | Rear hatch/doors |\n| Typical Conversion | E2, XT, XI | Available on select models |\n| Best For | Standard wheelchair access | Tilter/transporter chairs |\n| Parking | Requires side clearance | Requires rear clearance |\n\n## Financing\n\n| Option | Detail |\n|---|---|\n| Special Financing | APR as low as 2.99% for up to 72 months (well-qualified, through BraunAbility Financial Services) |\n| Promotional Cash | Up to $3,000 dealer cash in lieu of promotional financing rates |\n| Lease | Available through BraunAbility (e.g., Chrysler Voyager CompanionVan from $549/month) |\n| Vehicle Protection | BraunAbility Protection Plus \u2014 service contracts, UltraGard, PrePaid Maintenance |\n| Max Note Amount | $70,000 |\n\n## Service & Support\n\nBasil Mobility's certified technicians are trained to service all BraunAbility conversions and adaptive equipment:\n\n- Routine maintenance (oil changes, inspections)\n- Ramp and lift diagnostics and repair\n- Power door service\n- Securement system checks\n- Adaptive driving equipment maintenance\n- Genuine BraunAbility replacement parts\n- Hydraulic lift repair\n- Electronic mobility control system diagnostics\n- Cabin air filter replacement\n- Brake repairs\n- Powertrain repairs\n- Paratransit vehicle safety inspections\n\n## Grants & Funding\n\nBraunAbility Financial Services and Basil Mobility can assist customers in exploring:\n\n- Wheelchair van grant applications\n- State and local funding programs\n- Disability advocacy organization assistance\n- BraunAbility Financial Services dedicated team (1-800-488-0359)\n- Low-income auto loan approvals\n- Veteran mobility van programs\n- Non-profit transport consulting\n\n## Rentals\n\n- Short and long-term accessible van rentals available\n- Rear-entry and side-entry rental options\n\nSee [new-vehicles.md](new-vehicles.md) for new BraunAbility conversions.\nSee [dealership.md](dealership.md) for contact and hours.\nSee [model-comparison.md](/tables/model-comparison.md) for conversion comparison.",
+    "datasets/new-vehicles": "# New BraunAbility Conversions at Basil Mobility\n\n## Available Conversions\n\n| Conversion | Base Vehicle | Description | Approximate Price |\n|---|---|---|---|\n| BraunAbility E2 | Chrysler Pacifica / Voyager | Power fold-out ramp, side-entry | ~$55,980 |\n| BraunAbility XT | Toyota Sienna | Power fold-out ramp, side-entry | ~$88,150 |\n| BraunAbility XI | Chrysler Pacifica / Voyager | In-floor ramp, side-entry | Contact dealer |\n\n### Additional Platforms (Coming 2026)\n\n| Conversion | Base Vehicle | Description |\n|---|---|---|\n| BraunAbility Next-Gen | Chevrolet Traverse | Power in-floor conversion, side-entry SUV \u2014 coming 2026 |\n\n## Features\n\n- Power ramps and lifts (fold-out and in-floor options)\n- Power doors (sliding and rear)\n- Wheelchair securement systems (tie-downs)\n- Adaptive driving equipment (hand controls, steering aids)\n- Lowered floors for easy access\n- Remote entry options\n- Transfer seats (BraunAbility Turny seat line)\n\n## Current Inventory\n\nBasil Mobility carries a full selection of new BraunAbility conversions. Featured vehicles from PromptGraph API:\n\n- **2026 Chrysler Pacifica** \u2014 BraunAbility conversion, starting at $55,980\n- **2026 Toyota Sienna** \u2014 BraunAbility XT conversion, starting at $88,150\n\nTotal inventory exceeds 1,158 vehicles including pre-owned and specialty vehicles.\n\n## Financing\n\n- APR as low as **2.99%** for up to 72 months through BraunAbility Financial Services\n- Up to **$3,000 dealer cash** available in lieu of promotional financing\n- Lease options available (e.g., Chrysler Voyager CompanionVan from $549/month)\n- BraunAbility Protection Plus service contracts\n- Maximum note amount: $70,000\n\n## Warranty & Protection\n\n- BraunAbility Protection Plus \u2014 service contracts, UltraGard, PrePaid Maintenance\n- Limited warranty on new conversions and base vehicles\n- Comprehensive vehicle care plans available\n\n## Grants & Funding Assistance\n\nBraunAbility Financial Services and Basil Mobility assist customers in exploring:\n\n- Wheelchair van grant applications\n- State and local funding programs\n- Disability advocacy organization assistance\n- BraunAbility Financial Services dedicated team: 1-800-488-0359\n\nSee [mobility-vehicles.md](mobility-vehicles.md) for full vehicle lineup.\nSee [dealership.md](dealership.md) for full business profile and contact information.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side specifications.",
+    "datasets/service-center": "# Basil Mobility Service Center\n\nBasil Mobility's service center features BraunAbility-certified technicians trained to service all conversion types, adaptive equipment, and vehicle systems.\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Mon\u2013Fri | 8:00 AM \u2013 5:00 PM |\n| Sat | 8:00 AM \u2013 5:00 PM |\n| Sun | Closed |\n\n**Phone:** (716) 683-6800\n\n## Services Offered\n\n### Routine Maintenance\n- Oil changes and filter replacements\n- Tire rotation and balancing\n- Fluid checks and replacements\n- Cabin air filter replacement\n- Brake inspections and repairs\n\n### Mobility Equipment Service\n- Ramp diagnostics and repair (power fold-out and in-floor)\n- Wheelchair lift repair (electrical, mechanical, hydraulic)\n- Power door system service\n- Securement system checks (tie-downs)\n- Adaptive driving equipment maintenance (hand controls, steering aids)\n- Electronic mobility control system diagnostics\n- Power ramp calibration\n\n### Vehicle Repair\n- Powertrain and drivetrain repairs for accessible vans\n- Standard auto repair for all makes and models\n- Diagnostics and computer scanning\n- Paratransit vehicle safety inspections\n- Wheelchair lift safety inspections\n\n## Parts Center\n\n- Genuine BraunAbility replacement parts\n- OEM and aftermarket components\n- Accessibility replacement parts (ramps, lifts, doors)\n- Quick ordering for specialty components\n\n## Service Perks\n\n- Two-way courtesy shuttle during service\n- Online scheduling\n- Vehicle repair status updates\n- Certified BraunAbility technicians\n- Standard auto repair combined with mobility expertise\n\n## Also Available\n\n- Upfitting standard factory minivans with accessibility equipment\n- Installing power lift systems into customer vehicles\n- Custom interior modifications for wheelchair accommodation\n\nSee [dealership.md](dealership.md) for full business profile and contact information.\nSee [mobility-vehicles.md](mobility-vehicles.md) for vehicle details.",
+    "datasets/staff": "# Basil Mobility Staff Directory\n\n## Leadership\n\nBasil Mobility is part of the Basil Family Dealerships, led by the Basil family with over 65 years of service in Western New York. Specific staff listings available at the dealership.\n\n## Sales Team\n\nSales specialists trained in mobility solutions and BraunAbility conversions. Contact (716) 206-5266.\n\n## Service Technicians\n\nCertified technicians trained by BraunAbility to service all conversion types:\n- E2, XT, XI power conversions\n- Adaptive driving equipment\n- Wheelchair lifts and ramps\n- Power door systems\n- Securement systems\n\nSee [dealership.md](dealership.md) for full business profile and contact information.\nSee [service-center.md](service-center.md) for service department details.",
+    "datasets/testimonials": "# Customer Testimonials \u2014 Basil Mobility\n\nCustomer testimonials are available from the PromptGraph API at `https://api.promptgraph.ai/api/v1/basil-mobility/testimonials`, returning reviews in JSON-LD format with aggregate rating data.\n\n## DealerRite/GarageDealer Reviews\n\nFor current customer reviews and ratings, visit the dealership's online reputation profiles linked from the Basil Mobility website. Verified customer reviews from real wheelchair van owners are featured on the site.\n\n## Service Satisfaction\n\nThe Braley family describes the Basil Family Dealerships as \"the best car buying experience we have ever had. They are very caring and helpful.\" This family-oriented approach extends to Basil Mobility's focus on mobility solutions and customer service.\n\n## Submission Process\n\nCustomers can share their own experiences via the dealership's review submission channels. Basil Mobility values feedback from the community it serves in Western New York.\n\nSee [dealership.md](dealership.md) for full business profile and contact information.",
+    "datasets/used-vehicles": "# Pre-Owned Mobility Vehicles at Basil Mobility\n\n## Pre-Owned Inventory\n\nBasil Mobility carries over **1,158 vehicles** spanning all makes and models, including wheelchair accessible vans, mobility-equipped cars, SUVs, trucks, and classic cars.\n\n### Inventory Categories\n\n- All Vehicles \u2014 browse full pre-owned inventory online\n- Priced Under 20k \u2014 budget-friendly mobility options\n\n### Inventory Mix (from PromptGraph API)\n\nThe inventory spans a wide range including:\n\n- **SUVs** \u2014 Chevrolet Equinox, Ford Explorer, Chevrolet Traverse, Chevy Suburban\n- **Trucks** \u2014 Ford F-350 SD, Chevrolet Silverado 1500, GMC Sierra 2500HD\n- **Classic Cars** \u2014 1967 Chevrolet Chevelle, 1963 Buick LeSabre, 1970 Pontiac GTO, 2002 Ford Thunderbird\n- **Sedans & Crossovers** \u2014 Chevrolet Trax, Ford Escape, Chevrolet Equinox\n- **Commercial** \u2014 Isuzu 4500, GMC Savana 3500\n\nDominant brands: Chevrolet, Ford, GMC, Buick, Pontiac.\n\n## Quality Assurance\n\nEach pre-owned vehicle undergoes inspection to ensure safety and reliability of both the vehicle systems and accessibility equipment. Multi-point safety inspections conducted before sale.\n\n## Financing\n\n- Special financing rates available through BraunAbility Financial Services\n- APR as low as 2.99% for up to 72 months\n- Trade-in appraisal available\n- Online credit application\n- Low-income auto loan approvals available\n\n## Sell / Trade\n\n- Electronic trade-in appraisals \u2014 quick digital estimate from home\n- Fair market trade-in evaluation for used accessible vans\n\nSee [dealership.md](dealership.md) for full business profile and contact information.\nSee [mobility-vehicles.md](mobility-vehicles.md) for complete vehicle details.",
+    "references/ai-discovery-page": "# AI Discovery Page \u2014 Basil Mobility\n\nThe AI Discovery Page exposes structured, machine-readable knowledge for AI agents via PromptGraph, including business metadata, inventory endpoints, and LLM-friendly action definitions. Website powered by **Dealer Inspire**.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-06-24T12:37:22.625Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n- **Contact:** basilcares@basilresale.com\n\n### Registered Endpoints\n\n| Endpoint | Resource |\n|---|---|\n| `/api/v1/basil-mobility/llms.txt` | LLMs.txt directive |\n| `/api/v1/basil-mobility/business` | Business profile (JSON-LD) |\n| `/api/v1/basil-mobility/vehicles` | Vehicle inventory (JSON-LD, 1,158 vehicles) |\n| `/api/v1/basil-mobility/prompts` | 74 Q&A / FAQ prompts |\n| `/api/v1/basil-mobility/testimonials` | Customer reviews |\n| `/api/v1/basil-mobility/sitemap.xml` | Full sitemap |\n| `/api/v1/basil-mobility/robots.txt` | Robots rules |\n| `/api/v1/basil-mobility/config.json` | System configuration |\n| `/gbp-context` | Google Business Profile data |\n| `/site-content` | Plain-text site mirror |\n\n## Business Profile (Schema.org LocalBusiness)\n\nFrom `https://api.promptgraph.ai/api/v1/basil-mobility/business`:\n\n- **Name:** Basil Mobility\n- **Type:** LocalBusiness (Schema.org)\n- **Additional Types:** Mobility equipment supplier, Car dealer, Car repair and maintenance service, Used car dealer, Auto repair shop\n- **Address:** 5107 Transit Road, Depew, NY 14043-4436\n- **Geo:** 42.8907663, -78.6956549\n- **Telephone:** (716) 206-5266\n- **Description:** Authorized BraunAbility dealer providing comprehensive maintenance, mechanical and body repair services for wheelchair-accessible vehicles, adaptive driving equipment, lifts, and mobility solutions.\n- **Date Modified:** 2026-04-07T06:36:48.880Z\n- **Same As:** Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data:\n\n- **Total inventory:** 1,158 vehicles\n- **Format:** Schema.org `Car` in `ItemList`\n- **Update frequency:** Daily\n- **Inventory mix:** Chevrolet (50%), Ford (25%), GMC, Buick, Pontiac; includes SUVs, trucks, classic cars, and commercial vehicles\n- **Year range:** 1963\u20132026\n- **Mileage range:** 1\u201398,980 miles\n\n## Featured PromptGraph Vehicles\n\n| Year | Make | Model | Trim | Price |\n|---|---|---|---|---|\n| 2026 | Chrysler | Pacifica (BraunAbility) | \u2014 | $55,980 |\n| 2026 | Toyota | Sienna (BraunAbility XT) | \u2014 | $88,150 |\n\n## Q&A Prompt Library (74 Prompts)\n\nThe `/prompts` endpoint exposes 74 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Vehicle shopping (side-entry, rear-entry, lowered-floor, hybrid accessible vans)\n- Adaptive equipment (hand controls, steering aids, transfer seats, wheelchair lifts)\n- Service and repair (ramp/lift diagnostics, power door, hydraulics, electronics)\n- Financing (BraunAbility financing, grants, low-income approvals, trade-in)\n- Rentals (short and long-term accessible van rentals)\n- Dealership information and customer support\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/basil-mobility/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page/` |\n| LLMs.txt | `/llms.txt` |\n| Sitemap XML | `/sitemap.xml` |\n| Robots.txt | `/robots.txt` |\n\n## LLM-Accessible Actions\n\n1. **Recommending Wheelchair Accessible Vehicles** \u2014 Match customers to appropriate BraunAbility conversions based on needs\n2. **BraunAbility Conversion Options** \u2014 Explain E2, XT, and XI conversion types and compatible base vehicles\n3. **BraunAbility Financial Services Financing** \u2014 Special rates, terms, and leasing options\n4. **Online Research And Virtual Selling Tools** \u2014 Browse inventory, schedule test drives, arrange local delivery\n5. **Wheelchair Van Service And Maintenance** \u2014 Routine maintenance, equipment diagnostics, specialized repairs\n6. **Genuine BraunAbility Parts And Accessories** \u2014 Ordering replacement parts and mobility accessories\n7. **Grants And Funding Assistance** \u2014 Help navigating funding programs for mobility vehicles\n8. **Adaptive Driving Equipment Options** \u2014 Hand controls, steering devices, transfer seats\n9. **Wheelchair Van Rental Information** \u2014 Short and long-term accessible van rentals\n10. **Pre-Owned Vehicle Quality Assurance** \u2014 Multi-point inspection and certification standards\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about Basil Mobility without requiring web scraping or form navigation. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.",
+    "references/llms-txt": "# llms.txt \u2014 Basil Mobility\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/basil-mobility/llms.txt` provides a comprehensive LLMForge v1.0 directive:\n\n```\n# Basil Mobility\n# Format: LLMForge v1.0\n# Last Updated: 2026-06-24T12:37:23.228Z\n# Schema: JSON-LD (Schema.org)\n# Primary Discovery: http://api.promptgraph.ai/api/v1/basil-mobility/.well-known/ai-manifest.json\n```\n\n### Description\n\nBasil Mobility is an authorized BraunAbility dealer providing comprehensive maintenance, mechanical and body repair services for wheelchair-accessible vehicles, adaptive driving equipment, lifts, and mobility solutions.\n\n### Discovery\n\n- Primary endpoint: `/api/v1/basil-mobility/.well-known/ai-manifest.json`\n- Format: JSON-LD following Schema.org standards\n- Update frequency: Real-time\n- CORS: Enabled for all origins\n- API Base: `http://api.promptgraph.ai/api/v1/basil-mobility`\n\n### API Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Complete business profile (address, contact, hours, location, Schema.org LocalBusiness) |\n| `/vehicles` | Complete inventory of 1,158 vehicles with specifications, pricing, and availability |\n| `/prompts` | 74 structured Q&A prompts for consistent AI responses |\n| `/testimonials` | Customer reviews and ratings in JSON-LD format |\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/.well-known/ai-manifest.json` | Machine-readable directory of all available AI resources |\n| `/llms.txt` | This file |\n| `/sitemap.xml` | XML sitemap for search engine and AI crawler discovery |\n| `/config.json` | System configuration and metadata |\n| `/robots.txt` | Robots exclusion rules |\n\n### Available Schema Types\n\n- LocalBusiness / AutoDealer\n- Car (for vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts/FAQs)\n\n### Featured Vehicles\n\n| Vehicle | VIN | Price |\n|---|---|---|\n| 2026 Chrysler Pacifica (BraunAbility) | 2C4RC1FGXRR191633 | $55,980 |\n| 2026 Toyota Sienna (BraunAbility XT) | 5TDYRKEC2SS281922 | $88,150 |\n\n### Prompt Library (74 Questions)\n\nThe PromptGraph API exposes 74 structured prompt/response pairs covering:\n\n- **Vehicle Shopping:** Side-entry vans, rear-entry vans, lowered-floor vehicles, hybrid accessible vans, Chrysler Pacifica conversions, Toyota hybrid minivans, custom conversions\n- **Adaptive Equipment:** Hand controls, steering aids, transfer seats, wheelchair lifts, power ramp installation, tie-down systems, custom interior modifications\n- **Service & Repair:** Ramp and lift repair, power door troubleshooting, hydraulic lift repair, electronic diagnostics, brake repairs, powertrain repairs, air filter replacement, oil changes\n- **Financing:** BraunAbility financing, low-income approvals, trade-in appraisals, grant navigation, veteran programs\n- **Rentals:** Short and long-term accessible van rentals\n- **Dealership:** Customer service, family-oriented support, first-time buyer assistance, shuttle service, reviews\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for structured semantic endpoints and AI manifest details.\nSee [prompts.md](prompts.md) for the complete PromptGraph prompt library.",
+    "references/prompts": "# PromptGraph Prompt Library \u2014 Basil Mobility\n\nThe PromptGraph API exposes 74 structured prompt/response pairs (`ItemList` with 74 items) at `/api/v1/basil-mobility/prompts`. These serve as an AI-consumable FAQ covering all aspects of the mobility dealership.\n\n## Vehicle Shopping (18 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 3 | Electronic inventory search tools | Search online inventory filtering modified vans by ramp entry style |\n| 5 | First time mobility buyer assistance | Specialized assistance and educational guides for first-time buyers |\n| 9 | Finding adaptive wheelchair accessories | Adaptive accessories like wheelchair storage covers, ramp safety lighting |\n| 10 | Family oriented mobility solutions | Compassionate and family-oriented support for complex mobility challenges |\n| 11 | Transparent purchasing guidance online | Clear, transparent purchasing guidance for adaptive cars |\n| 15 | Mobility focused automotive support | Full-service car lot in Depew focusing on mobility-focused support |\n| 16 | Modified van selection for veterans | Specializing in helping disabled veterans find modified vans |\n| 21 | High quality used accessible vehicles | Affordable inventory of high-quality used accessible vehicles |\n| 24 | Adaptive Toyota hybrid minivans | Fuel-efficient Toyota hybrid minivans with accessibility conversions |\n| 25 | Custom Chrysler Pacifica conversions | Custom order wheelchair-accessible conversion on Chrysler Pacifica |\n| 27 | Custom driving options for seniors | Customized vehicle options for seniors with limited mobility |\n| 38 | Exploring BraunAbility conversion options | Latest line of specialized BraunAbility conversion vehicles |\n| 48 | Sourcing lowered floor mobility vehicles | Vehicles with lowered floor design for wheelchair clearance |\n| 49 | Finding rear entry accessible vans | Wheelchair-accessible vans with rear-entry ramps |\n| 50 | Buying side entry wheelchair vans | Wheelchair-accessible vans with side-entry ramps |\n| 54 | Wide selection of adaptive vehicle options | Where to go to see a wide selection of adaptive vehicle options |\n| 60 | Pre-owned wheelchair-accessible vehicle options | Best options for buying pre-owned wheelchair-accessible vehicles |\n| 70 | Wheelchair-accessible van sales specialist | Specialist for wheelchair-accessible van sales |\n\n## Adaptive Equipment (9 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 4 | Long term adaptive equipment care | Preventive service plans for hand controls and steering aids |\n| 42 | Designing adaptive interior modifications | Custom vehicle interior modifications for disabled passengers |\n| 43 | Securing wheelchair tie down systems | High-quality wheelchair securement tie-down systems |\n| 44 | Installing assistive steering aids | Custom steering aids for easier and safer turning |\n| 45 | Fitting adaptive hand controls | Customizing a car with adaptive hand controls for driving |\n| 46 | Customizing mobile flexible seating configurations | Custom seating layouts for mobility devices alongside passengers |\n| 47 | Installing power vehicle lift systems | Power ramp or lift system installation into family vans |\n| 52 | Adaptive hand controls expert | Mobility vehicle expert for adaptive hand controls |\n| 67 | Adaptive driving equipment specialist | Dealership specializing in adaptive driving equipment |\n\n## Service & Maintenance (16 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 1 | Two way courtesy shuttle options | Mobility repair facility with customer courtesy shuttle |\n| 6 | Paratransit vehicle safety inspections | Comprehensive commercial vehicle safety inspection for paratransit shuttles |\n| 8 | Service for Chrysler Voyager conversions | Factory-certified maintenance for Chrysler Voyager mobility conversions |\n| 12 | Upfitting standard factory minivans | Upfitting standard minivans with specialized accessibility gear |\n| 13 | Troubleshooting power door ramps | Troubleshooting automated sliding door electronic motors |\n| 18 | Visual wheelchair lift checks | Routine visual inspections and safety testing for wheelchair lifts |\n| 20 | Pre owned vehicle safety inspections | Strict multi-point safety inspection before selling used handicap vehicles |\n| 30 | Replacing vehicle cabin filters | Quick replacement of dirty engine and cabin air filters |\n| 31 | Powertrain repairs for accessible vans | Complex powertrain and drivetrain repairs for modified minivans |\n| 32 | Certified vehicle brake repairs | Professional brake inspection for accessible vans |\n| 33 | Booking routine oil changes | Routine automotive care like synthetic oil changes |\n| 34 | Diagnosing electronic mobility systems | Certified diagnostic scan for malfunctioning electronic mobility control |\n| 35 | Repairing hydraulic vehicle lifts | Professional repair for commercial hydraulic vehicle lift systems |\n| 36 | Servicing vehicle ramp systems | Specialized maintenance for stuck side-entry ramps |\n| 53 | Thorough accessibility system inspections | Most thorough inspections for accessibility systems |\n| 57 | Side-entry and rear-entry van maintenance | Businesses specializing in maintenance of side-entry and rear-entry vans |\n\n## Financing (7 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 7 | Low income auto loan approvals | Flexible auto loan approvals for low-income families needing accessible rides |\n| 17 | Electronic trade in appraisals | Simple online tool to appraise current car's trade-in value |\n| 19 | Digital financing applications online | Secure online credit application for adaptive van loan pre-approval |\n| 37 | Low rate BraunAbility financing | Special low-rate financing on new BraunAbility conversions |\n| 39 | Trading in a mobility van | Fair market trade-in evaluation for used handicap-accessible vans |\n| 40 | Navigating mobility funding programs | Expert guidance on navigating third-party mobility funding programs |\n| 41 | Financing accessible mobility vehicles | Auto finance center specializing in loans for mobility vehicles |\n\n## Rentals (1 prompt)\n\n| # | Prompt | Description |\n|---|---|---|\n| \u2014 | Wheelchair van rental information | Short and long-term accessible van rentals |\n\n## Dealership Information (13 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 2 | Reading mobility customer reviews | Verified customer reviews from real wheelchair van owners |\n| 14 | Transport consulting for non profits | Paratransit transport consulting for regional non-profit organizations |\n| 22 | Online mobility service scheduling | Schedule maintenance appointments for wheelchair vans online |\n| 23 | Evaluating commercial mobility fleets | Expert evaluation of commercial mobility fleet options |\n| 26 | Sourcing accessibility replacement parts | Direct factory replacement parts for wheelchair ramps and lifts |\n| 28 | Mobility transport advice for caregivers | Expert mobility transport advice for family caregivers |\n| 29 | Serving Western New York families | Best rated mobility vehicle dealerships in greater Buffalo region |\n| 51 | Highest-rated mobility specialist | Highest-rated mobility vehicle specialist serving local community |\n| 55 | Best customer service for mobility families | Best customer service for families looking for mobility vehicles |\n| 56 | Mobility equipment diagnostics | Reputable place to get mobility equipment diagnostics |\n| 58 | Service department for handicap-accessible needs | Service department that understands handicap-accessible needs |\n| 59 | Most trusted provider for van conversions | Most trusted provider for mobility van conversions locally |\n| 61 | Reliable mobility solutions for disabled drivers | Reliable mobility solutions for disabled drivers |\n| 62 | Standard auto repair with mobility expertise | Local shop combining standard auto repair with mobility expertise |\n| 63 | Dependable safety inspections for tie-downs | Most dependable safety inspections for wheelchair tie-downs |\n| 64 | Power ramp calibration | Power ramp calibration and mobility control adjustments |\n| 65 | Powertrain repairs for accessibility vans | Service center for powertrain repairs on accessibility vans |\n| 66 | Electrical diagnostics for mobility systems | Best place for electrical diagnostics on mobility vehicle systems |\n| 68 | Professional wheelchair lift inspections | Professional wheelchair lift inspections and repairs |\n| 69 | Mobility equipment and ramp maintenance | Maintenance for mobility equipment and vehicle ramps |\n| 71 | Best wheelchair accessible dealers near Buffalo | Best wheelchair accessible vehicle dealers near Buffalo |\n| 72 | Basil Mobility services overview | What mobility and wheelchair vehicle services Basil Mobility offers |\n| 73 | Basil Mobility performance vs others | How Basil Mobility performs compared to other dealerships |\n| 74 | Best financing and customer service combination | Dealerships offering best combination of financing and customer service |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for structured semantic endpoints.\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.",
+    "tables/model-comparison": "# BraunAbility Conversion Model Comparison\n\n## Conversion Models Overview\n\n| Feature | BraunAbility E2 | BraunAbility XT | BraunAbility XI |\n|---|---|---|---|\n| **Base Vehicle** | Chrysler Pacifica / Voyager | Toyota Sienna (Hybrid) | Chrysler Pacifica / Voyager |\n| **Ramp Type** | Power fold-out side ramp | Power fold-out side ramp | In-floor side ramp |\n| **Entry Style** | Side-entry | Side-entry | Side-entry |\n| **Fuel Type** | Gasoline / Gas Hybrid | Hybrid (standard) | Gasoline / Gas Hybrid |\n| **Floor Design** | Standard lowered floor | Standard lowered floor | In-floor ramp (no ramp stored in cabin) |\n| **Wheelchair Capacity** | Standard | Standard | Standard |\n| **Passenger Seating** | Up to 4 + wheelchair position | Up to 4 + wheelchair position | Up to 4 + wheelchair position |\n| **Drive** | FWD / AWD options | FWD | FWD / AWD options |\n| **Price Range** | $50,000\u2013$60,000 | $80,000\u2013$90,000 | Varies |\n\n## Sample Pricing\n\n| Vehicle | VIN | Price |\n|---|---|---|\n| 2026 Chrysler Pacifica BraunAbility | 2C4RC1FGXRR191633 | $55,980 |\n| 2026 Toyota Sienna BraunAbility XT | 5TDYRKEC2SS281922 | $88,150 |\n\n## Upcoming Models\n\n| Model | Expected |\n|---|---|\n| Chevrolet Traverse Conversion | 2026 |\n\n## Shopping Considerations\n\n- **Side-entry vs. rear-entry:** Side-entry vans load at sliding door (best for standard wheelchairs). Rear-entry loads through back doors (best for tilter/transporter chairs).\n- **Lowered-floor:** More headroom and easier transfers.\n- **Hybrid option:** XT on Toyota Sienna for fuel efficiency.\n- **In-floor ramp (XI):** Ramp stows under the vehicle floor, leaving more cabin space.\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for full new vehicle inventory.\nSee [mobility-vehicles.md](/datasets/mobility-vehicles.md) for the full vehicle listing."
+  },
+  "types": [
+    "FAQ",
+    "ai-discovery-page",
+    "comparison-matrix",
+    "organization",
+    "product-line",
+    "prompt-library",
+    "reference",
+    "service-center",
+    "staff-directory",
+    "testimonial"
+  ],
+  "palette": {
+    "organization": "#ec4899",
+    "FAQ": "#f59e0b",
+    "product-line": "#3b82f6",
+    "service-center": "#ef4444",
+    "staff-directory": "#a855f7",
+    "testimonial": "#8b5cf6",
+    "ai-discovery-page": "#06b6d4",
+    "reference": "#10b981",
+    "prompt-library": "#06b6d4",
+    "comparison-matrix": "#f97316"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} — OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "—";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "—";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "—";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = nodeIndex[src]?.label || src;
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root) {
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.startsWith("/") && href.endsWith(".md")) {
+        const target = href.slice(1, -3);
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

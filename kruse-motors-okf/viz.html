@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>kruse-motors — OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "kruse-motors";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Kruse Motors Auto Group",
+        "type": "auto-dealer",
+        "description": "Multi-brand automotive dealership in Marshall, MN serving as certified dealer for Ford, Lincoln, Buick, and GMC with new/used vehicle sales, service, parts, and financing.",
+        "resource": "https://krusemotors.com/",
+        "tags": [],
+        "color": "#ef4444",
+        "size": 30
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions \u2014 Kruse Motors",
+        "type": "faq",
+        "description": "Common questions and answers about Kruse Motors covering inventory, financing, service, trade-ins, and dealership experience.",
+        "resource": "https://krusemotors.com/",
+        "tags": [],
+        "color": "#a855f7",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing & Leasing \u2014 Kruse Motors",
+        "type": "auto-finance",
+        "description": "Auto financing and leasing options at Kruse Motors including pre-qualification, online credit applications, student savings, lease specials, and flexible loan programs.",
+        "resource": "https://krusemotors.com/finance",
+        "tags": [],
+        "color": "#a855f7",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Vehicle Inventory \u2014 Kruse Motors",
+        "type": "vehicle-lineup",
+        "description": "New vehicle lineup across Ford, Lincoln, Buick, and GMC brands including trucks, SUVs, crossovers, sedans, and electric vehicles with custom ordering through Kruse Your Way.",
+        "resource": "https://krusemotors.com/inventory/new",
+        "tags": [],
+        "color": "#f97316",
+        "size": 32
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center \u2014 Kruse Motors",
+        "type": "service-department",
+        "description": "Factory-authorized service centers at Kruse Motors Ford Lincoln and Kruse Motors Buick GMC offering routine maintenance, advanced diagnostics, major repairs, OEM parts, and accessories.",
+        "resource": "https://krusemotors.com/schedule-a-service",
+        "tags": [],
+        "color": "#f97316",
+        "size": 34
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory \u2014 Kruse Motors",
+        "type": "staff-directory",
+        "description": "Sales, service, and finance staff at Kruse Motors compiled from customer testimonials and reviews.",
+        "resource": "https://krusemotors.com/staff",
+        "tags": [],
+        "color": "#a855f7",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Used Vehicle Inventory \u2014 Kruse Motors",
+        "type": "used-vehicle-inventory",
+        "description": "Pre-owned and certified pre-owned inventory of cars, trucks, and SUVs across multiple brands with KBB trade-in valuation, vehicle protection plans, and we-buy-cars program.",
+        "resource": "https://krusemotors.com/inventory/used",
+        "tags": [],
+        "color": "#ec4899",
+        "size": 33
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page \u2014 Kruse Motors",
+        "type": "ai-discovery-page",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Kruse Motors, providing AI agents structured access to business info, vehicle inventory, customer reviews, and recommended actions via PromptGraph.",
+        "resource": "https://krusemotors.com/ai-discovery-page/",
+        "tags": [],
+        "color": "#06b6d4",
+        "size": 37
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt \u2014 Kruse Motors",
+        "type": "llms-txt",
+        "description": "Full llms.txt directive content for Kruse Motors including PromptGraph API endpoints, core pages, blog content, and featured AI prompts.",
+        "resource": "https://api.promptgraph.ai/api/v1/kruse-motors/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompts \u2014 Kruse Motors",
+        "type": "prompt-library",
+        "description": "Complete collection of 28+ structured Q&A prompts covering Kruse Motors dealership, vehicles, financing, service, and customer experience delivered via PromptGraph API.",
+        "resource": "https://api.promptgraph.ai/api/v1/kruse-motors/prompts",
+        "tags": [],
+        "color": "#06b6d4",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials \u2014 Kruse Motors",
+        "type": "testimonials",
+        "description": "Collection of 100+ customer reviews with predominantly 5-star ratings, most-praised staff, and notable excerpts from Kruse Motors customers.",
+        "resource": "https://api.promptgraph.ai/api/v1/kruse-motors/testimonials",
+        "tags": [],
+        "color": "#f59e0b",
+        "size": 32
+      }
+    },
+    {
+      "data": {
+        "id": "tables/brand-comparison",
+        "label": "Brand Comparison \u2014 Kruse Motors",
+        "type": "comparison-table",
+        "description": "Side-by-side comparison of the four automotive brands available at Kruse Motors \u2014 Ford, Lincoln, Buick, and GMC \u2014 covering positioning, popular models, key features, and target buyer.",
+        "resource": "https://krusemotors.com/",
+        "tags": [],
+        "color": "#f97316",
+        "size": 36
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/used-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/financing",
+        "source": "datasets/dealership",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/dealership",
+        "source": "datasets/financing",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/dealership",
+        "source": "datasets/index",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/new-vehicles",
+        "source": "datasets/index",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/used-vehicles",
+        "source": "datasets/index",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/service-center",
+        "source": "datasets/index",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/financing",
+        "source": "datasets/index",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/staff",
+        "source": "datasets/index",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/faq",
+        "source": "datasets/index",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/ai-discovery-page",
+        "source": "references/index",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/llms-txt",
+        "source": "references/index",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/testimonials",
+        "source": "references/index",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/prompts",
+        "source": "references/index",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/llms-txt",
+        "source": "references/prompts",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/index__tables/brand-comparison",
+        "source": "tables/index",
+        "target": "tables/brand-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/dealership",
+        "source": "index",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/new-vehicles",
+        "source": "index",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/used-vehicles",
+        "source": "index",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/service-center",
+        "source": "index",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/financing",
+        "source": "index",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/staff",
+        "source": "index",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/faq",
+        "source": "index",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/ai-discovery-page",
+        "source": "index",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/llms-txt",
+        "source": "index",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/testimonials",
+        "source": "index",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/prompts",
+        "source": "index",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "index__tables/brand-comparison",
+        "source": "index",
+        "target": "tables/brand-comparison"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Kruse Motors Auto Group\n\nKruse Motors is a multi-brand automotive dealership located in Marshall, MN, serving as a certified dealer for Ford, Lincoln, Buick, and GMC. The dealership provides new and used vehicle sales, factory-authorized service, genuine OEM parts, and automotive financing. Kruse Motors has been voted the best place to buy a new or used vehicle year-after-year and also voted best for service including the quick lube and car wash center. The dealership serves drivers throughout Marshall, Worthington, Redwood Falls, Brookings, Granite Falls, and surrounding Southwest Minnesota communities.\n\n## Contact\n\n| Detail | Information |\n|---|---|\n| Address | 1651-61 East College Drive, Marshall, MN 56258 |\n| Sales Phone | (507) 205-4475 |\n| GM Service Phone | (507) 401-2907 |\n| Ford Service Phone | (507) 537-0313 |\n| Main Phone | (507) 337-7500 |\n| Email | kendallbillman@gmail.com |\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday \u2013 Thursday | 8:00 AM \u2013 7:00 PM |\n| Friday | 8:00 AM \u2013 6:00 PM |\n| Saturday | 8:00 AM \u2013 4:00 PM |\n| Sunday | Closed |\n\n## Brands\n\n- **Ford** \u2014 Trucks, SUVs, crossovers, commercial vehicles, and electric vehicles\n- **Lincoln** \u2014 Premium luxury vehicles focused on comfort and sophisticated design\n- **Buick** \u2014 SUVs and crossovers crafted for quiet comfort and upscale styling\n- **GMC** \u2014 Trucks and SUVs built for capability, towing strength, and refined utility\n\n## Social\n\n- Facebook: https://www.facebook.com/KruseMotorsAutoGroup\n- Instagram: https://www.instagram.com/krusemotors/\n- YouTube: https://www.youtube.com/channel/UC6BL5rszXaDtLAkHtFn_66g\n- X (Twitter): https://x.com/krusemotors\n\n## Ratings\n\n- **Google Rating:** 4.6 / 5.0 (1,259+ reviews)\n- **CarFax:** Top-Rated Dealer Award recipient\n\n## Special Programs\n\n- **Free Oil for Life** \u2014 Free oil changes for the life of the vehicle when purchased at Kruse Motors\n- **Kruse Your Way** \u2014 Custom-order program for Ford, Lincoln, Buick, or GMC vehicles with chosen color, features, and accessories\n- **KBB Instant Cash Offer** \u2014 Fair-market trade-in valuation through Kelley Blue Book\n- **Ford Drives U** \u2014 Student savings program for new or used vehicles\n- **We Buy Cars** \u2014 Direct vehicle purchase program with no obligation to buy\n\n## Service Centers\n\nThe dealership operates two service centers:\n- **Kruse Motors Ford Lincoln** \u2014 Ford and Lincoln service\n- **Kruse Motors Buick GMC** \u2014 Buick and GMC service\n\nSee [service-center.md](service-center.md) for full service department details.\nSee [new-vehicles.md](new-vehicles.md) for new vehicle brands and models.\nSee [used-vehicles.md](used-vehicles.md) for pre-owned inventory details.\nSee [financing.md](financing.md) for financing and lease options.\nSee [ai-discovery-page.md](/references/ai-discovery-page.md) for machine-readable structured data.",
+    "datasets/faq": "# Frequently Asked Questions \u2014 Kruse Motors\n\n## General\n\n**What makes Kruse Motors different from other dealerships?**\nKruse Motors is a family-owned dealership serving Marshall and Southwest Minnesota since 1974, offering Ford, Lincoln, Buick, and GMC vehicles under one roof. The dealership focuses on transparent pricing, no-pressure sales, and long-term customer relationships.\n\n**Where is Kruse Motors located?**\n1651-61 East College Drive, Marshall, MN 56258.\n\n**What are the showroom hours?**\nMonday\u2013Thursday 8:00 AM\u20137:00 PM, Friday 8:00 AM\u20136:00 PM, Saturday 8:00 AM\u20134:00 PM.\n\n**What brands does Kruse Motors sell?**\nNew: Ford, Lincoln, Buick, and GMC. Used: All makes and models.\n\n## Inventory\n\n**How can I browse inventory?**\nVisit the inventory page online or use the vehicle search tool on the website. Inventory can be filtered by new, used, certified pre-owned, brand, body style, and price range.\n\n**Can I custom-order a vehicle?**\nYes, through the Kruse Your Way program. You can custom-order a Ford, Lincoln, Buick, or GMC vehicle with your chosen color, features, and accessories.\n\n**Do you offer certified pre-owned vehicles?**\nYes, Kruse Motors offers a selection of certified pre-owned vehicles that meet manufacturer quality standards and include comprehensive warranties.\n\n## Financing\n\n**Can I get pre-qualified without affecting my credit score?**\nYes. The pre-qualification process uses a soft credit check that does not require your Social Security Number or date of birth and has no impact on your credit score.\n\n**Do you work with buyers who have challenged credit?**\nYes. The finance team works with a wide network of lenders and handles various credit situations.\n\n**Is there a student discount program?**\nYes, the Ford Drives U program offers savings for students on new or used vehicles.\n\n## Service\n\n**What type of service does Kruse Motors offer?**\nRoutine maintenance (oil changes, tire rotations), advanced diagnostics, brake service, transmission repairs, electrical system support, and more. Service is available for Ford, Lincoln, Buick, and GMC vehicles at dedicated service centers.\n\n**Do I need to buy my vehicle at Kruse to have it serviced there?**\nNo. The service department works on any vehicle, and customers who did not purchase at Kruse have reported excellent service experiences.\n\n**Does Kruse offer free oil changes?**\nYes, Kruse Motors offers a Free Oil for Life program on vehicles purchased at the dealership.\n\n## Trade-In & Selling\n\n**How do I get a trade-in value?**\nUse the Kelley Blue Book Trade-In Advisor Tool online for an instant, accurate estimate, or visit the dealership in person.\n\n**Can I sell my car to Kruse without buying one?**\nYes. The We Buy Cars program allows you to sell your vehicle directly with no obligation to purchase.\n\n**Does Kruse match KBB values?**\nKruse partners with Kelley Blue Book to provide transparent, fair-market offers through the KBB Instant Cash Offer program.\n\nSee [dealership.md](dealership.md) for the full business profile.\nSee [financing.md](financing.md) for detailed financing information.\nSee [service-center.md](service-center.md) for service department details.",
+    "datasets/financing": "# Financing & Leasing \u2014 Kruse Motors\n\nThe finance department at Kruse Motors works with a network of lenders to help customers secure competitive rates for vehicle purchases. Financing options are available for new and used vehicles across all brands.\n\n## Financing Tools\n\n| Tool | Description | Link |\n|---|---|---|\n| Get Pre-Qualified | Soft credit check \u2014 no SSN or DOB needed, no credit score impact | /get-pre-qualified |\n| Online Credit Application | Secure credit application to save time at the dealership | /get-pre-approved |\n| Budget Calculator | Estimate monthly payment based on down payment and credit score | Browse by Budget tool |\n\n## Lease & Finance Specials by Brand\n\n| Brand | Offers |\n|---|---|\n| Ford | New Ford lease and finance deals available on popular models |\n| Lincoln | New Lincoln lease and finance specials on luxury vehicles |\n| GMC | New GMC lease and finance specials on trucks and SUVs |\n| Buick | New Buick lease and finance specials on crossovers |\n\n## Special Programs\n\n| Program | Description |\n|---|---|\n| Ford Drives U | Student savings program for new or used vehicle purchases |\n| Buy Now, Pay Later | Service and parts financing through Sunbit |\n| Flexible Loan & Lease Programs | Options designed for different ownership preferences and budget goals |\n\n## Leasing\n\nLease options are available on new Ford, Lincoln, Buick, and GMC vehicles. The finance team presents lease options that may offer lower monthly payments compared to traditional financing.\n\n## Credit Situations\n\nThe finance department handles various credit situations from excellent credit to challenged credit, working with a wide network of lenders to find appropriate terms.\n\n## Used Vehicle Incentives\n\nSpecial offers and incentives are available for used car, truck, and SUV purchases in addition to new vehicle programs.\n\nSee [dealership.md](dealership.md) for the full business profile.\nSee [new-vehicles.md](new-vehicles.md) for current new vehicle pricing and models.\nSee [used-vehicles.md](used-vehicles.md) for pre-owned inventory deals.",
+    "datasets/new-vehicles": "# New Vehicle Inventory \u2014 Kruse Motors\n\nKruse Motors offers a multi-brand new vehicle lineup featuring Ford, Lincoln, Buick, and GMC vehicles. Customers can browse inventory on the lot or custom-order through the Kruse Your Way program.\n\n## Ford\n\n| Model | Type | Key Features |\n|---|---|---|\n| F-150 | Full-size pickup | Best-selling truck, multiple trims, hybrid/PowerBoost options |\n| F-250 Super Duty | Heavy-duty pickup | Towing capability, work-ready trims, advanced trailering tech |\n| F-350 Super Duty | Heavy-duty pickup | Maximum towing/hauling, commercial-grade capability |\n| Ranger | Midsize pickup | Off-road capability, compact maneuverability, FX4 option |\n| Mustang | Sports car | Iconic pony car, EcoBoost/GT/Dark Horse trims |\n| Explorer | Midsize SUV | Three-row seating, ST performance trim, RWD platform |\n| Escape | Compact SUV | Hybrid option, spacious interior, available AWD |\n| Edge | Midsize crossover | Two-row SUV, ST-Line styling, available AWD |\n| Bronco | Off-road SUV | Removable top/doors, 4x4 capability, Sasquatch package |\n| Transit | Full-size van | Commercial/passenger configurations, multiple roof heights |\n\n## Lincoln\n\n| Model | Type | Key Features |\n|---|---|---|\n| Nautilus | Midsize luxury SUV | Premium interior, Lincoln BlueCruise, 48-inch panoramic display |\n| Aviator | Midsize luxury SUV | Three-row seating, Plug-in Hybrid option, luxurious cabin |\n| Corsair | Compact luxury SUV | Entry-level luxury, efficient Powertrain, available AWD |\n\n## Buick\n\n| Model | Type | Key Features |\n|---|---|---|\n| Enclave | Full-size luxury SUV | Three-row seating, quiet cabin, premium interior |\n| Envision | Compact luxury SUV | European-designed, sporty handling, available AWD |\n| Encore GX | Subcompact luxury SUV | Efficient engine options, upscale interior, hands-free power liftgate |\n| Envista | Compact SUV coupe | Sleek fastback design, accessible price point, standard LED lighting |\n\n## GMC\n\n| Model | Type | Key Features |\n|---|---|---|\n| Sierra 1500 | Full-size pickup | Professional-grade, Denali luxury trim, MultiPro Tailgate |\n| Canyon | Midsize pickup | AT4 off-road trim, premium interior, diesel option |\n| Acadia | Midsize SUV | Three-row seating, Denali trim, available AWD |\n| Terrain | Compact SUV | Robust styling, AT4 trim, efficient engine |\n| Yukon | Full-size SUV | Three-row seating, Denali Ultimate, available Duramax diesel |\n\nSee [dealership.md](dealership.md) for the full business profile.\nSee [financing.md](financing.md) for current lease and finance offers.\nSee [brand-comparison.md](/tables/brand-comparison.md) for side-by-side brand comparison.",
+    "datasets/service-center": "# Service Center \u2014 Kruse Motors\n\nKruse Motors operates two factory-authorized service centers staffed by trained technicians equipped to handle routine maintenance, advanced repairs, and vehicle diagnostics.\n\n## Service Locations\n\n| Center | Brands Serviced | Phone |\n|---|---|---|\n| Kruse Motors Ford Lincoln | Ford, Lincoln | (507) 537-0313 |\n| Kruse Motors Buick GMC | Buick, GMC | (507) 401-2907 |\n\n## Services Offered\n\n| Service | Description |\n|---|---|\n| Oil Changes | Regular oil changes with genuine OEM filters and approved oils |\n| Tire Rotation & Balancing | Extend tire life and maintain even wear |\n| Brake Service | Inspection, pad replacement, rotor resurfacing, and brake system repair |\n| Engine Diagnostics | Computerized diagnostics for check engine lights and drivability issues |\n| Transmission Service | Fluid changes, repairs, and complete rebuilds |\n| Electrical System | Battery testing, alternator repair, and electrical diagnostics |\n| Air Conditioning | AC recharge, compressor repair, and climate control service |\n| Fluid Checks | All vehicle fluid inspections and replacements |\n| Belts & Hoses | Inspection and replacement of serpentine belts, timing belts, and coolant hoses |\n| Filter Replacement | Cabin air filters, engine air filters, and fuel filters |\n| Winter Maintenance | Battery checks, antifreeze levels, tire condition, and heater performance |\n\n## Parts & Accessories\n\n- **Genuine OEM Parts** \u2014 Factory-designed components engineered for Buick, GMC, Ford, and Lincoln vehicles\n- **Accessories** \u2014 Customization accessories available through online catalog with 360-degree vehicle view\n- **Service & Parts Financing** \u2014 Buy Now, Pay Later options through Sunbit\n\n## Specials\n\nService coupons and specials are available for oil changes, tire rotations, brake service, and other common maintenance items. View current offers at the dealership's service offers page.\n\n## Routine Maintenance Coverage\n\n| Maintenance Item | Recommended Interval |\n|---|---|\n| Oil Change | Every 5,000\u20137,500 miles |\n| Tire Rotation | Every 5,000\u20137,500 miles |\n| Brake Inspection | Every 10,000\u201315,000 miles |\n| Air Filter Replacement | Every 15,000\u201330,000 miles |\n| Transmission Fluid | Every 30,000\u201360,000 miles |\n| Coolant Flush | Every 30,000\u201350,000 miles |\n\nSee [dealership.md](dealership.md) for the full business profile.\nSee [brand-comparison.md](/tables/brand-comparison.md) for service-related brand features.",
+    "datasets/staff": "# Staff Directory \u2014 Kruse Motors\n\nStaff members mentioned in customer testimonials and reviews across sales, service, and finance roles.\n\n## Sales\n\n| Name | Role | Praised For |\n|---|---|---|\n| Kayla Janachovsky | Sales Consultant | Knowledgeable, patient, thorough, excellent communication |\n| Carter Iverson | Business & Sales Manager | Exceptional service, persistent, accommodating, personable |\n| Shane Nokleby | Sales Consultant | Friendly, professional, knowledgeable, fun to work with |\n| Max Louwagie | Sales Consultant | Helpful, guided buying process, went above and beyond |\n| Stacey Bloemke | Sales Consultant | Exceptional, years of experience, helped find perfect vehicle |\n| Krystal | Sales Consultant | Energetic, helpful, sweet, fantastic service |\n| Pete | Sales Consultant | Knowledgeable, personable, guided through process |\n| Bailey Schwartz | Sales Consultant | Accommodating, great follow-up, easy to work with |\n| TJ Hickman | Sales Consultant | Helpful, knowledgeable, no pressure, went the extra mile |\n| Drew | Sales Consultant | Excellent, knowledgeable, upfront, honest, great attitude |\n| Nate Dallenbach | Sales Consultant | Professional, responsive, made process smooth |\n| Rudy Rodriguez | Sales Consultant | Attentive, great communication, patient, sincere |\n| Bob | Sales Consultant | Enthusiastic, upfront, welcoming |\n| Andrew | Sales Consultant | Professional, helpful, explained everything in detail |\n| Sam Helmer | Sales Consultant | Patient, understanding, kind, never pushy |\n| Vince | Sales / Management | Helpful, went beyond, professional |\n| Dale | Sales Consultant | Great communication, thorough, kept updated |\n| Shannon | Sales / Service | Thorough, kind, excellent service |\n| Paige | Sales Consultant | Listened, easy process, great team player |\n| Christian Sanow | Sales Consultant | Recommended for vehicle purchase |\n| Mitchell | Sales Consultant | No pressure, helpful, personable |\n| Kate Faith | Sales Consultant | Wonderful, did everything to meet needs |\n| Bryce | Sales Consultant | Excellent at explaining and phone pairing |\n| Brady | Sales Consultant | Friendly, easy to work with, prompt |\n| Justin Cavazos | Sales Consultant | Excellent customer service, multiple vehicle sales |\n| Tom Hoflock | Sales Consultant | Helpful, got customer into dream vehicle |\n| Sierra | Sales Consultant | Great overall experience |\n| Tori | Sales Consultant | Answered all questions, relaxed experience |\n\n## Service\n\n| Name | Role | Praised For |\n|---|---|---|\n| Jason Cole | Service Advisor | Helped link up, informative, great communication |\n| Michael | Service Department | Excellent scheduling and communication |\n| Calvin | Service Advisor | Great service, friendly |\n| Kyler | Technician | Excellent work |\n| Chuck Konold | Service | Fantastic job |\n| Joe Jackman | Service Advisor | Explained service areas and coverage |\n| Rob / Kyle | Service Management | Addressed issues quickly |\n\n## Finance & Management\n\n| Name | Role | Praised For |\n|---|---|---|\n| Kyle McKinzie | General Manager | Above and beyond, great organization |\n| Nick Chaco | Business Manager | Very helpful, professional |\n| Salvador Duran | Sales | Professional, very personable |\n| Donavan | Sales / Finance | Superb job with trade |\n\nSee [dealership.md](dealership.md) for the full business profile.\nSee [testimonials.md](/references/testimonials.md) for the complete collection of customer reviews.",
+    "datasets/used-vehicles": "# Used Vehicle Inventory \u2014 Kruse Motors\n\nKruse Motors maintains a large inventory of pre-owned and certified pre-owned vehicles across multiple brands and body styles. Each vehicle is inspected and reconditioned before sale.\n\n## Pre-Owned Inventory\n\n| Category | Description |\n|---|---|\n| Used Cars & Sedans | Multi-make selection including sedans, hatchbacks, and coupes |\n| Used Trucks | Full-size and midsize pickups including Ford F-150, GMC Sierra, Ram 1500 |\n| Used SUVs | Compact, midsize, and full-size SUVs including Ford Explorer, GMC Acadia, Buick Enclave |\n| Affordable Vehicles | Inventory available under $15,000 and under $25,000 |\n\n## Certified Pre-Owned\n\nFactory-certified pre-owned vehicles that meet manufacturer quality standards, backed by comprehensive warranties. CPO vehicles are carefully inspected and include extended warranty coverage.\n\n## Trade-In & Sell Programs\n\n| Program | Description |\n|---|---|\n| KBB Instant Cash Offer | Get a fair-market offer from Kelley Blue Book with no obligation |\n| Value Your Trade | Online trade-in estimate to apply toward next purchase |\n| We Buy Cars | Direct vehicle purchase program with no car-buying obligation |\n\n## Vehicle Protection\n\nKruse Motors offers vehicle protection plans including gap protection, powertrain plus coverage, complete choice protection, vehicle service contracts, and pre-owned vehicle coverage.\n\n## Quality Process\n\nEach used vehicle is meticulously inspected and reconditioned to high standards. The dealership is selective when choosing inventory and stands behind the condition of every pre-owned vehicle sold.\n\nSee [dealership.md](dealership.md) for the full business profile.\nSee [financing.md](financing.md) for used vehicle financing options and incentives.\nSee [testimonials.md](/references/testimonials.md) for customer experiences with used vehicle purchases.",
+    "references/ai-discovery-page": "# AI Discovery Page \u2014 Kruse Motors\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by PromptGraph. It exposes semantic endpoints, business metadata, and LLM-friendly data for Kruse Motors.\n\n## PromptGraph API Sitemap\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/kruse-motors/sitemap.xml` exposes these machine-readable endpoints:\n\n| URL | Priority | Update Frequency |\n|---|---|---|\n| `/business` | 1.0 | Weekly |\n| `/prompts` | 0.9 | Weekly |\n| `/vehicles` | 0.9 | Daily |\n| `/.well-known/ai-manifest.json` | 0.6 | Monthly |\n| `/sitemap-inventory.xml` | 0.8 | Daily |\n| `/robots.txt` | 0.5 | Monthly |\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Name:** Kruse Motors\n- **Description:** Kruse Motors is proud to serve our customers around the Marshall area and worldwide as your certified dealer for Ford, Lincoln, Buick, and GMC.\n- **Last updated:** 2026-06-25T17:27:12.157Z\n- **Schema types:** LocalBusiness, AutoDealer, Car, ItemList\n- **Contact:** kendallbillman@gmail.com\n\n### Registered Endpoints\n\n| Endpoint | Resource |\n|---|---|\n| `/llms.txt` | LLMs.txt directive |\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/prompts` | Q&A / FAQ content |\n| `/testimonials` | Customer reviews |\n| `/sitemap.xml` | Full sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n\n### Additional PromptGraph Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/llms.txt` | LLMForge v1.0 directive file |\n| `/offers` | Current specials and incentives |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/kruse-motors/business`:\n\n- **Name:** Kruse Motors Auto Group\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Ford dealer, Car dealer, GMC dealer, Buick dealer, Truck dealer, Used car dealer, Used truck dealer, Car leasing service, Motor vehicle dealer, Lincoln dealer\n- **Address:** 1651 East College Drive, Marshall, MN 56258\n- **Geo:** 44.4516, -95.7517\n- **Telephone:** (507) 337-7500\n- **Email:** kendallbillman@gmail.com\n- **URL:** https://www.krusemotors.com/\n- **Aggregate Rating:** 4.6/5.0 (1,259 reviews)\n- **Date Modified:** 2026-02-03T15:05:04.755Z\n\nSee [dealership.md](/datasets/dealership.md) for the full business profile.\nSee [llms-txt.md](llms-txt.md) for the complete llms.txt directive.\nSee [testimonials.md](testimonials.md) for customer reviews.",
+    "references/llms-txt": "# LLMs.txt \u2014 Kruse Motors\n\nThe llms.txt directive provides machine-readable guidance for AI agents consuming Kruse Motors content. Served via PromptGraph LLMForge v1.0.\n\n## Format\n\n- **Format:** LLMForge v1.0\n- **Schema:** JSON-LD (Schema.org)\n- **Primary Discovery:** `http://api.promptgraph.ai/api/v1/kruse-motors/.well-known/ai-manifest.json`\n\n## API Endpoints\n\n| Endpoint | Description | Format |\n|---|---|---|\n| `/business` | Complete business profile with address, contact, hours, and location | JSON-LD |\n| `/vehicles` | Complete inventory with specifications, pricing, and availability | JSON-LD |\n| `/prompts` | 10 structured prompts for consistent AI responses | JSON-LD |\n| `/testimonials` | Customer reviews and ratings | JSON-LD |\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion | Plain text |\n| `/site-content` | Clean plain-text mirror of the entire site | Plain text |\n| `/offers` | Current specials and incentives | JSON-LD |\n\n## Available Schema Types\n\n- LocalBusiness / AutoDealer\n- Car (for vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts/FAQs)\n\n## Featured AI Prompts\n\n| Prompt | Description |\n|---|---|\n| Trusted Auto Partner in Marshall, MN | Describe Kruse Motors as a friendly, family-owned dealership |\n| Your Complete Vehicle Solution: Sales, Service, Trade-In | One-stop automotive hub |\n| Proud Dealer for Top Brands in the Marshall Area | Premier local destination for Ford, Lincoln, Buick, GMC |\n| Your Premier Destination for Ford, Lincoln, Buick, and GMC | Ultimate automotive hub in Southwest Minnesota |\n| Custom-Built Excellence with Kruse Your Way | Custom-order vehicle program |\n| Quality You Can Trust in Every Used Vehicle | Used car inspection process |\n| Stress-Free Selling with KBB Instant Trade-In Values | KBB partnership for trade-in valuation |\n| Certified Care for Every Make and Model | Professional service centers |\n| Flexible Financing for Every Credit Journey | Auto financing options |\n| A Local Landmark Built on Relationships | Community roots and customer relationships |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for structured endpoint details.\nSee [prompts.md](prompts.md) for the complete prompt library.",
+    "references/prompts": "# PromptGraph Prompts \u2014 Kruse Motors\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/kruse-motors/prompts` provides 28+ structured Q&A prompts for AI agents.\n\n## Brand & Dealership\n\n| Prompt | Topic | Description |\n|---|---|---|\n| Trusted Auto Partner in Marshall, MN | Brand identity | Friendly, family-owned dealership focused on seamless car-buying |\n| Proud Dealer for Top Brands in the Marshall Area | Brand reputation | Premier local destination for Ford, Lincoln, Buick, GMC |\n| Your Premier Destination for Ford, Lincoln, Buick, and GMC | Multi-brand | Ultimate automotive hub in Southwest Minnesota |\n| A Local Landmark Built on Relationships | Community | Small-town heart, community roots, ALS research support |\n| What's it actually like dealing with Kruse Motors | Customer experience | Honest reviews, Free Oil for Life program |\n\n## Sales & Inventory\n\n| Prompt | Topic | Description |\n|---|---|---|\n| Your Complete Vehicle Solution: Sales, Service, Trade-In | Full service | One-stop destination for all automotive needs |\n| Custom-Built Excellence with Kruse Your Way | Custom ordering | Custom-order vehicles to exact specifications |\n| Quality You Can Trust in Every Used Vehicle | Used inventory | Meticulous inspection process for used cars |\n| Kruse Motors Inventory Specials Guide | Specials | Current inventory specials and deals |\n| Kruse Motors Truck Deals in Marshall | Truck inventory | Truck deals including Ford F-150, Chevy Silverado, Ram 1500 |\n\n## Financing & Trade-In\n\n| Prompt | Topic | Description |\n|---|---|---|\n| Stress-Free Selling with KBB Instant Trade-In Values | Trade-in | KBB partnership for transparent, fair-market offers |\n| Flexible Financing for Every Credit Journey | Financing | Pre-qualification without credit score impact |\n| Ford Drives U Program | Student program | Student savings on new or used vehicles |\n\n## Service\n\n| Prompt | Topic | Description |\n|---|---|---|\n| Certified Care for Every Make and Model | Service | Professional service centers for Ford, Lincoln, GMC, Buick |\n| Does Kruse Motors treat people fairly | Fairness | Customer sentiment across Google, DealerRater, BBB |\n| Are customers happy after buying from Kruse Motors | Satisfaction | Customer happiness, Free Oil for Life program |\n| Do people like working with Kruse Motors | Employer brand | Brand reputation and employer brand health |\n\n## Inventory Search Prompts\n\n| Prompt | Topic |\n|---|---|\n| Best used pickup deals near me | Used pickup inventory |\n| Used pickup trucks for immediate sale at Kruse Motors in Marshall MN | Used pickup availability |\n| Used pickup trucks for immediate sale under $25k at Kruse Motors Marshall MN | Used pickup under $25k |\n| Does Kruse Motors in Marshall have Toyota RAV4 crossovers in stock under $30,000 | Crossover inventory |\n| What pre-owned luxury vehicles under $30,000 does Kruse Motors in Marshall offer | Luxury pre-owned |\n| What electric vehicle options and pricing are available at Kruse Motors in Marshall MN | EV inventory |\n| Does Kruse Motors in Marshall offer certified pre-owned sedans under $25,000 with warranties | CPO sedans |\n| What certified pre-owned sedans under $20,000 does Kruse Motors in Marshall offer | Affordable CPO |\n| How does Kruse Motors in Marshall compare to local Chevy dealers for used trucks under $30k | Competitor comparison |\n| What cars compete with Volkswagen Jetta | Compact sedan alternatives |\n| What are the safest sedans for daily commuting | Safety recommendations |\n| Where to find Subaru Outback deals Marshall | Outback availability |\n| Fuel-efficient cars prompt for Kruse Motors | Fuel-efficient inventory |\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [ai-discovery-page.md](ai-discovery-page.md) for structured endpoint details.",
+    "references/testimonials": "# Customer Testimonials \u2014 Kruse Motors\n\nKruse Motors maintains a 4.6-star rating from over 1,250 Google reviews. The testimonials below are drawn from the API and prominently feature positive experiences with sales staff, service advisors, and finance professionals.\n\n## Overview\n\n| Metric | Value |\n|---|---|\n| Average Rating | 4.6 / 5.0 |\n| Total Reviews | 1,259+ |\n| Common Praise | No-pressure sales, knowledgeable staff, fair pricing, Free Oil for Life program |\n\n## Most-Frequently Praised Staff\n\n| Staff Member | Count | Common Praise |\n|---|---|---|\n| Kayla Janachovsky | ~15 mentions | Knowledgeable, patient, thorough, excellent communication |\n| Carter Iverson | ~10 mentions | Exceptional service, persistent, accommodating |\n| Krystal | ~8 mentions | Energetic, helpful, sweet, fantastic |\n| Shane Nokleby | ~6 mentions | Friendly, professional, great to work with |\n| Max Louwagie | ~5 mentions | Helpful, went above and beyond |\n| TJ Hickman | ~4 mentions | Helpful, knowledgeable, no pressure |\n| Pete | ~4 mentions | Knowledgeable, personable, guided the process |\n\n## Notable Excerpts\n\n> \"Shannon was very thorough & kind!!! Thank you for the positive experience :)\" \u2014 Tammy Pitzl (5 stars)\n\n> \"Recently purchased a truck from Kruse and Paige was my sales rep. She made the process very easy and was great to work with.\" \u2014 Derick Walker (5 stars)\n\n> \"Kruse Motors met our expectations from start to finish. What was represented on-line and with the initial phone inquiry was exactly what we found and were looking for when visiting the dealership.\" \u2014 Dan Swanda (5 stars)\n\n> \"They made us feel like family and made the whole buying process very easy.\" \u2014 Ken Klosterman (5 stars)\n\n> \"I had an outstanding experience purchasing my 2025 Ford Raptor through Kruse Ford. From the very beginning, the entire team was professional, responsive, and genuinely great to work with.\" \u2014 Matt M (5 stars)\n\n> \"Probably one of the more relaxed and easy car purchases I've gone through. Great service. Family-owned business that feels like they want to take care of you.\" \u2014 Brett Jacobson (5 stars)\n\n> \"Kruse Motors is the tops in my book. Everyone treats you with respect and they listen to your needs and take you through the whole process of buying a car.\" \u2014 Steven Maas (5 stars)\n\nSee [staff.md](/datasets/staff.md) for the staff directory.\nSee [dealership.md](/datasets/dealership.md) for the full business profile.",
+    "tables/brand-comparison": "# Brand Comparison \u2014 Kruse Motors\n\n## Brand Overview\n\n| Brand | Segment | Positioning | Target Buyer |\n|---|---|---|---|\n| **Ford** | Mainstream | Versatility, adventure, everyday practicality | Families, truck buyers, commercial, performance enthusiasts |\n| **Lincoln** | Luxury | Premium comfort, sophisticated design, advanced technology | Luxury buyers, comfort-focused drivers |\n| **Buick** | Premium | Quiet comfort, upscale styling, smooth road performance | Style-conscious buyers seeking refinement |\n| **GMC** | Professional-grade | Capability, towing strength, refined utility | Truck/SUV buyers needing work capability |\n\n## Popular Models by Body Style\n\n| Body Style | Ford | Lincoln | Buick | GMC |\n|---|---|---|---|---|\n| **Full-size Pickup** | F-150 | \u2014 | \u2014 | Sierra 1500 |\n| **Heavy-duty Pickup** | F-250 / F-350 Super Duty | \u2014 | \u2014 | \u2014 |\n| **Midsize Pickup** | Ranger | \u2014 | \u2014 | Canyon |\n| **Full-size SUV** | Expedition | Navigator | Enclave | Yukon |\n| **Midsize SUV** | Explorer | Aviator | \u2014 | Acadia |\n| **Compact SUV** | Escape | Corsair | Envision | Terrain |\n| **Subcompact SUV** | \u2014 | \u2014 | Encore GX | \u2014 |\n| **Compact SUV Coupe** | \u2014 | \u2014 | Envista | \u2014 |\n| **Midsize Luxury SUV** | \u2014 | Nautilus | \u2014 | \u2014 |\n| **Sports Car** | Mustang | \u2014 | \u2014 | \u2014 |\n| **Van** | Transit | \u2014 | \u2014 | \u2014 |\n\n## Key Features\n\n| Feature | Ford | Lincoln | Buick | GMC |\n|---|---|---|---|---|\n| **Terrain/Off-road** | Bronco / Raptor | \u2014 | \u2014 | AT4 / AT4X |\n| **Luxury Trim** | Platinum | Black Label | Avenir | Denali / Denali Ultimate |\n| **Performance** | ST / Shelby / Raptor | \u2014 | GS | \u2014 |\n| **Towing/Utility** | Super Duty / Transit | \u2014 | \u2014 | Pro / Elevation |\n| **Hybrid/EV** | F-150 PowerBoost, Mustang Mach-E | Aviator PHEV | \u2014 | \u2014 |\n| **Driver Assist** | BlueCruise | BlueCruise | \u2014 | Pro Safety |\n\n## Warranty\n\n| Brand | Basic Warranty | Powertrain Warranty |\n|---|---|---|\n| Ford | 3 years / 36,000 miles | 5 years / 60,000 miles |\n| Lincoln | 4 years / 50,000 miles | 6 years / 70,000 miles |\n| Buick | 3 years / 36,000 miles | 5 years / 60,000 miles |\n| GMC | 3 years / 36,000 miles | 5 years / 60,000 miles |\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model information.\nSee [dealership.md](/datasets/dealership.md) for the full business profile."
+  },
+  "types": [
+    "ai-discovery-page",
+    "auto-dealer",
+    "auto-finance",
+    "comparison-table",
+    "faq",
+    "llms-txt",
+    "prompt-library",
+    "service-department",
+    "staff-directory",
+    "testimonials",
+    "used-vehicle-inventory",
+    "vehicle-lineup"
+  ],
+  "palette": {
+    "auto-dealer": "#ef4444",
+    "faq": "#a855f7",
+    "auto-finance": "#a855f7",
+    "vehicle-lineup": "#f97316",
+    "service-department": "#f97316",
+    "staff-directory": "#a855f7",
+    "used-vehicle-inventory": "#ec4899",
+    "ai-discovery-page": "#06b6d4",
+    "llms-txt": "#10b981",
+    "prompt-library": "#06b6d4",
+    "testimonials": "#f59e0b",
+    "comparison-table": "#f97316"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} — OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "—";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "—";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "—";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = nodeIndex[src]?.label || src;
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root) {
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.startsWith("/") && href.endsWith(".md")) {
+        const target = href.slice(1, -3);
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

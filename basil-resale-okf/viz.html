@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>basil-resale — OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "basil-resale";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/commercial-trucks",
+        "label": "Commercial Trucks at Basil Resale",
+        "type": "product-line",
+        "description": "Dedicated commercial truck inventory at Basil Resale Sheridan in Williamsville, NY, featuring work-ready pickups and heavy-duty trucks for business and commercial use.",
+        "resource": "https://www.basilresale.com/commercial-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 37
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Basil Resale Sheridan & Basil Resale Transit",
+        "type": "organization",
+        "description": "Western New York's largest pre-owned vehicle resale center with two locations, 1,411 vehicles in inventory, and a 4.5 rating from 2,579 reviews \u2014 part of the Basil Family Dealerships.",
+        "resource": "https://www.basilresale.com/",
+        "tags": [],
+        "color": "#ec4899",
+        "size": 30
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions \u2014 Basil Resale",
+        "type": "FAQ",
+        "description": "Common questions about Basil Resale's pre-owned inventory, financing, service, and warranties in Williamsville and Buffalo, NY, sourced from the PromptGraph API 77-prompt library.",
+        "resource": "https://www.basilresale.com/",
+        "tags": [],
+        "color": "#f59e0b",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Vehicles \u2014 Basil Family Dealerships",
+        "type": "product-line",
+        "description": "New cars, trucks, and SUVs available through the Basil Family Dealerships network of 10 locations across Western New York, accessible via Basil Resale.",
+        "resource": "https://www.basilcars.com/new-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 32
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Basil Resale Service & Collision Center",
+        "type": "service-center",
+        "description": "Full-service repair facility with state-of-the-art laser alignment machines, handheld diagnostic computers, collision repair, parts center, and certified technicians at Basil Resale Sheridan.",
+        "resource": "https://www.basilresale.com/service/",
+        "tags": [],
+        "color": "#ef4444",
+        "size": 34
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Basil Resale Staff Directory",
+        "type": "staff-directory",
+        "description": "Key personnel and leadership at Basil Resale Sheridan and Basil Resale Transit in Williamsville and Buffalo, NY.",
+        "resource": "https://www.basilresale.com/",
+        "tags": [],
+        "color": "#a855f7",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/testimonials",
+        "label": "Customer Testimonials \u2014 Basil Resale Sheridan",
+        "type": "testimonial",
+        "description": "Customer reviews and ratings for Basil Resale Sheridan, sourced from the PromptGraph API with aggregate 4.5 rating from 2,579 reviews.",
+        "resource": "https://api.promptgraph.ai/api/v1/basil-resale-sheridan/testimonials",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 32
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles at Basil Resale",
+        "type": "product-line",
+        "description": "Inventory of over 1,411 pre-owned cars, trucks, SUVs from all major brands \u2014 with Certified Pre-Owned program, commercial vehicles, vehicle finder, and special financing.",
+        "resource": "https://www.basilresale.com/used-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 33
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page \u2014 Basil Resale Sheridan",
+        "type": "ai-discovery-page",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Basil Resale Sheridan, providing AI agents structured access to business info, 1,411 vehicle inventory, and 77 Q&A prompts via PromptGraph API.",
+        "resource": "https://api.promptgraph.ai/api/v1/basil-resale-sheridan/.well-known/ai-manifest.json",
+        "tags": [],
+        "color": "#06b6d4",
+        "size": 37
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt \u2014 Basil Resale Sheridan",
+        "type": "reference",
+        "description": "Full llms.txt directive content for AI agent guidance, sourced from the PromptGraph API at api.promptgraph.ai/api/v1/basil-resale-sheridan/llms.txt.",
+        "resource": "https://api.promptgraph.ai/api/v1/basil-resale-sheridan/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library \u2014 Basil Resale Sheridan",
+        "type": "prompt-library",
+        "description": "Complete library of 77 structured Q&A prompts from the PromptGraph API for Basil Resale Sheridan, covering pre-owned vehicles, financing, service, and dealership information.",
+        "resource": "https://api.promptgraph.ai/api/v1/basil-resale-sheridan/prompts",
+        "tags": [],
+        "color": "#06b6d4",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/commercial-trucks__datasets/dealership",
+        "source": "datasets/commercial-trucks",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/commercial-trucks__datasets/used-vehicles",
+        "source": "datasets/commercial-trucks",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/used-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/commercial-trucks",
+        "source": "datasets/faq",
+        "target": "datasets/commercial-trucks"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/dealership",
+        "source": "datasets/index",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/new-vehicles",
+        "source": "datasets/index",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/used-vehicles",
+        "source": "datasets/index",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/faq",
+        "source": "datasets/index",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/staff",
+        "source": "datasets/index",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/service-center",
+        "source": "datasets/index",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/commercial-trucks",
+        "source": "datasets/index",
+        "target": "datasets/commercial-trucks"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/index__datasets/testimonials",
+        "source": "datasets/index",
+        "target": "datasets/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/used-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/commercial-trucks",
+        "source": "datasets/service-center",
+        "target": "datasets/commercial-trucks"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/testimonials__datasets/dealership",
+        "source": "datasets/testimonials",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/commercial-trucks",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/commercial-trucks"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/ai-discovery-page",
+        "source": "references/index",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/llms-txt",
+        "source": "references/index",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/index__references/prompts",
+        "source": "references/index",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/llms-txt",
+        "source": "references/prompts",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/dealership",
+        "source": "index",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/new-vehicles",
+        "source": "index",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/used-vehicles",
+        "source": "index",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/faq",
+        "source": "index",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/staff",
+        "source": "index",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/service-center",
+        "source": "index",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/commercial-trucks",
+        "source": "index",
+        "target": "datasets/commercial-trucks"
+      }
+    },
+    {
+      "data": {
+        "id": "index__datasets/testimonials",
+        "source": "index",
+        "target": "datasets/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/ai-discovery-page",
+        "source": "index",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/llms-txt",
+        "source": "index",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "index__references/prompts",
+        "source": "index",
+        "target": "references/prompts"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/commercial-trucks": "# Commercial Trucks at Basil Resale\n\nBasil Resale Sheridan carries a dedicated inventory of commercial trucks and work-ready vehicles for business owners, contractors, and fleet operators.\n\n## Available Types\n\n- **Light-duty pickups** \u2014 Half-ton trucks for daily work use\n- **Heavy-duty pickups** \u2014 Three-quarter and one-ton trucks for towing and hauling\n- **Cargo vans** \u2014 Enclosed transport and delivery vehicles\n- **Specialty commercial vehicles** \u2014 Box trucks, service bodies\n\n## Popular Brands\n\n- RAM (1500, 2500, 3500)\n- Chevrolet Silverado (1500, 2500HD, 3500HD)\n- Ford F-Series (F-150, F-250, F-350)\n- GMC Sierra\n\n## Financing for Commercial Vehicles\n\n- Multiple lender options for business and personal use\n- Online credit application\n- Competitive rates and terms\n- Trade-in appraisal for existing fleet vehicles\n\n## Service & Maintenance\n\nThe Basil Resale Sheridan service center is equipped to handle commercial vehicle maintenance and repairs:\n\n- Heavy-duty brake service\n- Transmission maintenance\n- Oil changes and fluid services\n- Tire service for commercial-grade tires\n\nSee [dealership.md](dealership.md) for full business profile and hours.\nSee [used-vehicles.md](used-vehicles.md) for general pre-owned inventory.",
+    "datasets/dealership": "# Basil Resale Sheridan & Basil Resale Transit\n\nBasil Resale is a family-owned pre-owned vehicle dealership with two locations serving the Buffalo, NY area. Part of the Basil Family Dealerships \u2014 10 locations across Western New York with over 65 years of operation.\n\n## Business Profile (Schema.org AutoDealer)\n\n- **Name:** Basil Resale Sheridan\n- **Type:** AutoDealer (Used car dealer, Auto repair shop, Used truck dealer, Car leasing service, Car finance and loan company, Electric motor vehicle dealer)\n- **Rating:** 4.5 / 5.0 (2,579 reviews)\n- **Date Modified:** 2026-02-03\n\n## Locations\n\n### Basil Resale Sheridan\n\n| Detail | Info |\n|---|---|\n| Address | 4131 Sheridan Dr, Williamsville, NY 14221 |\n| Geo | 42.9779088, -78.7799943 |\n| Sales | (716) 631-0404 |\n| Service | (716) 631-0405 |\n| Main | (716) 631-0400 |\n| Email | lindsey@basilmarketinggroup.com |\n\n### Basil Resale Transit\n\n| Detail | Info |\n|---|---|\n| Address | 6868 Transit Rd, Buffalo, NY 14221 |\n\nEmail (customer service): basilcares@basilresale.com\n\n## Hours\n\n| Day | Sales | Service |\n|---|---|---|\n| Mon\u2013Thu | 9:00 AM \u2013 7:00 PM | 7:30 AM \u2013 5:00 PM |\n| Fri | 9:00 AM \u2013 6:00 PM | 7:30 AM \u2013 5:00 PM |\n| Sat | 9:00 AM \u2013 5:00 PM | 7:30 AM \u2013 3:30 PM |\n| Sun | 10:00 AM \u2013 3:00 PM | Closed |\n\n## Services\n\n- **Finance Center** \u2014 Multiple lender options, online credit application, trade-in appraisal, lease and loan options regardless of credit history\n- **Service Center** \u2014 State-of-the-art repair technologies including laser alignment machines and handheld diagnostic computers; free oil changes for life with purchase and service\n- **Collision Center** \u2014 Full collision repair services\n- **Parts Center** \u2014 Genuine and aftermarket parts\n- **Vehicle Finder Service** \u2014 Helps narrow down options to find the right vehicle\n- **Commercial Trucks** \u2014 Dedicated commercial vehicle inventory for work-ready pickups\n- **Credit Card Payments** \u2014 Pay via secure online payment portal (USAePay)\n\n## Perks\n\n- Free oil changes for life\n- Free car washes with every visit\n- Free warranty on all used cars sold\n- Free wi-fi\n- Hot popcorn in the showroom\n- Free alignment check with every visit\n- On the spot delivery\n- Highest trade-in allowance\n- $200 Sales Referral Program\n\n## Online Tools\n\n- Kelley Blue Book Instant Cash Offer\n- Online inventory browsing and filtering (by type, year, make, model)\n- Online finance application\n- Vehicle finder service\n- Online service scheduling\n- Vehicle repair updates\n- Secure credit card payment portal\n\n## Leadership\n\n- **John Basil** \u2014 President (716-631-0400)\n- **Patrick Schultz** \u2014 Business Development Manager\n- **Jess Basil** \u2014 Marketing Director\n\n## Social\n\n- Facebook: https://www.facebook.com/BasilResaleSheridan/\n- Twitter: https://twitter.com/basilcars\n- Instagram: https://www.instagram.com/basilcars/\n- YouTube: https://www.youtube.com/channel/UCo-z6B4aTt0Q9S8ENygLxjg\n\n## Platform\n\n- Website powered by **Dealer Inspire**\n- Accessibility via **AudioEye**\n- Privacy policy, sitemap, and sitemap XML available on site\n\n## AI Discovery Endpoints\n\n- API base: `https://api.promptgraph.ai/api/v1/basil-resale-sheridan/`\n- AI Manifest: `/.well-known/ai-manifest.json`\n- Business: `/business` (JSON-LD Schema.org AutoDealer)\n- Vehicles: `/vehicles` (1,411 vehicles)\n- Prompts: `/prompts` (77 Q&A prompts)\n- Testimonials: `/testimonials` (customer reviews)\n- Sitemap: `/sitemap.xml`\n- Site Content: `/site-content` (plain-text mirror)\n- GBP Context: `/gbp-context` (Google Business Profile data)\n\nSee [staff.md](staff.md) for full staff directory.\nSee [ai-discovery-page.md](/references/ai-discovery-page.md) for structured AI endpoints.",
+    "datasets/faq": "# Frequently Asked Questions \u2014 Basil Resale\n\n## Inventory & Purchasing\n\n**What types of vehicles does Basil Resale carry?**\n\nBasil Resale stocks over 1,411 pre-owned vehicles including sedans, SUVs, crossovers, trucks, coupes, luxury cars, minivans, electric/hybrid vehicles, classic cars, and commercial trucks. Brands include Toyota, Hyundai, Chevrolet, BMW, Land Rover, RAM, Nissan, and more.\n\n**Does Basil Resale sell commercial trucks?**\n\nYes \u2014 Basil Resale has a dedicated commercial truck inventory for business and work use.\n\n**Does Basil Resale sell new vehicles?**\n\nBasil Resale specializes in pre-owned vehicles. The Basil Family Dealerships group sells new vehicles across 10 locations.\n\n**What is the Certified Pre-Owned program?**\n\nCPO vehicles undergo a multi-point inspection and include additional warranty coverage for added peace of mind.\n\n**Can I make a credit card payment?**\n\nYes \u2014 Basil Resale offers a secure online credit card payment portal through USAePay.\n\n**Do you sell used Toyota, Honda, Ford, Chevy?**\n\nYes \u2014 Basil Resale carries a wide selection of used Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW, Mercedes-Benz, Audi, Lexus, GMC, RAM, and Jeep vehicles.\n\n**Do you carry classic and vintage cars?**\n\nYes \u2014 classic and vintage collector vehicles are part of the inventory.\n\n**What sports cars do you have?**\n\nBasil Resale carries used sports cars including Corvettes, BMWs, and other performance vehicles under $30K.\n\n## Pricing & Budget\n\n**Are there vehicles under $20,000?**\n\nYes \u2014 Basil Resale has a dedicated selection of pre-owned vehicles under $20K.\n\n**Do you offer student car buying programs?**\n\nYes \u2014 special programs for college students looking for budget-friendly vehicles.\n\n**Are there discounts for first responders?**\n\nYes \u2014 exclusive price reductions for firefighters, EMTs, and police officers.\n\n## Financing\n\n**What financing options are available?**\n\nBasil Resale works with multiple lenders to find competitive rates. Online credit application is available regardless of credit history. Lease and loan options are offered.\n\n**Do you offer guaranteed financing approval?**\n\nYes \u2014 Basil Resale offers vehicle loan financing approval regardless of past financial background.\n\n**Can I get a car with bad credit or no credit?**\n\nYes \u2014 Basil Resale offers bad credit car loans and no credit history auto financing options.\n\n**Can I value my trade-in online?**\n\nYes \u2014 an online trade-in appraisal tool and Kelley Blue Book Instant Cash Offer are available.\n\n**Do you offer leasing?**\n\nYes \u2014 leasing options are available for used vehicles.\n\n**Can I buy from Basil Resale if I live out of state?**\n\nYes \u2014 out-of-state purchasing is supported.\n\n## Service & Warranties\n\n**Does Basil Resale have a service center?**\n\nYes \u2014 Basil Resale Sheridan has a state-of-the-art service center with laser alignment machines and handheld diagnostic computers. A collision center and parts center are also available.\n\n**What warranty comes with a used car?**\n\nAll used cars sold at Basil Resale include a free warranty. Certified Pre-Owned vehicles include additional coverage.\n\n**Do I get free oil changes?**\n\nYes \u2014 free oil changes for life with vehicle purchase and service.\n\n**Do you offer a courtesy shuttle during service?**\n\nYes \u2014 a two-way courtesy shuttle is available during service appointments.\n\n**What are the service hours?**\n\nService is open Mon\u2013Thu 7:30 AM \u2013 5:00 PM, Fri 7:30 AM \u2013 5:00 PM, Sat 7:30 AM \u2013 3:30 PM, closed Sunday.\n\n**Can you diagnose a check engine light?**\n\nYes \u2014 diagnostic scanning for check engine lights is available.\n\n**Do you offer auto detailing?**\n\nYes \u2014 professional auto detailing and cleaning services are available.\n\n## Perks\n\n- Free oil changes for life\n- Free car washes with every visit\n- Free warranty on all used cars sold\n- Free alignment check with every visit\n- Free wi-fi\n- Hot popcorn in the showroom\n- $200 Sales Referral Program\n- On the spot delivery\n- Free two-way courtesy shuttle\n- Highest trade-in allowance\n\n## Dealership\n\n**What are the sales hours?**\n\nSales: Mon\u2013Thu 9\u20137, Fri 9\u20136, Sat 9\u20135, Sun 10\u20133. Basil Resale is open on Sundays!\n\n**What area does Basil Resale serve?**\n\nBasil Resale serves Williamsville, Buffalo, Amherst, Getzville, Clarence, Lockport, and the greater Western New York area.\n\n**Is Basil Resale part of a larger group?**\n\nYes \u2014 Basil Resale is part of the Basil Family Dealerships, a family-owned group with over 65 years of service and multiple locations across Western New York.\n\n**What is the \"Basil Difference\"?**\n\nThe Basil Difference includes free oil changes for life, highest trade-in allowances, free shuttle/wash/alignment perks, online financing/trade tools, in-house credit solutions, and a commitment to treating customers like family.\n\n**Can I shop online and get home delivery?**\n\nYes \u2014 Basil Resale offers virtual tours, online financing, trade-in estimators, and home delivery scheduling.\n\n**Is there a loyalty program?**\n\nYes \u2014 customer loyalty programs and repeat buyer benefits are available.\n\n## Related\n\nSee [dealership.md](dealership.md) for full business profile, hours, and contact information.\nSee [used-vehicles.md](used-vehicles.md) for the pre-owned inventory details.\nSee [commercial-trucks.md](commercial-trucks.md) for commercial vehicle inventory.\nSee [prompts.md](/references/prompts.md) for the full 77-prompt PromptGraph library.",
+    "datasets/new-vehicles": "# New Vehicles \u2014 Basil Family Dealerships\n\n## Overview\n\nWhile Basil Resale specializes in pre-owned vehicles, the Basil Family Dealerships maintain a substantial new vehicle inventory across 10 locations in Western New York. Basil Resale can connect customers to new vehicle inventory through the broader family network.\n\n## Available Brands\n\nThe Basil Family Dealerships represent multiple franchises including:\n\n- Mitsubishi (Basil Mitsubishi)\n- Ford (Basil Ford, Basil Ford of Niagara Falls)\n- Chevrolet (Joe Basil Chevrolet)\n- Buick, GMC, Cadillac (Robert Basil Buick GMC Cadillac)\n- Volkswagen (Basil Volkswagen)\n- Toyota (Basil Toyota)\n- BraunAbility mobility conversions (Basil Mobility)\n\n## How It Works\n\n1. Browse new inventory online at [basilcars.com](https://www.basilcars.com/new-vehicles/)\n2. Contact Basil Resale for assistance locating a specific new vehicle\n3. Leverage the Basil Family network for competitive pricing across locations\n4. Commercial trucks also available through network\n\n## Financing\n\n- Multiple lender options through the Basil Family finance centers\n- Online credit application available\n- Competitive rates across new and used vehicles\n\n## Related\n\nSee [dealership.md](dealership.md) for full business profile and contact information.\nSee [used-vehicles.md](used-vehicles.md) for the pre-owned inventory.",
+    "datasets/service-center": "# Basil Resale Service & Collision Center\n\nBasil Resale Sheridan features a state-of-the-art service center equipped with advanced diagnostic technologies including laser alignment machines and handheld diagnostic computers.\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Mon\u2013Thu | 7:30 AM \u2013 5:00 PM |\n| Fri | 7:30 AM \u2013 5:00 PM |\n| Sat | 7:30 AM \u2013 3:30 PM |\n| Sun | Closed |\n\n**Phone:** (716) 631-0405\n\n## Services Offered\n\n### Routine Maintenance\n- Oil changes (free for life with purchase)\n- Tire rotation and balancing\n- Battery replacement\n- Fluid replacements and top-offs\n- State inspections\n- Alignment checks (free with every visit)\n\n### Diagnostics & Repairs\n- Computer diagnostics with handheld diagnostic tools\n- Laser alignment services\n- Brake repairs\n- Engine and transmission work\n- Full mechanical repairs\n\n## Collision Center\n\nFull collision repair services for all makes and models:\n\n- Body panel repair and replacement\n- Paint matching and refinishing\n- Frame straightening\n- Dent and ding removal\n- Post-accident restoration\n\n## Parts Center\n\n- Genuine and aftermarket parts\n- Quick ordering for specialty components\n- Competitive pricing\n\n## Service Perks\n\n- Free car wash with every service visit\n- Free alignment check with every visit\n- Free wi-fi in waiting area\n- Free shuttle service\n- Online scheduling\n\nSee [dealership.md](dealership.md) for full business profile and contact information.\nSee [commercial-trucks.md](commercial-trucks.md) for commercial vehicle service.",
+    "datasets/staff": "# Basil Resale Staff Directory\n\n## Leadership\n\n- **John Basil** \u2014 President (716-631-0400)\n- **Patrick Schultz** \u2014 Business Development Manager\n- **Jess Basil** \u2014 Marketing Director\n\n## Sales & Finance\n\nSales and finance teams available at both locations. Contact the Sheridan location at (716) 631-0404 for sales assistance.\n\n## Service & Parts\n\nService and parts departments staffed with certified technicians. Contact Sheridan service at (716) 631-0405.\n\nSee [dealership.md](dealership.md) for full business profile and locations.",
+    "datasets/testimonials": "# Customer Testimonials \u2014 Basil Resale Sheridan\n\nBasil Resale Sheridan has an **aggregate rating of 4.5 out of 5.0** from **2,579 reviews** (per PromptGraph API / Schema.org AutoDealer business profile).\n\n## Recent Customer Reviews\n\n### Nadia Levy \u2014 \u2b50\u2b50\u2b50\u2b50\u2b50\n\"Jake and Austin provided exceptional customer service, exceeding every expectation I had when entering the dealership! They were able to assist my family and get us into a brand new vehicle with no hassle. These guys are some of the best negotiators I've ever encountered and I highly recommend them for any drivers aspiring to get a new vehicle.\"\n\n### Nick Nowicki \u2014 \u2b50\u2b50\u2b50\u2b50\u2b50\n\"Steve made the whole process seamless and painless. I bought a used Mustang and the vehicle was in great shape! Car was priced very well, and they gave me a very good trade in value! Everyone there was awesome and treated me like family. Jake in finance was awesome, he broke everything down and made sure I had a full understanding.\"\n\n### Sam Martello \u2014 \u2b50\u2b50\u2b50\u2b50\u2b50\n\"Austin was extremely knowledgeable and perspicacious regarding cars and the car buying experience. Also, not pushy, instead he tactfully met us where we were in the car buying process. Easy 5 stars out of 5.\"\n\n### Marcella Mcdowell \u2014 \u2b50\u2b50\u2b50\u2b50\u2b50\n\"I got a car from Basil Resale Sheridan with Avian. I truly appreciate Avian for continuously looking for a car for me for over two months. His patience and kindness have been a God-send.\"\n\n## Online Review Platforms\n\n- **Facebook:** 82% recommend rate (423 reviews)\n- **DealerRater:** Over 350 reviews\n- **Cars.com:** 357 reviews\n- **Edmunds:** 8 reviews (2.5 out of 5)\n- **Google Maps:** Available via GBP context\n\nSee [dealership.md](dealership.md) for full business profile and contact information.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles at Basil Resale\n\nBasil Resale is Western New York's largest pre-owned vehicle center, stocking over **1,411 used vehicles** across two locations (per PromptGraph API).\n\n## Inventory Highlights\n\n- **Sedans** \u2014 Commuter-friendly options\n- **SUVs & Crossovers** \u2014 Family-hauling vehicles\n- **Trucks** \u2014 Work-ready pickups (RAM, Colorado, Tacoma)\n- **Coupes & Luxury** \u2014 BMW, Land Rover, Alfa Romeo, Corvette\n- **Minivans** \u2014 Cavernous people-movers\n- **Electric & Hybrid** \u2014 Eco-friendly options\n- **Classic Cars** \u2014 Vintage collector vehicles\n- **Commercial Trucks** \u2014 Dedicated commercial vehicle inventory for business and work use\n\nPopular brands: Toyota, Hyundai, Chevrolet, BMW, Land Rover, RAM, Nissan, Alfa Romeo, Ford, Buick.\n\n## Certified Pre-Owned Program\n\nMulti-point inspected vehicles with warranty coverage. Available across a selection of makes and models.\n\n## Vehicle Finder Service\n\nTool to narrow down options by make, model, features, and price range to find the right vehicle.\n\n## Sample Inventory (from PromptGraph)\n\n| Vehicle | VIN | Price | Mileage |\n|---|---|---|---|\n| 2019 Toyota Tundra SR5 4WD | 5TFDY5F10KX858389 | $37,077 | 81,002 |\n\n## Budget-Friendly Options\n\n- Vehicles across all price points\n- Various price tiers including budget-conscious options\n- Trade-in appraisal available to offset purchase price\n- Kelley Blue Book Instant Cash Offer for quick trade value\n\n## Financing\n\n- Multiple lenders for competitive rate shopping\n- Online credit application\n- Options regardless of credit history\n- Lease and loan options available\n\n## Value Your Trade\n\n- Kelley Blue Book Instant Cash Offer \u2014 quick online estimate\n- Get a guaranteed trade-in value from home\n- [Value Your Trade](https://www.basilresale.com/sell-trade/)\n\n## Why Buy From Basil Resale\n\n- Free warranty on all used cars sold\n- Free oil changes for life\n- Free car washes with every visit\n- Free alignment check with every visit\n- Free wi-fi, hot popcorn in the showroom\n- On the spot delivery\n- 82% recommend rate on Facebook (423 reviews)\n- Over 350 reviews on DealerRater\n\nSee [dealership.md](dealership.md) for full business profile and contact information.\nSee [commercial-trucks.md](commercial-trucks.md) for dedicated commercial vehicle inventory.",
+    "references/ai-discovery-page": "# AI Discovery Page \u2014 Basil Resale Sheridan\n\nThe AI Discovery Page exposes structured, machine-readable knowledge for AI agents via PromptGraph, including business metadata, inventory endpoints, and LLM-friendly action definitions. Website powered by **Dealer Inspire**.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest provides a machine-readable directory of all AI resources:\n\n- **API Base:** `https://api.promptgraph.ai/api/v1/basil-resale-sheridan/`\n- **Schema types:** `AutoDealer`, `LocalBusiness`, `Car`, `ItemList`\n- **Contact:** basilcares@basilresale.com\n- **CORS:** Enabled for all origins\n\n### Registered Endpoints\n\n| Endpoint | Resource |\n|---|---|\n| `/llms.txt` | LLMs.txt directive |\n| `/business` | Business profile (JSON-LD AutoDealer) |\n| `/vehicles` | Vehicle inventory (JSON-LD, 1,411 vehicles) |\n| `/prompts` | 77 Q&A / FAQ prompts |\n| `/testimonials` | Customer reviews |\n| `/offers` | Current special offers |\n| `/gbp-context` | Google Business Profile data |\n| `/site-content` | Plain-text site mirror |\n| `/sitemap.xml` | Full sitemap |\n| `/config.json` | System configuration |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/basil-resale-sheridan/business`:\n\n- **Name:** Basil Resale Sheridan\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Used car dealer, Auto repair shop, Used truck dealer, Car leasing service, Car finance and loan company, Electric motor vehicle dealer\n- **Address:** 4131 Sheridan Drive, Williamsville, NY 14221\n- **Geo:** 42.9779088, -78.7799943\n- **Telephone:** (716) 631-0404\n- **Email:** lindsey@basilmarketinggroup.com\n- **Website:** https://www.basilresale.com/?utm_source=gbp&utm_medium=organic&utm_campaign=confluence\n- **Aggregate Rating:** 4.5 / 5.0 (2,579 reviews)\n- **Date Modified:** 2026-02-03T14:20:33.587Z\n- **Same As:** Facebook, Twitter, Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data:\n\n- **Total inventory:** 1,411 vehicles\n- **Format:** Schema.org `Car` in `ItemList`\n- **Items per page:** 20\n- **Update frequency:** Daily\n\n## Sample Vehicles\n\n| Year | Make | Model | Trim | Price | Mileage |\n|---|---|---|---|---|---|\n| 2019 | Toyota | Tundra | SR5 4WD Crew Cab | $37,077 | 81,002 |\n\n## Q&A Prompt Library (77 Prompts)\n\nThe `/prompts` endpoint exposes 77 structured Q&A prompt/response pairs serving as an AI FAQ. Topics include:\n\n- **Pricing & Budget:** Vehicles under $20K, affordable used cars, best value\n- **Financing:** Guaranteed approval, bad credit options, lease vs. buy, trade-in appraisals\n- **Inventory:** Sedans, SUVs, trucks, luxury cars, classic cars, commercial trucks\n- **Service:** Oil changes for life, diagnostics, alignment, collision repair\n- **Dealership:** Basil Family trust, customer service, online shopping tools\n- **Special Programs:** Military and first responder discounts, student car buying\n\n## LLM-Accessible Actions\n\n1. **Recommending Pre-Owned Vehicles** \u2014 Matching budget-friendly sedans and hybrids to daily commuters\n2. **Used Car Financing** \u2014 Plain-language explanation of rates, terms, and approval\n3. **Online Research And Virtual Selling Tools** \u2014 Browsing inventory, scheduling test drives, arranging local delivery\n4. **Free Oil Changes For Life Program** \u2014 Details on the lifetime oil change benefit\n5. **Pre-Owned Vehicle Quality Assurance** \u2014 Multi-point inspection and certification standards\n6. **Used Vehicle Warranty Coverage** \u2014 Free warranty on all used cars sold\n7. **Vehicle Finder Service** \u2014 How the tool helps customers narrow down options\n8. **Service Center Amenities** \u2014 Loaners, wi-fi, free car washes\n9. **Collision Center Services** \u2014 Full collision repair capabilities\n10. **Commercial Truck Inventory** \u2014 Dedicated work-ready commercial vehicles\n\nSee [dealership.md](/datasets/dealership.md) for full business profile.\nSee [used-vehicles.md](/datasets/used-vehicles.md) for pre-owned inventory.\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.",
+    "references/llms-txt": "# llms.txt \u2014 Basil Resale Sheridan\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/basil-resale-sheridan/llms.txt` provides a comprehensive LLMForge v1.0 directive:\n\n```\n# Basil Resale Sheridan\n# Format: LLMForge v1.0\n# Last Updated: 2026-06-24T12:49:51.681Z\n# Schema: JSON-LD (Schema.org)\n# Primary Discovery: http://api.promptgraph.ai/api/v1/basil-resale-sheridan/.well-known/ai-manifest.json\n```\n\n### Description\n\nAt Basil Resale Sheridan & Basil Resale Transit we've taken extra measures to ensure you have the very best purchase and ownership experience possible. We're not just another used car dealer here in Buffalo, we're an Automotive Team that will provide you a total solution to all your vehicle needs. In addition to offering a spectacular selection of over 1,300 used cars and providing you the most finance options available regardless of your credit, Basil Resale Sheridan is a major Automotive Service & Repair Center with state-of-the-art repair technologies including laser alignment machines, hand-held diagnostic computers and more.\n\n### Discovery\n\n- Primary endpoint: `/api/v1/basil-resale-sheridan/.well-known/ai-manifest.json`\n- Format: JSON-LD following Schema.org standards\n- Update frequency: Real-time\n- CORS: Enabled for all origins\n- API Base: `http://api.promptgraph.ai/api/v1/basil-resale-sheridan`\n\n### API Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Complete business profile (address, contact, hours, location, Schema.org AutoDealer) |\n| `/vehicles` | Complete inventory of 1,411 vehicles with specifications, pricing, and availability |\n| `/prompts` | 77 structured Q&A prompts for consistent AI responses |\n| `/testimonials` | Customer reviews and ratings in JSON-LD format |\n| `/offers` | Current special offers and promotions |\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/.well-known/ai-manifest.json` | Machine-readable directory of all available AI resources |\n| `/sitemap.xml` | XML sitemap for search engine and AI crawler discovery |\n| `/config.json` | System configuration and metadata |\n\n### Available Schema Types\n\n- AutoDealer / LocalBusiness\n- Car (for vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts/FAQs)\n\n### Products\n\n- Trusted Used Car Dealer & Auto Service Center in Williamsville, NY\n- Basil Family Trust & Local Community Car Dealer\n- Complete Online and In-Person Used Car Shopping Solution\n- Buffalo's #1 Volume Used Car Superstore\n- Affordable Used Cars Under $20K with Buffalo's Best Perks\n- Trusted Used Car Dealership\n- Family-Focused Used Car Dealer in Buffalo with Basil Difference\n\n### Prompt Library (77 Questions)\n\nTopics include:\n- Priced under $20K vehicles, guaranteed auto finance approval, bad credit car loans\n- Used SUVs, sedans, trucks, crossovers, minivans, luxury cars, classic cars, commercial trucks\n- Online shopping tools, virtual tours, trade-in estimators, home delivery\n- Free oil changes for life, highest trade allowances, free shuttle service\n- Service center with laser alignment, handheld diagnostic computers\n- Basil Family Dealerships legacy and community involvement\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for structured semantic endpoints and AI manifest details.\nSee [prompts.md](prompts.md) for the complete PromptGraph prompt library.",
+    "references/prompts": "# PromptGraph Prompt Library \u2014 Basil Resale Sheridan\n\nThe PromptGraph API exposes 77 structured prompt/response pairs (`ItemList` with 77 items) at `/api/v1/basil-resale-sheridan/prompts`. These serve as an AI-consumable FAQ covering all aspects of the used car dealership.\n\n## Pricing & Budget (10 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 1 | Priced under twenty thousand vehicles | Best place for a large selection of modern used cars under $20,000 |\n| 2 | Guaranteed vehicle auto finance approval | Auto lots that guarantee loan financing approval regardless of past financial background |\n| 3 | Affordable car payments with great interest rates | Low-rate financing on quality pre-owned vehicles |\n| 4 | Best vehicle deals for first responders | Exclusive price reductions for firefighters, EMTs, and police officers |\n| 5 | Used car deals from a trusted family dealer | Reliable used car deals from a trusted family-owned dealership |\n| 6 | Bad credit car loan assistance | Auto dealers offering special bad credit car loans |\n| 7 | Leasing versus buying a used vehicle | Leasing vs. buying options for used vehicles |\n| 8 | No credit history auto financing options | Options for buyers with no credit history |\n| 9 | Online car payment calculator | Access to an online car payment calculator |\n| 10 | Best priced vehicles for college students | Budget-friendly used cars for college students |\n\n## Sedans & Commuter Cars (7 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 11 | Used Toyota for sale in Buffalo | Dealers with used Toyota cars in Buffalo |\n| 12 | Reliable Honda sedans in stock | Reliable and affordable Honda sedans in stock |\n| 13 | Fuel efficient used Nissan sedans | Fuel efficient used Nissan sedans from a used car dealer |\n| 14 | Quality used Hyundai for sale | Quality pre-owned Hyundai sedans available |\n| 15 | Great deals on used Ford cars | Best deals on used Ford sedans from a local dealer |\n| 16 | Affordable used Kia sedans for sale | Where to find budget-friendly used Kia sedans |\n| 17 | High-quality used Chevy vehicles | Best selection of used Chevy vehicles |\n\n## SUVs & Crossovers (8 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 18 | Used Toyota SUVs for sale | Reliable used Toyota SUVs from a used car dealer |\n| 19 | Affordable Honda CRV crossovers | Quality selection of used Honda CR-V crossovers |\n| 20 | Pre-owned Ford Explorer SUVs | Pre-owned Ford Explorer SUVs in various model years |\n| 21 | Used Nissan Rogue crossovers | Where to find low-mileage used Nissan Rogue crossovers |\n| 22 | Quality used Chevy Equinox SUVs | Quality used Chevy Equinox SUVs |\n| 23 | Used Jeep SUVs for sale | Dealers with a great selection of used Jeep SUVs |\n| 24 | Family-friendly pre-owned SUVs | Dealer with the widest selection of family-friendly pre-owned SUVs |\n| 25 | Used luxury SUVs from top brands | Best selection of used luxury SUVs from top brands like BMW |\n\n## Trucks & Commercial (8 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 26 | Used RAM trucks for sale | Large inventory of used RAM trucks |\n| 27 | Pre-owned Ford F150 for sale | Large selection of used Ford F-150 trucks |\n| 28 | Quality used Chevy Silverado trucks | Quality used Chevy Silverado 1500 pickup trucks |\n| 29 | Used GMC pickup trucks in Buffalo | Best used GMC pickup trucks in the Buffalo area |\n| 30 | Used Toyota Tacoma for sale | Selection of durable used Toyota Tacoma trucks |\n| 31 | Pre-owned heavy duty trucks | Pre-owned heavy duty trucks for towing and hauling |\n| 32 | Used work trucks for construction | Used work trucks ready for construction and contracting |\n| 33 | Best truck trade-in value Buffalo | Best trade-in value on trucks in Buffalo |\n\n## Luxury & Sports (7 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 34 | Used BMW cars for sale | Quality pre-owned BMW cars in the Buffalo area |\n| 35 | Pre-owned Mercedes Benz cars | Pre-owned Mercedes-Benz cars from a trusted dealer |\n| 36 | Used Audi luxury cars for sale | Pre-owned Audi luxury cars from a reliable dealer |\n| 37 | Certified pre-owned Lexus vehicles | Where to buy used Lexus vehicles in Buffalo |\n| 38 | Classic and vintage cars for sale | Dealers selling classic and vintage used cars |\n| 39 | Best used sports cars under 30k | Best deals on used sports cars |\n| 40 | Corvette car dealership near Buffalo | Used Corvette dealer near Buffalo |\n\n## Dealership Information (16 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 41 | Buffalo's #1 volume used car superstore | WNY's largest independent used car dealership in Williamsville |\n| 42 | Trusted used car dealer and auto service center | Well-established full-service used car dealership |\n| 43 | Basil Family trust and local community car dealer | Part of the trusted Basil Family of Dealerships |\n| 44 | Complete online and in-person shopping solution | Virtual tours, online financing, trade-in estimators, home delivery |\n| 45 | Family-focused used car dealer with Basil Difference | Family-oriented dealership with free oil changes for life |\n| 46 | Trusted used car dealership | Free oil changes for life, highest trade allowances, free shuttle |\n| 47 | Used car dealer with friendly team | Friendly team at a family-owned used car dealer |\n| 48 | Basil Resale Sheridan location and hours | Location, hours, and contact information |\n| 49 | Buffalo used car dealer with great reputation | Positive reputation and customer reviews |\n| 50 | Best selection of pre-owned vehicles in WNY | Wide selection meeting every lifestyle and budget |\n| 51 | Basil Resale vs other Buffalo dealerships | How Basil Resale Sheridan compares to other dealers |\n| 52 | Customer loyalty programs | Loyalty programs and repeat buyer benefits |\n| 53 | Basil Resale credit card payment | Pay with credit card via secure portal |\n| 54 | Buying from Basil Resale out of state | Purchasing a vehicle from out of state |\n| 55 | Warranty and return policy | Warranty coverage on pre-owned vehicles |\n| 56 | Basil Family Dealerships locations | Multiple locations across Western New York |\n\n## Service & Maintenance (14 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 57 | Used car service and repair center | State-of-the-art repair technologies including laser alignment |\n| 58 | Free oil changes for life program | Free oil changes for life with purchase and service |\n| 59 | Vehicle collision repair services | Full collision repair services |\n| 60 | Routine car maintenance | Routine maintenance including oil changes, tire rotation |\n| 61 | Auto repair diagnostic services | Computer diagnostics with handheld diagnostic tools |\n| 62 | Certified auto technicians | Factory-certified auto repair technicians |\n| 63 | Two-way courtesy shuttle during service | Free shuttle service during appointments |\n| 64 | Auto detailing services | Professional auto detailing and cleaning |\n| 65 | Car battery replacement | Quick battery testing and replacement |\n| 66 | Tire replacement and rotation | Tire selection and installation |\n| 67 | Brake repair and replacement | Professional brake inspections and service |\n| 68 | Check engine light diagnostic | Diagnostic scanning for check engine lights |\n| 69 | Commercial truck repair and maintenance | Service center handling commercial vehicle repairs |\n| 70 | Genuine OEM and aftermarket parts | Parts center with competitive pricing |\n\n## Online & Finance Tools (7 prompts)\n\n| # | Prompt | Description |\n|---|---|---|\n| 71 | Online used car search tool | Easy-to-use online search with detailed filters |\n| 72 | Virtual test drives and walkarounds | Virtual vehicle tours from home |\n| 73 | Online credit application | Secure online financing application |\n| 74 | Used car trade-in appraisal | Online trade-in estimators and Kelley Blue Book Instant Cash Offer |\n| 75 | Vehicle delivery options | Home delivery and local delivery arrangements |\n| 76 | Low down payment car buying | Programs for low down payment vehicle purchases |\n| 77 | Student car buying program | Special programs for student car buyers |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for structured semantic endpoints.\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive."
+  },
+  "types": [
+    "FAQ",
+    "ai-discovery-page",
+    "organization",
+    "product-line",
+    "prompt-library",
+    "reference",
+    "service-center",
+    "staff-directory",
+    "testimonial"
+  ],
+  "palette": {
+    "product-line": "#3b82f6",
+    "organization": "#ec4899",
+    "FAQ": "#f59e0b",
+    "service-center": "#ef4444",
+    "staff-directory": "#a855f7",
+    "testimonial": "#8b5cf6",
+    "ai-discovery-page": "#06b6d4",
+    "reference": "#10b981",
+    "prompt-library": "#06b6d4"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} — OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "—";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "—";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "—";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = nodeIndex[src]?.label || src;
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root) {
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.startsWith("/") && href.endsWith(".md")) {
+        const target = href.slice(1, -3);
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

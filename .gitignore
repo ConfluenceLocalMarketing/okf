@@ -2,4 +2,6 @@
 .venv-312
 /EchoesVault
 AGENTS.md
+docs
+build-viz.py
 opencode.jsonc
