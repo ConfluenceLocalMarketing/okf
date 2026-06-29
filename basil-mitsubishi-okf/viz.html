@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Basil Mitsubishi — OKF Bundle Viewer</title>
+<title>basil-mitsubishi - OKF Bundle Viewer</title>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <style>
@@ -158,7 +158,7 @@ hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
   </section>
 </main>
 <script>
-window.BUNDLE_NAME = "Basil Mitsubishi";
+window.BUNDLE_NAME = "basil-mitsubishi";
 window.BUNDLE = {
   "nodes": [
     {
@@ -176,7 +176,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/faq",
-        "label": "Frequently Asked Questions \u2014 Basil Mitsubishi",
+        "label": "Frequently Asked Questions - Basil Mitsubishi",
         "type": "Playbooks & Runbooks",
         "description": "Common questions about Basil Mitsubishi's new and pre-owned inventory, financing, service, and dealership perks in Buffalo, NY. (synthesized)",
         "resource": "https://www.basilmitsubishi.com/",
@@ -236,7 +236,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/ai-discovery-page",
-        "label": "AI Discovery Page \u2014 Basil Mitsubishi",
+        "label": "AI Discovery Page - Basil Mitsubishi",
         "type": "APIs",
         "description": "Machine-readable knowledge base and semantic data endpoints for Basil Mitsubishi, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
         "resource": "https://www.basilmitsubishi.com/ai-discovery-page/",
@@ -248,7 +248,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/llms-txt",
-        "label": "llms.txt \u2014 Basil Mitsubishi",
+        "label": "llms.txt - Basil Mitsubishi",
         "type": "APIs",
         "description": "Full llms.txt directive content for AI agent guidance, sourced from basilmitsubishi.com and the PromptGraph API at api.promptgraph.ai/api/v1/basil-mitsubishi/llms.txt.",
         "resource": "https://www.basilmitsubishi.com/llms.txt",
@@ -260,7 +260,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/prompts",
-        "label": "PromptGraph Prompt Library \u2014 Basil Mitsubishi",
+        "label": "PromptGraph Prompt Library - Basil Mitsubishi",
         "type": "Playbooks & Runbooks",
         "description": "Complete library of 64 structured Q&A prompts from the PromptGraph API for Basil Mitsubishi, covering vehicles, financing, service, parts, and dealership information.",
         "resource": "https://api.promptgraph.ai/api/v1/basil-mitsubishi/prompts",
@@ -284,7 +284,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "tables/model-comparison",
-        "label": "Mitsubishi Model Lineup Comparison \u2014 Basil Mitsubishi",
+        "label": "Mitsubishi Model Lineup Comparison - Basil Mitsubishi",
         "type": "Tables & Datasets",
         "description": "Side-by-side comparison of new Mitsubishi models available at Basil Mitsubishi in Buffalo, NY, including body type, passenger capacity, drivetrain, and key features.",
         "resource": "https://www.basilmitsubishi.com/new-vehicles/",
@@ -446,7 +446,7 @@ window.BUNDLE = {
 (function () {
   const bundle = window.BUNDLE;
   const bundleName = window.BUNDLE_NAME;
-  document.title = `${bundleName} — OKF Viewer`;
+  document.title = `${bundleName} - OKF Viewer`;
   document.getElementById("bundle-name").textContent = bundleName;
 
   const typeSelect = document.getElementById("filter-type");
@@ -538,7 +538,7 @@ window.BUNDLE = {
 
     document.getElementById("detail-title").textContent = data.label;
     document.getElementById("detail-id").textContent = conceptId;
-    document.getElementById("detail-description").textContent = data.description || "—";
+    document.getElementById("detail-description").textContent = data.description || "-";
 
     const resourceEl = document.getElementById("detail-resource");
     resourceEl.innerHTML = "";
@@ -551,7 +551,7 @@ window.BUNDLE = {
       a.className = "external";
       resourceEl.appendChild(a);
     } else {
-      resourceEl.textContent = "—";
+      resourceEl.textContent = "-";
     }
 
     const tagsEl = document.getElementById("detail-tags");
@@ -564,7 +564,7 @@ window.BUNDLE = {
         tagsEl.appendChild(span);
       }
     } else {
-      tagsEl.textContent = "—";
+      tagsEl.textContent = "-";
     }
 
     const body = bundle.bodies[conceptId] || "";
@@ -582,7 +582,7 @@ window.BUNDLE = {
       for (const src of bl) {
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.textContent = nodeIndex[src]?.label || src;
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
         a.dataset.target = src;
         a.addEventListener("click", () => showDetail(src));
         li.appendChild(a);
@@ -610,6 +610,7 @@ window.BUNDLE = {
         }
         if (nodeIndex[target]) {
           a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
           a.setAttribute("href", "javascript:void(0)");
           a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
           return;

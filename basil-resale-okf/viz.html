@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Basil Resale — OKF Bundle Viewer</title>
+<title>basil-resale - OKF Bundle Viewer</title>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <style>
@@ -158,7 +158,7 @@ hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
   </section>
 </main>
 <script>
-window.BUNDLE_NAME = "Basil Resale";
+window.BUNDLE_NAME = "basil-resale";
 window.BUNDLE = {
   "nodes": [
     {
@@ -188,7 +188,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/faq",
-        "label": "Frequently Asked Questions \u2014 Basil Resale",
+        "label": "Frequently Asked Questions - Basil Resale",
         "type": "Playbooks & Runbooks",
         "description": "Common questions about Basil Resale's pre-owned inventory, financing, service, and warranties in Williamsville and Buffalo, NY, sourced from the PromptGraph API 77-prompt library.",
         "resource": "https://www.basilresale.com/",
@@ -200,7 +200,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/new-vehicles",
-        "label": "New Vehicles \u2014 Basil Family Dealerships",
+        "label": "New Vehicles - Basil Family Dealerships",
         "type": "Entities",
         "description": "New cars, trucks, and SUVs available through the Basil Family Dealerships network of 10 locations across Western New York, accessible via Basil Resale.",
         "resource": "https://www.basilcars.com/new-vehicles/",
@@ -236,7 +236,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/testimonials",
-        "label": "Customer Testimonials \u2014 Basil Resale Sheridan",
+        "label": "Customer Testimonials - Basil Resale Sheridan",
         "type": "Entities",
         "description": "Customer reviews and ratings for Basil Resale Sheridan, sourced from the PromptGraph API with aggregate 4.5 rating from 2,579 reviews.",
         "resource": "https://api.promptgraph.ai/api/v1/basil-resale-sheridan/testimonials",
@@ -260,7 +260,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/ai-discovery-page",
-        "label": "AI Discovery Page \u2014 Basil Resale Sheridan",
+        "label": "AI Discovery Page - Basil Resale Sheridan",
         "type": "APIs",
         "description": "Machine-readable knowledge base and semantic data endpoints for Basil Resale Sheridan, providing AI agents structured access to business info, 1,411 vehicle inventory, and 77 Q&A prompts via PromptGraph API.",
         "resource": "https://api.promptgraph.ai/api/v1/basil-resale-sheridan/.well-known/ai-manifest.json",
@@ -272,7 +272,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/llms-txt",
-        "label": "llms.txt \u2014 Basil Resale Sheridan",
+        "label": "llms.txt - Basil Resale Sheridan",
         "type": "APIs",
         "description": "Full llms.txt directive content for AI agent guidance, sourced from the PromptGraph API at api.promptgraph.ai/api/v1/basil-resale-sheridan/llms.txt.",
         "resource": "https://api.promptgraph.ai/api/v1/basil-resale-sheridan/llms.txt",
@@ -284,7 +284,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/prompts",
-        "label": "PromptGraph Prompt Library \u2014 Basil Resale Sheridan",
+        "label": "PromptGraph Prompt Library - Basil Resale Sheridan",
         "type": "Playbooks & Runbooks",
         "description": "Complete library of 77 structured Q&A prompts from the PromptGraph API for Basil Resale Sheridan, covering pre-owned vehicles, financing, service, and dealership information.",
         "resource": "https://api.promptgraph.ai/api/v1/basil-resale-sheridan/prompts",
@@ -465,7 +465,7 @@ window.BUNDLE = {
 (function () {
   const bundle = window.BUNDLE;
   const bundleName = window.BUNDLE_NAME;
-  document.title = `${bundleName} — OKF Viewer`;
+  document.title = `${bundleName} - OKF Viewer`;
   document.getElementById("bundle-name").textContent = bundleName;
 
   const typeSelect = document.getElementById("filter-type");
@@ -557,7 +557,7 @@ window.BUNDLE = {
 
     document.getElementById("detail-title").textContent = data.label;
     document.getElementById("detail-id").textContent = conceptId;
-    document.getElementById("detail-description").textContent = data.description || "—";
+    document.getElementById("detail-description").textContent = data.description || "-";
 
     const resourceEl = document.getElementById("detail-resource");
     resourceEl.innerHTML = "";
@@ -570,7 +570,7 @@ window.BUNDLE = {
       a.className = "external";
       resourceEl.appendChild(a);
     } else {
-      resourceEl.textContent = "—";
+      resourceEl.textContent = "-";
     }
 
     const tagsEl = document.getElementById("detail-tags");
@@ -583,7 +583,7 @@ window.BUNDLE = {
         tagsEl.appendChild(span);
       }
     } else {
-      tagsEl.textContent = "—";
+      tagsEl.textContent = "-";
     }
 
     const body = bundle.bodies[conceptId] || "";
@@ -601,7 +601,7 @@ window.BUNDLE = {
       for (const src of bl) {
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.textContent = nodeIndex[src]?.label || src;
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
         a.dataset.target = src;
         a.addEventListener("click", () => showDetail(src));
         li.appendChild(a);
@@ -629,6 +629,7 @@ window.BUNDLE = {
         }
         if (nodeIndex[target]) {
           a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
           a.setAttribute("href", "javascript:void(0)");
           a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
           return;

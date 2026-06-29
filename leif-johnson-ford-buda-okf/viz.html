@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>leif-johnson-ford-buda — OKF Bundle Viewer</title>
+<title>leif-johnson-ford-buda - OKF Bundle Viewer</title>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <style>
@@ -176,7 +176,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/faq",
-        "label": "Frequently Asked Questions \u2014 Leif Johnson Ford of Buda",
+        "label": "Frequently Asked Questions - Leif Johnson Ford of Buda",
         "type": "Playbook",
         "description": "Common customer questions about Ford vehicle features, financing, service, and dealership operations.",
         "resource": "https://api.promptgraph.ai/api/v1/leif-johnson-buda/prompts",
@@ -188,7 +188,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/financing",
-        "label": "Financing & Leasing \u2014 Leif Johnson Ford of Buda",
+        "label": "Financing & Leasing - Leif Johnson Ford of Buda",
         "type": "Entity",
         "description": "Vehicle financing and leasing options at Leif Johnson Ford of Buda including online applications, trade-in valuation, and payment calculators.",
         "resource": "https://www.leifjohnsonfordofbuda.com/finance-center/",
@@ -200,7 +200,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/new-vehicles",
-        "label": "New Ford Vehicles \u2014 Leif Johnson Ford of Buda",
+        "label": "New Ford Vehicles - Leif Johnson Ford of Buda",
         "type": "Entity",
         "description": "Full lineup of new Ford vehicles available at Leif Johnson Ford of Buda including trucks, SUVs, crossovers, vans, and electric models.",
         "resource": "https://www.leifjohnsonfordofbuda.com/inventory/new-vehicles/",
@@ -212,7 +212,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/service-center",
-        "label": "Service Center \u2014 Leif Johnson Ford of Buda",
+        "label": "Service Center - Leif Johnson Ford of Buda",
         "type": "Entity",
         "description": "Factory-authorized Ford service department in Buda, TX offering maintenance, repairs, OEM parts, and mobile service.",
         "resource": "https://www.leifjohnsonfordofbuda.com/service-center/",
@@ -224,7 +224,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/staff",
-        "label": "Staff Directory \u2014 Leif Johnson Ford of Buda",
+        "label": "Staff Directory - Leif Johnson Ford of Buda",
         "type": "Entity",
         "description": "Team directory for Leif Johnson Ford of Buda including management, sales, service, and parts departments.",
         "resource": "https://www.leifjohnsonfordofbuda.com/staff/",
@@ -236,7 +236,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/used-vehicles",
-        "label": "Pre-Owned Vehicles \u2014 Leif Johnson Ford of Buda",
+        "label": "Pre-Owned Vehicles - Leif Johnson Ford of Buda",
         "type": "Entity",
         "description": "Pre-owned and certified pre-owned vehicle inventory at Leif Johnson Ford of Buda including used cars, trucks, SUVs, and Ford Blue Advantage program.",
         "resource": "https://www.leifjohnsonfordofbuda.com/inventory/used-vehicles/",
@@ -248,7 +248,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/ai-discovery-page",
-        "label": "AI Discovery Hub \u2014 Leif Johnson Ford of Buda",
+        "label": "AI Discovery Hub - Leif Johnson Ford of Buda",
         "type": "API",
         "description": "AI-optimized discovery page with structured endpoints for LLM consumption, including business profile, vehicle inventory, prompts, and site directives.",
         "resource": "https://www.leifjohnsonfordofbuda.com/ai-discovery-hub/",
@@ -260,7 +260,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/llms-txt",
-        "label": "llms.txt \u2014 Leif Johnson Ford of Buda",
+        "label": "llms.txt - Leif Johnson Ford of Buda",
         "type": "API",
         "description": "AI discovery and consumption directive for Leif Johnson Ford of Buda providing structured API endpoints, schema types, and business context.",
         "resource": "https://api.promptgraph.ai/api/v1/leif-johnson-buda/llms.txt",
@@ -272,7 +272,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/prompts",
-        "label": "Prompt Library \u2014 Leif Johnson Ford of Buda",
+        "label": "Prompt Library - Leif Johnson Ford of Buda",
         "type": "Playbook",
         "description": "Structured Q&A prompts for consistent AI responses covering vehicles, financing, service, and dealership operations.",
         "resource": "https://api.promptgraph.ai/api/v1/leif-johnson-buda/prompts",
@@ -284,7 +284,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "tables/model-comparison",
-        "label": "Ford Model Comparison \u2014 Leif Johnson Ford of Buda",
+        "label": "Ford Model Comparison - Leif Johnson Ford of Buda",
         "type": "Table",
         "description": "Comparison of key Ford models available at Leif Johnson Ford of Buda across body type, fuel options, passenger capacity, and starting price.",
         "resource": "https://www.leifjohnsonfordofbuda.com/model-lineup/",
@@ -481,7 +481,7 @@ window.BUNDLE = {
 (function () {
   const bundle = window.BUNDLE;
   const bundleName = window.BUNDLE_NAME;
-  document.title = `${bundleName} — OKF Viewer`;
+  document.title = `${bundleName} - OKF Viewer`;
   document.getElementById("bundle-name").textContent = bundleName;
 
   const typeSelect = document.getElementById("filter-type");
@@ -573,7 +573,7 @@ window.BUNDLE = {
 
     document.getElementById("detail-title").textContent = data.label;
     document.getElementById("detail-id").textContent = conceptId;
-    document.getElementById("detail-description").textContent = data.description || "—";
+    document.getElementById("detail-description").textContent = data.description || "-";
 
     const resourceEl = document.getElementById("detail-resource");
     resourceEl.innerHTML = "";
@@ -586,7 +586,7 @@ window.BUNDLE = {
       a.className = "external";
       resourceEl.appendChild(a);
     } else {
-      resourceEl.textContent = "—";
+      resourceEl.textContent = "-";
     }
 
     const tagsEl = document.getElementById("detail-tags");
@@ -599,7 +599,7 @@ window.BUNDLE = {
         tagsEl.appendChild(span);
       }
     } else {
-      tagsEl.textContent = "—";
+      tagsEl.textContent = "-";
     }
 
     const body = bundle.bodies[conceptId] || "";
@@ -617,7 +617,7 @@ window.BUNDLE = {
       for (const src of bl) {
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.textContent = nodeIndex[src]?.label || src;
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
         a.dataset.target = src;
         a.addEventListener("click", () => showDetail(src));
         li.appendChild(a);
@@ -645,6 +645,7 @@ window.BUNDLE = {
         }
         if (nodeIndex[target]) {
           a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
           a.setAttribute("href", "javascript:void(0)");
           a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
           return;

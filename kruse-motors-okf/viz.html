@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Kruse Motors — OKF Bundle Viewer</title>
+<title>kruse-motors - OKF Bundle Viewer</title>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <style>
@@ -158,7 +158,7 @@ hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
   </section>
 </main>
 <script>
-window.BUNDLE_NAME = "Kruse Motors";
+window.BUNDLE_NAME = "kruse-motors";
 window.BUNDLE = {
   "nodes": [
     {
@@ -176,7 +176,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/faq",
-        "label": "Frequently Asked Questions \u2014 Kruse Motors",
+        "label": "Frequently Asked Questions - Kruse Motors",
         "type": "Playbooks & Runbooks",
         "description": "Common questions and answers about Kruse Motors covering inventory, financing, service, trade-ins, and dealership experience.",
         "resource": "https://krusemotors.com/",
@@ -188,7 +188,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/financing",
-        "label": "Financing & Leasing \u2014 Kruse Motors",
+        "label": "Financing & Leasing - Kruse Motors",
         "type": "Entities",
         "description": "Auto financing and leasing options at Kruse Motors including pre-qualification, online credit applications, student savings, lease specials, and flexible loan programs.",
         "resource": "https://krusemotors.com/finance",
@@ -200,7 +200,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/new-vehicles",
-        "label": "New Vehicle Inventory \u2014 Kruse Motors",
+        "label": "New Vehicle Inventory - Kruse Motors",
         "type": "Entities",
         "description": "New vehicle lineup across Ford, Lincoln, Buick, and GMC brands including trucks, SUVs, crossovers, sedans, and electric vehicles with custom ordering through Kruse Your Way.",
         "resource": "https://krusemotors.com/inventory/new",
@@ -212,7 +212,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/service-center",
-        "label": "Service Center \u2014 Kruse Motors",
+        "label": "Service Center - Kruse Motors",
         "type": "Entities",
         "description": "Factory-authorized service centers at Kruse Motors Ford Lincoln and Kruse Motors Buick GMC offering routine maintenance, advanced diagnostics, major repairs, OEM parts, and accessories.",
         "resource": "https://krusemotors.com/schedule-a-service",
@@ -224,7 +224,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/staff",
-        "label": "Staff Directory \u2014 Kruse Motors",
+        "label": "Staff Directory - Kruse Motors",
         "type": "Entities",
         "description": "Sales, service, and finance staff at Kruse Motors compiled from customer testimonials and reviews.",
         "resource": "https://krusemotors.com/staff",
@@ -236,7 +236,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "datasets/used-vehicles",
-        "label": "Used Vehicle Inventory \u2014 Kruse Motors",
+        "label": "Used Vehicle Inventory - Kruse Motors",
         "type": "Entities",
         "description": "Pre-owned and certified pre-owned inventory of cars, trucks, and SUVs across multiple brands with KBB trade-in valuation, vehicle protection plans, and we-buy-cars program.",
         "resource": "https://krusemotors.com/inventory/used",
@@ -248,7 +248,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/ai-discovery-page",
-        "label": "AI Discovery Page \u2014 Kruse Motors",
+        "label": "AI Discovery Page - Kruse Motors",
         "type": "APIs",
         "description": "Machine-readable knowledge base and semantic data endpoints for Kruse Motors, providing AI agents structured access to business info, vehicle inventory, customer reviews, and recommended actions via PromptGraph.",
         "resource": "https://krusemotors.com/ai-discovery-page/",
@@ -260,7 +260,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/llms-txt",
-        "label": "LLMs.txt \u2014 Kruse Motors",
+        "label": "LLMs.txt - Kruse Motors",
         "type": "APIs",
         "description": "Full llms.txt directive content for Kruse Motors including PromptGraph API endpoints, core pages, blog content, and featured AI prompts.",
         "resource": "https://api.promptgraph.ai/api/v1/kruse-motors/llms.txt",
@@ -272,7 +272,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/prompts",
-        "label": "PromptGraph Prompts \u2014 Kruse Motors",
+        "label": "PromptGraph Prompts - Kruse Motors",
         "type": "Playbooks & Runbooks",
         "description": "Complete collection of 28+ structured Q&A prompts covering Kruse Motors dealership, vehicles, financing, service, and customer experience delivered via PromptGraph API.",
         "resource": "https://api.promptgraph.ai/api/v1/kruse-motors/prompts",
@@ -284,7 +284,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/testimonials",
-        "label": "Customer Testimonials \u2014 Kruse Motors",
+        "label": "Customer Testimonials - Kruse Motors",
         "type": "Entities",
         "description": "Collection of 100+ customer reviews with predominantly 5-star ratings, most-praised staff, and notable excerpts from Kruse Motors customers.",
         "resource": "https://api.promptgraph.ai/api/v1/kruse-motors/testimonials",
@@ -296,7 +296,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "tables/brand-comparison",
-        "label": "Brand Comparison \u2014 Kruse Motors",
+        "label": "Brand Comparison - Kruse Motors",
         "type": "Tables & Datasets",
         "description": "Side-by-side comparison of the four automotive brands available at Kruse Motors \u2014 Ford, Lincoln, Buick, and GMC \u2014 covering positioning, popular models, key features, and target buyer.",
         "resource": "https://krusemotors.com/",
@@ -494,7 +494,7 @@ window.BUNDLE = {
 (function () {
   const bundle = window.BUNDLE;
   const bundleName = window.BUNDLE_NAME;
-  document.title = `${bundleName} — OKF Viewer`;
+  document.title = `${bundleName} - OKF Viewer`;
   document.getElementById("bundle-name").textContent = bundleName;
 
   const typeSelect = document.getElementById("filter-type");
@@ -586,7 +586,7 @@ window.BUNDLE = {
 
     document.getElementById("detail-title").textContent = data.label;
     document.getElementById("detail-id").textContent = conceptId;
-    document.getElementById("detail-description").textContent = data.description || "—";
+    document.getElementById("detail-description").textContent = data.description || "-";
 
     const resourceEl = document.getElementById("detail-resource");
     resourceEl.innerHTML = "";
@@ -599,7 +599,7 @@ window.BUNDLE = {
       a.className = "external";
       resourceEl.appendChild(a);
     } else {
-      resourceEl.textContent = "—";
+      resourceEl.textContent = "-";
     }
 
     const tagsEl = document.getElementById("detail-tags");
@@ -612,7 +612,7 @@ window.BUNDLE = {
         tagsEl.appendChild(span);
       }
     } else {
-      tagsEl.textContent = "—";
+      tagsEl.textContent = "-";
     }
 
     const body = bundle.bodies[conceptId] || "";
@@ -630,7 +630,7 @@ window.BUNDLE = {
       for (const src of bl) {
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.textContent = nodeIndex[src]?.label || src;
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
         a.dataset.target = src;
         a.addEventListener("click", () => showDetail(src));
         li.appendChild(a);
@@ -658,6 +658,7 @@ window.BUNDLE = {
         }
         if (nodeIndex[target]) {
           a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
           a.setAttribute("href", "javascript:void(0)");
           a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
           return;

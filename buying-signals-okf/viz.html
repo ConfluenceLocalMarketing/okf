@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Buying Signals — OKF Bundle Viewer</title>
+<title>buying-signals - OKF Bundle Viewer</title>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <style>
@@ -158,7 +158,7 @@ hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
   </section>
 </main>
 <script>
-window.BUNDLE_NAME = "Buying Signals";
+window.BUNDLE_NAME = "buying-signals";
 window.BUNDLE = {
   "nodes": [
     {
@@ -308,7 +308,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/ai-discovery-page",
-        "label": "AI Discovery Page \u2014 Buying Signals",
+        "label": "AI Discovery Page - Buying Signals",
         "type": "APIs",
         "description": "Machine-readable knowledge base and semantic data endpoints for Buying Signals, providing AI agents structured access to business info, product data, and recommended actions via PromptGraph.",
         "resource": "https://buyingsignals.com/ai-discovery-page/",
@@ -320,7 +320,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/llms-txt",
-        "label": "llms.txt \u2014 Buying Signals",
+        "label": "llms.txt - Buying Signals",
         "type": "APIs",
         "description": "Full llms.txt directive content for AI agent guidance, sourced from buyingsignals.com and the PromptGraph API at api.promptgraph.ai/api/v1/buying-signals/llms.txt.",
         "resource": "https://buyingsignals.com/llms.txt",
@@ -332,7 +332,7 @@ window.BUNDLE = {
     {
       "data": {
         "id": "references/prompts",
-        "label": "PromptGraph Prompt Library \u2014 Buying Signals",
+        "label": "PromptGraph Prompt Library - Buying Signals",
         "type": "Playbooks & Runbooks",
         "description": "Complete library of 78 structured Q&A prompts from the PromptGraph API for Buying Signals, covering data hygiene, audience targeting, advertising, SEO, AI marketing, and partner selection.",
         "resource": "https://api.promptgraph.ai/api/v1/buying-signals/prompts",
@@ -602,7 +602,7 @@ window.BUNDLE = {
 (function () {
   const bundle = window.BUNDLE;
   const bundleName = window.BUNDLE_NAME;
-  document.title = `${bundleName} — OKF Viewer`;
+  document.title = `${bundleName} - OKF Viewer`;
   document.getElementById("bundle-name").textContent = bundleName;
 
   const typeSelect = document.getElementById("filter-type");
@@ -694,7 +694,7 @@ window.BUNDLE = {
 
     document.getElementById("detail-title").textContent = data.label;
     document.getElementById("detail-id").textContent = conceptId;
-    document.getElementById("detail-description").textContent = data.description || "—";
+    document.getElementById("detail-description").textContent = data.description || "-";
 
     const resourceEl = document.getElementById("detail-resource");
     resourceEl.innerHTML = "";
@@ -707,7 +707,7 @@ window.BUNDLE = {
       a.className = "external";
       resourceEl.appendChild(a);
     } else {
-      resourceEl.textContent = "—";
+      resourceEl.textContent = "-";
     }
 
     const tagsEl = document.getElementById("detail-tags");
@@ -720,7 +720,7 @@ window.BUNDLE = {
         tagsEl.appendChild(span);
       }
     } else {
-      tagsEl.textContent = "—";
+      tagsEl.textContent = "-";
     }
 
     const body = bundle.bodies[conceptId] || "";
@@ -738,7 +738,7 @@ window.BUNDLE = {
       for (const src of bl) {
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.textContent = nodeIndex[src]?.label || src;
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
         a.dataset.target = src;
         a.addEventListener("click", () => showDetail(src));
         li.appendChild(a);
@@ -766,6 +766,7 @@ window.BUNDLE = {
         }
         if (nodeIndex[target]) {
           a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
           a.setAttribute("href", "javascript:void(0)");
           a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
           return;
