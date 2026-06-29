@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Strategic Marketing Suite
 description: Omnichannel programmatic advertising platform running full-funnel campaigns across Display, CTV, OTT, Radio, SEM, SEO, and Social using real consumer signals and geo-framed targeting.
 resource: https://buyingsignals.com/

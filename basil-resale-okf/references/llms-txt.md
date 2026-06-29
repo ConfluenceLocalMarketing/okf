@@ -1,5 +1,5 @@
 ---
-type: reference
+type: APIs
 title: llms.txt — Basil Resale Sheridan
 description: Full llms.txt directive content for AI agent guidance, sourced from the PromptGraph API at api.promptgraph.ai/api/v1/basil-resale-sheridan/llms.txt.
 resource: https://api.promptgraph.ai/api/v1/basil-resale-sheridan/llms.txt

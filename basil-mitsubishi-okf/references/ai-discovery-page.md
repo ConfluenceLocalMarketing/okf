@@ -1,5 +1,5 @@
 ---
-type: ai-discovery-page
+type: APIs
 title: AI Discovery Page — Basil Mitsubishi
 description: Machine-readable knowledge base and semantic data endpoints for Basil Mitsubishi, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.
 resource: https://www.basilmitsubishi.com/ai-discovery-page/

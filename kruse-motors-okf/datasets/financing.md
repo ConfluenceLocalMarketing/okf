@@ -1,5 +1,5 @@
 ---
-type: auto-finance
+type: Entities
 title: Financing & Leasing — Kruse Motors
 description: Auto financing and leasing options at Kruse Motors including pre-qualification, online credit applications, student savings, lease specials, and flexible loan programs.
 resource: https://krusemotors.com/finance

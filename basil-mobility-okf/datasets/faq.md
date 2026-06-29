@@ -1,5 +1,5 @@
 ---
-type: FAQ
+type: Playbooks & Runbooks
 title: Frequently Asked Questions — Basil Mobility
 description: Common questions about Basil Mobility's wheelchair accessible vehicles, service, financing, and adaptive equipment in Depew, NY.
 resource: https://www.basilmobility.com/

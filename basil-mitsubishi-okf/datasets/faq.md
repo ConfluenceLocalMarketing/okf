@@ -1,5 +1,5 @@
 ---
-type: FAQ
+type: Playbooks & Runbooks
 title: Frequently Asked Questions — Basil Mitsubishi
 description: Common questions about Basil Mitsubishi's new and pre-owned inventory, financing, service, and dealership perks in Buffalo, NY. (synthesized)
 resource: https://www.basilmitsubishi.com/

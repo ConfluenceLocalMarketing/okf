@@ -1,5 +1,5 @@
 ---
-type: service-center
+type: Entities
 title: Basil Mobility Service Center
 description: Full-service mobility vehicle service center in Depew, NY with BraunAbility-certified technicians, adaptive equipment repair, routine maintenance, and genuine parts.
 resource: https://www.basilmobility.com/service/

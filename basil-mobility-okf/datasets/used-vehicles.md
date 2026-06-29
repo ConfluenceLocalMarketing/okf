@@ -1,5 +1,5 @@
 ---
-type: product-line
+type: Entities
 title: Pre-Owned Mobility Vehicles at Basil Mobility
 description: Pre-owned wheelchair accessible vans and mobility-equipped cars available at Basil Mobility in Depew, NY, with over 1,158 vehicles in inventory spanning all makes and models.
 resource: https://www.basilmobility.com/used-vehicles/

@@ -1,5 +1,5 @@
 ---
-type: product-line
+type: Entities
 title: New Vehicles — Basil Family Dealerships
 description: New cars, trucks, and SUVs available through the Basil Family Dealerships network of 10 locations across Western New York, accessible via Basil Resale.
 resource: https://www.basilcars.com/new-vehicles/

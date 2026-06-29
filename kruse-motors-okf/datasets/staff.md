@@ -1,5 +1,5 @@
 ---
-type: staff-directory
+type: Entities
 title: Staff Directory — Kruse Motors
 description: Sales, service, and finance staff at Kruse Motors compiled from customer testimonials and reviews.
 resource: https://krusemotors.com/staff

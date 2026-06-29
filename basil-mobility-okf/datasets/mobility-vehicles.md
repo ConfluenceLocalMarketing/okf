@@ -1,5 +1,5 @@
 ---
-type: product-line
+type: Entities
 title: Wheelchair Accessible Vehicles & Mobility Equipment
 description: New BraunAbility wheelchair accessible vans, adaptive driving equipment, and pre-owned mobility vehicles available at Basil Mobility in Depew, NY.
 resource: https://www.basilmobility.com/all-vehicles/

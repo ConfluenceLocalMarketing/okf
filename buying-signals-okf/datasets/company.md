@@ -1,5 +1,5 @@
 ---
-type: organization
+type: Entities
 title: Buying Signals
 description: Marketing technology and data services company based in San Leandro, CA and Grapevine, TX, offering data hygiene, website visitor intelligence, programmatic advertising, AI SEO, and business intelligence solutions.
 resource: https://buyingsignals.com/

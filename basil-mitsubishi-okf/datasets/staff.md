@@ -1,5 +1,5 @@
 ---
-type: staff-directory
+type: Entities
 title: Basil Mitsubishi Staff Directory
 description: Key personnel and leadership at Basil Mitsubishi in Buffalo, NY, including dealer principals, management, sales, service, and parts teams.
 resource: https://www.basilmitsubishi.com/staff/

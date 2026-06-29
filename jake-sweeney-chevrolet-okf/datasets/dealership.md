@@ -1,5 +1,5 @@
 ---
-type: organization
+type: Entities
 title: Jake Sweeney Chevrolet
 description: Chevrolet dealership in Cincinnati, OH serving the Tri-County area with new and pre-owned vehicles, financing, service, and parts — family-owned and operated since 1917.
 resource: https://www.jakesweeneychevrolet.com/

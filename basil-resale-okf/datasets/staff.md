@@ -1,5 +1,5 @@
 ---
-type: staff-directory
+type: Entities
 title: Basil Resale Staff Directory
 description: Key personnel and leadership at Basil Resale Sheridan and Basil Resale Transit in Williamsville and Buffalo, NY.
 resource: https://www.basilresale.com/

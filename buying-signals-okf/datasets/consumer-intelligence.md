@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Consumer Intelligence
 description: Buyer behavior analytics platform that provides deep understanding of shopping behaviors, purchase intent, and consumer patterns across channels.
 resource: https://buyingsignals.com/consumer-intelligence/

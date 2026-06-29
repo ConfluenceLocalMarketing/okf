@@ -1,5 +1,5 @@
 ---
-type: ai-discovery-page
+type: APIs
 title: AI Discovery Page — Basil Resale Sheridan
 description: Machine-readable knowledge base and semantic data endpoints for Basil Resale Sheridan, providing AI agents structured access to business info, 1,411 vehicle inventory, and 77 Q&A prompts via PromptGraph API.
 resource: https://api.promptgraph.ai/api/v1/basil-resale-sheridan/.well-known/ai-manifest.json

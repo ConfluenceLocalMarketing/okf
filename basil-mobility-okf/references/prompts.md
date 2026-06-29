@@ -1,5 +1,5 @@
 ---
-type: prompt-library
+type: Playbooks & Runbooks
 title: PromptGraph Prompt Library — Basil Mobility
 description: Complete library of 74 structured Q&A prompts from the PromptGraph API for Basil Mobility, covering vehicles, adaptive equipment, service, financing, rentals, and dealership information.
 resource: https://api.promptgraph.ai/api/v1/basil-mobility/prompts

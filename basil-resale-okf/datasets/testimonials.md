@@ -1,5 +1,5 @@
 ---
-type: testimonial
+type: Entities
 title: Customer Testimonials — Basil Resale Sheridan
 description: Customer reviews and ratings for Basil Resale Sheridan, sourced from the PromptGraph API with aggregate 4.5 rating from 2,579 reviews.
 resource: https://api.promptgraph.ai/api/v1/basil-resale-sheridan/testimonials

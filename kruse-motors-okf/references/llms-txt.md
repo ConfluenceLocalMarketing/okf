@@ -1,5 +1,5 @@
 ---
-type: llms-txt
+type: APIs
 title: LLMs.txt — Kruse Motors
 description: Full llms.txt directive content for Kruse Motors including PromptGraph API endpoints, core pages, blog content, and featured AI prompts.
 resource: https://api.promptgraph.ai/api/v1/kruse-motors/llms.txt

@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Geo Signals
 description: Location-based consumer targeting platform using geo-framing technology and Location IQ to reach in-market consumers with the right message at the right time.
 resource: https://buyingsignals.com/geo-signals/

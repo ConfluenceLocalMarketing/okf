@@ -1,5 +1,5 @@
 ---
-type: customer-reviews
+type: Entities
 title: Basil Mitsubishi Customer Testimonials
 description: Customer reviews and testimonials for Basil Mitsubishi in Buffalo, NY — 245 reviews with a 5.0 aggregate rating, sourced from the PromptGraph API.
 resource: https://api.promptgraph.ai/api/v1/basil-mitsubishi/testimonials

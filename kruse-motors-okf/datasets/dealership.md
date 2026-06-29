@@ -1,5 +1,5 @@
 ---
-type: auto-dealer
+type: Entities
 title: Kruse Motors Auto Group
 description: Multi-brand automotive dealership in Marshall, MN serving as certified dealer for Ford, Lincoln, Buick, and GMC with new/used vehicle sales, service, parts, and financing.
 resource: https://krusemotors.com/

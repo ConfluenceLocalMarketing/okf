@@ -1,5 +1,5 @@
 ---
-type: service-department
+type: Entities
 title: Service Center — Kruse Motors
 description: Factory-authorized service centers at Kruse Motors Ford Lincoln and Kruse Motors Buick GMC offering routine maintenance, advanced diagnostics, major repairs, OEM parts, and accessories.
 resource: https://krusemotors.com/schedule-a-service

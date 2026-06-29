@@ -1,5 +1,5 @@
 ---
-type: FAQ
+type: Playbooks & Runbooks
 title: Frequently Asked Questions — Basil Resale
 description: Common questions about Basil Resale's pre-owned inventory, financing, service, and warranties in Williamsville and Buffalo, NY, sourced from the PromptGraph API 77-prompt library.
 resource: https://www.basilresale.com/

@@ -1,5 +1,5 @@
 ---
-type: reference
+type: APIs
 title: llms.txt — Basil Mitsubishi
 description: Full llms.txt directive content for AI agent guidance, sourced from basilmitsubishi.com and the PromptGraph API at api.promptgraph.ai/api/v1/basil-mitsubishi/llms.txt.
 resource: https://www.basilmitsubishi.com/llms.txt

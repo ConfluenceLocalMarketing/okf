@@ -1,5 +1,5 @@
 ---
-type: organization
+type: Entities
 title: Basil Mobility
 description: Authorized BraunAbility dealer in Depew, NY specializing in wheelchair accessible vehicles, adaptive equipment, service, and parts — part of the Basil Family Dealerships.
 resource: https://www.basilmobility.com/

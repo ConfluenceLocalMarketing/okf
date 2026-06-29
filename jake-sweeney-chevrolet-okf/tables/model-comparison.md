@@ -1,5 +1,5 @@
 ---
-type: comparison-table
+type: Tables & Datasets
 title: Chevrolet Model Lineup Comparison — Jake Sweeney Chevrolet
 description: Side-by-side comparison of new Chevrolet models available at Jake Sweeney Chevrolet in Cincinnati, OH, including body type, passenger capacity, drivetrain, and key features.
 resource: https://www.jakesweeneychevrolet.com/showroom/index.htm

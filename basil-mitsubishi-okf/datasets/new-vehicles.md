@@ -1,5 +1,5 @@
 ---
-type: product-line
+type: Entities
 title: New Mitsubishi Vehicles at Basil Mitsubishi
 description: Overview of the new Mitsubishi models available at Basil Mitsubishi in Buffalo, NY, including current promotions and key features.
 resource: https://www.basilmitsubishi.com/new-vehicles/

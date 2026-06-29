@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>basil-mitsubishi — OKF Bundle Viewer</title>
+<title>Basil Mitsubishi — OKF Bundle Viewer</title>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <style>
@@ -158,139 +158,139 @@ hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
   </section>
 </main>
 <script>
-window.BUNDLE_NAME = "basil-mitsubishi";
+window.BUNDLE_NAME = "Basil Mitsubishi";
 window.BUNDLE = {
   "nodes": [
     {
       "data": {
         "id": "datasets/dealership",
         "label": "Basil Mitsubishi",
-        "type": "organization",
+        "type": "Entities",
         "description": "Mitsubishi dealership in Buffalo, NY offering new and pre-owned vehicles, financing, service, and parts \u2014 part of the Basil Family Dealerships with over 65 years of service.",
         "resource": "https://www.basilmitsubishi.com/",
         "tags": [],
-        "color": "#ec4899",
-        "size": 30
+        "color": "#8b5cf6",
+        "size": 22
       }
     },
     {
       "data": {
         "id": "datasets/faq",
         "label": "Frequently Asked Questions \u2014 Basil Mitsubishi",
-        "type": "FAQ",
+        "type": "Playbooks & Runbooks",
         "description": "Common questions about Basil Mitsubishi's new and pre-owned inventory, financing, service, and dealership perks in Buffalo, NY. (synthesized)",
         "resource": "https://www.basilmitsubishi.com/",
         "tags": [],
-        "color": "#f59e0b",
-        "size": 28
+        "color": "#8b5cf6",
+        "size": 16
       }
     },
     {
       "data": {
         "id": "datasets/new-vehicles",
         "label": "New Mitsubishi Vehicles at Basil Mitsubishi",
-        "type": "product-line",
+        "type": "Entities",
         "description": "Overview of the new Mitsubishi models available at Basil Mitsubishi in Buffalo, NY, including current promotions and key features.",
         "resource": "https://www.basilmitsubishi.com/new-vehicles/",
         "tags": [],
-        "color": "#3b82f6",
-        "size": 32
+        "color": "#8b5cf6",
+        "size": 24
       }
     },
     {
       "data": {
         "id": "datasets/service-center",
         "label": "Basil Mitsubishi Service Center",
-        "type": "service-center",
+        "type": "Entities",
         "description": "Full-service Mitsubishi service center in Buffalo, NY offering routine maintenance, diagnostics, major repairs, collision repair, and genuine OEM parts with factory-trained technicians.",
         "resource": "https://www.basilmitsubishi.com/service/",
         "tags": [],
-        "color": "#ef4444",
-        "size": 34
+        "color": "#8b5cf6",
+        "size": 26
       }
     },
     {
       "data": {
         "id": "datasets/staff",
         "label": "Basil Mitsubishi Staff Directory",
-        "type": "staff-directory",
+        "type": "Entities",
         "description": "Key personnel and leadership at Basil Mitsubishi in Buffalo, NY, including dealer principals, management, sales, service, and parts teams.",
         "resource": "https://www.basilmitsubishi.com/staff/",
         "tags": [],
-        "color": "#a855f7",
-        "size": 28
+        "color": "#8b5cf6",
+        "size": 17
       }
     },
     {
       "data": {
         "id": "datasets/used-vehicles",
         "label": "Pre-Owned & Certified Vehicles at Basil Mitsubishi",
-        "type": "product-line",
+        "type": "Entities",
         "description": "Inventory of pre-owned cars, trucks, SUVs, and certified pre-owned (CPO) Mitsubishi vehicles at Basil Mitsubishi in Buffalo, NY \u2014 with multi-point inspection, warranty options, and budget-friendly pricing.",
         "resource": "https://www.basilmitsubishi.com/used-vehicles/",
         "tags": [],
-        "color": "#3b82f6",
-        "size": 33
+        "color": "#8b5cf6",
+        "size": 25
       }
     },
     {
       "data": {
         "id": "references/ai-discovery-page",
         "label": "AI Discovery Page \u2014 Basil Mitsubishi",
-        "type": "ai-discovery-page",
+        "type": "APIs",
         "description": "Machine-readable knowledge base and semantic data endpoints for Basil Mitsubishi, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
         "resource": "https://www.basilmitsubishi.com/ai-discovery-page/",
         "tags": [],
-        "color": "#06b6d4",
-        "size": 37
+        "color": "#10b981",
+        "size": 29
       }
     },
     {
       "data": {
         "id": "references/llms-txt",
         "label": "llms.txt \u2014 Basil Mitsubishi",
-        "type": "reference",
+        "type": "APIs",
         "description": "Full llms.txt directive content for AI agent guidance, sourced from basilmitsubishi.com and the PromptGraph API at api.promptgraph.ai/api/v1/basil-mitsubishi/llms.txt.",
         "resource": "https://www.basilmitsubishi.com/llms.txt",
         "tags": [],
         "color": "#10b981",
-        "size": 28
+        "size": 20
       }
     },
     {
       "data": {
         "id": "references/prompts",
         "label": "PromptGraph Prompt Library \u2014 Basil Mitsubishi",
-        "type": "prompt-library",
+        "type": "Playbooks & Runbooks",
         "description": "Complete library of 64 structured Q&A prompts from the PromptGraph API for Basil Mitsubishi, covering vehicles, financing, service, parts, and dealership information.",
         "resource": "https://api.promptgraph.ai/api/v1/basil-mitsubishi/prompts",
         "tags": [],
-        "color": "#06b6d4",
-        "size": 28
+        "color": "#10b981",
+        "size": 19
       }
     },
     {
       "data": {
         "id": "references/testimonials",
         "label": "Basil Mitsubishi Customer Testimonials",
-        "type": "customer-reviews",
+        "type": "Entities",
         "description": "Customer reviews and testimonials for Basil Mitsubishi in Buffalo, NY \u2014 245 reviews with a 5.0 aggregate rating, sourced from the PromptGraph API.",
         "resource": "https://api.promptgraph.ai/api/v1/basil-mitsubishi/testimonials",
         "tags": [],
-        "color": "#f97316",
-        "size": 32
+        "color": "#10b981",
+        "size": 24
       }
     },
     {
       "data": {
         "id": "tables/model-comparison",
         "label": "Mitsubishi Model Lineup Comparison \u2014 Basil Mitsubishi",
-        "type": "comparison-table",
+        "type": "Tables & Datasets",
         "description": "Side-by-side comparison of new Mitsubishi models available at Basil Mitsubishi in Buffalo, NY, including body type, passenger capacity, drivetrain, and key features.",
         "resource": "https://www.basilmitsubishi.com/new-vehicles/",
         "tags": [],
-        "color": "#f97316",
-        "size": 36
+        "color": "#3b82f6",
+        "size": 28
       }
     }
   ],
@@ -429,28 +429,16 @@ window.BUNDLE = {
     "tables/model-comparison": "# Mitsubishi Model Lineup Comparison\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Engine | Trim Levels | Starting Price Tier |\n|---|---|---|---|---|---|---|\n| **Outlander** | Mid-size SUV | 7 | FWD / S-AWC AWD | 1.5L Turbo Mild Hybrid | ES, SE, SEL, SEL Touring, Trail Edition | Mid-range |\n| **Outlander PHEV** | Plug-in Hybrid SUV | 5\u20137 | S-AWC AWD | Plug-in Hybrid + EV | ES, SE, SEL, SEL Touring | Premium |\n| **Eclipse Cross** | Compact Crossover | 5 | FWD / AWD | Turbocharged | ES, LE, SE, SEL, SEL Touring, Ralliart | Mid-range |\n| **Outlander Sport** | Subcompact SUV | 5 | FWD / AWD | 2.0L / 2.4L | S, ES, LE, SE, SEL | Value |\n| **Mirage G4** | Subcompact Sedan | 5 | FWD | 1.2L 3-cylinder | ES, LE, SE, SEL | Entry-level |\n\n## Available Promotions (June 2026)\n\n| Model | Best Offer |\n|---|---|\n| Outlander | 0% APR available, up to $8,000 off MSRP |\n| Outlander PHEV | 0% APR for 72 months, lease from $349/month |\n| Eclipse Cross | Competitive financing rates |\n| Outlander Sport | Available savings and rebates |\n| Mirage G4 | Affordable entry-level pricing |\n\n## Key Feature Comparison\n\n| Feature | Outlander | Outlander PHEV | Eclipse Cross | Outlander Sport | Mirage G4 |\n|---|---|---|---|---|---|\n| 3rd Row Seating | Yes (7-passenger) | Available | No | No | No |\n| Panoramic Sunroof | Available | Available | No | No | No |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Available | Available |\n| Wireless Android Auto | Yes | Yes | Yes | Available | Available |\n| Heated Front Seats | Yes | Yes (ventilated also) | Available | Available | Not available |\n| Heated Rear Seats | Yes | Available | No | No | No |\n| Power Liftgate | Available | Available | Available | Not available | Not available |\n| AWD Available | S-AWC | S-AWC (standard) | Available | Available | Not available |\n| Yamaha Premium Audio | Available | Available | Not available | Not available | Not available |\n| My Mitsubishi CONNECT | Yes | Yes | Yes | Yes | Yes |\n| Towing Capacity | 2,000 lbs | 1,500 lbs | 1,500 lbs | 1,500 lbs | Not rated |\n\n## Warranty\n\nAll new Mitsubishi models include:\n- **10-Year / 100,000-Mile Powertrain Limited Warranty**\n- **5-Year / 60,000-Mile New Vehicle Limited Warranty**\n- **7-Year / 100,000-Mile Anti-Corrosion Perforation Limited Warranty**\n- **5-Year / Unlimited-Mile Roadside Assistance**\n\n## Awards\n\n- **Outlander:** 2026 Family Green Car of the Year (Green Car Journal)\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
   },
   "types": [
-    "FAQ",
-    "ai-discovery-page",
-    "comparison-table",
-    "customer-reviews",
-    "organization",
-    "product-line",
-    "prompt-library",
-    "reference",
-    "service-center",
-    "staff-directory"
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
   ],
   "palette": {
-    "organization": "#ec4899",
-    "FAQ": "#f59e0b",
-    "product-line": "#3b82f6",
-    "service-center": "#ef4444",
-    "staff-directory": "#a855f7",
-    "ai-discovery-page": "#06b6d4",
-    "reference": "#10b981",
-    "prompt-library": "#06b6d4",
-    "customer-reviews": "#f97316",
-    "comparison-table": "#f97316"
+    "Entities": "#8b5cf6",
+    "Playbooks & Runbooks": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables & Datasets": "#3b82f6"
   }
 };
 </script>
@@ -540,6 +528,7 @@ window.BUNDLE = {
     if (node) node.select();
 
     document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
     const content = document.getElementById("detail-content");
     content.hidden = false;
 
@@ -582,7 +571,7 @@ window.BUNDLE = {
     const html = marked.parse(body, { breaks: false, gfm: true });
     const bodyEl = document.getElementById("detail-body");
     bodyEl.innerHTML = html;
-    rewriteInternalLinks(bodyEl);
+    rewriteInternalLinks(bodyEl, conceptId);
 
     const bl = backlinks[conceptId] || [];
     const blSection = document.getElementById("detail-backlinks");
@@ -608,12 +597,17 @@ window.BUNDLE = {
     }
   }
 
-  function rewriteInternalLinks(root) {
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
     root.querySelectorAll("a[href]").forEach((a) => {
       const href = a.getAttribute("href");
       if (!href) return;
-      if (href.startsWith("/") && href.endsWith(".md")) {
-        const target = href.slice(1, -3);
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
         if (nodeIndex[target]) {
           a.className = "internal";
           a.setAttribute("href", "javascript:void(0)");

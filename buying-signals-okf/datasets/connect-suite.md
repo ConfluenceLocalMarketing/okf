@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Connect Suite
 description: Cross-platform integration solution that seamlessly connects social media, data sources, marketing campaigns, and CRM systems with intelligence.
 resource: https://buyingsignals.com/connect-suite/

@@ -1,5 +1,5 @@
 ---
-type: organization
+type: Entities
 title: Basil Mitsubishi
 description: Mitsubishi dealership in Buffalo, NY offering new and pre-owned vehicles, financing, service, and parts — part of the Basil Family Dealerships with over 65 years of service.
 resource: https://www.basilmitsubishi.com/

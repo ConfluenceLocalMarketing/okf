@@ -1,5 +1,5 @@
 ---
-type: product-line
+type: Entities
 title: Pre-Owned & Certified Vehicles at Basil Mitsubishi
 description: Inventory of pre-owned cars, trucks, SUVs, and certified pre-owned (CPO) Mitsubishi vehicles at Basil Mitsubishi in Buffalo, NY — with multi-point inspection, warranty options, and budget-friendly pricing.
 resource: https://www.basilmitsubishi.com/used-vehicles/

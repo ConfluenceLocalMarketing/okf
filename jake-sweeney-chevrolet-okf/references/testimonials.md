@@ -1,5 +1,5 @@
 ---
-type: customer-testimonials
+type: Entities
 title: Customer Testimonials — Jake Sweeney Chevrolet
 description: Customer reviews collected via PromptGraph API for Jake Sweeney Chevrolet in Cincinnati, OH, with 100+ predominantly 5-star testimonials highlighting sales and service experiences.
 resource: https://api.promptgraph.ai/api/v1/jake-sweeney-chevrolet/testimonials

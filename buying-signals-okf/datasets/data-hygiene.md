@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Data Hygiene & Enrichment
 description: Data cleansing, verification, enrichment, and DMS sync services that transform outdated customer records into verified, enriched profiles with real-time CRM/DMS push.
 resource: https://buyingsignals.com/dms-sync/

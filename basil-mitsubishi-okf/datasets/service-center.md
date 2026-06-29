@@ -1,5 +1,5 @@
 ---
-type: service-center
+type: Entities
 title: Basil Mitsubishi Service Center
 description: Full-service Mitsubishi service center in Buffalo, NY offering routine maintenance, diagnostics, major repairs, collision repair, and genuine OEM parts with factory-trained technicians.
 resource: https://www.basilmitsubishi.com/service/

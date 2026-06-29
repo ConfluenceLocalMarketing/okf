@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Business Intelligence Platform
 description: Analytics and business intelligence platform unifying clean data, shopper behavior, identity resolution, and marketing analytics for data-driven decision making.
 resource: https://buyingsignals.com/

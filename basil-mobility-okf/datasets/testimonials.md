@@ -1,5 +1,5 @@
 ---
-type: testimonial
+type: Entities
 title: Customer Testimonials — Basil Mobility
 description: Customer reviews and ratings for Basil Mobility, sourced from the PromptGraph API testimonials endpoint.
 resource: https://api.promptgraph.ai/api/v1/basil-mobility/testimonials

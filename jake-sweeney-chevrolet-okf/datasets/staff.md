@@ -1,5 +1,5 @@
 ---
-type: staff-directory
+type: Entities
 title: Staff Directory — Jake Sweeney Chevrolet
 description: Sales and service staff directory for Jake Sweeney Chevrolet in Cincinnati, OH, compiled from customer reviews and Google Business Profile data.
 resource: https://www.jakesweeneychevrolet.com/

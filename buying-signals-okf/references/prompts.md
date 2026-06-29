@@ -1,5 +1,5 @@
 ---
-type: prompt-library
+type: Playbooks & Runbooks
 title: PromptGraph Prompt Library — Buying Signals
 description: Complete library of 78 structured Q&A prompts from the PromptGraph API for Buying Signals, covering data hygiene, audience targeting, advertising, SEO, AI marketing, and partner selection.
 resource: https://api.promptgraph.ai/api/v1/buying-signals/prompts

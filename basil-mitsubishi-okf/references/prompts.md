@@ -1,5 +1,5 @@
 ---
-type: prompt-library
+type: Playbooks & Runbooks
 title: PromptGraph Prompt Library — Basil Mitsubishi
 description: Complete library of 64 structured Q&A prompts from the PromptGraph API for Basil Mitsubishi, covering vehicles, financing, service, parts, and dealership information.
 resource: https://api.promptgraph.ai/api/v1/basil-mitsubishi/prompts

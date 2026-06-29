@@ -1,5 +1,5 @@
 ---
-type: organization
+type: Entities
 title: Basil Resale Sheridan & Basil Resale Transit
 description: Western New York's largest pre-owned vehicle resale center with two locations, 1,411 vehicles in inventory, and a 4.5 rating from 2,579 reviews — part of the Basil Family Dealerships.
 resource: https://www.basilresale.com/

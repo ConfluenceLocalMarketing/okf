@@ -1,5 +1,5 @@
 ---
-type: ai-discovery-page
+type: APIs
 title: AI Discovery Page — Kruse Motors
 description: Machine-readable knowledge base and semantic data endpoints for Kruse Motors, providing AI agents structured access to business info, vehicle inventory, customer reviews, and recommended actions via PromptGraph.
 resource: https://krusemotors.com/ai-discovery-page/

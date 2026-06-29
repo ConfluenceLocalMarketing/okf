@@ -1,5 +1,5 @@
 ---
-type: ai-discovery-page
+type: APIs
 title: AI Discovery Page — Basil Mobility
 description: Machine-readable knowledge base and semantic data endpoints for Basil Mobility, providing AI agents structured access to business info, inventory, and mobility vehicle data via PromptGraph.
 resource: https://www.basilmobility.com/ai-discovery-page/

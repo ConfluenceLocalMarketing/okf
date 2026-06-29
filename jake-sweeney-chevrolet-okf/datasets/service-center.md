@@ -1,5 +1,5 @@
 ---
-type: service-center
+type: Entities
 title: Service Center — Jake Sweeney Chevrolet
 description: Chevrolet-certified service center in Cincinnati, OH offering routine maintenance, diagnostics, major repairs, and OEM parts, serving all makes and models.
 resource: https://www.jakesweeneychevrolet.com/service/index.htm

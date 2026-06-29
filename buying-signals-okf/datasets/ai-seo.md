@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: AI SEO Services
 description: AI-ready search engine optimization services designed for discovery across ChatGPT, Claude, Gemini, Grok, Google, and voice search using structured data, schemas, and knowledge graphs.
 resource: https://buyingsignals.com/chatgpt-seo/

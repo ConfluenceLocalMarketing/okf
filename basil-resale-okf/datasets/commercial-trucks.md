@@ -1,5 +1,5 @@
 ---
-type: product-line
+type: Entities
 title: Commercial Trucks at Basil Resale
 description: Dedicated commercial truck inventory at Basil Resale Sheridan in Williamsville, NY, featuring work-ready pickups and heavy-duty trucks for business and commercial use.
 resource: https://www.basilresale.com/commercial-vehicles/

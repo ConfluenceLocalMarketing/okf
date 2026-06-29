@@ -1,5 +1,5 @@
 ---
-type: comparison-table
+type: Tables & Datasets
 title: Brand Comparison — Kruse Motors
 description: Side-by-side comparison of the four automotive brands available at Kruse Motors — Ford, Lincoln, Buick, and GMC — covering positioning, popular models, key features, and target buyer.
 resource: https://krusemotors.com/

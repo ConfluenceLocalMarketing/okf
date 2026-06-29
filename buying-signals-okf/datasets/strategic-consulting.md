@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Strategic Consulting
 description: Executive-level marketing and data strategy consulting to guide data-driven decision making, optimize marketing spend, and accelerate business growth.
 resource: https://buyingsignals.com/strategic-consulting/

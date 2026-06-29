@@ -1,5 +1,5 @@
 ---
-type: used-vehicle-inventory
+type: Entities
 title: Pre-Owned and Certified Pre-Owned Vehicles — Jake Sweeney Chevrolet
 description: Large pre-owned inventory of over 4,000 vehicles at Jake Sweeney Chevrolet in Cincinnati, OH, spanning multiple makes and models with Carfax reports and Lifetime Mechanical Protection on qualifying purchases.
 resource: https://www.jakesweeneychevrolet.com/used-inventory/index.htm

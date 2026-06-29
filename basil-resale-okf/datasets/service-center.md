@@ -1,5 +1,5 @@
 ---
-type: service-center
+type: Entities
 title: Basil Resale Service & Collision Center
 description: Full-service repair facility with state-of-the-art laser alignment machines, handheld diagnostic computers, collision repair, parts center, and certified technicians at Basil Resale Sheridan.
 resource: https://www.basilresale.com/service/

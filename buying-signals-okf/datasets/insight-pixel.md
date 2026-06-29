@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Insight Pixel
 description: Website visitor identification and identity resolution tool that transforms anonymous website clicks into real consumer identities to improve digital marketing ROI.
 resource: https://buyingsignals.com/insight-pixel/

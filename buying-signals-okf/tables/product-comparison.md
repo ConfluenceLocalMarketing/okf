@@ -1,5 +1,5 @@
 ---
-type: comparison-table
+type: Tables & Datasets
 title: Buying Signals Product Comparison
 description: Side-by-side comparison of all Buying Signals products and services including data hygiene, identity resolution, advertising, AI SEO, and consulting offerings.
 resource: https://buyingsignals.com/

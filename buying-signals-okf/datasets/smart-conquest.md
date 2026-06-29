@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Smart Conquest
 description: Competitive conquesting solution that identifies and targets competitor audiences to win buyers from competing brands and dealerships.
 resource: https://buyingsignals.com/smart-conquest/

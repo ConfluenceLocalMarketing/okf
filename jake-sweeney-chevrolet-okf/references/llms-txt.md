@@ -1,5 +1,5 @@
 ---
-type: llms-txt
+type: APIs
 title: LLMs.txt — Jake Sweeney Chevrolet
 description: Full llms.txt directive content including PromptGraph API endpoints, site structure, and 10 featured AI prompts for Jake Sweeney Chevrolet.
 resource: https://api.promptgraph.ai/api/v1/jake-sweeney-chevrolet/llms.txt

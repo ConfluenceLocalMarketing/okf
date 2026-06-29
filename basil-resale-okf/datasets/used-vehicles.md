@@ -1,5 +1,5 @@
 ---
-type: product-line
+type: Entities
 title: Pre-Owned Vehicles at Basil Resale
 description: Inventory of over 1,411 pre-owned cars, trucks, SUVs from all major brands — with Certified Pre-Owned program, commercial vehicles, vehicle finder, and special financing.
 resource: https://www.basilresale.com/used-vehicles/

@@ -1,5 +1,5 @@
 ---
-type: product-line
+type: Entities
 title: New BraunAbility Conversions at Basil Mobility
 description: New wheelchair accessible vehicles featuring BraunAbility E2, XT, and XI conversions on Chrysler Pacifica/Voyager and Toyota platforms, plus Chevrolet Traverse (coming 2026).
 resource: https://www.basilmobility.com/all-vehicles/

@@ -1,5 +1,5 @@
 ---
-type: testimonials
+type: Entities
 title: Customer Testimonials — Kruse Motors
 description: Collection of 100+ customer reviews with predominantly 5-star ratings, most-praised staff, and notable excerpts from Kruse Motors customers.
 resource: https://api.promptgraph.ai/api/v1/kruse-motors/testimonials

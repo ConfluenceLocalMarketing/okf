@@ -1,5 +1,5 @@
 ---
-type: product
+type: Entities
 title: Buying Signals AI
 description: Conversational AI agents designed to influence and convert more leads through intelligent, automated customer interactions.
 resource: https://buyingsignals.com/buying-signals-ai/

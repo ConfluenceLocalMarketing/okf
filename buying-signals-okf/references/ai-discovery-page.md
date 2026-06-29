@@ -1,5 +1,5 @@
 ---
-type: ai-discovery-page
+type: APIs
 title: AI Discovery Page — Buying Signals
 description: Machine-readable knowledge base and semantic data endpoints for Buying Signals, providing AI agents structured access to business info, product data, and recommended actions via PromptGraph.
 resource: https://buyingsignals.com/ai-discovery-page/
