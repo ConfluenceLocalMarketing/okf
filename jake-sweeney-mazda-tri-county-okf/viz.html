@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jake-sweeney-mazda-tri-county - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "jake-sweeney-mazda-tri-county";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Jake Sweeney Mazda Tri-County",
+        "type": "Entities",
+        "description": "Mazda dealership in Cincinnati, OH serving the Tri-County area with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.jakesweeneymazda.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Jake Sweeney Mazda Tri-County",
+        "type": "Entities",
+        "description": "Common questions about Jake Sweeney Mazda Tri-County's inventory, financing, service, and dealership operations in Cincinnati, OH.",
+        "resource": "https://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Mazda Models - Jake Sweeney Mazda Tri-County",
+        "type": "Entities",
+        "description": "New Mazda model lineup available at Jake Sweeney Mazda Tri-County in Cincinnati, OH including CX-30, CX-5, CX-50, CX-70, CX-90, MX-5 Miata, and Mazda3.",
+        "resource": "https://www.jakesweeneymazda.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Jake Sweeney Mazda Tri-County",
+        "type": "Entities",
+        "description": "Mazda-certified service center in Cincinnati, OH offering routine maintenance, diagnostics, major repairs, and OEM parts, serving all makes and models.",
+        "resource": "https://www.jakesweeneymazda.com/service/center.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Jake Sweeney Mazda Tri-County",
+        "type": "Entities",
+        "description": "Sales and service staff directory for Jake Sweeney Mazda Tri-County in Cincinnati, OH, compiled from customer reviews and PromptGraph testimonial data.",
+        "resource": "https://www.jakesweeneymazda.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - Jake Sweeney Mazda Tri-County",
+        "type": "Entities",
+        "description": "Pre-owned inventory of over 423 vehicles at Jake Sweeney Mazda Tri-County in Cincinnati, OH, spanning multiple makes and models with Mazda Certified Pre-Owned options.",
+        "resource": "https://www.jakesweeneymazda.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Jake Sweeney Mazda Tri-County",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Jake Sweeney Mazda Tri-County, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.jakesweeneymazda.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Jake Sweeney Mazda Tri-County",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site structure, and 10 featured AI prompts for Jake Sweeney Mazda Tri-County.",
+        "resource": "https://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - Jake Sweeney Mazda Tri-County",
+        "type": "APIs",
+        "description": "Complete PromptGraph library of 10 structured Q&A prompts covering vehicles, financing, service, and dealership info for Jake Sweeney Mazda Tri-County.",
+        "resource": "https://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Jake Sweeney Mazda Tri-County",
+        "type": "Entities",
+        "description": "Customer reviews collected via PromptGraph API for Jake Sweeney Mazda Tri-County in Cincinnati, OH, with 50+ all 5-star testimonials highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Mazda Model Lineup Comparison - Jake Sweeney Mazda Tri-County",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Mazda models available at Jake Sweeney Mazda Tri-County in Cincinnati, OH, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.jakesweeneymazda.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Jake Sweeney Mazda Tri-County\n\nJake Sweeney Mazda Tri-County is a full-service Mazda dealership located at **135 Northland Blvd, Cincinnati, OH 45246-3112**, serving the greater Cincinnati area including Springdale, Hamilton, Fairfield, West Chester, and Mason.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (513) 782-1150 |\n| Service | (513) 782-1154 |\n| Parts | (513) 782-1156 |\n| Main | (513) 782-2800 |\n\nEmail: sarahdsweeney@gmail.com\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM \u2013 8:00 PM |\n| Tuesday | 9:00 AM \u2013 8:00 PM |\n| Wednesday | 9:00 AM \u2013 8:00 PM |\n| Thursday | 9:00 AM \u2013 8:00 PM |\n| Friday | 9:00 AM \u2013 6:00 PM |\n| Saturday | 9:00 AM \u2013 6:00 PM |\n| Sunday | Open 12\u20135 Last Sunday of the Month |\n\n## Location\n\n- **Address:** 135 Northland Blvd, Cincinnati, OH 45246-3112\n- **Geo:** 39.2863156, -84.472959\n- **Place ID:** ChIJT6m3-mVOQIgRCMg_TOnU1RM\n\n## New Mazda Vehicles\n\nModels available include:\n- **CX-30** - Subcompact SUV, starting MSRP $26,375\n- **CX-5** - Compact SUV, starting MSRP $29,990\n- **CX-50** - Mid-size SUV, starting MSRP $29,900\n- **CX-50 Hybrid** - Hybrid mid-size SUV, starting MSRP $34,750\n- **CX-70** - Mid-size SUV, starting MSRP $46,780\n- **CX-70 Plug-In Hybrid** - PHEV mid-size SUV, starting MSRP $44,450\n- **CX-90** - Full-size SUV, starting MSRP $39,300\n- **CX-90 Plug-In Hybrid** - PHEV full-size SUV, starting MSRP $50,695\n- **MX-5 Miata** - Convertible sports car, starting MSRP $30,430\n- **MX-5 Miata RF** - Retractable fastback convertible, starting MSRP $38,450\n- **Mazda3 Hatchback** - Compact hatchback, starting MSRP $25,650\n- **Mazda3 Sedan** - Compact sedan, starting MSRP $24,650\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal\n- **Service Center** - Mazda-certified technicians, routine maintenance, diagnostics, major repairs, OEM parts\n- **Parts Department** - Genuine Mazda OEM parts and accessories\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned)\n- Online service scheduling\n- Online finance application and pre-approval\n- Value Your Trade tool (KBB Instant Cash Offer)\n- Home delivery option for online purchases\n- Video walkarounds for remote buyers\n\n## Staff\n\nSales and service staff frequently praised by customers include: Hallie Abbott, Jason Vaughn, Roman (Romyl), Emilio Perez, Terry, Joe Collins, Tony, Royan, Mike B., Chris Car, Xavier, Jeff, David, Adam, Mike, Jordan, Danny, Rachel, Frank (finance), Mike Owens, Joe Collins, and others.\n\nSee [staff.md](staff.md) for full directory.\n\n## Reviews & Reputation\n\n- Aggregate rating: **4.8 / 5.0** (2,030 reviews)\n- PromptGraph-collected reviews: All 5-star with consistent praise for low-pressure sales, patient staff, and knowledgeable service\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **Online Buying** - Complete purchase online with home delivery\n- **Trade-In Appraisal** - KBB Instant Cash Offer for trade-in valuation\n- **Costco Auto Program** - Partner pricing for Costco members\n- **Loaner Vehicles** - Available for longer service appointments\n- **Mazda Certified Pre-Owned** - Manufacturer-certified used vehicles\n\n## Social Media\n\n- [Facebook](https://www.facebook.com/mazdacincinnati)\n- [YouTube](https://www.youtube.com/@MazdaJakeSweeney)\n- [Instagram](https://www.instagram.com/jakesweeney.mazdaofficial/)\n- [DealerRater](https://www.dealerrater.com/dealer/Jake-Sweeney-Mazda-Tri-County-review-23636/)\n\n## Affiliations\n\n- Part of the Jake Sweeney Automotive group (including Jake Sweeney Chevrolet, Jake Sweeney Used Car Superstore)\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform",
+    "datasets/faq": "# Frequently Asked Questions - Jake Sweeney Mazda Tri-County\n\n## Inventory\n\n**Q: What new Mazda models are available?**\nA: The full Mazda lineup including CX-30, CX-5, CX-50, CX-50 Hybrid, CX-70, CX-70 PHEV, CX-90, CX-90 PHEV, MX-5 Miata, MX-5 Miata RF, Mazda3 Hatchback, and Mazda3 Sedan.\n\n**Q: How large is the vehicle inventory?**\nA: The dealership carries over 423 vehicles including new Mazdas and pre-owned multi-make inventory.\n\n**Q: Does Jake Sweeney Mazda offer certified pre-owned vehicles?**\nA: Yes, Mazda Certified Pre-Owned (CPO) vehicles are available with 160-point inspection and extended warranty.\n\n**Q: Are Mazda CX-50 Hybrid and PHEV models available?**\nA: Yes, both the CX-50 Hybrid and CX-70/CX-90 Plug-In Hybrid models are in stock.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, online pre-approval, and the Costco Auto Program for members.\n\n**Q: Can I get pre-approved online?**\nA: Yes, the online finance application on the dealership website allows you to complete a pre-approval application.\n\n**Q: Can the dealership work with out-of-state buyers?**\nA: Yes, the dealership assists with out-of-state purchases including shipping coordination and remote paperwork.\n\n## Service\n\n**Q: Can the service center work on non-Mazda vehicles?**\nA: Yes, the service center works on all makes and models, not just Mazda vehicles.\n\n**Q: Do you offer loaner vehicles?**\nA: Yes, loaner vehicles are available for longer service appointments.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available at jakesweeneymazda.com or by calling (513) 782-1154.\n\n**Q: Does the service center provide video inspections?**\nA: Yes, the team provides video walkthroughs detailing any issues found during service.\n\n## Dealership\n\n**Q: Where is the dealership located?**\nA: 135 Northland Blvd, Cincinnati, OH 45246-3112.\n\n**Q: What are the dealership hours?**\nA: Sales: Mon-Thu 9am-8pm, Fri-Sat 9am-6pm, Sun Open 12-5 Last Sunday of the Month.\n\n**Q: Is home delivery available?**\nA: Yes, the dealership offers vehicle delivery to your home as part of the online buying process.\n\n**Q: Does the dealership handle recalls?**\nA: Yes, Mazda recall repairs are handled through the service center.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New Mazda Models - Jake Sweeney Mazda Tri-County\n\nJake Sweeney Mazda Tri-County carries a full lineup of new Mazda vehicles. Mazda is known for refined styling, engaging performance (Jinba Ittai), and premium interiors. Below is a summary of available models.\n\n## SUVs & Crossovers\n\n### Mazda CX-30\nSubcompact SUV, starting MSRP $26,375. Available in 2.5 S, Select, Preferred, Premium, and Turbo trims. 2.5L 4-cylinder engine standard, turbocharged option available. All-wheel drive available. 20 in stock.\n\n### Mazda CX-5\nCompact SUV, starting MSRP $29,990. Multiple trims including 2.5 S, Select, Preferred, Premium, Premium Plus, and Carbon Edition. 2.5L 4-cylinder or 2.5L Turbo engine options. All-wheel drive. 89 in stock.\n\n### Mazda CX-50\nMid-size SUV, starting MSRP $29,900. Available in 2.5 S, Select, Preferred, Premium, Premium Plus, and Meridian Edition trims. All-wheel drive standard. 42 in stock.\n\n### Mazda CX-50 Hybrid\nHybrid mid-size SUV, starting MSRP $34,750. Toyota-sourced hybrid powertrain. Excellent fuel economy. All-wheel drive. 17 in stock.\n\n### Mazda CX-70\nMid-size SUV (two-row), starting MSRP $46,780. Available in 3.3 Turbo, Turbo S, and Turbo S Premium trims. Inline-6 cylinder engine. All-wheel drive. 7 in stock.\n\n### Mazda CX-70 Plug-In Hybrid\nPHEV mid-size SUV, starting MSRP $44,450. 2.5L 4-cylinder engine with electric motor. All-electric range for daily commuting. All-wheel drive. 5 in stock.\n\n### Mazda CX-90\nFull-size SUV (three-row), starting MSRP $39,300. Available in 3.3 Turbo, Turbo S, Turbo S Premium, and Turbo S Premium Plus trims. Inline-6 cylinder engine. All-wheel drive standard. 33 in stock.\n\n### Mazda CX-90 Plug-In Hybrid\nPHEV full-size SUV, starting MSRP $50,695. 2.5L 4-cylinder with electric motor. All-electric range for daily commuting. Three-row seating. All-wheel drive. 5 in stock.\n\n## Sports Cars & Convertibles\n\n### Mazda MX-5 Miata\nConvertible sports car, starting MSRP $30,430. Available in Sport, Club, and Grand Touring trims. 2.0L 4-cylinder engine. Rear-wheel drive. Lightest and most affordable Mazda. 4 in stock.\n\n### Mazda MX-5 Miata RF\nRetractable fastback convertible, starting MSRP $38,450. Power-retractable hard top. Club and Grand Touring trims. 2.0L 4-cylinder. Rear-wheel drive. 4 in stock.\n\n## Cars\n\n### Mazda3 Hatchback\nCompact hatchback, starting MSRP $25,650. Available in 2.5 S, Select, Preferred, Premium, Carbon Edition, and 2.5 Turbo trims. 2.5L 4-cylinder standard, turbocharged option. All-wheel drive available. 6 in stock.\n\n### Mazda3 Sedan\nCompact sedan, starting MSRP $24,650. Available in 2.5 S, Select, Preferred, Premium, Carbon Edition, and 2.5 Turbo trims. 2.5L 4-cylinder standard. All-wheel drive available. 15 in stock.\n\n## Promotions & Offers\n\nPromotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - Jake Sweeney Mazda Tri-County\n\nThe Jake Sweeney Mazda Tri-County Service Center provides certified maintenance and repair services at 135 Northland Blvd, Cincinnati, OH.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes (starting at $79.95), tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis, video inspection walkthroughs\n- **Major Repairs** - Transmission service, engine repairs, suspension work, electrical systems\n- **Recall Repairs** - Manufacturer-specified recall and campaign work\n- **Mazda Service Promise** - Online scheduling, video inspections, no-surprise repairs, loaner vehicles\n\n## Service Team\n\n- **Xavier** - Service technician; praised for taking test drives with customers, thorough diagnostics, video walkthroughs\n- **Jeff** - Service manager; professional, customer-focused\n- **David (Dave)** - Service advisor; attentive, professional, clear explanations, timely\n- **Adam** - Service staff; keeps customers informed\n- **Mike** - Service department; helps with warranty claims\n- **Remi** - Service; excellent communication and updates\n\n## Service Experience\n\nCustomer reviews highlight:\n- **Video feedback** - Service team sends detailed video walkthroughs of vehicle issues\n- **Text message updates** during service visits\n- **Online appointment scheduling**\n- **Loaner vehicles** available for longer service jobs\n- **Clean waiting area** with coffee\n- **Complimentary shuttle service**\n- **Follow-up calls** after service to ensure satisfaction\n- **Honest recommendations** - No unnecessary upselling\n\n## Service Specials\n\nThe dealership offers rotating service specials and seasonal discounts. See [dealership.md](dealership.md) for current offers.\n\n## Parts Department\n\nGenuine Mazda OEM parts and accessories available. Order online at parts.jakesweeneymazda.com.\n\nSee [staff.md](staff.md) for full service department directory.",
+    "datasets/staff": "# Staff Directory - Jake Sweeney Mazda Tri-County\n\nStaff recognized in customer reviews and PromptGraph testimonial data:\n\n## Sales Consultants\n\n- **Hallie Abbott (Hallie)** - Most frequently praised; patient, knowledgeable, sends personalized videos, walks through features, makes process smooth; multiple repeat customers\n- **Jason Vaughn (Jason)** - Friendly, knowledgeable, patient, compares models, explains features, thorough; great with first-time buyers and older customers\n- **Roman (Romyl)** - Knowledgeable, family-friendly, excellent communication, great negotiation; works with out-of-state buyers\n- **Emilio Perez (Emilio)** - Friendly, fast, efficient, personalized video walkarounds, accommodates payment methods, stress-free\n- **Terry** - Extremely patient, honest, answers all questions, no pressure, follows up after purchase\n- **Joe Collins (Joe)** - Knowledgeable of details (CX-5 vs CX-50 differences), professional, reasonable offers, best negotiation experience\n- **Mike B. (Mike)** - Wonderful, knowledgeable, helpful\n- **Chris Car (Chris)** - Exceptional, professional, treats customers like family, knowledgeable\n- **Mike Owens (Mr. Owens)** - Seamless process, informative, knowledgeable\n- **Danny** - Patient, knowledgeable\n- **Rachel** - Low-stress, kind, answers many questions\n- **Tony** - Sales manager; kind, professional, picks matching vehicles\n- **Jordan** - Fast service, caring\n- **Romyl Barylo** - Helped with out-of-state purchase\n- **Joe Collins** - CX-5/CX-50 expert\n\n## Service Department\n\n- **Xavier** - Customer service praised, takes test drives with customers to understand issues, thorough diagnostics, video walkthroughs\n- **Jeff** - Service manager; amazing customer service, professional work ethic\n- **David (Dave)** - Service advisor; attentive, professional, clear explanations, timely, honest\n- **Adam** - Service staff; keeps customers informed, reliable\n- **Mike** - Service department; helps with warranty claims, quick turnaround\n- **Remi** - Service department; excellent communication, daily updates\n\n## Finance Team\n\n- **Royan (Frank)** - Finance manager; helpful, patient, smooth paperwork, great rates\n- **Frank** - Helpful with financing, clear financial breakdown\n- **Mike** - Finance; found great rates\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - Jake Sweeney Mazda Tri-County\n\nJake Sweeney Mazda Tri-County maintains a selection of pre-owned vehicles with over 423 vehicles in inventory (PromptGraph API).\n\n## Inventory Scope\n\n- **Total vehicles:** 423 (PromptGraph API)\n- **Multi-make selection** spanning Mazda, Honda, Toyota, Chevrolet, Ford, Jeep, Ram, GMC, BMW, Nissan, Subaru, Dodge, and more\n- **Price range:** Broad range from budget-friendly to premium vehicles\n- **Model years:** Range from select pre-owned to late-model vehicles\n\n## Quality Assurance\n\n- **Mazda Certified Pre-Owned (CPO)** - Vehicles undergo rigorous inspection and meet manufacturer quality standards\n- **Multi-point inspection** on all pre-owned vehicles\n- **Carfax Report** available\n- **Warranty options** on qualifying purchases\n\n## Certified Pre-Owned Program\n\nMazda Certified Pre-Owned vehicles include:\n- 160-point inspection\n- Extended warranty coverage\n- Roadside assistance\n- New-car financing rates available\n\n## Online Buying\n\nThe dealership offers online purchasing options:\n- Start with online finance application and trade-in appraisal\n- Payment adjustments can be made online\n- Vehicle delivery available to your home\n- Video walkarounds available for remote buyers\n\n## Trade-In\n\n- Trade-in appraisal available via KBB Instant Cash Offer\n- Competitive trade-in values\n- On-the-spot evaluation\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - Jake Sweeney Mazda Tri-County\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer.com** platform.\n\n## PromptGraph API Sitemap\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/sitemap.xml` exposes these machine-readable endpoints:\n\n| URL | Priority | Update Frequency |\n|---|---|---|\n| `/business` | 1.0 | Weekly |\n| `/prompts` | 0.9 | Weekly |\n| `/vehicles` | 0.9 | Daily |\n| `/.well-known/ai-manifest.json` | 0.6 | Monthly |\n| `/robots.txt` | 0.5 | Monthly |\n| `/config.json` | 0.3 | Monthly |\n| 10 individual prompt endpoints | 0.8 | Weekly |\n| `/sitemap-inventory.xml` | 0.8 | Daily |\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-06-30T17:25:29.395Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n- **Contact:** sarahdsweeney@gmail.com\n\n### Registered Endpoints\n\n| Endpoint | Resource |\n|---|---|\n| `/api/v1/jake-sweeney-mazda-tri-county/llms.txt` | LLMs.txt directive |\n| `/api/v1/jake-sweeney-mazda-tri-county/business` | Business profile (JSON-LD) |\n| `/api/v1/jake-sweeney-mazda-tri-county/vehicles` | Vehicle inventory (JSON-LD) |\n| `/api/v1/jake-sweeney-mazda-tri-county/prompts` | Q&A / FAQ prompts |\n| `/api/v1/jake-sweeney-mazda-tri-county/testimonials` | Customer reviews |\n| `/api/v1/jake-sweeney-mazda-tri-county/sitemap.xml` | Full sitemap |\n| `/api/v1/jake-sweeney-mazda-tri-county/robots.txt` | Robots rules |\n| `/api/v1/jake-sweeney-mazda-tri-county/config.json` | System configuration |\n\n### Additional PromptGraph Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/llms.txt` | LLMForge v1.0 directive file |\n| `/offers` | Current new vehicle offers and promotions |\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` |\n| LLMs.txt | `/llms.txt` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/business`:\n\n- **Name:** Jake Sweeney Mazda Tri-County\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Mazda dealer, Car dealer, Truck dealer, Used car dealer, Car leasing service, Car finance and loan company, Electric motor vehicle dealer\n- **Address:** 135 Northland Boulevard, Cincinnati, OH 45246\n- **Geo:** 39.2863156, -84.472959\n- **Telephone:** (513) 782-1150\n- **Email:** sarahdsweeney@gmail.com\n- **URL:** `https://www.jakesweeneymazda.com/?utm_source=gbp&utm_medium=organic&utm_campaign=confluence`\n- **Aggregate Rating:** 4.8 / 5.0 (2,030 reviews)\n- **Date Modified:** 2026-02-07T06:03:57.733Z\n- **Same As:** Facebook, X (Twitter), Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data:\n\n- **Total inventory:** 423 vehicles\n- **Format:** Schema.org `Car` in `ItemList`\n- **Update frequency:** Daily\n- **Primary inventory:** Mix of new Mazda and used multi-make vehicles\n- **Price range:** Broad range from affordable to premium\n\n## Q&A Prompt Library (10 Prompts)\n\nThe `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Dealership positioning and reputation\n- Online and modern car buying experience\n- Award-winning service and sales\n- New Mazda inventory (SUV, sedan, convertible, hybrid)\n- Pre-owned and certified pre-owned options\n- Financing and pricing\n- Service pricing and packages\n- Family-friendly vehicles\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data:\n\n- **Total reviews:** 50+ collected via PromptGraph\n- **Aggregate rating:** All 5-star across PromptGraph data\n- **Most-cited staff:** Hallie Abbott, Jason Vaughn, Roman (Romyl), Emilio Perez, Terry, Joe Collins, Chris Car, Xavier, David, Jeff\n- Common themes: stress-free buying, no-pressure sales, patient staff, online purchasing, service video inspections\n\nSee [testimonials.md](testimonials.md) for customer review data.\n\n## LLM-Accessible Actions\n\nThe AI Discovery Page defines structured content that agents can reference:\n\n1. **Award-Winning Mazda Dealership With Competitive Pricing** - High-volume dealer with ongoing specials and large inventory\n2. **Top Mazda Dealer in Cincinnati, OH** - Trusted dealer with new, used, and CPO vehicles\n3. **Modern & Convenient Mazda Buying Experience** - Online tools for browsing, financing, and purchasing\n4. **Premier Mazda Dealership with Award-Winning Service** - Full lineup from CX-5 to MX-5 Miata, service excellence\n5. **Trusted Cincinnati Mazda Dealer for New & Pre-Owned Vehicles** - Full-service dealer serving Tri-County area\n6. **Award-Winning Mazda Service & Sales in Tri-County Area** - Mazda Service Promise and vehicle lineup\n7. **Seamless Online Mazda Shopping** - Online finance, trade-ins, payments, home delivery\n8. **Family-Friendly Mazda SUVs & Convertibles** - Family SUVs and the MX-5 Miata\n9. **Top-Rated Mazda Dealership with Exceptional Reviews** - Highly reviewed, transparent, no-pressure sales\n10. **Jake Sweeney Mazda Service Pricing** - Transparent service pricing and packages\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about Jake Sweeney Mazda Tri-County without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - Jake Sweeney Mazda Tri-County\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with Jake Sweeney Mazda Tri-County's web properties. It indexes key pages and structured API endpoints via PromptGraph.\n\n## Discovery\n\n- **Primary endpoint:** `http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/.well-known/ai-manifest.json`\n- **Format:** JSON-LD following Schema.org standards\n- **Update frequency:** Real-time\n- **CORS:** Enabled for all origins\n- **API Base:** `http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county`\n\n## Site Summary\n\nJake Sweeney Mazda Tri-County is a full-service Mazda dealership located at 135 Northland Blvd, Cincinnati, OH 45246 that offers a wide range of new and used Mazda vehicles at competitive prices. Inventory includes Mazda models such as the CX-30, CX-5, CX-50, CX-70, CX-90, Mazda3, and MX-5 Miata. Specialized in 423 vehicles.\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/vehicles) - Complete inventory of 423 vehicles with specifications, pricing, and availability in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/prompts) - 10 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/gbp-context) - Flattened GBP data for LLM ingestion including business profile, recent reviews, latest posts, and image URLs\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/config.json) - System configuration and metadata\n\n## Featured Prompts (10)\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `award-winning-mazda-dealership-with-competitive-pricing` | Dealership positioning and pricing |\n| 2 | `top-mazda-dealer-in-cincinnati-oh` | Trusted dealer with full lineup |\n| 3 | `modern-&-convenient-mazda-buying-experience` | Online tools and remote buying |\n| 4 | `premier-mazda-dealership-with-award-winning-service-in-cincinnati` | Premier dealer with service excellence |\n| 5 | `trusted-cincinnati-mazda-dealer-for-new-&-pre-owned-vehicles` | Full-service dealer for area communities |\n| 6 | `award-winning-mazda-service-&-sales-in-tri-county-area` | Service Promise and vehicle lineup |\n| 7 | `seamless-online-mazda-shopping-at-cincinnatis-favorite-dealer` | Digital purchase and home delivery |\n| 8 | `family-friendly-mazda-suvs-&-convertibles-in-cincinnati` | Family SUVs and MX-5 Miata |\n| 9 | `top-rated-mazda-dealership-with-exceptional-cincinnati-reviews` | Reviews, no-pressure sales, expert financing |\n| 10 | `jake-sweeney-mazda-service-pricing-prompt` | Service pricing and packages |\n\n## Company\n\n- **Contact:** Phone: (513) 782-1150, Email: sarahdsweeney@gmail.com\n- **Website:** `https://www.jakesweeneymazda.com/`\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - Jake Sweeney Mazda Tri-County\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri-county/prompts` exposes 10 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (3 prompts)\n- Award-winning Mazda dealership with competitive pricing\n- Top Mazda dealer in Cincinnati, OH\n- Top-rated Mazda dealership with exceptional Cincinnati reviews\n\n### Vehicle Shopping (3 prompts)\n- Premier Mazda dealership with award-winning service in Cincinnati\n- Trusted Cincinnati Mazda dealer for new & pre-owned vehicles\n- Family-friendly Mazda SUVs & convertibles in Cincinnati\n\n### Buying Experience (2 prompts)\n- Modern & convenient Mazda buying experience\n- Seamless online Mazda shopping at Cincinnati's favorite dealer\n\n### Service & Parts (1 prompt)\n- Award-winning Mazda service & sales in Tri-County area\n\n### Pricing (1 prompt)\n- Jake Sweeney Mazda service pricing prompt\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `award-winning-mazda-dealership-with-competitive-pricing` | Dealership positioning and pricing |\n| 2 | `top-mazda-dealer-in-cincinnati-oh` | Trusted dealer with full lineup |\n| 3 | `modern-&-convenient-mazda-buying-experience` | Online tools and remote buying |\n| 4 | `premier-mazda-dealership-with-award-winning-service-in-cincinnati` | Premier dealer with service excellence |\n| 5 | `trusted-cincinnati-mazda-dealer-for-new-&-pre-owned-vehicles` | Full-service dealer for area communities |\n| 6 | `award-winning-mazda-service-&-sales-in-tri-county-area` | Service Promise and vehicle lineup |\n| 7 | `seamless-online-mazda-shopping-at-cincinnatis-favorite-dealer` | Digital purchase and home delivery |\n| 8 | `family-friendly-mazda-suvs-&-convertibles-in-cincinnati` | Family SUVs and MX-5 Miata |\n| 9 | `top-rated-mazda-dealership-with-exceptional-cincinnati-reviews` | Reviews, no-pressure sales, expert financing |\n| 10 | `jake-sweeney-mazda-service-pricing-prompt` | Service pricing and packages |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - Jake Sweeney Mazda Tri-County\n\nJake Sweeney Mazda Tri-County has collected 50+ customer testimonials through the PromptGraph platform. Reviews are all 5-star with strong themes of low-pressure sales, patient staff, and service transparency.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 4.8 / 5.0 (2,030 reviews)\n- **PromptGraph Reviews:** All 5-star\n\n## Most-Praised Staff (by frequency)\n\n- **Hallie Abbott (Hallie)** - Patient, knowledgeable, personal videos, smooth process; most frequently mentioned; great with out-of-state buyers\n- **Jason Vaughn (Jason)** - Friendly, knowledgeable, patient, compares models thoroughly, explains features; great with first-time buyers\n- **Roman (Romyl)** - Knowledgeable, family-friendly, excellent communication, out-of-state purchase support\n- **Emilio Perez (Emilio)** - Fast, efficient, personalized videos, accommodates payment methods\n- **Terry** - Extremely patient, honest, no pressure, answers all questions\n- **Joe Collins (Joe)** - Impressive product knowledge, reasonable offers, best negotiation experience\n- **Chris Car (Chris)** - Professional, treats customers like family, exceptional service\n- **Xavier** - Service technician; thorough diagnostics, video walkthroughs, personal attention\n- **David (Dave)** - Service advisor; professional, clear explanations, timely estimates\n- **Jeff** - Service manager; excellent customer service\n\n## Notable Excerpts\n\n> \"First time buying a car at a dealership, and it was the best experience! Everyone there was amazing and patient. I couldn't be happier with my salesperson Jason.\" - Jessica Lopez\n\n> \"Hallie made the process incredibly smooth and went above and beyond for me! She sent a personalized test drive video and some footage from underneath the truck as well.\" - Derek Sarlo\n\n> \"The service guys at Jake Sweeney Mazda are top notch! Very polite and friendly! Took the time to answer all my questions and made sure I was happy with the service.\" - Amy Jones\n\n> \"This dealership took better care of me than any other dealer I have ever been to. They will have my business and hopefully my circles business for the foreseeable future!\" - David Germanozashvili\n\n> \"Quite possibly the smoothest dealership experience I've ever had. Roman was a great, knowledgeable salesman. Did not feel pressured to buy any extras.\" - Brian Ginett\n\n> \"I had a great experience yesterday getting my Mazda serviced. They made it super easy to make an appointment. They pick up their phone calls!! (Unlike other Mazda dealerships in town)\" - Sarah T\n\n> \"After my vehicle was totalled, we began a hasty car search. Guided by our mechanic, we focused on the Mazda brand. After meeting with Joe Collins, our search drew to a close.\" - John Branch\n\n> \"I've been a regular customer at Jake Sweeney Mazda for years. The team is always so pleasant and attentive from calling for an appointment to the day of service.\" - Jerri Seal\n\n> \"This car buying experience was exceptional. Hallie helped me pick out the right car for me and we had a nice BookTok discussion. Royan helped with my financing.\" - Jennifer Stenger\n\n## Sales Themes\n\n- **No-pressure buying** - Multiple reviewers mention patient staff who didn't push\n- **Personalized videos** - Sales team sends custom walkaround videos for remote buyers\n- **Out-of-state purchases** - Dealership facilitates remote buying with shipping coordination\n- **Quick transactions** - Several reviews mention under 2 hours from arrival to drive-off\n- **Product knowledge** - Staff praised for detailed knowledge of Mazda models\n\n## Service Themes\n\n- **Video inspections** - Service team provides detailed video walkthroughs of issues found\n- **Honest recommendations** - Not upselling unnecessary repairs; only recommending what's needed\n- **Loaner availability** - Loaner vehicles provided for longer service jobs\n- **Communication** - Text updates, clear explanations, proactive outreach\n- **Clean facility** - Welcoming waiting area with amenities\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Mazda Model Lineup Comparison\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP | Stock Count |\n|---|---|---|---|---|---|\n| **Mazda3 Sedan** | Compact Sedan | 5 | FWD / AWD | $24,650 | 15 |\n| **Mazda3 Hatchback** | Compact Hatchback | 5 | FWD / AWD | $25,650 | 6 |\n| **CX-30** | Subcompact SUV | 5 | FWD / AWD | $26,375 | 20 |\n| **CX-5** | Compact SUV | 5 | FWD / AWD | $29,990 | 89 |\n| **CX-50** | Mid-size SUV | 5 | AWD | $29,900 | 42 |\n| **CX-50 Hybrid** | Mid-size Hybrid SUV | 5 | AWD | $34,750 | 17 |\n| **MX-5 Miata** | Convertible | 2 | RWD | $30,430 | 4 |\n| **MX-5 Miata RF** | Retractable Hardtop | 2 | RWD | $38,450 | 4 |\n| **CX-90** | Full-size SUV | 7\u20138 | AWD | $39,300 | 33 |\n| **CX-70 PHEV** | Mid-size PHEV SUV | 5 | AWD | $44,450 | 5 |\n| **CX-70** | Mid-size SUV | 5 | AWD | $46,780 | 7 |\n| **CX-90 PHEV** | Full-size PHEV SUV | 7\u20138 | AWD | $50,695 | 5 |\n\n## Key Feature Comparison\n\n| Feature | CX-30 | CX-5 | CX-50 | CX-70 | CX-90 | MX-5 Miata | Mazda3 |\n|---|---|---|---|---|---|---|---|\n| Engine | 2.5L I4 | 2.5L I4/Turbo | 2.5L I4 | 3.3L I6 Turbo | 3.3L I6 Turbo | 2.0L I4 | 2.5L I4/Turbo |\n| Horsepower | 191 hp | 187\u2013256 hp | 187 hp | 280\u2013340 hp | 280\u2013340 hp | 181 hp | 191\u2013250 hp |\n| AWD Available | Yes | Yes | Standard | Standard | Standard | No | Available |\n| 3rd Row | No | No | No | No | Yes | No | No |\n| Premium Interior | Available | Available | Standard | Standard | Standard | Available | Available |\n| Apple CarPlay/AA | Standard | Standard | Standard | Standard | Standard | Standard | Standard |\n| i-Activsense Safety | Standard | Standard | Standard | Standard | Standard | Standard | Standard |\n\n## Hybrid & PHEV Options\n\n| Model | Type | System | Notes |\n|---|---|---|---|\n| **CX-50 Hybrid** | Full Hybrid | 2.5L I4 + Toyota hybrid system | Excellent fuel economy |\n| **CX-70 PHEV** | Plug-In Hybrid | 2.5L I4 + electric motor | Electric range for daily commute |\n| **CX-90 PHEV** | Plug-In Hybrid | 2.5L I4 + electric motor | 3-row SUV with EV capability |\n\n## Warranty\n\nAll new Mazda models include:\n- **3-Year / 36,000-Mile Bumper-to-Bumper Limited Warranty**\n- **5-Year / 60,000-Mile Powertrain Limited Warranty**\n- **5-Year / Unlimited-Mile Corrosion Perforation Limited Warranty**\n- **3-Year / 36,000-Mile 24/7 Roadside Assistance**\n- **3-Year / 36,000-Mile Mazda Certified Pre-Owned Roadside Assistance**\n\n## Awards & Recognition\n\n- **Mazda CX-5** - Consistently among best-selling Mazda models in America\n- **MX-5 Miata** - World's best-selling two-seat sports car by Guinness World Records\n- **Mazda CX-90** - Multiple automotive awards for premium interior and driving dynamics\n- **Mazda3** - IIHS Top Safety Pick+\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

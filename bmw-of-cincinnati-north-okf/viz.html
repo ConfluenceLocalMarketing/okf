@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>bmw-of-cincinnati-north - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "bmw-of-cincinnati-north";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "BMW of Cincinnati North",
+        "type": "Entities",
+        "description": "BMW dealership in Cincinnati, OH serving the Tri-County area with new and pre-owned BMW vehicles, financing, service, and parts - a Jake Sweeney Company, family-owned and operated since 1917.",
+        "resource": "https://www.bmwofcincinnatinorth.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - BMW of Cincinnati North",
+        "type": "Entities",
+        "description": "Common questions about BMW of Cincinnati North's inventory, financing, service, and dealership operations in Cincinnati, OH.",
+        "resource": "https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New BMW Models - BMW of Cincinnati North",
+        "type": "Entities",
+        "description": "New BMW model lineup available at BMW of Cincinnati North including sedans, SUVs, coupes, convertibles, electric iPerformance models, and M performance variants.",
+        "resource": "https://www.bmwofcincinnatinorth.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "BMW Service Center - BMW of Cincinnati North",
+        "type": "Entities",
+        "description": "BMW-certified service center in Cincinnati, OH offering routine maintenance, diagnostics, major repairs, and genuine BMW parts, serving all makes and models.",
+        "resource": "https://www.bmwofcincinnatinorth.com/service/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - BMW of Cincinnati North",
+        "type": "Entities",
+        "description": "Staff directory for BMW of Cincinnati North in Cincinnati, OH, spanning sales, service, and management roles.",
+        "resource": "https://www.bmwofcincinnatinorth.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and BMW Certified Pre-Owned Vehicles - BMW of Cincinnati North",
+        "type": "Entities",
+        "description": "Pre-owned inventory of 664+ vehicles including BMW Certified Pre-Owned, multi-make selection, and BMW Financial Services APR offers as low as 1.99%.",
+        "resource": "https://www.bmwofcincinnatinorth.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery - BMW of Cincinnati North",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for BMW of Cincinnati North, providing AI agents structured access to business info, inventory, and content via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/business",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - BMW of Cincinnati North",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site structure, and featured AI prompts for BMW of Cincinnati North.",
+        "resource": "https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - BMW of Cincinnati North",
+        "type": "APIs",
+        "description": "Complete PromptGraph library of 16 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for BMW of Cincinnati North.",
+        "resource": "https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - BMW of Cincinnati North",
+        "type": "Entities",
+        "description": "Customer reviews for BMW of Cincinnati North with a 4.8/5.0 aggregate rating from 2,500 reviews, highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "BMW Model Lineup Comparison - BMW of Cincinnati North",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new BMW models available at BMW of Cincinnati North, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.bmwofcincinnatinorth.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# BMW of Cincinnati North\n\nBMW of Cincinnati North is a full-service BMW dealership located at **105 West Kemper Road, Cincinnati, OH 45246**, serving the greater Cincinnati area including Mason, West Chester, Ross, Monroe, Maineville, and Middletown. A Jake Sweeney Company, family-owned and operated since 1917. Designated a **BMW M Certified Dealer** center.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (513) 782-1122 |\n| Service | (513) 782-1124 |\n| Parts | (513) 782-1125 |\n\nEmail: info@bmwofcincinnatinorth.com\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM \u2013 8:00 PM |\n| Tuesday | 9:00 AM \u2013 8:00 PM |\n| Wednesday | 9:00 AM \u2013 8:00 PM |\n| Thursday | 9:00 AM \u2013 8:00 PM |\n| Friday | 9:00 AM \u2013 6:00 PM |\n| Saturday | 9:00 AM \u2013 6:00 PM |\n| Sunday | Closed |\n\n## Location\n\n- **Address:** 105 West Kemper Road, Cincinnati, OH 45246\n- **Geo:** 39.287233, -84.475458\n- **Place ID:** ChIJ1-qofGVOQIgRoWe16PCi45A\n\n## Dealership Highlights\n\n- **BMW M Certified Dealer** - Authorized M performance sales, service, and parts\n- **Jake Sweeney Company** - 4th generation family-owned since 1917\n- **Ultimate Driving Machine** - Full BMW lineup including M, iPerformance, and ALPINA models\n- **Online tools** - Inventory browsing, service scheduling, CarFinder, online credit application\n- **BMW Financial Services** - Lease and finance options through BMW Financial Services NA, LLC\n\n## New Vehicles\n\nBMW models available include:\n- **Sedans:** 2 Series, 3 Series (330i, M340i), 5 Series (530i, 540i, 550e), 7 Series (740i, 750e, 760i), i5, i7\n- **SUVs:** X1, X2, X3, X4, X5, X5 PHEV, X6, X7, XM, iX, ALPINA XB7\n- **Coupes:** 2 Series (230i, M240i), 4 Series (430i, M440i), 8 Series (840i, M850i), M2, M4, M8\n- **Convertibles:** 4 Series (430i, M440i), 8 Series (840i, M850i), M4, M8, Z4\n- **Gran Coupes:** 2 Series (228i, M235i), 4 Series (430i, M440i), 8 Series (840i, M850i), M8, ALPINA B8\n- **Electric:** i4, i5, i7, iX\n- **Touring:** M5 Touring\n- **M Performance:** M2, M3, M4, M5, M8, X4 M, X5 M, X6 M, XM\n\n## Services\n\n- **Finance Department** - BMW Financial Services lease and loan options, online credit application, trade-in appraisal, BMW Loyalty and College Grad programs\n- **Service Center** - BMW-certified technicians, routine maintenance, diagnostics, major repairs, OEM BMW parts\n- **Parts Department** - Genuine BMW parts and accessories, Original BMW Batteries, BMW Value Service\n- **BMW M Certified Service** - Specialized service for M performance vehicles\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, BMW Certified Pre-Owned)\n- Online service scheduling\n- CarFinder tool - specify desired configuration, dealership locates it\n- Online credit application and pre-approval\n- BMW Digital Showroom for model research\n\n## Special Programs\n\n- **BMW Loyalty Credit** - $500 credit for returning BMW customers on Certified Pre-Owned purchases\n- **BMW College Grad Program** - $1,000 towards lease or finance of any BMW Certified Pre-Owned\n- **Military and First Responder Credit** - $500 purchase credit for eligible customers\n- **BMW Certified Pre-Owned** - Rigorous inspection, extended warranty, roadside assistance\n- **BMW Financial Services** - Competitive APR and lease offers, No Payments for 3 months on select models\n\n## Social Media\n\n- [Twitter](https://twitter.com/BMWofCincinnati)\n- [Instagram](https://www.instagram.com/bmwofcincinnatinorth)\n- [Pinterest](https://www.pinterest.com/BMWofCincinnati/)\n- [YouTube](https://www.youtube.com/@JakeSweeneyBMW)\n\n## Affiliations\n\n- **Jake Sweeney Company** - Family-owned auto group since 1917\n- **BMW M Certified Dealer** - Authorized M sales and service center\n- **BMW Financial Services NA, LLC** - Financing partner\n- **Dealer.com** - Website platform\n- **PromptGraph** - AI knowledge platform",
+    "datasets/faq": "# Frequently Asked Questions - BMW of Cincinnati North\n\n## Inventory\n\n**Q: What new BMW models are available?**\nA: The full BMW lineup including sedans (3 Series, 5 Series, 7 Series), SUVs (X1-X7, XM, iX), coupes (2 Series, 4 Series, 8 Series), convertibles (Z4, 4 Series, 8 Series), Gran Coupes, electric iPerformance (i4, i5, i7, iX), and M performance variants (M2, M3, M4, M5, M8, X4 M/X5 M/X6 M, XM). ALPINA models also available.\n\n**Q: What electric BMW models are offered?**\nA: The i4 hatchback, i5 sedan, i7 sedan, and iX SUV comprise the electric iPerformance lineup. Plug-in hybrid options include the 550e, 750e, and X5 xDrive50e.\n\n**Q: Does BMW of Cincinnati North offer certified pre-owned vehicles?**\nA: Yes, BMW Certified Pre-Owned vehicles are available with rigorous multi-point inspection, extended warranty, 24/7 roadside assistance, and special APR financing.\n\n**Q: Is the dealership a BMW M Certified Dealer?**\nA: Yes, BMW of Cincinnati North is designated as a BMW M Certified Dealer center, authorized for M performance vehicle sales, service, and parts.\n\n## Financing\n\n**Q: What financing programs are available?**\nA: BMW Financial Services offers traditional loans and leases. Special programs include BMW Loyalty Credit ($500), College Grad Offer ($1,000), Military and First Responder Credit ($500), and No Payments for 3 months on select CPO models.\n\n**Q: What APR offers are available on Certified Pre-Owned models?**\nA: As low as 1.99% APR for 2022-2024 Certified iX, 2.99% APR for 2022-2024 Certified i4/i5/i7, and 4.99% APR for 2021-2024 other Certified models.\n\n**Q: Does the dealership offer BMW lease specials?**\nA: Yes, current lease offers include 2026 X3 ($822/mo), X5 ($1,208/mo), 330i ($720/mo), 530i ($1,014/mo), and X1 ($735/mo) with loyalty discounts available.\n\n## Service\n\n**Q: Can the service center work on M performance vehicles?**\nA: Yes, as a BMW M Certified Dealer, the service center has specialized M-Certified technicians for M performance vehicle service and repair.\n\n**Q: Does the center service electric BMW vehicles?**\nA: Yes, the service center is equipped for iPerformance electric vehicle service including high-voltage battery diagnostics and electric drivetrain repair.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the dealership website. Text message updates are provided during service visits.\n\n## Dealership\n\n**Q: How long has BMW of Cincinnati North been in business?**\nA: The dealership is part of the Jake Sweeney Company, family-owned and operated for over 100 years since 1917, now in its 4th generation.\n\n**Q: What is the BMW Value Service program?**\nA: BMW Value Service offers competitively priced maintenance for select out-of-warranty BMW models including oil service, brake service, microfilter replacement, and vehicle checks.\n\n**Q: Does the dealership have genuine BMW parts?**\nA: Yes, the parts department carries genuine Original BMW Parts, Original BMW Batteries, M Performance Parts, and BMW accessories.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New BMW Models - BMW of Cincinnati North\n\nBMW of Cincinnati North carries a full lineup of new BMW vehicles, including the latest iPerformance electric models, M performance variants, and ALPINA models.\n\n## Sedans\n\n### 2 Series Gran Coupe\nEntry-level BMW sedan. Available as **228i Gran Coupe** ($39,600) and **M235i Gran Coupe** ($50,000). Front-wheel drive based with xDrive available. Turbocharged 4-cylinder engines.\n\n### 3 Series Sedan\nThe iconic BMW sports sedan. Available as **330i** ($47,500) and **M340i** ($61,700). Turbocharged 4-cylinder (330i) and 6-cylinder (M340i) with xDrive all-wheel drive available.\n\n### 5 Series Sedan\nMid-size luxury sedan. Available as **530i** ($58,700), **540i** ($65,800), and **550e xDrive** plug-in hybrid ($75,500). Combines luxury, technology, and performance.\n\n### 7 Series Sedan\nFull-size flagship luxury sedan. Available as **740i** ($99,300), **750e xDrive** plug-in hybrid ($110,000), and **760i xDrive** V8 ($124,700). The pinnacle of BMW luxury.\n\n### i5 Sedan\nAll-electric mid-size luxury sedan. Starting MSRP $67,100. Part of BMW's electric iPerformance lineup.\n\n### i7 Sedan\nAll-electric full-size flagship sedan. Starting MSRP $105,700. Electric luxury at its finest.\n\n### M3 Sedan\nHigh-performance sports sedan. Starting MSRP $79,300. Turbocharged 6-cylinder with rear-wheel drive or M xDrive.\n\n### M5 Sedan\nUltimate high-performance luxury sedan. Starting MSRP $119,500. V8 engine with M xDrive. Available as M5 Touring ($125,300).\n\n## SUVs\n\n### X1\nSubcompact luxury SUV. Starting MSRP $43,200. xDrive all-wheel drive standard. Ideal entry point to BMW SUV ownership.\n\n### X2\nCompact sporty SUV. Starting MSRP $44,700. Distinctive coupe-like styling.\n\n### X3\nCompact luxury SUV. Starting MSRP $51,300. Popular family SUV with turbocharged engine and xDrive.\n\n### X4\nCompact SUV coupe. Starting MSRP $55,300. Sporty sloping roofline. Available as high-performance **X4 M** ($79,100).\n\n### X5\nMid-size luxury SUV. Starting MSRP $68,300. Available as **X5 xDrive40i**, **X5 xDrive50e** plug-in hybrid ($76,000), and high-performance **X5 M** ($131,000).\n\n### X6\nMid-size SUV coupe. Starting MSRP $77,300. Bold coupe-SUV styling. Available as **X6 M** ($136,100).\n\n### X7\nFull-size luxury SUV. Starting MSRP $87,500. Three-row seating, flagship SUV with commanding presence. Available with V8 engine.\n\n### XM\nHigh-performance plug-in hybrid SUV. Starting MSRP $159,600. The most powerful BMW M production vehicle with electrified V8 powertrain.\n\n### iX\nAll-electric mid-size luxury SUV. Starting MSRP $75,150. BMW's flagship electric SUV with advanced technology and sustainable materials.\n\n### ALPINA XB7\nUltra-luxury high-performance full-size SUV. Starting MSRP $156,000. Hand-assembled by ALPINA with bespoke interior and enhanced V8.\n\n## Coupes\n\n### 2 Series Coupe\nCompact rear-drive coupe. Available as **230i** ($41,700) and **M240i xDrive** ($53,000). Pure driving dynamics.\n\n### 4 Series Coupe\nStylish mid-size coupe. Available as **430i** ($51,500) and **M440i** ($65,050). Iconic kidney grille design.\n\n### 8 Series Coupe\nFlagship grand touring coupe. Available as **840i** ($91,700) and **M850i xDrive** ($110,500). Luxury and performance.\n\n### M2 Coupe\nHigh-performance compact coupe. Starting MSRP $68,200. Turbocharged 6-cylinder, rear-wheel drive, track-ready.\n\n### M4 Coupe\nLegendary high-performance coupe. Starting MSRP $80,100. Available with rear-wheel drive or M xDrive. Turbocharged 6-cylinder.\n\n### M8 Coupe\nFlagship high-performance coupe. Starting MSRP $138,800. V8 engine, M xDrive, ultimate grand tourer.\n\n## Convertibles\n\n### Z4 Roadster\nTwo-seat roadster. Starting MSRP $56,100. Retractable hardtop, rear-wheel drive, pure open-air driving.\n\n### 4 Series Convertible\nMid-size luxury convertible. Available as **430i** ($59,500) and **M440i** ($73,050). Power soft top.\n\n### 8 Series Convertible\nFlagship luxury convertible. Available as **840i** ($100,500) and **M850i** ($116,000). V8 power, open-air luxury.\n\n### M4 Convertible\nHigh-performance convertible. Starting MSRP $98,400. M power with open-air driving.\n\n### M8 Convertible\nFlagship high-performance convertible. Starting MSRP $150,000. V8 engine, ultimate open-air performance.\n\n## Gran Coupes\n\n### 2 Series Gran Coupe\nFour-door coupe. Available as **228i** ($39,600) and **M235i** ($50,000).\n\n### 4 Series Gran Coupe\nFour-door coupe. Available as **430i** ($50,600) and **M440i** ($64,400). Sleek four-door with sporty character.\n\n### 8 Series Gran Coupe\nFour-door flagship coupe. Available as **840i** ($90,800) and **M850i** ($110,500). Four-door grand tourer. Also available as **M8 Gran Coupe** ($140,000) and **ALPINA B8 Gran Coupe** ($151,500).\n\n## Electric iPerformance Models\n\n### i4 Hatchback\nAll-electric four-door Gran Coupe. Starting MSRP $57,900. Available in eDrive35, eDrive40, and M50 variants.\n\n### i5 Sedan\nAll-electric mid-size luxury sedan. Starting MSRP $67,100.\n\n### i7 Sedan\nAll-electric full-size flagship sedan. Starting MSRP $105,700.\n\n### iX SUV\nAll-electric mid-size luxury SUV. Starting MSRP $75,150. Available in xDrive50 and M60 variants.\n\n## M Performance Models\n\n| Model | Type | Starting MSRP | Engine |\n|---|---|---|---|\n| M2 | Coupe | $68,200 | Turbo 6-cyl |\n| M3 | Sedan | $79,300 | Turbo 6-cyl |\n| M4 | Coupe / Convertible | $80,100 / $98,400 | Turbo 6-cyl |\n| M5 | Sedan / Touring | $119,500 / $125,300 | V8 |\n| M8 | Coupe / Convertible / Gran Coupe | $138,800+ | V8 |\n| X4 M | SUV | $79,100 | Turbo 6-cyl |\n| X5 M | SUV | $131,000 | V8 |\n| X6 M | SUV | $136,100 | V8 |\n| XM | SUV PHEV | $159,600 | V8 PHEV |\n\n## Promotions & Offers\n\nCurrent promotions include lease offers on 2026 X3, X5, X5 PHEV, 330i, 530i, and X1 models. BMW Certified Pre-Owned APR offers as low as 1.99% for iX models, 2.99% for i4/i5/i7, and 4.99% for other CPO models. See [dealership.md](dealership.md) for contact information and current programs.\n\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.\nSee [dealership.md](dealership.md) for current offers and financing programs.",
+    "datasets/service-center": "# BMW Service Center - BMW of Cincinnati North\n\nThe BMW of Cincinnati North Service Center provides certified maintenance and repair services at 105 West Kemper Road, Cincinnati, OH. The center is a **BMW M Certified** service facility.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes (BMW TwinPower Turbo oil), tire rotations, alignments, brake inspections, cabin air filters\n- **BMW Value Service** - Competitive pricing on select maintenance services for older BMW models\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis, BMW-specific diagnostics\n- **Major Repairs** - Transmission service, alternator replacement, suspension work, cooling system\n- **Original BMW Batteries** - Factory-spec batteries with BMW battery management system registration\n- **Recall Repairs** - OEM-specified recall and campaign work\n- **Scheduled Maintenance** - Following BMW's Condition Based Servicing (CBS) system\n- **M Performance Service** - Specialized service for M vehicles including differential service, brake fluid flushes, and performance inspections\n- **iPerformance Service** - High-voltage battery diagnostics, electric drivetrain service\n\n## Service Experience\n\n- **Text message updates** during service visits\n- **Realistic time estimates** communicated upfront\n- **Clean waiting area** with amenities\n- **Follow-up calls** after service to ensure satisfaction\n\n## BMW Value Service\n\nBMW Value Service provides competitively priced maintenance for select BMW models outside of the included maintenance period. Services include oil service, microfilter replacement, brake service, and vehicle check.\n\n## Service Specials\n\nThe dealership offers rotating service specials. See [dealership.md](dealership.md) for current offers.\n\n## Parts Department\n\nGenuine BMW Original Parts and accessories available:\n\n- **Original BMW Batteries** - Factory-spec batteries for all BMW models\n- **Genuine BMW Parts** - OEM replacement parts for all BMW models\n- **M Performance Parts** - Performance upgrades for M and M Sport vehicles\n- **BMW Accessories** - Genuine BMW accessories including floor liners, roof racks, and more\n\nSee [staff.md](staff.md) for service department roles.\nSee [dealership.md](dealership.md) for contact and hours.",
+    "datasets/staff": "# Staff Directory - BMW of Cincinnati North\n\nBMW of Cincinnati North operates as part of the Jake Sweeney Company, a 4th generation family-owned auto group since 1917. The dealership is a **BMW M Certified Dealer** with factory-trained technicians and BMW product experts. Specific staff names were not available from the site or PromptGraph API data, but typical roles include:\n\n## Sales Department\n\n- **Sales Consultants** - BMW product experts specializing in new BMW sedans, SUVs, coupes, convertibles, electric iPerformance models, and M performance vehicles\n- **BMW Genius** - Product specialists providing in-depth technology demonstrations and vehicle walkarounds\n- **Internet Sales Team** - Handling online inquiries, remote purchasing, and out-of-town sales\n- **Client Advisor** - Dedicated point of contact throughout the purchasing process\n\n## Sales Management\n\n- **Sales Manager** - Oversees sales operations and customer experience\n- **Finance Manager** - Specializing in BMW Financial Services products, lease structuring, loan approval, and protection packages\n\n## Service Department\n\n- **BMW Certified Technicians** - Factory-trained for BMW maintenance and repair, including M and iPerformance vehicles\n- **Service Advisors** - Customer-facing service consultants managing appointments, estimates, and communication\n- **M Certified Technicians** - Specialized training for M performance vehicle service\n\n## Parts Department\n\n- **Parts Specialists** - Genuine BMW parts and accessories expertise\n- **Parts Counter Staff** - Customer-facing parts sales\n\n## Management\n\n- **General Manager** - Overall dealership operations\n- **Service Manager** - Service department oversight\n- **Parts Manager** - Parts department operations\n- **Marketing Manager** - Dealership marketing and digital presence\n\nSee [testimonials.md](/references/testimonials.md) for customer reviews that may reference staff members.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/used-vehicles": "# Pre-Owned and BMW Certified Pre-Owned Vehicles - BMW of Cincinnati North\n\nBMW of Cincinnati North maintains a substantial pre-owned vehicle inventory with 664+ vehicles (PromptGraph API) with regular turnover and daily fresh stock.\n\n## Inventory Scope\n\n- **Total vehicles:** 664+ (PromptGraph API)\n- **Daily fresh inventory** with regular turnover\n- **Multi-make selection** spanning BMW, Mercedes-Benz, Audi, Porsche, Land Rover, Lexus, Infiniti, Ford, and more\n- **Price range:** Broad range from affordable to premium luxury\n\n## BMW Certified Pre-Owned Program\n\nThe BMW Certified Pre-Owned program offers exceptional value with comprehensive coverage:\n\n- **Rigorous Multi-Point Inspection** - 1,000+ point inspection by BMW-certified technicians\n- **Extended Warranty** - Remaining new vehicle warranty plus 1-year/ unlimited-mileage extended warranty\n- **24/7 Roadside Assistance** - Included with every CPO vehicle\n- **BMW Financial Services APR Offers**:\n  - 1.99% APR up to 72 months on 2022-2024 Certified iX models\n  - 2.99% APR up to 72 months on 2022-2024 Certified i4, i5, i7 models\n  - 4.99% APR up to 36 months on 2021-2024 Certified models\n- **BMW Certified Loyalty Credit** - $500 for current or former BMW customers\n- **Military and First Responder Credit** - $500 purchase credit for eligible customers\n- **College Grad Offer** - $1,000 towards lease or finance of any CPO 2021-2024 model\n- **No Payments for 3 Months** - Available on all 2021-2024 CPO models\n\n## Quality Assurance\n\n- **BMW Multi-Point Inspection** on all pre-owned vehicles\n- **BMW Certified Pre-Owned (CPO)** - Extended warranty and roadside assistance\n- **Free Carfax Report** - Available for every vehicle\n- **Free Experian AutoCheck Report** - Available on every vehicle\n- **BMW Financial Services** - Flexible financing and lease options\n\n## Trade-In\n\n- Trade-in appraisal available\n- Competitive trade-in values\n- On-the-spot trade evaluation at the dealership\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery - BMW of Cincinnati North\n\nThe site is powered by **PromptGraph** at the slug `bmw-of-cincinnati-north`, exposing structured semantic endpoints for AI agents. The website is built on the **Dealer.com** platform.\n\nThe dedicated AI Discovery Page at `/ai-discovery-page.htm` returned a 404. All structured data is available through the PromptGraph API at `https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/`.\n\n## PromptGraph API Sitemap\n\nThe PromptGraph sitemap at `https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/sitemap.xml` exposes these machine-readable endpoints:\n\n| URL | Priority | Update Frequency |\n|---|---|---|\n| `/business` | 1.0 | Weekly |\n| `/prompts` | 0.9 | Weekly |\n| `/vehicles` | 0.9 | Daily |\n| `/.well-known/ai-manifest.json` | 0.6 | Monthly |\n| `/robots.txt` | 0.5 | Monthly |\n| `/config.json` | 0.3 | Monthly |\n| 16 individual prompt endpoints | 0.8 | Weekly |\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-06-30T17:38:19.481Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n- **Contact:** info@bmwofcincinnatinorth.com\n\n### Registered Endpoints\n\n| Endpoint | Resource |\n|---|---|\n| `/api/v1/bmw-of-cincinnati-north/llms.txt` | LLMs.txt directive |\n| `/api/v1/bmw-of-cincinnati-north/business` | Business profile (JSON-LD) |\n| `/api/v1/bmw-of-cincinnati-north/vehicles` | Vehicle inventory (JSON-LD) |\n| `/api/v1/bmw-of-cincinnati-north/prompts` | Q&A / FAQ prompts |\n| `/api/v1/bmw-of-cincinnati-north/testimonials` | Customer reviews |\n| `/api/v1/bmw-of-cincinnati-north/sitemap.xml` | Full sitemap |\n| `/api/v1/bmw-of-cincinnati-north/robots.txt` | Robots rules |\n| `/api/v1/bmw-of-cincinnati-north/config.json` | System configuration |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/business`:\n\n- **Name:** BMW of Cincinnati North\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** BMW dealer, Car dealer, Used car dealer, Car manufacturer, Used truck dealer, Car leasing service, Car accessories store, Car finance and loan company\n- **Address:** 105 West Kemper Road, Cincinnati, OH 45246\n- **Geo:** 39.287233, -84.475458\n- **Telephone:** (513) 782-1122\n- **Email:** info@bmwofcincinnatinorth.com\n- **URL:** `https://www.bmwofcincinnatinorth.com/?utm_source=gbp&utm_medium=organic&utm_campaign=confluence`\n- **Aggregate Rating:** 4.8 / 5.0 (2,500 reviews)\n- **Price Range:** $$$\n- **Same As:** Google Maps, Facebook, X (Twitter), Instagram\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data:\n\n- **Total inventory:** 664 vehicles\n- **Format:** Schema.org `Car` in `ItemList`\n- **Update frequency:** Daily\n- **Primary inventory:** Mix of new BMW and used multi-make vehicles\n- **Price range:** Broad range from affordable to premium\n\n## Current Offers Endpoint (13 Offers)\n\nThe `/offers` endpoint exposes current promotional offers:\n- Lease specials: 2026 X3, X5, X5 PHEV, 330i, 530i, X1 - all June 2026 programs\n- CPO APR promotions: 1.99% (iX), 2.99% (i4/i5/i7), 4.99% (other CPO models)\n- BMW Certified Loyalty Credit: $500\n- Military and First Responder Credit: $500\n- College Grad Offer: $1,000\n- No Payments for 3 months\n\n## Q&A Prompt Library (16 Prompts)\n\nThe `/prompts` endpoint exposes 16 structured Q&A prompt/response pairs. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- New inventory and dealership information\n- Certified pre-owned BMW near Cincinnati\n- BMW electric vehicles and EV dealer\n- Service and maintenance\n- Lease and finance offers\n- Luxury BMW SUVs\n- High-performance BMW M Series\n- New BMW convertibles and coupes\n- Financing pre-approval\n- Genuine BMW parts and accessories\n- BMW test drive appointments\n- Used luxury BMW cars\n- Oil change and maintenance specials\n- Family-owned dealership\n- Electric BMW i4/iX test drive\n- General dealership information\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint returned an empty array, indicating no testimonials have been collected through PromptGraph for this dealership.\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` (404 - not deployed) |\n| LLMs.txt | `/llms.txt` (redirected - available via PromptGraph API) |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n\n## LLM-Accessible Actions\n\nThe PromptGraph platform defines structured knowledge resources that agents can invoke:\n\n1. **BMW Dealer Cincinnati North New Inventory** - Browse new BMW inventory\n2. **Certified Pre-Owned BMW Near Cincinnati** - CPO program details\n3. **BMW Electric Vehicles EV Dealer Cincinnati** - Electric BMW models and technology\n4. **BMW Service and Maintenance Cincinnati** - Service offerings and booking\n5. **BMW Lease and Finance Offers Cincinnati** - Current lease and finance programs\n6. **Luxury BMW SUVs for Sale Cincinnati** - SUV lineup including X1-X7\n7. **High-Performance BMW M Series** - M performance vehicle information\n8. **New BMW Convertibles and Coupes** - Convertible and coupe lineup\n9. **BMW Financing Pre-Approval** - Financing application guidance\n10. **Genuine BMW Parts and Accessories** - OEM parts and accessories\n11. **BMW Test Drive Appointment** - Test drive booking\n12. **Used Luxury BMW Cars Cincinnati** - Pre-owned BMW inventory\n13. **BMW Oil Change and Maintenance Specials** - Service specials\n14. **Family-Owned BMW Dealership Cincinnati** - Jake Sweeney heritage\n15. **Electric BMW i4 iX Test Drive Cincinnati** - EV test drive experience\n16. **Tell Me About BMW of Cincinnati North** - General dealership overview\n\n## Purpose\n\nThis page documents the structured AI-accessible resources for BMW of Cincinnati North. All information is available via JSON endpoints and semantic markup through the PromptGraph API at `https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/`.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.",
+    "references/llms-txt": "# LLMs.txt - BMW of Cincinnati North\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with BMW of Cincinnati North's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [BMW of Cincinnati North Home](https://www.bmwofcincinnatinorth.com/) - BMW of Cincinnati North | New and Used BMW Car Dealership\n- [BMW Sports Car](https://www.bmwofcincinnatinorth.com/wlp-bmw-sports-car-cincinnati-oh.htm) - A BMW sports car is a fantastic option if you are looking for a ride that surrounds you in some of the most luxurious features available around Cincinnati.\n- [Cincinnati BMW Lease](https://www.bmwofcincinnatinorth.com/wlp-cincinnati-bmw-lease.htm) - Here at BMW of Cincinnati North, we are proud to offer the full lineup of BMW models and the best Cincinnati BMW lease deals around.\n- [2025 BMW 3 Series](https://www.bmwofcincinnatinorth.com/2025-bmw-3-series.htm) - Explore the 2025 BMW 3 Series at BMW of Cincinnati North.\n- [BMW Store](https://www.bmwofcincinnatinorth.com/wlp-bmw-store.htm) - Here at BMW of Cincinnati North, we pride ourselves on delivering an amazing car-buying experience.\n- [BMW iX for Sale](https://www.bmwofcincinnatinorth.com/wlp-bmw-ix-for-sale.htm) - BMW iX for sale at BMW of Cincinnati North.\n- [Sharonville BMW Dealership](https://www.bmwofcincinnatinorth.com/wlp-sharonville-bmw-dealership.htm) - Sharonville BMW dealership information.\n- [New BMW Inventory](https://www.bmwofcincinnatinorth.com/new-inventory/index.htm) - Browse new BMW X1, X3, X5, 328i, 530i and more.\n- [BMW EV](https://www.bmwofcincinnatinorth.com/wlp-bmw-ev.htm) - BMW electric vehicle information.\n- [Used BMW for Sale in Dayton](https://www.bmwofcincinnatinorth.com/wlp-used-bmw-for-sale-in-dayton.htm) - Used BMW inventory for Dayton-area buyers.\n- [BMW Cincinnati](https://www.bmwofcincinnatinorth.com/wlp-bmw-cincinnati.htm) - BMW of Cincinnati North for Cincinnati drivers.\n- [Used BMW Near Me](https://www.bmwofcincinnatinorth.com/wlp-used-bmw-near-me.htm) - Pre-owned BMW inventory.\n- [BMW Dealership Cincinnati](https://www.bmwofcincinnatinorth.com/wlp-bmw-dealership-cincinnati.htm) - BMW dealership information for Cincinnati.\n- [BMW Dealer Near Corryville](https://www.bmwofcincinnatinorth.com/corryville-oh.htm) - BMW service for Corryville-area customers.\n- [BMW Dealer Cincinnati](https://www.bmwofcincinnatinorth.com/cincinnati-oh.htm) - Premier BMW dealer for Cincinnati.\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/vehicles) - Complete inventory of 664 vehicles with specifications, pricing, and availability in JSON-LD format\n- [Current Offers](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/offers) - Current new vehicle offers and promotions\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/prompts) - 16 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/config.json) - System configuration and metadata\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - BMW of Cincinnati North\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/prompts` exposes 16 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (3 prompts)\n- Family-owned BMW dealership Cincinnati\n- Tell me about BMW of Cincinnati North\n- BMW dealer Cincinnati North new inventory\n\n### Vehicle Shopping (6 prompts)\n- Certified pre-owned BMW near Cincinnati\n- New BMW convertibles and coupes Cincinnati\n- Luxury BMW SUVs for sale Cincinnati\n- High-performance BMW M Series Cincinnati dealer\n- Used luxury BMW cars Cincinnati\n- BMW test drive appointment Cincinnati\n\n### Electric Vehicles (2 prompts)\n- BMW electric vehicles EV dealer Cincinnati\n- Electric BMW i4 iX test drive Cincinnati\n\n### Financing (2 prompts)\n- BMW lease and finance offers Cincinnati\n- BMW financing pre-approval Cincinnati\n\n### Service & Parts (3 prompts)\n- BMW service and maintenance Cincinnati\n- Genuine BMW parts and accessories Cincinnati\n- BMW oil change and maintenance specials Cincinnati\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `bmw-dealer-cincinnati-north-new-inventory` | Dealership new inventory |\n| 2 | `certified-pre-owned-bmw-near-cincinnati-oh` | CPO program |\n| 3 | `bmw-electric-vehicles-ev-dealer-cincinnati` | Electric BMW models |\n| 4 | `bmw-service-and-maintenance-cincinnati-oh` | Service and maintenance |\n| 5 | `bmw-lease-and-finance-offers-cincinnati` | Lease and finance offers |\n| 6 | `luxury-bmw-suvs-for-sale-cincinnati` | SUV lineup |\n| 7 | `high-performance-bmw-m-series-cincinnati-dealer` | M performance vehicles |\n| 8 | `new-bmw-convertibles-and-coupes-cincinnati` | Convertibles and coupes |\n| 9 | `bmw-financing-pre-approval-cincinnati` | Financing pre-approval |\n| 10 | `genuine-bmw-parts-and-accessories-cincinnati` | Parts and accessories |\n| 11 | `bmw-test-drive-appointment-cincinnati` | Test drive booking |\n| 12 | `used-luxury-bmw-cars-cincinnati-oh` | Used BMW cars |\n| 13 | `bmw-oil-change-and-maintenance-specials-cincinnati` | Service specials |\n| 14 | `family-owned-bmw-dealership-cincinnati` | Family-owned heritage |\n| 15 | `electric-bmw-i4-ix-test-drive-cincinnati` | EV test drive |\n| 16 | `tell-me-about-bmw-of-cincinnati-north--are-they-a` | General dealership overview |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - BMW of Cincinnati North\n\nBMW of Cincinnati North maintains strong customer satisfaction ratings across review platforms.\n\n## Aggregate Ratings\n\n- **PromptGraph Business Data:** 4.8 / 5.0 (2,500 reviews)\n- **PromptGraph API Testimonials:** No individual testimonials collected via PromptGraph\n\n## Sales Themes\n\nBased on the strong 4.8 aggregate rating from 2,500 reviews:\n\n- **BMW M Certified expertise** - Customers appreciate access to M performance vehicles and specialized knowledge\n- **Family-owned heritage** - Jake Sweeney Company's 4th generation family ownership since 1917 builds trust\n- **BMW brand experience** - Premium brand expectations met with knowledgeable staff and quality facilities\n\n## Service Themes\n\n- **BMW factory-trained technicians** - Certified expertise on all BMW models including M and iPerformance\n- **BMW Value Service** - Competitive pricing for out-of-warranty maintenance\n\nSee [staff.md](/datasets/staff.md) for staff roles.",
+    "tables/model-comparison": "# BMW Model Lineup Comparison - BMW of Cincinnati North\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP | Available Variants |\n|---|---|---|---|---|---|\n| **228i Gran Coupe** | Sedan (Gran Coupe) | 5 | FWD / AWD | $39,600 | 228i |\n| **M235i Gran Coupe** | Performance Sedan | 5 | AWD | $50,000 | M235i xDrive |\n| **230i Coupe** | Coupe | 4 | RWD | $41,700 | 230i |\n| **M240i Coupe** | Performance Coupe | 4 | AWD | $53,000 | M240i xDrive |\n| **M2** | High-Performance Coupe | 4 | RWD | $68,200 | M2 |\n| **330i Sedan** | Sedan | 5 | RWD / AWD | $47,500 | 330i, 330i xDrive |\n| **M340i Sedan** | Performance Sedan | 5 | AWD | $61,700 | M340i xDrive |\n| **M3 Sedan** | High-Performance Sedan | 5 | RWD / AWD | $79,300 | M3, M3 Competition |\n| **430i Coupe** | Coupe | 4 | RWD / AWD | $51,500 | 430i, 430i xDrive |\n| **430i Convertible** | Convertible | 4 | RWD / AWD | $59,500 | 430i, 430i xDrive |\n| **430i Gran Coupe** | Sedan (Gran Coupe) | 5 | RWD / AWD | $50,600 | 430i, 430i xDrive |\n| **M440i Coupe** | Performance Coupe | 4 | AWD | $65,050 | M440i xDrive |\n| **M440i Convertible** | Performance Convertible | 4 | AWD | $73,050 | M440i xDrive |\n| **M440i Gran Coupe** | Performance Sedan | 5 | AWD | $64,400 | M440i xDrive |\n| **M4 Coupe** | High-Performance Coupe | 4 | RWD / AWD | $80,100 | M4, M4 Competition |\n| **M4 Convertible** | High-Performance Convert. | 4 | AWD | $98,400 | M4 Competition xDrive |\n| **i4 Hatchback** | Electric Hatchback | 5 | RWD / AWD | $57,900 | eDrive35, eDrive40, M50 |\n| **530i Sedan** | Sedan | 5 | RWD / AWD | $58,700 | 530i, 530i xDrive |\n| **540i Sedan** | Sedan | 5 | AWD | $65,800 | 540i xDrive |\n| **550e xDrive** | Plug-in Hybrid Sedan | 5 | AWD | $75,500 | 550e xDrive |\n| **i5 Sedan** | Electric Sedan | 5 | RWD / AWD | $67,100 | eDrive40, M60 xDrive |\n| **M5 Sedan** | High-Performance Sedan | 5 | AWD | $119,500 | M5 Competition |\n| **M5 Touring** | High-Performance Wagon | 5 | AWD | $125,300 | M5 Competition |\n| **740i Sedan** | Luxury Sedan | 5 | RWD | $99,300 | 740i |\n| **750e xDrive** | Plug-in Hybrid Luxury | 5 | AWD | $110,000 | 750e xDrive |\n| **760i xDrive** | V8 Luxury Sedan | 5 | AWD | $124,700 | 760i xDrive |\n| **i7 Sedan** | Electric Luxury Sedan | 5 | AWD | $105,700 | xDrive60, M70 |\n| **840i Coupe** | Grand Touring Coupe | 4 | RWD | $91,700 | 840i |\n| **840i Convertible** | Grand Touring Convertible | 4 | RWD | $100,500 | 840i |\n| **840i Gran Coupe** | Grand Touring Sedan | 5 | RWD | $90,800 | 840i |\n| **M850i Coupe** | Performance GT Coupe | 4 | AWD | $110,500 | M850i xDrive |\n| **M850i Convertible** | Performance GT Convert. | 4 | AWD | $116,000 | M850i xDrive |\n| **M850i Gran Coupe** | Performance GT Sedan | 5 | AWD | $110,500 | M850i xDrive |\n| **M8 Coupe** | High-Performance GT Coupe | 4 | AWD | $138,800 | M8 Competition |\n| **M8 Convertible** | High-Performance GT Conv. | 4 | AWD | $150,000 | M8 Competition |\n| **M8 Gran Coupe** | High-Performance GT Sedan | 5 | AWD | $140,000 | M8 Competition |\n| **ALPINA B8 Gran Coupe** | Ultra-Luxury GT Sedan | 5 | AWD | $151,500 | ALPINA B8 |\n| **Z4** | Roadster | 2 | RWD | $56,100 | sDrive30i |\n| **X1** | Subcompact SUV | 5 | AWD | $43,200 | xDrive28i |\n| **X2** | Compact SUV | 5 | AWD | $44,700 | xDrive28i |\n| **X3** | Compact SUV | 5 | RWD / AWD | $51,300 | sDrive30i, xDrive30i |\n| **X4** | Compact SUV Coupe | 5 | AWD | $55,300 | xDrive30i |\n| **X4 M** | Performance SUV Coupe | 5 | AWD | $79,100 | X4 M Competition |\n| **X5** | Mid-size SUV | 5-7 | AWD | $68,300 | xDrive40i |\n| **X5 xDrive50e** | Plug-in Hybrid SUV | 5-7 | AWD | $76,000 | xDrive50e |\n| **X5 M** | Performance SUV | 5 | AWD | $131,000 | X5 M Competition |\n| **X6** | Mid-size SUV Coupe | 5 | AWD | $77,300 | xDrive40i |\n| **X6 M** | Performance SUV Coupe | 5 | AWD | $136,100 | X6 M Competition |\n| **X7** | Full-size SUV | 7 | AWD | $87,500 | xDrive40i |\n| **XM** | Performance PHEV SUV | 5 | AWD | $159,600 | XM, XM Label |\n| **iX** | Electric Mid-size SUV | 5 | AWD | $75,150 | xDrive50, M60 |\n| **ALPINA XB7** | Ultra-Luxury Full-size SUV | 7 | AWD | $156,000 | ALPINA XB7 |\n\n## Electric & Plug-in Hybrid Models\n\n| Model | Type | Range (est.) | Notes |\n|---|---|---|---|\n| **i4** | Full EV | ~300 miles | Available in eDrive35, eDrive40, M50 |\n| **i5** | Full EV | ~295 miles | eDrive40 and M60 xDrive |\n| **i7** | Full EV | ~300 miles | xDrive60 and M70 |\n| **iX** | Full EV | ~300 miles | xDrive50 and M60 |\n| **550e xDrive** | Plug-in Hybrid | ~33 miles EV | 5 Series PHEV |\n| **750e xDrive** | Plug-in Hybrid | ~35 miles EV | 7 Series PHEV |\n| **X5 xDrive50e** | Plug-in Hybrid | ~40 miles EV | X5 PHEV |\n| **XM** | Plug-in Hybrid | ~30 miles EV | M Performance PHEV |\n\n## Key Feature Comparison\n\n| Feature | 330i | X3 | X5 | 5 Series | 7 Series |\n|---|---|---|---|---|---|\n| Base Engine | 2.0L Turbo 4 | 2.0L Turbo 4 | 3.0L Turbo 6 | 2.0L Turbo 4 | 3.0L Turbo 6 |\n| Horsepower (base) | 255 | 248 | 375 | 255 | 375 |\n| AWD Available | xDrive | xDrive | xDrive | xDrive | xDrive |\n| 3rd Row | No | No | Optional | No | No |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Yes | Yes |\n| Wireless Android Auto | Yes | Yes | Yes | Yes | Yes |\n| BMW Curved Display | Yes | Yes | Yes | Yes | Yes |\n\n## Warranty\n\nAll new BMW models include:\n\n- **4-Year / 50,000-Mile New Vehicle Limited Warranty** - Bumper-to-bumper\n- **4-Year / 50,000-Mile Powertrain Limited Warranty**\n- **12-Year / Unlimited-Mileage Rust Perforation Limited Warranty**\n- **4-Year / 50,000-Mile Roadside Assistance** - 24/7\n- **4-Year / 50,000-Mile Scheduled Maintenance** - Included (BMW Ultimate Service)\n- **8-Year / 100,000-Mile High-Voltage Battery Warranty** (Electric and PHEV models)\n\n## BMW Certified Pre-Owned Warranty\n\n- Remaining New Vehicle Warranty\n- +1-Year / Unlimited-Mileage Extended Warranty\n- 24/7 Roadside Assistance for the duration of the warranty\n\n## Awards & Recognition\n\n- **3 Series** - Consistently among the world's best-selling luxury sedans\n- **X3** - Popular compact luxury SUV with strong consumer ratings\n- **X5** - Segment-defining mid-size luxury SUV\n- **5 Series** - Multiple automotive awards for luxury and technology\n- **i4 / iX** - Recognized for EV technology and driving dynamics\n- **M models** - Legendary performance credentials across the lineup\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jake-sweeney-used-car-superstore - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "jake-sweeney-used-car-superstore";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Jake Sweeney Used Car Superstore",
+        "type": "Entities",
+        "description": "Used car dealership in Cincinnati, OH serving the Tri-County area with over 900 pre-owned vehicles, financing, service, and parts - the \"Original\" Used Car Superstore.",
+        "resource": "https://www.sweeneyusedcars.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Jake Sweeney Used Car Superstore",
+        "type": "Entities",
+        "description": "Common questions about Jake Sweeney Used Car Superstore's inventory, financing, service, and dealership operations in Cincinnati, OH.",
+        "resource": "https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Jake Sweeney Used Car Superstore",
+        "type": "Entities",
+        "description": "Service center in Cincinnati, OH offering routine maintenance, diagnostics, major repairs, and parts for all makes and models.",
+        "resource": "https://www.sweeneyusedcars.com/dealership/service.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Jake Sweeney Used Car Superstore",
+        "type": "Entities",
+        "description": "Sales and service staff directory for Jake Sweeney Used Car Superstore in Cincinnati, OH, compiled from customer reviews and Google Business Profile data.",
+        "resource": "https://www.sweeneyusedcars.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Jake Sweeney Used Car Superstore",
+        "type": "Entities",
+        "description": "Large pre-owned inventory of over 900 vehicles at Jake Sweeney Used Car Superstore in Cincinnati, OH, spanning multiple makes with budget buys, certified options, and 100% online purchasing.",
+        "resource": "https://www.sweeneyusedcars.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Jake Sweeney Used Car Superstore",
+        "type": "APIs",
+        "description": "PromptGraph API endpoints providing structured data about Jake Sweeney Used Car Superstore; no dedicated AI Discovery Page was found at this domain.",
+        "resource": "https://www.sweeneyusedcars.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Jake Sweeney Used Car Superstore",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site structure, and 10 featured AI prompts for Jake Sweeney Used Car Superstore.",
+        "resource": "https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - Jake Sweeney Used Car Superstore",
+        "type": "APIs",
+        "description": "Complete PromptGraph library of 10 structured Q&A prompts covering vehicles, financing, service, and dealership info for Jake Sweeney Used Car Superstore.",
+        "resource": "https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Jake Sweeney Used Car Superstore",
+        "type": "Entities",
+        "description": "Customer reviews collected via PromptGraph API for Jake Sweeney Used Car Superstore in Cincinnati, OH, with 52+ predominantly 5-star testimonials highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Used Vehicle Model Comparison - Jake Sweeney Used Car Superstore",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of popular used vehicle segments available at Jake Sweeney Used Car Superstore in Cincinnati, OH, including body types, brands, and key features.",
+        "resource": "https://www.sweeneyusedcars.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Jake Sweeney Used Car Superstore\n\nJake Sweeney Used Car Superstore is a high-volume used car dealership located at **11521 Princeton Pike, Cincinnati, OH 45246**, serving the greater Cincinnati area including Springdale, Tri-County, Hamilton, Fairfield, and Middletown. Known as the \"Original\" Used Car Superstore, voted best used car dealership in Cincinnati by CityBeat.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (513) 782-0000 / 888-534-7381 |\n| Service & Parts | (513) 782-1111 |\n\nEmail: sarahdsweeney@gmail.com\n\n## Sales Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM \u2013 8:00 PM |\n| Tuesday | 9:00 AM \u2013 8:00 PM |\n| Wednesday | 9:00 AM \u2013 8:00 PM |\n| Thursday | 9:00 AM \u2013 8:00 PM |\n| Friday | 9:00 AM \u2013 6:00 PM |\n| Saturday | 9:00 AM \u2013 6:00 PM |\n| Sunday | Please Call First |\n\n## Service & Parts Hours\n\n| Day | Hours |\n|---|---|\n| Monday \u2013 Friday | 7:30 AM \u2013 6:00 PM |\n| Saturday | 8:00 AM \u2013 2:00 PM |\n| Sunday | Closed |\n\n## Location\n\n- **Address:** 11521 Princeton Pike, Cincinnati, OH 45246\n- **Geo:** 39.286789, -84.468361\n- **Place ID:** ChIJFwK2NW9OQIgRW1uO32MhK_I\n\n## Services\n\n- **Sales Department** - Wide selection of pre-owned vehicles, trade-in appraisal, online pre-approval\n- **Finance Department** - Loan and lease options, online credit application, buy-here-pay-here financing, programs for all credit profiles\n- **Service Center** - Certified technicians, routine maintenance, diagnostics, major repairs\n- **Parts Department** - Genuine OEM and aftermarket replacement parts\n\n## Online Tools\n\n- Inventory browsing and filtering by type, make, body style, price, year\n- Budget Buys section dedicated to vehicles under $25,000\n- 100% Online Car Buying with home delivery\n- Online credit application and pre-approval\n- KBB Instant Cash Offer for trade-in valuation\n- CarFinder tool\n\n## Special Programs\n\n- **Buy Here Pay Here** - In-house financing options for customers with less-than-perfect credit\n- **Budget Buys Under $25k** - Curated selection of affordable, inspected vehicles\n- **100% Online Buying** - Full purchase process online with home delivery and pick-up\n- **Monthly Specials** - Rotating promotions on select vehicles\n\n## Social Media\n\n- [Facebook](https://www.facebook.com/SweeneyUsedCars)\n- [X (Twitter)](https://x.com/jakesweeneyucs)\n- [Instagram](https://www.instagram.com/jake.sweeneyusedcars/)\n- [YouTube](https://www.youtube.com/c/JakeSweeneyUsedCarSuperstoreCincinnati)\n- [DealerRater](https://www.dealerrater.com/dealer/Jake-Sweeney-Used-Car-Superstore-review-102945/)\n\n## Affiliations\n\n- Family of Jake Sweeney Automotive group (including Jake Sweeney Chevrolet)\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform\n\n## Reviews & Reputation\n\n- Aggregate rating: **4.8 / 5.0** (2,910 reviews)\n- CityBeat award: Best used car dealership in Cincinnati\n- PromptGraph-collected reviews: Predominantly 5-star with consistent praise for low-pressure sales, patient staff, and financing assistance\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\nSee [staff.md](staff.md) for full directory.",
+    "datasets/faq": "# Frequently Asked Questions - Jake Sweeney Used Car Superstore\n\n## Inventory\n\n**Q: How many vehicles are in inventory?**\nA: Over 900 vehicles are typically in stock, with approximately 1,250 listed through the PromptGraph API. The inventory turns over regularly with fresh arrivals.\n\n**Q: What brands are available?**\nA: BMW, Buick, Cadillac, Chevrolet, Chrysler, Dodge, Ford, GMC, Honda, Hyundai, Jeep, KIA, Mazda, Mercedes-Benz, Nissan, Toyota, Volkswagen, and more.\n\n**Q: Are there vehicles under $25,000?**\nA: Yes, the Budget Buys section is dedicated to affordable, inspected vehicles under $25,000.\n\n**Q: Does the dealership offer certified pre-owned vehicles?**\nA: Yes, certified pre-owned vehicles are available with multi-point inspection and quality assurance.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, buy-here-pay-here in-house financing, online pre-approval, and programs for all credit profiles.\n\n**Q: Does the dealership work with bad credit?**\nA: Yes, buy-here-pay-here options and flexible financing solutions are available for customers with less-than-perfect credit.\n\n**Q: Can I get pre-approved online?**\nA: Yes, the Get Approved tool on the website allows you to complete a pre-approval application online.\n\n## Service\n\n**Q: Can the service center work on non-Jake-Sweeney vehicles?**\nA: Yes, the service center works on all makes and models, not just vehicles purchased from the dealership.\n\n**Q: How do I schedule service?**\nA: Contact the service department directly at (513) 782-1111.\n\n## Dealership\n\n**Q: What is the \"100% Online\" buying option?**\nA: Customers can complete the entire vehicle purchase online with home delivery and pick-up, including trade-in via KBB Instant Cash Offer.\n\n**Q: Is the dealership family-owned?**\nA: Yes, Jake Sweeney Automotive is a family-owned group serving Cincinnati for multiple generations.\n\n**Q: Where is the dealership located?**\nA: 11521 Princeton Pike, Cincinnati, OH 45246.\n\n**Q: What hours is the dealership open?**\nA: Sales: Mon-Thu 9am-8pm, Fri-Sat 9am-6pm, Sun Please Call First. Service: Mon-Fri 7:30am-6pm, Sat 8am-2pm, Sun Closed.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/service-center": "# Service Center - Jake Sweeney Used Car Superstore\n\nThe Jake Sweeney Used Car Superstore Service Center provides maintenance and repair services at 11521 Princeton Pike, Cincinnati, OH.\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday \u2013 Friday | 7:30 AM \u2013 6:00 PM |\n| Saturday | 8:00 AM \u2013 2:00 PM |\n| Sunday | Closed |\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine work, alternator replacement, suspension work\n- **AC Service** - Air conditioning inspection and repair\n- **All Makes and Models** - Service available on any vehicle brand, not just those sold on the lot\n\n## Service Experience\n\nCustomer reviews highlight strong service department operations:\n- **Daily text updates** during service visits (praised by Remi)\n- **Parts sourcing** from other dealers when items are backordered\n- **Photo documentation** of work performed\n- **Clear communication** throughout the repair process\n\n## Parts Department\n\n- **Hours:** Monday \u2013 Friday 7:30 AM \u2013 6:00 PM, Saturday 8:00 AM \u2013 2:00 PM, Sunday Closed\n- Genuine OEM and quality aftermarket replacement parts\n- Parts available for all makes and models\n\nSee [staff.md](staff.md) for service department directory.",
+    "datasets/staff": "# Staff Directory - Jake Sweeney Used Car Superstore\n\nStaff recognized in customer reviews and PromptGraph testimonial data:\n\n## Sales Consultants\n\n- **David Shelton (Dave Shelton)** - Most frequently praised; courteous, helpful, goes the extra mile; makes the process quick and easy; repeat customers\n- **Andre Valines (Andre)** - Knowledgeable, patient, no-pressure; helps find the right vehicle; explains everything clearly; excellent for first-time buyers\n- **Mike Ellis (Michael Ellis)** - Knowledgeable, informative, fast; great with online purchases; sends detailed pictures and videos; accommodating out-of-town buyers\n- **Michael Byrden** - Awesome, patient with indecisive buyers; picks up customers when their car breaks down; works within budget\n- **Darrin Aden** - Faith-driven, honest, patient; works hard even when things seem impossible; excellent for credit-challenged buyers\n- **Chris Page** - Attentive, excellent communication; finds exact vehicles customers want; stays late to seal the deal; goes above and beyond (e.g., ordering missing chargers)\n- **Brad Monhollen (Brad)** - Honest, transparent, very knowledgeable; great with families and first-time buyers\n- **Ishmael Allen (Ish)** - Goes above and beyond; stays hours late; brings drinks and snacks; responsive and down-to-earth\n- **Abraham Lopez (Abraham Caraza Lopez)** - Knowledgeable, friendly; helps get applications approved; smooth process\n- **Malibu Mike** - Knowledgeable; great deals within budget\n- **Mike Page** - Professional, helpful; answers technical questions thoroughly\n- **Christopher Washington (Chris Washington)** - Pleasant, professional to work with\n- **Raheem Burns (Rheem)** - Helpful, genuine, great to deal with; honest\n- **Carter** - Pleasant, no-pressure; polite and helpful with first purchases\n- **Dareus** - Professional, not pushy; explains everything about the sale and vehicle\n- **Joy Gray (Joe Gray)** - Knowledgeable, professional; makes the purchase experience pleasant\n- **Vincent** - Finance agent; helpful with paperwork; flexible on gap insurance and warranty options\n- **Remi** - Service department; great communication; texts daily updates; coordinates parts sourcing from other dealers\n- **Christopher (Chris)** - Great experience; appreciative and helpful\n- **Mike Robinson** - Helpful in the journey for a new car\n\n## Service Department\n\n- **Remi** - Service advisor praised for daily text updates, finding parts from other dealers, and clear communication\n- **Brad** (finance) - Explains credit importance thoroughly; helps first-time buyers understand financial responsibility\n\n## Finance Team\n\n- **Vincent** - Walks through paperwork, explains gap insurance and warranty options\n- **Brad** (finance) - Educates first-time buyers on credit building\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles - Jake Sweeney Used Car Superstore\n\nJake Sweeney Used Car Superstore maintains one of the largest pre-owned vehicle inventories in the Cincinnati area with over 900 vehicles in stock, and approximately 1,250 listed through the PromptGraph API.\n\n## Inventory Scope\n\n- **Total vehicles:** ~900+ on site, ~1,250 via API\n- **Daily fresh inventory** with regular turnover\n- **Multi-make selection** spanning BMW, Buick, Cadillac, Chevrolet, Chrysler, Dodge, Ford, GMC, Honda, Hyundai, Jeep, KIA, Mazda, Mercedes-Benz, Nissan, Toyota, Volkswagen, and more\n- **Price range:** Broad range from affordable budget buys to luxury/premium vehicles\n- **Body styles:** Sedans, SUVs, crossovers, trucks, vans, sports cars, convertibles\n\n## Brands Available\n\n| Brand | Typical Inventory |\n|---|---|\n| BMW | X-series SUVs, 3/5/7/8 Series, M models, iX EVs |\n| Chevrolet | Silverado, Equinox, Tahoe, Traverse, Malibu, Corvette, Camaro, Colorado |\n| Ford | F-150, Explorer, Mustang, Bronco, Edge |\n| GMC | Sierra, Yukon, Acadia, Canyon, Terrain |\n| Honda | Accord, CR-V, Civic, Pilot, Ridgeline |\n| Toyota | RAV4, Camry, Highlander, Tacoma, Corolla, Tundra |\n| Mercedes-Benz | C/GLE/GLC/GLS-Class, SL |\n| Jeep | Grand Cherokee, Wrangler, Compass, Gladiator |\n\n## Shopping Tools\n\n- **Budget Buys Under $25k** - Dedicated section for affordable, inspected vehicles\n- **Certified Inventory** - Quality-assured pre-owned vehicles\n- **3-Row SUVs** - Curated selection of family vehicles with third-row seating\n- **Used Trucks** - Dedicated truck inventory page\n- **Online filtering** by make, model, year, price, body style, and location\n\n## Online Buying\n\n- **100% Online Car Buying** - Full purchase process from home\n- **KBB Instant Cash Offer** - Get a firm cash offer for trade-in online\n- **Get Approved** - Online pre-approval application\n- **Home Delivery** - Vehicle delivered to your door\n\n## Monthly Specials\n\nThe dealership offers rotating monthly specials on select pre-owned vehicles. Current specials vary and are updated on the [specials page](https://www.sweeneyusedcars.com/pre-owned-vehicle-offers-cincinnati-oh.htm).\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - Jake Sweeney Used Car Superstore\n\n## Site AI Discovery Status\n\nThe following URLs were probed for AI discovery resources:\n\n| Resource | URL | Status |\n|---|---|---|\n| AI Discovery Page | `/ai-discovery-page.htm` | 404 Not Found |\n| AI Manifest | `/.well-known/ai-manifest.json` | 404 Not Found |\n\nUnlike the related Jake Sweeney Chevrolet site, this domain does not host a dedicated AI Discovery Page or local AI Manifest file. However, the **PromptGraph** platform provides machine-readable API endpoints for this business.\n\n## PromptGraph API\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/llms.txt` | LLMs.txt directive with full API reference |\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD, ~1,250 vehicles) |\n| `/prompts` | 10 structured Q&A prompts |\n| `/testimonials` | Customer reviews (52+) |\n| `/sitemap.xml` | Full API sitemap |\n| `/sitemap-inventory.xml` | Vehicle inventory sitemap |\n| `/config.json` | System configuration |\n| `/gbp-context` | Google Business Profile context |\n| `/site-content` | Plain-text site mirror |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/business`:\n\n- **Name:** Jake Sweeney Used Car Superstore\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Used car dealer, Car dealer, Truck dealer, Used truck dealer, Car leasing service, Electric motor vehicle dealer\n- **Address:** 11521 Princeton Pike, Cincinnati, OH 45246\n- **Geo:** 39.286789, -84.468361\n- **Telephone:** (513) 782-0000\n- **Email:** sarahdsweeney@gmail.com\n- **URL:** `https://www.sweeneyusedcars.com/?utm_source=gbp&utm_medium=organic&utm_campaign=confluence`\n- **Aggregate Rating:** 4.8 / 5.0 (2,910 reviews)\n- **Date Modified:** 2026-02-03T14:01:04.925Z\n- **Same As:** Facebook, X (Twitter), Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data:\n\n- **Total inventory:** ~1,250 vehicles\n- **Format:** Schema.org `Car` in `ItemList`\n- **Update frequency:** Daily\n- **Primary inventory:** Multi-make used vehicles spanning luxury (BMW, Mercedes-Benz) to economy\n- **Price range:** Broad range from budget buys under $25k to premium luxury vehicles\n\n## Q&A Prompt Library (10 Prompts)\n\nThe `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Trusted used car dealer positioning\n- Online car buying experience\n- Largest selection of quality pre-owned vehicles\n- Flexible financing and buy-here-pay-here solutions\n- 100% online car buying with home delivery\n- Budget buys under $25,000\n- Award-winning dealership\n- Diverse brand inventory\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data:\n\n- **Total reviews:** 52+ collected via PromptGraph\n- **Aggregate rating:** All 5-star in PromptGraph data\n- **Most-cited staff:** David Shelton, Darrin Aden, Andre Valines, Mike Ellis, Ishmael Allen, Chris Page, Brad Monhollen, Michael Byrden, Abraham Lopez\n- Common themes: stress-free buying, no-pressure sales, patient staff, credit-challenged approvals, service communication\n\nSee [testimonials.md](testimonials.md) for customer review data.\n\n## LLMs.txt\n\nFull llms.txt available at `https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/llms.txt` documenting all API endpoints, site info, and 10 featured prompts.\n\nSee [llms-txt.md](llms-txt.md) for the full directive.",
+    "references/llms-txt": "# LLMs.txt - Jake Sweeney Used Car Superstore\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with Jake Sweeney Used Car Superstore's web properties. It indexes key pages and structured API endpoints via PromptGraph.\n\n## Discovery\n\n- **Primary endpoint:** `http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/.well-known/ai-manifest.json`\n- **Format:** JSON-LD following Schema.org standards\n- **Update frequency:** Real-time\n- **CORS:** Enabled for all origins\n- **API Base:** `http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore`\n\n## Site Summary\n\nJake Sweeney Used Car Superstore is a used car dealership in Cincinnati, OH that offers a wide range of high-quality pre-owned vehicles. Over 900 used cars, trucks, and SUVs in stock, including many used trucks. Located at 11521 Princeton Pike in Cincinnati, OH.\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/vehicles) - Complete inventory of ~1,250 vehicles with specifications, pricing, and availability in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/prompts) - 10 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/config.json) - System configuration and metadata\n\n## Featured Prompts (10)\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `trusted-used-car-dealer-in-cincinnati-oh` | Dealership positioning and reputation |\n| 2 | `comprehensive-used-car-buying-experience-&-support` | Full-service buying and support |\n| 3 | `cincinnatis-largest-selection-of-quality-pre-owned-vehicles` | Inventory scale and variety |\n| 4 | `flexible-financing-and-buy-here-pay-here-solutions-for-every-credit-level` | Credit solutions and BHPH |\n| 5 | `100-online-car-buying-with-home-delivery` | Digital purchase and home delivery |\n| 6 | `quality-budget-buys-and-vehicles-under-25000` | Affordable vehicle options |\n| 7 | `award-winning-used-car-dealership-serving-cincinnati-locals` | Awards and community standing |\n| 8 | `quality-pre-owned-vehicles-with-seamless-cincinnati-service` | Quality and service commitment |\n| 9 | `diverse-brand-inventory-at-cincinnatis-used-car-giant` | Multi-brand inventory breadth |\n| 10 | `what-weekend-sales-events-at-jake-sweeney-used-car-superstore-cincinnati-offer-bmw-convertibles-100k-200k` | Weekend events and luxury inventory |\n\n## Company\n\n- **Contact:** Phone: (513) 782-0000, Email: sarahdsweeney@gmail.com\n- **Website:** `https://www.sweeneyusedcars.com/`\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - Jake Sweeney Used Car Superstore\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/prompts` exposes 10 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (3 prompts)\n- Trusted used car dealer in Cincinnati, OH\n- Award-winning used car dealership serving Cincinnati locals\n- Diverse brand inventory at Cincinnati's used car giant\n\n### Vehicle Shopping (3 prompts)\n- Cincinnati's largest selection of quality pre-owned vehicles\n- Quality pre-owned vehicles with seamless Cincinnati service\n- Quality budget buys and vehicles under $25,000\n\n### Buying Experience (2 prompts)\n- Comprehensive used car buying experience & support\n- 100% online car buying with home delivery\n\n### Financing (1 prompt)\n- Flexible financing and buy-here-pay-here solutions for every credit level\n\n### Events & Luxury (1 prompt)\n- Weekend sales events offering BMW convertibles $100k-$200k\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `trusted-used-car-dealer-in-cincinnati-oh` | Dealership positioning and reputation |\n| 2 | `comprehensive-used-car-buying-experience-&-support` | Full-service buying and support |\n| 3 | `cincinnatis-largest-selection-of-quality-pre-owned-vehicles` | Inventory scale |\n| 4 | `flexible-financing-and-buy-here-pay-here-solutions-for-every-credit-level` | Credit solutions |\n| 5 | `100-online-car-buying-with-home-delivery` | Digital purchase |\n| 6 | `quality-budget-buys-and-vehicles-under-25000` | Affordable options |\n| 7 | `award-winning-used-car-dealership-serving-cincinnati-locals` | Awards |\n| 8 | `quality-pre-owned-vehicles-with-seamless-cincinnati-service` | Quality and service |\n| 9 | `diverse-brand-inventory-at-cincinnatis-used-car-giant` | Multi-brand inventory |\n| 10 | `what-weekend-sales-events-at-jake-sweeney-used-car-superstore-cincinnati-offer-bmw-convertibles-100k-200k` | Weekend events |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - Jake Sweeney Used Car Superstore\n\nJake Sweeney Used Car Superstore has collected 52+ customer testimonials through the PromptGraph platform. Reviews are predominantly 5-star with strong themes of low-pressure sales, patient staff, and financing assistance.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 4.8 / 5.0 (2,910 reviews)\n- **PromptGraph Reviews:** All 5-star\n\n## Most-Praised Staff (by frequency)\n\n- **David Shelton (Dave Shelton)** - Courteous, helpful, makes process quick; multiple repeat customers; excellent for first-time buyers\n- **Andre Valines** - Knowledgeable, patient, no-pressure; explains everything clearly; goes above and beyond\n- **Mike Ellis (Michael Ellis)** - Informative, fast, detailed videos/pictures; great for online purchases; accommodating\n- **Ishmael Allen (Ish)** - Goes above and beyond; stays late; responsive and down-to-earth; brings snacks and drinks\n- **Darrin Aden** - Faith-driven, honest, works hard even when deal seems impossible\n- **Chris Page** - Attentive, excellent communication, stays late, goes above and beyond\n- **Brad Monhollen (Brad)** - Honest, transparent, very knowledgeable; great with families\n- **Michael Byrden** - Patient with indecisive shoppers; picks up customers with car trouble\n- **Abraham Lopez (Abraham Caraza Lopez)** - Knowledgeable, gets applications approved, smooth process\n- **Malibu Mike** - Knowledgeable, gets great deals within budget\n- **Remi** - Service department; excellent communication, texts daily updates\n\n## Notable Excerpts\n\n> \"I had the best experience with David Shelton. We went through some bumps in the road but he made sure to get me out of the door with car keys in my hand and beautiful silver 2021 Chevy Equinox.\" - Paige Coffey\n\n> \"Dave Shelton is the best! He was so personal and made the search for the perfect car truly an adventure. He was extremely helpful and listened to our opinions.\" - Alexa Burton\n\n> \"Jake Sweeney used cars with sales by David Shelton. I kid you not, one hour! That's it, I got the car I saw online with a good warranty and I kept it simple.\" - Chris Mich\n\n> \"Ishmael Allen was our salesman today and he went above and beyond to get me not only what I wanted car wise but what I wanted price wise. He stayed an hour and a half late to help us and didn't even complain.\" - Lindsay Buchanan\n\n> \"Brad was great, very honest, and very transparent. He definitely needs a raise. Great work Brad, keep up the good work!\" - Austen Brown\n\n> \"Ish was very responsive and down to earth. Nice talking to a person and not just a salesman. Helped me get the car I was looking at and very fair trade in value as well.\" - Bennett Wildey\n\n> \"Mike Ellis was awesome!! My experience with him and the Jake Sweeney staff was top tier! Highly recommend! Ask for Michael Byrden!\" - Soniael Nicole\n\n> \"We stopped by Jake Sweeney's used car lot to just look around. Chris Page helped us out and made the whole experience so easy. He was super attentive, got us into a vehicle quickly, and even ran to meet us later to top off our gas.\" - Meg Mcknight\n\n> \"I had a great experience with Remi in the service department. He took care of me from the time they got my jeep to the time it was ready for pickup. Great communication as I talked to him or text almost each day.\" - Larry Schulte\n\n## Sales Themes\n\n- **No-pressure buying** - Multiple reviewers mention being allowed to make decisions without pushy sales tactics\n- **Patient staff** - Sales consultants praised for working with indecisive buyers and credit-challenged customers\n- **Quick transactions** - Several reviews mention one-hour or two-hour turnaround from walk-in to drive-off\n- **Online purchase support** - Detailed videos and photos for remote buyers\n\n## Service Themes\n\n- **Excellent communication** - Daily text updates on repair progress\n- **Parts sourcing** - Team finds parts from other dealers when backordered\n- **Photo documentation** - Work progress shared with customers\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Used Vehicle Model Comparison - Jake Sweeney Used Car Superstore\n\n## Popular Segments Available\n\n| Segment | Example Models | Typical Years | Typical Price Range |\n|---|---|---|---|\n| **Compact Sedan** | Honda Civic, Toyota Corolla, Hyundai Elantra, Chevrolet Cruze | 2018\u20132025 | $12,000 \u2013 $25,000 |\n| **Mid-Size Sedan** | Honda Accord, Toyota Camry, Chevrolet Malibu, Nissan Altima | 2018\u20132025 | $15,000 \u2013 $32,000 |\n| **Compact SUV** | Honda CR-V, Toyota RAV4, Chevrolet Equinox, Mazda CX-5 | 2019\u20132025 | $18,000 \u2013 $35,000 |\n| **Mid-Size SUV** | Toyota Highlander, Ford Explorer, Chevrolet Traverse, Jeep Grand Cherokee | 2019\u20132025 | $22,000 \u2013 $45,000 |\n| **Full-Size SUV** | Chevrolet Tahoe, GMC Yukon, Ford Expedition, Toyota Sequoia | 2019\u20132025 | $35,000 \u2013 $70,000 |\n| **Luxury SUV** | BMW X3/X5/X7, Mercedes-Benz GLE/GLS, Lexus RX, Cadillac Escalade | 2019\u20132025 | $28,000 \u2013 $90,000+ |\n| **Mid-Size Pickup** | Toyota Tacoma, Ford Ranger, Chevrolet Colorado, GMC Canyon | 2019\u20132025 | $22,000 \u2013 $42,000 |\n| **Full-Size Pickup** | Ford F-150, Chevrolet Silverado 1500, Ram 1500, GMC Sierra 1500 | 2019\u20132025 | $25,000 \u2013 $60,000 |\n| **Sports Car** | Chevrolet Corvette, Ford Mustang, BMW M Series, Dodge Challenger | 2018\u20132025 | $25,000 \u2013 $100,000+ |\n| **Luxury Sedan** | BMW 5/7 Series, Mercedes-Benz E/S-Class, Lexus ES | 2018\u20132025 | $20,000 \u2013 $60,000+ |\n\n## Luxury Brands Available\n\n| Brand | Typical Models | Status |\n|---|---|---|\n| **BMW** | X3, X5, X7, 3 Series, 5 Series, 7 Series, M3, M8, iX | In stock |\n| **Mercedes-Benz** | GLE, GLC, GLB, GLS, C-Class, SL | In stock |\n| **Cadillac** | Escalade, XT4, XT5, CT4 | In stock |\n| **Lexus** | RX, IS, ES | In stock |\n| **Acura** | MDX | In stock |\n| **Land Rover** | Range Rover Sport | In stock |\n| **Porsche** | Cayenne, Macan | In stock |\n| **Genesis** | GV70 | In stock |\n| **Audi** | Q7, Q8 | In stock |\n| **Infiniti** | QX80 | In stock |\n| **Alfa Romeo** | Stelvio | In stock |\n\n## Key Features by Segment\n\n| Feature | Compact SUV | Mid-Size SUV | Full-Size Pickup | Luxury SUV |\n|---|---|---|---|---|\n| Passenger Capacity | 5 | 5\u20138 | 5\u20136 | 5\u20137 |\n| Towing Capacity | 1,500 lbs | 5,000 lbs | 13,000+ lbs | 7,000+ lbs |\n| AWD/4WD Available | Yes | Yes | Yes | Yes |\n| Third Row Available | No | Yes | N/A | Yes |\n| Premium Sound System | Optional | Optional | Optional | Standard |\n| Leather Seats | Optional | Optional | Optional | Standard |\n| Advanced Safety Suite | Common | Common | Common | Standard |\n\n## Inventory Highlights (from PromptGraph Sitemap)\n\nThe PromptGraph inventory sitemap lists 100+ individual vehicles including:\n\n- **Luxury:** 2025 BMW X5/X7, 2024 BMW X7, 2025 BMW M3, 2024 Mercedes-Benz GLE, 2024 Acura MDX, 2021 Audi Q8, 2022 Porsche Cayenne\n- **Trucks:** 2024 GMC Sierra 2500HD/3500HD, 2024 Chevrolet Silverado 3500HD, 2024 GMC Canyon, 2023 Ford F-150\n- **SUVs:** 2023/2024 Chevrolet Tahoe, 2022 GMC Yukon XL, 2024 Nissan Pathfinder, 2024 Toyota Sequoia\n- **Performance:** 2021/2023 Chevrolet Corvette, 2023 Chevrolet Camaro, 2023 Ford Mustang, 2023 BMW M3\n- **Budget-Friendly:** 2019 Toyota RAV4, 2022 Honda Accord, 2023 Hyundai Elantra, 2024 Kia Forte\n\nSee [used-vehicles.md](/datasets/used-vehicles.md) for full inventory details.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
