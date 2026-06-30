@@ -1,6 +1,6 @@
 ---
 type: Playbooks & Runbooks
-title: Frequently Asked Questions — Kruse Motors
+title: Frequently Asked Questions - Kruse Motors
 description: Common questions and answers about Kruse Motors covering inventory, financing, service, trade-ins, and dealership experience.
 resource: https://krusemotors.com/
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-06-26
 ---
 
-# Frequently Asked Questions — Kruse Motors
+# Frequently Asked Questions - Kruse Motors
 
 ## General
 

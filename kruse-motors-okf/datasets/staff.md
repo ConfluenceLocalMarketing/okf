@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Staff Directory — Kruse Motors
+title: Staff Directory - Kruse Motors
 description: Sales, service, and finance staff at Kruse Motors compiled from customer testimonials and reviews.
 resource: https://krusemotors.com/staff
 tags:
@@ -13,7 +13,7 @@ tags:
 timestamp: 2026-06-26
 ---
 
-# Staff Directory — Kruse Motors
+# Staff Directory - Kruse Motors
 
 Staff members mentioned in customer testimonials and reviews across sales, service, and finance roles.
 

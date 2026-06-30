@@ -1,7 +1,7 @@
 ---
 type: Entities
 title: Basil Mitsubishi Customer Testimonials
-description: Customer reviews and testimonials for Basil Mitsubishi in Buffalo, NY — 245 reviews with a 5.0 aggregate rating, sourced from the PromptGraph API.
+description: Customer reviews and testimonials for Basil Mitsubishi in Buffalo, NY - 245 reviews with a 5.0 aggregate rating, sourced from the PromptGraph API.
 resource: https://api.promptgraph.ai/api/v1/basil-mitsubishi/testimonials
 tags:
   - testimonials
@@ -36,23 +36,23 @@ timestamp: 2026-06-24
 
 ## Common Themes
 
-- **"Best car buying experience in 40+ years"** — Multiple long-time car buyers
-- **No-pressure sales environment** — Consistently mentioned across reviews
-- **Credit-challenged approvals** — Several customers praised help with credit issues
-- **Out-of-town buyers** — Customers drove 1–5+ hours to purchase
-- **Service excellence** — Fast oil changes, recalls handled promptly, loaner vehicles
-- **Cost savings** — Saved customers $1,000+ vs. other dealerships
+- **"Best car buying experience in 40+ years"** - Multiple long-time car buyers
+- **No-pressure sales environment** - Consistently mentioned across reviews
+- **Credit-challenged approvals** - Several customers praised help with credit issues
+- **Out-of-town buyers** - Customers drove 1–5+ hours to purchase
+- **Service excellence** - Fast oil changes, recalls handled promptly, loaner vehicles
+- **Cost savings** - Saved customers $1,000+ vs. other dealerships
 
 ## Notable Excerpts
 
 > "The best car buying experience I've ever had in 40 years of buying cars."
-> — **T.B. Player**
+> - **T.B. Player**
 
-> "THANK YOU THANK YOU THANK YOU" — customer whose sister's car had $12k in hidden problems that other mechanics missed; dealership helped roll negative equity into a new vehicle.
-> — **Jordan Velazquez**
+> "THANK YOU THANK YOU THANK YOU" - customer whose sister's car had $12k in hidden problems that other mechanics missed; dealership helped roll negative equity into a new vehicle.
+> - **Jordan Velazquez**
 
 > "They went above and beyond to help me get approved even with my credit situation."
-> — Multiple customers regarding Andre Wilson and Matt Harrison
+> - Multiple customers regarding Andre Wilson and Matt Harrison
 
 ## Key Descriptors Used
 

@@ -43,10 +43,10 @@ Kruse Motors is a multi-brand automotive dealership located in Marshall, MN, ser
 
 ## Brands
 
-- **Ford** — Trucks, SUVs, crossovers, commercial vehicles, and electric vehicles
-- **Lincoln** — Premium luxury vehicles focused on comfort and sophisticated design
-- **Buick** — SUVs and crossovers crafted for quiet comfort and upscale styling
-- **GMC** — Trucks and SUVs built for capability, towing strength, and refined utility
+- **Ford** - Trucks, SUVs, crossovers, commercial vehicles, and electric vehicles
+- **Lincoln** - Premium luxury vehicles focused on comfort and sophisticated design
+- **Buick** - SUVs and crossovers crafted for quiet comfort and upscale styling
+- **GMC** - Trucks and SUVs built for capability, towing strength, and refined utility
 
 ## Social
 
@@ -62,17 +62,17 @@ Kruse Motors is a multi-brand automotive dealership located in Marshall, MN, ser
 
 ## Special Programs
 
-- **Free Oil for Life** — Free oil changes for the life of the vehicle when purchased at Kruse Motors
-- **Kruse Your Way** — Custom-order program for Ford, Lincoln, Buick, or GMC vehicles with chosen color, features, and accessories
-- **KBB Instant Cash Offer** — Fair-market trade-in valuation through Kelley Blue Book
-- **Ford Drives U** — Student savings program for new or used vehicles
-- **We Buy Cars** — Direct vehicle purchase program with no obligation to buy
+- **Free Oil for Life** - Free oil changes for the life of the vehicle when purchased at Kruse Motors
+- **Kruse Your Way** - Custom-order program for Ford, Lincoln, Buick, or GMC vehicles with chosen color, features, and accessories
+- **KBB Instant Cash Offer** - Fair-market trade-in valuation through Kelley Blue Book
+- **Ford Drives U** - Student savings program for new or used vehicles
+- **We Buy Cars** - Direct vehicle purchase program with no obligation to buy
 
 ## Service Centers
 
 The dealership operates two service centers:
-- **Kruse Motors Ford Lincoln** — Ford and Lincoln service
-- **Kruse Motors Buick GMC** — Buick and GMC service
+- **Kruse Motors Ford Lincoln** - Ford and Lincoln service
+- **Kruse Motors Buick GMC** - Buick and GMC service
 
 See [service-center.md](service-center.md) for full service department details.
 See [new-vehicles.md](new-vehicles.md) for new vehicle brands and models.

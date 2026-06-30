@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: Staff Directory — Leif Johnson Ford of Manor
+title: Staff Directory - Leif Johnson Ford of Manor
 description: Team directory for Leif Johnson Ford of Manor including management, sales, service, and parts departments.
 resource: https://www.leifjohnsonfordofmanor.com/staff/
 tags:

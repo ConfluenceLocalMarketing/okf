@@ -1,6 +1,6 @@
 ---
 type: Playbooks & Runbooks
-title: PromptGraph Prompt Library — Basil Resale Sheridan
+title: PromptGraph Prompt Library - Basil Resale Sheridan
 description: Complete library of 77 structured Q&A prompts from the PromptGraph API for Basil Resale Sheridan, covering pre-owned vehicles, financing, service, and dealership information.
 resource: https://api.promptgraph.ai/api/v1/basil-resale-sheridan/prompts
 tags:
@@ -15,7 +15,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# PromptGraph Prompt Library — Basil Resale Sheridan
+# PromptGraph Prompt Library - Basil Resale Sheridan
 
 The PromptGraph API exposes 77 structured prompt/response pairs (`ItemList` with 77 items) at `/api/v1/basil-resale-sheridan/prompts`. These serve as an AI-consumable FAQ covering all aspects of the used car dealership.
 

@@ -1,6 +1,6 @@
 ---
 type: Tables & Datasets
-title: Chevrolet Model Lineup Comparison — Jake Sweeney Chevrolet
+title: Chevrolet Model Lineup Comparison - Jake Sweeney Chevrolet
 description: Side-by-side comparison of new Chevrolet models available at Jake Sweeney Chevrolet in Cincinnati, OH, including body type, passenger capacity, drivetrain, and key features.
 resource: https://www.jakesweeneychevrolet.com/showroom/index.htm
 tags:
@@ -42,8 +42,8 @@ timestamp: 2026-06-24
 | **Camaro** | Sports Coupe | 4 | RWD | Premium | LT1, 2LT, 3LT, SS |
 | **Corvette** | Sports Car | 2 | RWD | Luxury | Stingray, Z06, E-Ray |
 | **Bolt EV / Bolt SUV** | Compact EV Hatch/SUV | 5 | FWD (EV) | Value | 1LT, 2LT |
-| **BrightDrop 400** | Electric Commercial Van | 2 | FWD (EV) | Commercial | — |
-| **BrightDrop 600** | Electric Commercial Van | 2 | FWD (EV) | Commercial | — |
+| **BrightDrop 400** | Electric Commercial Van | 2 | FWD (EV) | Commercial | - |
+| **BrightDrop 600** | Electric Commercial Van | 2 | FWD (EV) | Commercial | - |
 
 ## Key Feature Comparison
 
@@ -79,10 +79,10 @@ All new Chevrolet models include:
 
 ## Awards & Recognition
 
-- **Silverado 1500** — Consistently among best-selling vehicles in America
-- **Corvette** — Multiple automotive awards for performance and value
-- **Equinox** — Popular compact SUV with strong consumer ratings
-- **Bolt EV** — Recognized for affordable EV accessibility
+- **Silverado 1500** - Consistently among best-selling vehicles in America
+- **Corvette** - Multiple automotive awards for performance and value
+- **Equinox** - Popular compact SUV with strong consumer ratings
+- **Bolt EV** - Recognized for affordable EV accessibility
 
 See [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.
 See [dealership.md](/datasets/dealership.md) for current offers and promotions.

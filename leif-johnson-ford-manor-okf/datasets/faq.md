@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Frequently Asked Questions — Leif Johnson Ford of Manor
+title: Frequently Asked Questions - Leif Johnson Ford of Manor
 description: Common customer questions about Ford vehicle features, financing, service, and dealership operations.
 resource: https://api.promptgraph.ai/api/v1/leif-johnson-manor/prompts
 tags:
@@ -55,7 +55,7 @@ A: Yes. The dealership provides vehicle pickup and delivery service for service 
 A: Monday–Thursday 8:30am–8:00pm, Friday–Saturday 8:30am–7:00pm, Sunday closed.
 
 **Q: Do you serve Spanish-speaking customers?**
-A: Yes. The dealership offers Spanish-language support — ¡Hablamos español!
+A: Yes. The dealership offers Spanish-language support - ¡Hablamos español!
 
 **Q: Is Leif Johnson Ford family-owned?**
 A: Yes. The Leif Johnson Automotive Group has been family-owned and operated for over 65 years.

@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Prompt Library — Leif Johnson Ford of Austin
+title: Prompt Library - Leif Johnson Ford of Austin
 description: Structured Q&A prompts for consistent AI responses covering vehicles, financing, service, and dealership operations.
 resource: https://api.promptgraph.ai/api/v1/leif-johnson-austin/prompts
 tags:

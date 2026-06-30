@@ -45,18 +45,18 @@ Saturday – Sunday: Closed
 
 ## Products & Services
 
-- **Buying Signals AI** — Conversational AI agents to influence and convert leads
-- **Connect Suite** — Seamlessly connect social, data, campaigns, and CRM with intelligence
-- **Consumer Intelligence** — Understand buyer behavior and shopping patterns
-- **Data Hygiene & Enrichment** — Clean, verify, and enrich customer data records
-- **DMS Sync** — Fix bad data inside your Dealer Management System
-- **Geo Signals** — Location-based consumer targeting with geo-framing technology
-- **Insight Pixel** — Identify anonymous website visitors and improve digital marketing ROI
-- **Smart Conquest** — Win buyers from competitors through targeted conquest campaigns
-- **Strategic Marketing Suite** — Omnichannel programmatic advertising (Display, CTV, OTT, Radio, SEM, Social)
-- **Business Intelligence Platform** — Analytics and insights for marketing measurement
-- **AI SEO Services** — SEO optimized for ChatGPT, Claude, Gemini, and Grok
-- **Strategic Consulting** — Executive-level consulting for data-driven marketing decisions
+- **Buying Signals AI** - Conversational AI agents to influence and convert leads
+- **Connect Suite** - Seamlessly connect social, data, campaigns, and CRM with intelligence
+- **Consumer Intelligence** - Understand buyer behavior and shopping patterns
+- **Data Hygiene & Enrichment** - Clean, verify, and enrich customer data records
+- **DMS Sync** - Fix bad data inside your Dealer Management System
+- **Geo Signals** - Location-based consumer targeting with geo-framing technology
+- **Insight Pixel** - Identify anonymous website visitors and improve digital marketing ROI
+- **Smart Conquest** - Win buyers from competitors through targeted conquest campaigns
+- **Strategic Marketing Suite** - Omnichannel programmatic advertising (Display, CTV, OTT, Radio, SEM, Social)
+- **Business Intelligence Platform** - Analytics and insights for marketing measurement
+- **AI SEO Services** - SEO optimized for ChatGPT, Claude, Gemini, and Grok
+- **Strategic Consulting** - Executive-level consulting for data-driven marketing decisions
 
 ## Industries Served
 

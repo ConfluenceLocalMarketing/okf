@@ -1,6 +1,6 @@
 ---
 type: Playbooks & Runbooks
-title: PromptGraph Prompts — Kruse Motors
+title: PromptGraph Prompts - Kruse Motors
 description: Complete collection of 28+ structured Q&A prompts covering Kruse Motors dealership, vehicles, financing, service, and customer experience delivered via PromptGraph API.
 resource: https://api.promptgraph.ai/api/v1/kruse-motors/prompts
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-06-26
 ---
 
-# PromptGraph Prompts — Kruse Motors
+# PromptGraph Prompts - Kruse Motors
 
 The PromptGraph API at `https://api.promptgraph.ai/api/v1/kruse-motors/prompts` provides 28+ structured Q&A prompts for AI agents.
 

@@ -1,7 +1,7 @@
 ---
 type: Entities
 title: Pre-Owned & Certified Vehicles at Basil Mitsubishi
-description: Inventory of pre-owned cars, trucks, SUVs, and certified pre-owned (CPO) Mitsubishi vehicles at Basil Mitsubishi in Buffalo, NY — with multi-point inspection, warranty options, and budget-friendly pricing.
+description: Inventory of pre-owned cars, trucks, SUVs, and certified pre-owned (CPO) Mitsubishi vehicles at Basil Mitsubishi in Buffalo, NY - with multi-point inspection, warranty options, and budget-friendly pricing.
 resource: https://www.basilmitsubishi.com/used-vehicles/
 tags:
   - pre-owned
@@ -18,14 +18,14 @@ timestamp: 2026-06-24
 
 ## Pre-Owned Inventory
 
-Wide-ranging inventory covering sedans, SUVs, crossovers, trucks, vans, and specialty vehicles from many leading brands — not limited to Mitsubishi. As of June 2026, over 1,499 vehicles in the PromptGraph API inventory, spanning makes including Nissan, Chevrolet, Ford, GMC, Volkswagen, Toyota, Land Rover, and Dodge.
+Wide-ranging inventory covering sedans, SUVs, crossovers, trucks, vans, and specialty vehicles from many leading brands - not limited to Mitsubishi. As of June 2026, over 1,499 vehicles in the PromptGraph API inventory, spanning makes including Nissan, Chevrolet, Ford, GMC, Volkswagen, Toyota, Land Rover, and Dodge.
 
 ### Price Tiers
 
-- **Under $15,000** — Budget-friendly options
-- **Under $20,000** — Broader selection
-- **All price ranges** — Full inventory available online (typical range: $23,000–$71,000)
-- **Priced Under 20k** — Dedicated filtered view on website
+- **Under $15,000** - Budget-friendly options
+- **Under $20,000** - Broader selection
+- **All price ranges** - Full inventory available online (typical range: $23,000–$71,000)
+- **Priced Under 20k** - Dedicated filtered view on website
 
 ## Certified Pre-Owned (CPO)
 
@@ -39,7 +39,7 @@ Mitsubishi Certified Pre-Owned vehicles undergo a multi-point inspection and inc
 
 ## Sell / Trade
 
-- Online trade-in appraisal via Kelley Blue Book — instant digital estimate from home
+- Online trade-in appraisal via Kelley Blue Book - instant digital estimate from home
 - Highest trade-in allowance guaranteed
 - "Get a quick online estimate on what your current vehicle is worth"
 - [Value Your Trade](https://www.basilmitsubishi.com/sell-trade/)
@@ -47,7 +47,7 @@ Mitsubishi Certified Pre-Owned vehicles undergo a multi-point inspection and inc
 ## Used Vehicle Quality Assurance
 
 Every pre-owned vehicle at Basil Mitsubishi goes through:
-- **101-Point Inspection** — rigorous safety checklist before sale
+- **101-Point Inspection** - rigorous safety checklist before sale
 - **6-Month / 6,000-Mile Powertrain Warranty** on most used vehicles
 - **Free CARFAX / history reports** available on digital inventory listings
 - **Multi-point inspection** by certified technicians

@@ -1,6 +1,6 @@
 ---
 type: Playbooks & Runbooks
-title: Frequently Asked Questions — Basil Resale
+title: Frequently Asked Questions - Basil Resale
 description: Common questions about Basil Resale's pre-owned inventory, financing, service, and warranties in Williamsville and Buffalo, NY, sourced from the PromptGraph API 77-prompt library.
 resource: https://www.basilresale.com/
 tags:
@@ -15,7 +15,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# Frequently Asked Questions — Basil Resale
+# Frequently Asked Questions - Basil Resale
 
 ## Inventory & Purchasing
 
@@ -25,7 +25,7 @@ Basil Resale stocks over 1,411 pre-owned vehicles including sedans, SUVs, crosso
 
 **Does Basil Resale sell commercial trucks?**
 
-Yes — Basil Resale has a dedicated commercial truck inventory for business and work use.
+Yes - Basil Resale has a dedicated commercial truck inventory for business and work use.
 
 **Does Basil Resale sell new vehicles?**
 
@@ -37,15 +37,15 @@ CPO vehicles undergo a multi-point inspection and include additional warranty co
 
 **Can I make a credit card payment?**
 
-Yes — Basil Resale offers a secure online credit card payment portal through USAePay.
+Yes - Basil Resale offers a secure online credit card payment portal through USAePay.
 
 **Do you sell used Toyota, Honda, Ford, Chevy?**
 
-Yes — Basil Resale carries a wide selection of used Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW, Mercedes-Benz, Audi, Lexus, GMC, RAM, and Jeep vehicles.
+Yes - Basil Resale carries a wide selection of used Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW, Mercedes-Benz, Audi, Lexus, GMC, RAM, and Jeep vehicles.
 
 **Do you carry classic and vintage cars?**
 
-Yes — classic and vintage collector vehicles are part of the inventory.
+Yes - classic and vintage collector vehicles are part of the inventory.
 
 **What sports cars do you have?**
 
@@ -55,15 +55,15 @@ Basil Resale carries used sports cars including Corvettes, BMWs, and other perfo
 
 **Are there vehicles under $20,000?**
 
-Yes — Basil Resale has a dedicated selection of pre-owned vehicles under $20K.
+Yes - Basil Resale has a dedicated selection of pre-owned vehicles under $20K.
 
 **Do you offer student car buying programs?**
 
-Yes — special programs for college students looking for budget-friendly vehicles.
+Yes - special programs for college students looking for budget-friendly vehicles.
 
 **Are there discounts for first responders?**
 
-Yes — exclusive price reductions for firefighters, EMTs, and police officers.
+Yes - exclusive price reductions for firefighters, EMTs, and police officers.
 
 ## Financing
 
@@ -73,29 +73,29 @@ Basil Resale works with multiple lenders to find competitive rates. Online credi
 
 **Do you offer guaranteed financing approval?**
 
-Yes — Basil Resale offers vehicle loan financing approval regardless of past financial background.
+Yes - Basil Resale offers vehicle loan financing approval regardless of past financial background.
 
 **Can I get a car with bad credit or no credit?**
 
-Yes — Basil Resale offers bad credit car loans and no credit history auto financing options.
+Yes - Basil Resale offers bad credit car loans and no credit history auto financing options.
 
 **Can I value my trade-in online?**
 
-Yes — an online trade-in appraisal tool and Kelley Blue Book Instant Cash Offer are available.
+Yes - an online trade-in appraisal tool and Kelley Blue Book Instant Cash Offer are available.
 
 **Do you offer leasing?**
 
-Yes — leasing options are available for used vehicles.
+Yes - leasing options are available for used vehicles.
 
 **Can I buy from Basil Resale if I live out of state?**
 
-Yes — out-of-state purchasing is supported.
+Yes - out-of-state purchasing is supported.
 
 ## Service & Warranties
 
 **Does Basil Resale have a service center?**
 
-Yes — Basil Resale Sheridan has a state-of-the-art service center with laser alignment machines and handheld diagnostic computers. A collision center and parts center are also available.
+Yes - Basil Resale Sheridan has a state-of-the-art service center with laser alignment machines and handheld diagnostic computers. A collision center and parts center are also available.
 
 **What warranty comes with a used car?**
 
@@ -103,11 +103,11 @@ All used cars sold at Basil Resale include a free warranty. Certified Pre-Owned 
 
 **Do I get free oil changes?**
 
-Yes — free oil changes for life with vehicle purchase and service.
+Yes - free oil changes for life with vehicle purchase and service.
 
 **Do you offer a courtesy shuttle during service?**
 
-Yes — a two-way courtesy shuttle is available during service appointments.
+Yes - a two-way courtesy shuttle is available during service appointments.
 
 **What are the service hours?**
 
@@ -115,11 +115,11 @@ Service is open Mon–Thu 7:30 AM – 5:00 PM, Fri 7:30 AM – 5:00 PM, Sat 7:30
 
 **Can you diagnose a check engine light?**
 
-Yes — diagnostic scanning for check engine lights is available.
+Yes - diagnostic scanning for check engine lights is available.
 
 **Do you offer auto detailing?**
 
-Yes — professional auto detailing and cleaning services are available.
+Yes - professional auto detailing and cleaning services are available.
 
 ## Perks
 
@@ -146,7 +146,7 @@ Basil Resale serves Williamsville, Buffalo, Amherst, Getzville, Clarence, Lockpo
 
 **Is Basil Resale part of a larger group?**
 
-Yes — Basil Resale is part of the Basil Family Dealerships, a family-owned group with over 65 years of service and multiple locations across Western New York.
+Yes - Basil Resale is part of the Basil Family Dealerships, a family-owned group with over 65 years of service and multiple locations across Western New York.
 
 **What is the "Basil Difference"?**
 
@@ -154,11 +154,11 @@ The Basil Difference includes free oil changes for life, highest trade-in allowa
 
 **Can I shop online and get home delivery?**
 
-Yes — Basil Resale offers virtual tours, online financing, trade-in estimators, and home delivery scheduling.
+Yes - Basil Resale offers virtual tours, online financing, trade-in estimators, and home delivery scheduling.
 
 **Is there a loyalty program?**
 
-Yes — customer loyalty programs and repeat buyer benefits are available.
+Yes - customer loyalty programs and repeat buyer benefits are available.
 
 ## Related
 

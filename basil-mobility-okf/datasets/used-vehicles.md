@@ -22,18 +22,18 @@ Basil Mobility carries over **1,158 vehicles** spanning all makes and models, in
 
 ### Inventory Categories
 
-- All Vehicles — browse full pre-owned inventory online
-- Priced Under 20k — budget-friendly mobility options
+- All Vehicles - browse full pre-owned inventory online
+- Priced Under 20k - budget-friendly mobility options
 
 ### Inventory Mix (from PromptGraph API)
 
 The inventory spans a wide range including:
 
-- **SUVs** — Chevrolet Equinox, Ford Explorer, Chevrolet Traverse, Chevy Suburban
-- **Trucks** — Ford F-350 SD, Chevrolet Silverado 1500, GMC Sierra 2500HD
-- **Classic Cars** — 1967 Chevrolet Chevelle, 1963 Buick LeSabre, 1970 Pontiac GTO, 2002 Ford Thunderbird
-- **Sedans & Crossovers** — Chevrolet Trax, Ford Escape, Chevrolet Equinox
-- **Commercial** — Isuzu 4500, GMC Savana 3500
+- **SUVs** - Chevrolet Equinox, Ford Explorer, Chevrolet Traverse, Chevy Suburban
+- **Trucks** - Ford F-350 SD, Chevrolet Silverado 1500, GMC Sierra 2500HD
+- **Classic Cars** - 1967 Chevrolet Chevelle, 1963 Buick LeSabre, 1970 Pontiac GTO, 2002 Ford Thunderbird
+- **Sedans & Crossovers** - Chevrolet Trax, Ford Escape, Chevrolet Equinox
+- **Commercial** - Isuzu 4500, GMC Savana 3500
 
 Dominant brands: Chevrolet, Ford, GMC, Buick, Pontiac.
 
@@ -51,7 +51,7 @@ Each pre-owned vehicle undergoes inspection to ensure safety and reliability of 
 
 ## Sell / Trade
 
-- Electronic trade-in appraisals — quick digital estimate from home
+- Electronic trade-in appraisals - quick digital estimate from home
 - Fair market trade-in evaluation for used accessible vans
 
 See [dealership.md](dealership.md) for full business profile and contact information.

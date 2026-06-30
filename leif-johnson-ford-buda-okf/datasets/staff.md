@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: Staff Directory — Leif Johnson Ford of Buda
+title: Staff Directory - Leif Johnson Ford of Buda
 description: Team directory for Leif Johnson Ford of Buda including management, sales, service, and parts departments.
 resource: https://www.leifjohnsonfordofbuda.com/staff/
 tags:
@@ -49,7 +49,7 @@ timestamp: 2026-06-29
 | Lilly Gutierrez | Service Advisor | lgutierrez@truckcityford.com |
 | Noe Avila | Service Advisor | navila@truckcityford.com |
 | Charlie Trujillo | Mobile Service Advisor | ctrujillo@truckcityford.com |
-| Jason Marsh | Service Advisor | — |
+| Jason Marsh | Service Advisor | - |
 | Robert Laughlin | Service Advisor | rlaughlin@truckcityford.com |
 | Dustin Nall | Mobile Service Advisor | dnall@truckcityford.com |
 | Blake Dahlberg | Service Advisor | bdahlberg@truckcityford.com |

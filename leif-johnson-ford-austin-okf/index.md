@@ -2,26 +2,26 @@
 okf_version: "0.1"
 ---
 
-# Leif Johnson Ford of Austin — OKF Bundle
+# Leif Johnson Ford of Austin - OKF Bundle
 
 OKF v0.1 bundle for Leif Johnson Ford of Austin, a full-service Ford dealership in Austin, TX serving Austin, Round Rock, Cedar Park, Georgetown, Pflugerville, and Central Texas. Part of the Leif Johnson Automotive Group (family-owned, nearly 60 years).
 
 ## Datasets
 
-- [dealership.md](datasets/dealership.md) — Ford dealership in Austin, TX with new and pre-owned vehicles, financing, and factory-authorized service.
-- [new-vehicles.md](datasets/new-vehicles.md) — Full new Ford vehicle lineup including trucks, SUVs, vans, and EVs.
-- [used-vehicles.md](datasets/used-vehicles.md) — Pre-owned inventory with certified pre-owned and Ford Blue Advantage.
-- [service-center.md](datasets/service-center.md) — Factory-authorized service department with OEM parts and mobile service.
-- [staff.md](datasets/staff.md) — Team across management, sales, service, and parts departments.
-- [faq.md](datasets/faq.md) — Common customer questions about vehicles, financing, service, and operations.
-- [financing.md](datasets/financing.md) — Purchase financing, leasing, trade-in valuation, and payment calculators.
+- [dealership.md](datasets/dealership.md) - Ford dealership in Austin, TX with new and pre-owned vehicles, financing, and factory-authorized service.
+- [new-vehicles.md](datasets/new-vehicles.md) - Full new Ford vehicle lineup including trucks, SUVs, vans, and EVs.
+- [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned inventory with certified pre-owned and Ford Blue Advantage.
+- [service-center.md](datasets/service-center.md) - Factory-authorized service department with OEM parts and mobile service.
+- [staff.md](datasets/staff.md) - Team across management, sales, service, and parts departments.
+- [faq.md](datasets/faq.md) - Common customer questions about vehicles, financing, service, and operations.
+- [financing.md](datasets/financing.md) - Purchase financing, leasing, trade-in valuation, and payment calculators.
 
 ## References
 
-- [ai-discovery-page.md](references/ai-discovery-page.md) — AI Discovery Hub with structured JSON-LD endpoints for LLM consumption.
-- [llms-txt.md](references/llms-txt.md) — AI discovery directive (LLMForge v1.0) with API endpoints and schema types.
-- [prompts.md](references/prompts.md) — 118 structured Q&A prompts covering vehicles, financing, service, and operations.
+- [ai-discovery-page.md](references/ai-discovery-page.md) - AI Discovery Hub with structured JSON-LD endpoints for LLM consumption.
+- [llms-txt.md](references/llms-txt.md) - AI discovery directive (LLMForge v1.0) with API endpoints and schema types.
+- [prompts.md](references/prompts.md) - 118 structured Q&A prompts covering vehicles, financing, service, and operations.
 
 ## Tables
 
-- [model-comparison.md](tables/model-comparison.md) — Ford model comparison across body type, fuel options, passenger capacity, and competitors.
+- [model-comparison.md](tables/model-comparison.md) - Ford model comparison across body type, fuel options, passenger capacity, and competitors.

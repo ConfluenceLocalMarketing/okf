@@ -16,7 +16,7 @@ timestamp: 2026-06-24
 
 # Basil Mitsubishi Service Center
 
-Basil Mitsubishi's service center is a state-of-the-art facility featuring factory-trained technicians, genuine Mitsubishi parts, and the latest diagnostic equipment. The department services all makes and models — not just Mitsubishi vehicles.
+Basil Mitsubishi's service center is a state-of-the-art facility featuring factory-trained technicians, genuine Mitsubishi parts, and the latest diagnostic equipment. The department services all makes and models - not just Mitsubishi vehicles.
 
 ## Service Hours
 
@@ -72,7 +72,7 @@ The on-site collision center handles exterior body repairs:
 
 ## Service Perks
 
-- **Free 2-Way Shuttle** — complimentary local transport during service
+- **Free 2-Way Shuttle** - complimentary local transport during service
 - **FREE Alignment Check** with every service visit
 - Online scheduling for convenience
 - Vehicle repair status updates

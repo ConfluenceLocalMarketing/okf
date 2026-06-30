@@ -72,7 +72,7 @@ Over 1,158 vehicles in inventory including wheelchair accessible vans, mobility-
 | Special Financing | APR as low as 2.99% for up to 72 months (well-qualified, through BraunAbility Financial Services) |
 | Promotional Cash | Up to $3,000 dealer cash in lieu of promotional financing rates |
 | Lease | Available through BraunAbility (e.g., Chrysler Voyager CompanionVan from $549/month) |
-| Vehicle Protection | BraunAbility Protection Plus — service contracts, UltraGard, PrePaid Maintenance |
+| Vehicle Protection | BraunAbility Protection Plus - service contracts, UltraGard, PrePaid Maintenance |
 | Max Note Amount | $70,000 |
 
 ## Service & Support

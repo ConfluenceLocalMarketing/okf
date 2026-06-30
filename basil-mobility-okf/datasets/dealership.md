@@ -1,7 +1,7 @@
 ---
 type: Entities
 title: Basil Mobility
-description: Authorized BraunAbility dealer in Depew, NY specializing in wheelchair accessible vehicles, adaptive equipment, service, and parts — part of the Basil Family Dealerships.
+description: Authorized BraunAbility dealer in Depew, NY specializing in wheelchair accessible vehicles, adaptive equipment, service, and parts - part of the Basil Family Dealerships.
 resource: https://www.basilmobility.com/
 tags:
   - mobility
@@ -43,12 +43,12 @@ Email: basilcares@basilresale.com
 
 ## Services
 
-- **Mobility Vehicle Sales** — New BraunAbility wheelchair accessible vans and conversions
-- **Pre-Owned Inventory** — Used vehicles and mobility-equipped cars (1,158+ vehicles in inventory), priced under $20k available
-- **Service Center** — Certified technicians trained to service BraunAbility vehicles; routine maintenance, diagnostics, repairs for both vehicle systems and accessibility equipment (ramps, lifts, power doors, securement systems, adaptive driving equipment)
-- **Parts Center** — Genuine replacement parts and components for mobility solutions
-- **Financing** — Through BraunAbility Financial Services; APR as low as 2.99% for up to 72 months (well-qualified buyers); also lease options; up to $3,000 dealer cash available
-- **Wheelchair Van Rentals** — Short and long-term accessible van rentals available
+- **Mobility Vehicle Sales** - New BraunAbility wheelchair accessible vans and conversions
+- **Pre-Owned Inventory** - Used vehicles and mobility-equipped cars (1,158+ vehicles in inventory), priced under $20k available
+- **Service Center** - Certified technicians trained to service BraunAbility vehicles; routine maintenance, diagnostics, repairs for both vehicle systems and accessibility equipment (ramps, lifts, power doors, securement systems, adaptive driving equipment)
+- **Parts Center** - Genuine replacement parts and components for mobility solutions
+- **Financing** - Through BraunAbility Financial Services; APR as low as 2.99% for up to 72 months (well-qualified buyers); also lease options; up to $3,000 dealer cash available
+- **Wheelchair Van Rentals** - Short and long-term accessible van rentals available
 
 ## BraunAbility Partnership
 

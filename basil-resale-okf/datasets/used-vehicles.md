@@ -1,7 +1,7 @@
 ---
 type: Entities
 title: Pre-Owned Vehicles at Basil Resale
-description: Inventory of over 1,411 pre-owned cars, trucks, SUVs from all major brands — with Certified Pre-Owned program, commercial vehicles, vehicle finder, and special financing.
+description: Inventory of over 1,411 pre-owned cars, trucks, SUVs from all major brands - with Certified Pre-Owned program, commercial vehicles, vehicle finder, and special financing.
 resource: https://www.basilresale.com/used-vehicles/
 tags:
   - pre-owned
@@ -20,14 +20,14 @@ Basil Resale is Western New York's largest pre-owned vehicle center, stocking ov
 
 ## Inventory Highlights
 
-- **Sedans** — Commuter-friendly options
-- **SUVs & Crossovers** — Family-hauling vehicles
-- **Trucks** — Work-ready pickups (RAM, Colorado, Tacoma)
-- **Coupes & Luxury** — BMW, Land Rover, Alfa Romeo, Corvette
-- **Minivans** — Cavernous people-movers
-- **Electric & Hybrid** — Eco-friendly options
-- **Classic Cars** — Vintage collector vehicles
-- **Commercial Trucks** — Dedicated commercial vehicle inventory for business and work use
+- **Sedans** - Commuter-friendly options
+- **SUVs & Crossovers** - Family-hauling vehicles
+- **Trucks** - Work-ready pickups (RAM, Colorado, Tacoma)
+- **Coupes & Luxury** - BMW, Land Rover, Alfa Romeo, Corvette
+- **Minivans** - Cavernous people-movers
+- **Electric & Hybrid** - Eco-friendly options
+- **Classic Cars** - Vintage collector vehicles
+- **Commercial Trucks** - Dedicated commercial vehicle inventory for business and work use
 
 Popular brands: Toyota, Hyundai, Chevrolet, BMW, Land Rover, RAM, Nissan, Alfa Romeo, Ford, Buick.
 
@@ -61,7 +61,7 @@ Tool to narrow down options by make, model, features, and price range to find th
 
 ## Value Your Trade
 
-- Kelley Blue Book Instant Cash Offer — quick online estimate
+- Kelley Blue Book Instant Cash Offer - quick online estimate
 - Get a guaranteed trade-in value from home
 - [Value Your Trade](https://www.basilresale.com/sell-trade/)
 

@@ -14,7 +14,7 @@ timestamp: 2026-06-30
 
 # Leif Johnson Ford of Austin
 
-Leif Johnson Ford of Austin is a full-service Ford dealership located at 501 East Koenig Lane, Austin, TX 78751. Part of the Leif Johnson Automotive Group — a family-owned business operating for nearly 60 years — the dealership serves Austin, Round Rock, Cedar Park, Georgetown, Pflugerville, and the wider Central Texas region.
+Leif Johnson Ford of Austin is a full-service Ford dealership located at 501 East Koenig Lane, Austin, TX 78751. Part of the Leif Johnson Automotive Group - a family-owned business operating for nearly 60 years - the dealership serves Austin, Round Rock, Cedar Park, Georgetown, Pflugerville, and the wider Central Texas region.
 
 ## Contact Information
 
@@ -52,7 +52,7 @@ Full new Ford lineup including trucks, SUVs, crossovers, vans, and EVs. Pre-owne
 
 ## Ownership
 
-Leif Johnson Automotive Group — family-owned, nearly 60 years in business. Operates 3 Ford franchise dealerships and 3 pre-owned locations in and around Austin.
+Leif Johnson Automotive Group - family-owned, nearly 60 years in business. Operates 3 Ford franchise dealerships and 3 pre-owned locations in and around Austin.
 
 ## Community Involvement
 

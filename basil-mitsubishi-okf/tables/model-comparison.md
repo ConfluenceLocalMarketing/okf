@@ -1,6 +1,6 @@
 ---
 type: Tables & Datasets
-title: Mitsubishi Model Lineup Comparison — Basil Mitsubishi
+title: Mitsubishi Model Lineup Comparison - Basil Mitsubishi
 description: Side-by-side comparison of new Mitsubishi models available at Basil Mitsubishi in Buffalo, NY, including body type, passenger capacity, drivetrain, and key features.
 resource: https://www.basilmitsubishi.com/new-vehicles/
 tags:

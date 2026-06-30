@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: Staff Directory — Leif Johnson Ford of Austin
+title: Staff Directory - Leif Johnson Ford of Austin
 description: Team directory for Leif Johnson Ford of Austin including management, sales, service, and parts departments.
 resource: https://www.leifjohnsonford.com/staff/
 tags:
@@ -19,10 +19,10 @@ Leif Johnson Ford of Austin employs a dedicated team across management, sales, s
 
 ## Departments
 
-- **Management** — Dealership leadership and operations
-- **Sales** — New and pre-owned vehicle sales consultants and finance managers
-- **Service** — Factory-trained technicians, service advisors, and mobile service team
-- **Parts** — OEM parts specialists and inventory management
+- **Management** - Dealership leadership and operations
+- **Sales** - New and pre-owned vehicle sales consultants and finance managers
+- **Service** - Factory-trained technicians, service advisors, and mobile service team
+- **Parts** - OEM parts specialists and inventory management
 
 For specific staff listings, visit the [staff page](https://www.leifjohnsonford.com/staff/) on the dealership website.
 

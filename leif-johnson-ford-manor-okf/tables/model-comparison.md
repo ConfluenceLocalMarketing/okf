@@ -1,6 +1,6 @@
 ---
 type: Table
-title: Ford Model Comparison — Leif Johnson Ford of Manor
+title: Ford Model Comparison - Leif Johnson Ford of Manor
 description: Comparison of key Ford models available at Leif Johnson Ford of Manor across body type, fuel options, passenger capacity, and starting price.
 resource: https://www.leifjohnsonfordofmanor.com/model-lineup/
 tags:

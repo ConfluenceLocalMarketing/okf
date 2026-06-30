@@ -1,7 +1,7 @@
 ---
 type: Entities
 title: Jake Sweeney Chevrolet
-description: Chevrolet dealership in Cincinnati, OH serving the Tri-County area with new and pre-owned vehicles, financing, service, and parts — family-owned and operated since 1917.
+description: Chevrolet dealership in Cincinnati, OH serving the Tri-County area with new and pre-owned vehicles, financing, service, and parts - family-owned and operated since 1917.
 resource: https://www.jakesweeneychevrolet.com/
 tags:
   - chevrolet
@@ -52,51 +52,51 @@ Email: jakesweeneychevrolet@email.com
 
 ## Jake Sweeney Promise
 
-- **Lifetime Mechanical Protection** — Included when you buy any qualifying vehicle
-- **Free Carfax** — Available for every vehicle
-- **Certified Service Technicians** — Factory-trained using only OEM parts
-- **Shamrock Club** — Exclusive loyalty program for repeat customers
-- **Smart Credit & Fresh Start Programs** — Financing solutions for all credit profiles
+- **Lifetime Mechanical Protection** - Included when you buy any qualifying vehicle
+- **Free Carfax** - Available for every vehicle
+- **Certified Service Technicians** - Factory-trained using only OEM parts
+- **Shamrock Club** - Exclusive loyalty program for repeat customers
+- **Smart Credit & Fresh Start Programs** - Financing solutions for all credit profiles
 
 ## New Vehicles
 
 Chevrolet models available include:
-- **Silverado 1500** — Full-size pickup truck, multiple trims and configurations
-- **Silverado HD (2500HD / 3500HD)** — Heavy-duty pickup trucks for towing and work
-- **Silverado EV** — All-electric full-size pickup truck
-- **Colorado** — Mid-size pickup truck
-- **Equinox / Equinox EV** — Compact SUV with all-electric variant
-- **Trax** — Subcompact SUV, value-oriented
-- **Trailblazer** — Small SUV, available RS trim
-- **Traverse** — Mid-size 8-passenger SUV
-- **Blazer / Blazer EV** — Mid-size SUV with all-electric variant
-- **Tahoe** — Full-size SUV
-- **Suburban** — Full-size extended SUV
-- **Malibu** — Mid-size sedan
-- **Corvette** — Sports car, including Stingray and Z06
-- **Camaro** — Muscle car / sports coupe
-- **Bolt EV / Bolt SUV** — All-electric hatchback and SUV variants
-- **BrightDrop 400 / 600** — All-electric commercial vans
-- **Cruze** — Compact sedan
-- **Sonic** — Subcompact hatchback/sedan
-- **Spark** — City car / minicar
-- **Impala** — Full-size sedan
+- **Silverado 1500** - Full-size pickup truck, multiple trims and configurations
+- **Silverado HD (2500HD / 3500HD)** - Heavy-duty pickup trucks for towing and work
+- **Silverado EV** - All-electric full-size pickup truck
+- **Colorado** - Mid-size pickup truck
+- **Equinox / Equinox EV** - Compact SUV with all-electric variant
+- **Trax** - Subcompact SUV, value-oriented
+- **Trailblazer** - Small SUV, available RS trim
+- **Traverse** - Mid-size 8-passenger SUV
+- **Blazer / Blazer EV** - Mid-size SUV with all-electric variant
+- **Tahoe** - Full-size SUV
+- **Suburban** - Full-size extended SUV
+- **Malibu** - Mid-size sedan
+- **Corvette** - Sports car, including Stingray and Z06
+- **Camaro** - Muscle car / sports coupe
+- **Bolt EV / Bolt SUV** - All-electric hatchback and SUV variants
+- **BrightDrop 400 / 600** - All-electric commercial vans
+- **Cruze** - Compact sedan
+- **Sonic** - Subcompact hatchback/sedan
+- **Spark** - City car / minicar
+- **Impala** - Full-size sedan
 
 ## Services
 
-- **Finance Department** — Loan and lease options, online credit application, trade-in appraisal, Smart Credit and Fresh Start Programs
-- **Service Center** — Chevy-certified technicians, routine maintenance, diagnostics, major repairs, OEM parts
-- **Parts Department** — Genuine GM components, accessories
+- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, Smart Credit and Fresh Start Programs
+- **Service Center** - Chevy-certified technicians, routine maintenance, diagnostics, major repairs, OEM parts
+- **Parts Department** - Genuine GM components, accessories
 
 ## Online Tools
 
 - Inventory browsing and filtering (new, used, certified pre-owned)
 - Online service scheduling
-- CarFinder tool — specify desired configuration, dealership locates it
+- CarFinder tool - specify desired configuration, dealership locates it
 - Online credit application and pre-approval
 - Digital showroom for model research
-- Shop Click Drive — online purchase and home delivery
-- KBB Instant Cash Offer — trade-in valuation tool
+- Shop Click Drive - online purchase and home delivery
+- KBB Instant Cash Offer - trade-in valuation tool
 
 ## Staff
 
@@ -113,11 +113,11 @@ See [testimonials.md](/references/testimonials.md) for detailed customer reviews
 
 ## Special Programs
 
-- **Jake Sweeney Shamrock Club** — Exclusive benefits for loyal customers
-- **Lifetime Mechanical Protection** — Included on qualifying vehicle purchases
-- **Smart Credit Program** — Tailored financing for various credit profiles
-- **Fresh Start Program** — Helping customers rebuild credit through vehicle financing
-- **Jake Sweeney Express** — Online purchasing option for out-of-town buyers
+- **Jake Sweeney Shamrock Club** - Exclusive benefits for loyal customers
+- **Lifetime Mechanical Protection** - Included on qualifying vehicle purchases
+- **Smart Credit Program** - Tailored financing for various credit profiles
+- **Fresh Start Program** - Helping customers rebuild credit through vehicle financing
+- **Jake Sweeney Express** - Online purchasing option for out-of-town buyers
 
 ## Social Media
 
@@ -131,4 +131,4 @@ See [testimonials.md](/references/testimonials.md) for detailed customer reviews
 - Partnership with **Shamrock Customs** for truck lifting and aftermarket accessories
 - Website powered by **Dealer.com**
 - Connected via **PromptGraph** AI platform
-- **CarBravo** — Chevrolet's certified pre-owned marketplace
+- **CarBravo** - Chevrolet's certified pre-owned marketplace

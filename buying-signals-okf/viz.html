@@ -738,7 +738,7 @@ window.BUNDLE = {
       for (const src of bl) {
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.textContent = (nodeIndex[src]?.label || src).replace(/-/g, '-');
         a.dataset.target = src;
         a.addEventListener("click", () => showDetail(src));
         li.appendChild(a);
@@ -766,7 +766,7 @@ window.BUNDLE = {
         }
         if (nodeIndex[target]) {
           a.className = "internal";
-          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.textContent = nodeIndex[target].label.replace(/-/g, '-');
           a.setAttribute("href", "javascript:void(0)");
           a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
           return;

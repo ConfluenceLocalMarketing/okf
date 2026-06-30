@@ -1,6 +1,6 @@
 ---
 type: API
-title: AI Discovery Hub — Leif Johnson Ford of Buda
+title: AI Discovery Hub - Leif Johnson Ford of Buda
 description: AI-optimized discovery page with structured endpoints for LLM consumption, including business profile, vehicle inventory, prompts, and site directives.
 resource: https://www.leifjohnsonfordofbuda.com/ai-discovery-hub/
 tags:

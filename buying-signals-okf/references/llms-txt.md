@@ -1,6 +1,6 @@
 ---
 type: APIs
-title: llms.txt — Buying Signals
+title: llms.txt - Buying Signals
 description: Full llms.txt directive content for AI agent guidance, sourced from buyingsignals.com and the PromptGraph API at api.promptgraph.ai/api/v1/buying-signals/llms.txt.
 resource: https://buyingsignals.com/llms.txt
 tags:
@@ -12,7 +12,7 @@ tags:
 timestamp: 2026-06-26
 ---
 
-# llms.txt — Buying Signals
+# llms.txt - Buying Signals
 
 The `llms.txt` file provides guidance for AI assistants interacting with Buying Signals.
 

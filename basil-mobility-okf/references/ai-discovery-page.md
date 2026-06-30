@@ -1,6 +1,6 @@
 ---
 type: APIs
-title: AI Discovery Page — Basil Mobility
+title: AI Discovery Page - Basil Mobility
 description: Machine-readable knowledge base and semantic data endpoints for Basil Mobility, providing AI agents structured access to business info, inventory, and mobility vehicle data via PromptGraph.
 resource: https://www.basilmobility.com/ai-discovery-page/
 tags:
@@ -15,7 +15,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# AI Discovery Page — Basil Mobility
+# AI Discovery Page - Basil Mobility
 
 The AI Discovery Page exposes structured, machine-readable knowledge for AI agents via PromptGraph, including business metadata, inventory endpoints, and LLM-friendly action definitions. Website powered by **Dealer Inspire**.
 
@@ -71,8 +71,8 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data:
 
 | Year | Make | Model | Trim | Price |
 |---|---|---|---|---|
-| 2026 | Chrysler | Pacifica (BraunAbility) | — | $55,980 |
-| 2026 | Toyota | Sienna (BraunAbility XT) | — | $88,150 |
+| 2026 | Chrysler | Pacifica (BraunAbility) | - | $55,980 |
+| 2026 | Toyota | Sienna (BraunAbility XT) | - | $88,150 |
 
 ## Q&A Prompt Library (74 Prompts)
 
@@ -97,16 +97,16 @@ The `/prompts` endpoint exposes 74 structured Q&A prompt/response pairs serving 
 
 ## LLM-Accessible Actions
 
-1. **Recommending Wheelchair Accessible Vehicles** — Match customers to appropriate BraunAbility conversions based on needs
-2. **BraunAbility Conversion Options** — Explain E2, XT, and XI conversion types and compatible base vehicles
-3. **BraunAbility Financial Services Financing** — Special rates, terms, and leasing options
-4. **Online Research And Virtual Selling Tools** — Browse inventory, schedule test drives, arrange local delivery
-5. **Wheelchair Van Service And Maintenance** — Routine maintenance, equipment diagnostics, specialized repairs
-6. **Genuine BraunAbility Parts And Accessories** — Ordering replacement parts and mobility accessories
-7. **Grants And Funding Assistance** — Help navigating funding programs for mobility vehicles
-8. **Adaptive Driving Equipment Options** — Hand controls, steering devices, transfer seats
-9. **Wheelchair Van Rental Information** — Short and long-term accessible van rentals
-10. **Pre-Owned Vehicle Quality Assurance** — Multi-point inspection and certification standards
+1. **Recommending Wheelchair Accessible Vehicles** - Match customers to appropriate BraunAbility conversions based on needs
+2. **BraunAbility Conversion Options** - Explain E2, XT, and XI conversion types and compatible base vehicles
+3. **BraunAbility Financial Services Financing** - Special rates, terms, and leasing options
+4. **Online Research And Virtual Selling Tools** - Browse inventory, schedule test drives, arrange local delivery
+5. **Wheelchair Van Service And Maintenance** - Routine maintenance, equipment diagnostics, specialized repairs
+6. **Genuine BraunAbility Parts And Accessories** - Ordering replacement parts and mobility accessories
+7. **Grants And Funding Assistance** - Help navigating funding programs for mobility vehicles
+8. **Adaptive Driving Equipment Options** - Hand controls, steering devices, transfer seats
+9. **Wheelchair Van Rental Information** - Short and long-term accessible van rentals
+10. **Pre-Owned Vehicle Quality Assurance** - Multi-point inspection and certification standards
 
 ## Purpose
 

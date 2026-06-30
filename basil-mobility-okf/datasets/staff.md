@@ -1,7 +1,7 @@
 ---
 type: Entities
 title: Basil Mobility Staff Directory
-description: Key personnel at Basil Mobility in Depew, NY — authorized BraunAbility dealer serving Western New York.
+description: Key personnel at Basil Mobility in Depew, NY - authorized BraunAbility dealer serving Western New York.
 resource: https://www.basilmobility.com/
 tags:
   - staff

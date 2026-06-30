@@ -1,6 +1,6 @@
 ---
 type: APIs
-title: AI Discovery Page — Basil Resale Sheridan
+title: AI Discovery Page - Basil Resale Sheridan
 description: Machine-readable knowledge base and semantic data endpoints for Basil Resale Sheridan, providing AI agents structured access to business info, 1,411 vehicle inventory, and 77 Q&A prompts via PromptGraph API.
 resource: https://api.promptgraph.ai/api/v1/basil-resale-sheridan/.well-known/ai-manifest.json
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# AI Discovery Page — Basil Resale Sheridan
+# AI Discovery Page - Basil Resale Sheridan
 
 The AI Discovery Page exposes structured, machine-readable knowledge for AI agents via PromptGraph, including business metadata, inventory endpoints, and LLM-friendly action definitions. Website powered by **Dealer Inspire**.
 
@@ -86,16 +86,16 @@ The `/prompts` endpoint exposes 77 structured Q&A prompt/response pairs serving 
 
 ## LLM-Accessible Actions
 
-1. **Recommending Pre-Owned Vehicles** — Matching budget-friendly sedans and hybrids to daily commuters
-2. **Used Car Financing** — Plain-language explanation of rates, terms, and approval
-3. **Online Research And Virtual Selling Tools** — Browsing inventory, scheduling test drives, arranging local delivery
-4. **Free Oil Changes For Life Program** — Details on the lifetime oil change benefit
-5. **Pre-Owned Vehicle Quality Assurance** — Multi-point inspection and certification standards
-6. **Used Vehicle Warranty Coverage** — Free warranty on all used cars sold
-7. **Vehicle Finder Service** — How the tool helps customers narrow down options
-8. **Service Center Amenities** — Loaners, wi-fi, free car washes
-9. **Collision Center Services** — Full collision repair capabilities
-10. **Commercial Truck Inventory** — Dedicated work-ready commercial vehicles
+1. **Recommending Pre-Owned Vehicles** - Matching budget-friendly sedans and hybrids to daily commuters
+2. **Used Car Financing** - Plain-language explanation of rates, terms, and approval
+3. **Online Research And Virtual Selling Tools** - Browsing inventory, scheduling test drives, arranging local delivery
+4. **Free Oil Changes For Life Program** - Details on the lifetime oil change benefit
+5. **Pre-Owned Vehicle Quality Assurance** - Multi-point inspection and certification standards
+6. **Used Vehicle Warranty Coverage** - Free warranty on all used cars sold
+7. **Vehicle Finder Service** - How the tool helps customers narrow down options
+8. **Service Center Amenities** - Loaners, wi-fi, free car washes
+9. **Collision Center Services** - Full collision repair capabilities
+10. **Commercial Truck Inventory** - Dedicated work-ready commercial vehicles
 
 See [dealership.md](/datasets/dealership.md) for full business profile.
 See [used-vehicles.md](/datasets/used-vehicles.md) for pre-owned inventory.

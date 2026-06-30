@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Prompt Library — Leif Johnson Ford of Manor
+title: Prompt Library - Leif Johnson Ford of Manor
 description: 107 structured Q&A prompts for consistent AI responses covering vehicles, financing, service, and dealership operations.
 resource: https://api.promptgraph.ai/api/v1/leif-johnson-manor/prompts
 tags:

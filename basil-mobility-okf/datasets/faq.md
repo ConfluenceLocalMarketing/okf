@@ -1,6 +1,6 @@
 ---
 type: Playbooks & Runbooks
-title: Frequently Asked Questions — Basil Mobility
+title: Frequently Asked Questions - Basil Mobility
 description: Common questions about Basil Mobility's wheelchair accessible vehicles, service, financing, and adaptive equipment in Depew, NY.
 resource: https://www.basilmobility.com/
 tags:
@@ -15,7 +15,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# Frequently Asked Questions — Basil Mobility
+# Frequently Asked Questions - Basil Mobility
 
 ## Vehicles & Conversions
 
@@ -37,21 +37,21 @@ Side-entry vans have the ramp at the sliding door, ideal for standard wheelchair
 
 **Can I buy a lowered-floor vehicle?**
 
-Yes — lowered-floor vehicles provide better interior clearance for wheelchair access and are available on both Chrysler and Toyota platforms.
+Yes - lowered-floor vehicles provide better interior clearance for wheelchair access and are available on both Chrysler and Toyota platforms.
 
 **Do you carry hybrid accessible vans?**
 
-Yes — the BraunAbility XT conversion on the Toyota Sienna is a hybrid, offering fuel efficiency with full accessibility.
+Yes - the BraunAbility XT conversion on the Toyota Sienna is a hybrid, offering fuel efficiency with full accessibility.
 
 **Are wheelchair van rentals available?**
 
-Yes — Basil Mobility offers short and long-term accessible van rentals.
+Yes - Basil Mobility offers short and long-term accessible van rentals.
 
 ## Adaptive Equipment
 
 **Can you install hand controls?**
 
-Yes — Basil Mobility offers custom fitting and installation of adaptive hand controls for driving.
+Yes - Basil Mobility offers custom fitting and installation of adaptive hand controls for driving.
 
 **What other adaptive equipment is available?**
 
@@ -69,7 +69,7 @@ Ramp problems can be caused by electrical issues, motor failures, worn component
 
 **Can you service power door systems?**
 
-Yes — the service center handles power sliding door and rear door diagnostics and repair.
+Yes - the service center handles power sliding door and rear door diagnostics and repair.
 
 **What routine maintenance services do mobility vans need?**
 
@@ -77,11 +77,11 @@ Routine services include oil changes, filter replacements (engine/cabin), fluid 
 
 **Can non-mobility vehicles be serviced?**
 
-Yes — the service center also handles standard auto repair for non-mobility vehicles.
+Yes - the service center also handles standard auto repair for non-mobility vehicles.
 
 **Do you perform safety inspections for paratransit vehicles?**
 
-Yes — comprehensive commercial vehicle safety inspections for paratransit shuttle vans are available.
+Yes - comprehensive commercial vehicle safety inspections for paratransit shuttle vans are available.
 
 ## Financing
 
@@ -91,15 +91,15 @@ Basil Mobility offers APR as low as 2.99% for up to 72 months through BraunAbili
 
 **Can I get financing with low income or bad credit?**
 
-Yes — Basil Mobility offers low-income auto loan approvals and works with buyers with various credit situations.
+Yes - Basil Mobility offers low-income auto loan approvals and works with buyers with various credit situations.
 
 **Can I value my trade-in online?**
 
-Yes — an online trade-in appraisal tool is available on the Basil Mobility website.
+Yes - an online trade-in appraisal tool is available on the Basil Mobility website.
 
 **Are there grants available for mobility vehicles?**
 
-Yes — BraunAbility Financial Services and Basil Mobility can assist with grant applications, state and local funding programs, and disability advocacy organization resources.
+Yes - BraunAbility Financial Services and Basil Mobility can assist with grant applications, state and local funding programs, and disability advocacy organization resources.
 
 ## Dealership
 
@@ -109,11 +109,11 @@ Basil Mobility serves Depew, Buffalo, Cheektowaga, Williamsville, Amherst, and t
 
 **Does Basil Mobility offer rentals?**
 
-Yes — short and long-term accessible van rentals are available.
+Yes - short and long-term accessible van rentals are available.
 
 **Is there a courtesy shuttle during service?**
 
-Yes — a two-way courtesy shuttle is available during service appointments.
+Yes - a two-way courtesy shuttle is available during service appointments.
 
 See [dealership.md](dealership.md) for full business profile, hours, and contact information.
 See [new-vehicles.md](new-vehicles.md) for details on new BraunAbility conversions.

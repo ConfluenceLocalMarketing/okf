@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: Financing & Leasing — Leif Johnson Ford of Manor
+title: Financing & Leasing - Leif Johnson Ford of Manor
 description: Vehicle financing and leasing options at Leif Johnson Ford of Manor including online applications, trade-in valuation, and payment calculators.
 resource: https://www.leifjohnsonfordofmanor.com/finance-center/
 tags:

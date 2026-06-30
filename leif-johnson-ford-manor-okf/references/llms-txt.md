@@ -1,6 +1,6 @@
 ---
 type: API
-title: llms.txt — Leif Johnson Ford of Manor
+title: llms.txt - Leif Johnson Ford of Manor
 description: AI discovery and consumption directive for Leif Johnson Ford of Manor providing structured API endpoints, schema types, and business context.
 resource: https://api.promptgraph.ai/api/v1/leif-johnson-manor/llms.txt
 tags:

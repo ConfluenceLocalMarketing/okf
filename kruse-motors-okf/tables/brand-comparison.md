@@ -1,7 +1,7 @@
 ---
 type: Tables & Datasets
-title: Brand Comparison — Kruse Motors
-description: Side-by-side comparison of the four automotive brands available at Kruse Motors — Ford, Lincoln, Buick, and GMC — covering positioning, popular models, key features, and target buyer.
+title: Brand Comparison - Kruse Motors
+description: Side-by-side comparison of the four automotive brands available at Kruse Motors - Ford, Lincoln, Buick, and GMC - covering positioning, popular models, key features, and target buyer.
 resource: https://krusemotors.com/
 tags:
   - brand-comparison
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-06-26
 ---
 
-# Brand Comparison — Kruse Motors
+# Brand Comparison - Kruse Motors
 
 ## Brand Overview
 
@@ -29,28 +29,28 @@ timestamp: 2026-06-26
 
 | Body Style | Ford | Lincoln | Buick | GMC |
 |---|---|---|---|---|
-| **Full-size Pickup** | F-150 | — | — | Sierra 1500 |
-| **Heavy-duty Pickup** | F-250 / F-350 Super Duty | — | — | — |
-| **Midsize Pickup** | Ranger | — | — | Canyon |
+| **Full-size Pickup** | F-150 | - | - | Sierra 1500 |
+| **Heavy-duty Pickup** | F-250 / F-350 Super Duty | - | - | - |
+| **Midsize Pickup** | Ranger | - | - | Canyon |
 | **Full-size SUV** | Expedition | Navigator | Enclave | Yukon |
-| **Midsize SUV** | Explorer | Aviator | — | Acadia |
+| **Midsize SUV** | Explorer | Aviator | - | Acadia |
 | **Compact SUV** | Escape | Corsair | Envision | Terrain |
-| **Subcompact SUV** | — | — | Encore GX | — |
-| **Compact SUV Coupe** | — | — | Envista | — |
-| **Midsize Luxury SUV** | — | Nautilus | — | — |
-| **Sports Car** | Mustang | — | — | — |
-| **Van** | Transit | — | — | — |
+| **Subcompact SUV** | - | - | Encore GX | - |
+| **Compact SUV Coupe** | - | - | Envista | - |
+| **Midsize Luxury SUV** | - | Nautilus | - | - |
+| **Sports Car** | Mustang | - | - | - |
+| **Van** | Transit | - | - | - |
 
 ## Key Features
 
 | Feature | Ford | Lincoln | Buick | GMC |
 |---|---|---|---|---|
-| **Terrain/Off-road** | Bronco / Raptor | — | — | AT4 / AT4X |
+| **Terrain/Off-road** | Bronco / Raptor | - | - | AT4 / AT4X |
 | **Luxury Trim** | Platinum | Black Label | Avenir | Denali / Denali Ultimate |
-| **Performance** | ST / Shelby / Raptor | — | GS | — |
-| **Towing/Utility** | Super Duty / Transit | — | — | Pro / Elevation |
-| **Hybrid/EV** | F-150 PowerBoost, Mustang Mach-E | Aviator PHEV | — | — |
-| **Driver Assist** | BlueCruise | BlueCruise | — | Pro Safety |
+| **Performance** | ST / Shelby / Raptor | - | GS | - |
+| **Towing/Utility** | Super Duty / Transit | - | - | Pro / Elevation |
+| **Hybrid/EV** | F-150 PowerBoost, Mustang Mach-E | Aviator PHEV | - | - |
+| **Driver Assist** | BlueCruise | BlueCruise | - | Pro Safety |
 
 ## Warranty
 

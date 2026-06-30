@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: Pre-Owned Vehicles — Leif Johnson Ford of Austin
+title: Pre-Owned Vehicles - Leif Johnson Ford of Austin
 description: Pre-owned and certified pre-owned vehicle inventory at Leif Johnson Ford of Austin including used cars, trucks, SUVs, and Ford Blue Advantage program.
 resource: https://www.leifjohnsonford.com/inventory/used-vehicles/
 tags:
@@ -36,7 +36,7 @@ The dealership participates in the [Ford Blue Advantage](https://www.leifjohnson
 ## Trade-In
 
 The dealership offers trade-in evaluation through:
-- [Black Book Trade-In](https://www.leifjohnsonford.com/black-book-trade-in/) — instant online valuation
+- [Black Book Trade-In](https://www.leifjohnsonford.com/black-book-trade-in/) - instant online valuation
 - [Black Book Credit Estimator](https://www.leifjohnsonford.com/black-book-credit-estimator/)
 - In-person appraisal at the dealership
 

@@ -1,6 +1,6 @@
 ---
 type: Table
-title: Ford Model Comparison — Leif Johnson Ford of Buda
+title: Ford Model Comparison - Leif Johnson Ford of Buda
 description: Comparison of key Ford models available at Leif Johnson Ford of Buda across body type, fuel options, passenger capacity, and starting price.
 resource: https://www.leifjohnsonfordofbuda.com/model-lineup/
 tags:

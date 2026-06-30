@@ -1,7 +1,7 @@
 ---
 type: Entities
 title: Basil Resale Sheridan & Basil Resale Transit
-description: Western New York's largest pre-owned vehicle resale center with two locations, 1,411 vehicles in inventory, and a 4.5 rating from 2,579 reviews — part of the Basil Family Dealerships.
+description: Western New York's largest pre-owned vehicle resale center with two locations, 1,411 vehicles in inventory, and a 4.5 rating from 2,579 reviews - part of the Basil Family Dealerships.
 resource: https://www.basilresale.com/
 tags:
   - used-cars
@@ -18,7 +18,7 @@ timestamp: 2026-06-24
 
 # Basil Resale Sheridan & Basil Resale Transit
 
-Basil Resale is a family-owned pre-owned vehicle dealership with two locations serving the Buffalo, NY area. Part of the Basil Family Dealerships — 10 locations across Western New York with over 65 years of operation.
+Basil Resale is a family-owned pre-owned vehicle dealership with two locations serving the Buffalo, NY area. Part of the Basil Family Dealerships - 10 locations across Western New York with over 65 years of operation.
 
 ## Business Profile (Schema.org AutoDealer)
 
@@ -59,13 +59,13 @@ Email (customer service): basilcares@basilresale.com
 
 ## Services
 
-- **Finance Center** — Multiple lender options, online credit application, trade-in appraisal, lease and loan options regardless of credit history
-- **Service Center** — State-of-the-art repair technologies including laser alignment machines and handheld diagnostic computers; free oil changes for life with purchase and service
-- **Collision Center** — Full collision repair services
-- **Parts Center** — Genuine and aftermarket parts
-- **Vehicle Finder Service** — Helps narrow down options to find the right vehicle
-- **Commercial Trucks** — Dedicated commercial vehicle inventory for work-ready pickups
-- **Credit Card Payments** — Pay via secure online payment portal (USAePay)
+- **Finance Center** - Multiple lender options, online credit application, trade-in appraisal, lease and loan options regardless of credit history
+- **Service Center** - State-of-the-art repair technologies including laser alignment machines and handheld diagnostic computers; free oil changes for life with purchase and service
+- **Collision Center** - Full collision repair services
+- **Parts Center** - Genuine and aftermarket parts
+- **Vehicle Finder Service** - Helps narrow down options to find the right vehicle
+- **Commercial Trucks** - Dedicated commercial vehicle inventory for work-ready pickups
+- **Credit Card Payments** - Pay via secure online payment portal (USAePay)
 
 ## Perks
 
@@ -91,9 +91,9 @@ Email (customer service): basilcares@basilresale.com
 
 ## Leadership
 
-- **John Basil** — President (716-631-0400)
-- **Patrick Schultz** — Business Development Manager
-- **Jess Basil** — Marketing Director
+- **John Basil** - President (716-631-0400)
+- **Patrick Schultz** - Business Development Manager
+- **Jess Basil** - Marketing Director
 
 ## Social
 

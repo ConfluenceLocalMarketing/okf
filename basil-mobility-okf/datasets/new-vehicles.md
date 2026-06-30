@@ -29,7 +29,7 @@ timestamp: 2026-06-24
 
 | Conversion | Base Vehicle | Description |
 |---|---|---|
-| BraunAbility Next-Gen | Chevrolet Traverse | Power in-floor conversion, side-entry SUV — coming 2026 |
+| BraunAbility Next-Gen | Chevrolet Traverse | Power in-floor conversion, side-entry SUV - coming 2026 |
 
 ## Features
 
@@ -45,8 +45,8 @@ timestamp: 2026-06-24
 
 Basil Mobility carries a full selection of new BraunAbility conversions. Featured vehicles from PromptGraph API:
 
-- **2026 Chrysler Pacifica** — BraunAbility conversion, starting at $55,980
-- **2026 Toyota Sienna** — BraunAbility XT conversion, starting at $88,150
+- **2026 Chrysler Pacifica** - BraunAbility conversion, starting at $55,980
+- **2026 Toyota Sienna** - BraunAbility XT conversion, starting at $88,150
 
 Total inventory exceeds 1,158 vehicles including pre-owned and specialty vehicles.
 
@@ -60,7 +60,7 @@ Total inventory exceeds 1,158 vehicles including pre-owned and specialty vehicle
 
 ## Warranty & Protection
 
-- BraunAbility Protection Plus — service contracts, UltraGard, PrePaid Maintenance
+- BraunAbility Protection Plus - service contracts, UltraGard, PrePaid Maintenance
 - Limited warranty on new conversions and base vehicles
 - Comprehensive vehicle care plans available
 

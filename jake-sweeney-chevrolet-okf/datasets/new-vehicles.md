@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: New Chevrolet Models — Jake Sweeney Chevrolet
+title: New Chevrolet Models - Jake Sweeney Chevrolet
 description: New Chevrolet model lineup available at Jake Sweeney Chevrolet in Cincinnati, OH including Silverado, Equinox, Trax, Trailblazer, Traverse, Blazer, Colorado, Malibu, Tahoe, Corvette, Camaro, Bolt EV, and Suburban.
 resource: https://www.jakesweeneychevrolet.com/new-inventory/index.htm
 tags:
@@ -22,7 +22,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# New Chevrolet Models — Jake Sweeney Chevrolet
+# New Chevrolet Models - Jake Sweeney Chevrolet
 
 Jake Sweeney Chevrolet carries a full lineup of new Chevrolet vehicles. Below is a summary of available models and trims.
 

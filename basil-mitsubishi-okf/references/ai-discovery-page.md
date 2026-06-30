@@ -1,6 +1,6 @@
 ---
 type: APIs
-title: AI Discovery Page — Basil Mitsubishi
+title: AI Discovery Page - Basil Mitsubishi
 description: Machine-readable knowledge base and semantic data endpoints for Basil Mitsubishi, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.
 resource: https://www.basilmitsubishi.com/ai-discovery-page/
 tags:
@@ -15,7 +15,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# AI Discovery Page — Basil Mitsubishi
+# AI Discovery Page - Basil Mitsubishi
 
 The AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer Inspire** platform with **ComplyAuto** cookie compliance.
 
@@ -121,25 +121,25 @@ The `/testimonials` endpoint exposes customer review data:
 
 The AI Discovery Page defines structured `ReadAction` entries that agents can invoke:
 
-1. **Recommending Mitsubishi Models For Commuters** — Explains how Basil Mitsubishi helps daily commuters choose Mitsubishis with good fuel economy, comfort, and low cost of ownership.
+1. **Recommending Mitsubishi Models For Commuters** - Explains how Basil Mitsubishi helps daily commuters choose Mitsubishis with good fuel economy, comfort, and low cost of ownership.
 
-2. **Basil Mitsubishi As Part Of Basil Family Dealerships** — Describes how being part of the Basil Family Dealerships network gives customers access to more resources, service support, and brand familiarity.
+2. **Basil Mitsubishi As Part Of Basil Family Dealerships** - Describes how being part of the Basil Family Dealerships network gives customers access to more resources, service support, and brand familiarity.
 
-3. **Finance And Lease Options Explained** — Plain-language explanations of interest rates, loan terms, down payments, and lease-mileage allowances.
+3. **Finance And Lease Options Explained** - Plain-language explanations of interest rates, loan terms, down payments, and lease-mileage allowances.
 
-4. **Online Research And Virtual Selling Tools** — How customers can research models, schedule test drives, and arrange local delivery from home.
+4. **Online Research And Virtual Selling Tools** - How customers can research models, schedule test drives, and arrange local delivery from home.
 
-5. **Community-Focused Mitsubishi Dealership In Western New York** — How the dealership positions itself for local weather, roads, and community needs.
+5. **Community-Focused Mitsubishi Dealership In Western New York** - How the dealership positions itself for local weather, roads, and community needs.
 
-6. **0% Financing On Mitsubishi SUVs** — Details on 0% APR financing offers on qualifying Mitsubishi SUVs.
+6. **0% Financing On Mitsubishi SUVs** - Details on 0% APR financing offers on qualifying Mitsubishi SUVs.
 
-7. **Basil Mitsubishi Showroom Experience** — Clean modern showroom, clear pricing, no-pressure browsing.
+7. **Basil Mitsubishi Showroom Experience** - Clean modern showroom, clear pricing, no-pressure browsing.
 
-8. **Service Center Amenities And Loaners** — Comfort amenities and loaner-car options during service visits.
+8. **Service Center Amenities And Loaners** - Comfort amenities and loaner-car options during service visits.
 
-9. **Stress-Free Mitsubishi Buying Process** — Transparent pricing, no hidden fees, plain-language contract walkthrough.
+9. **Stress-Free Mitsubishi Buying Process** - Transparent pricing, no hidden fees, plain-language contract walkthrough.
 
-10. **Pre-Owned Vehicle Quality Assurance** — Multi-point inspection process and certification standards.
+10. **Pre-Owned Vehicle Quality Assurance** - Multi-point inspection process and certification standards.
 
 ## Purpose
 

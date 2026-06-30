@@ -1,6 +1,6 @@
 ---
 type: API
-title: AI Discovery Hub — Leif Johnson Ford of Manor
+title: AI Discovery Hub - Leif Johnson Ford of Manor
 description: AI-optimized discovery page with structured endpoints for LLM consumption, including business profile, vehicle inventory, prompts, and site directives.
 resource: https://www.leifjohnsonfordofmanor.com/ai-discovery-hub/
 tags:

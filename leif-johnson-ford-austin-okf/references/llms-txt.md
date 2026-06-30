@@ -1,6 +1,6 @@
 ---
 type: API
-title: llms.txt — Leif Johnson Ford of Austin
+title: llms.txt - Leif Johnson Ford of Austin
 description: AI discovery and consumption directive for Leif Johnson Ford of Austin providing structured API endpoints, schema types, and business context.
 resource: https://api.promptgraph.ai/api/v1/leif-johnson-austin/llms.txt
 tags:

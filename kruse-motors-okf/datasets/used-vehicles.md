@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Used Vehicle Inventory — Kruse Motors
+title: Used Vehicle Inventory - Kruse Motors
 description: Pre-owned and certified pre-owned inventory of cars, trucks, and SUVs across multiple brands with KBB trade-in valuation, vehicle protection plans, and we-buy-cars program.
 resource: https://krusemotors.com/inventory/used
 tags:
@@ -16,7 +16,7 @@ tags:
 timestamp: 2026-06-26
 ---
 
-# Used Vehicle Inventory — Kruse Motors
+# Used Vehicle Inventory - Kruse Motors
 
 Kruse Motors maintains a large inventory of pre-owned and certified pre-owned vehicles across multiple brands and body styles. Each vehicle is inspected and reconditioned before sale.
 

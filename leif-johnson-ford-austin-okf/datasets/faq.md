@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Frequently Asked Questions — Leif Johnson Ford of Austin
+title: Frequently Asked Questions - Leif Johnson Ford of Austin
 description: Common customer questions about Ford vehicle features, financing, service, and dealership operations.
 resource: https://api.promptgraph.ai/api/v1/leif-johnson-austin/prompts
 tags:

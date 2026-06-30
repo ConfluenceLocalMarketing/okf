@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: New Ford Vehicles — Leif Johnson Ford of Austin
+title: New Ford Vehicles - Leif Johnson Ford of Austin
 description: Full lineup of new Ford vehicles available at Leif Johnson Ford of Austin including trucks, SUVs, crossovers, vans, and electric models.
 resource: https://www.leifjohnsonford.com/inventory/new-vehicles/
 tags:

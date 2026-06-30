@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: New Ford Vehicles — Leif Johnson Ford of Manor
+title: New Ford Vehicles - Leif Johnson Ford of Manor
 description: Full lineup of new Ford vehicles available at Leif Johnson Ford of Manor including trucks, SUVs, crossovers, vans, and electric models.
 resource: https://www.leifjohnsonfordofmanor.com/inventory/new-vehicles/
 tags:

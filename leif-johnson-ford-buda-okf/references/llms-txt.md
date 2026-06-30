@@ -1,6 +1,6 @@
 ---
 type: API
-title: llms.txt — Leif Johnson Ford of Buda
+title: llms.txt - Leif Johnson Ford of Buda
 description: AI discovery and consumption directive for Leif Johnson Ford of Buda providing structured API endpoints, schema types, and business context.
 resource: https://api.promptgraph.ai/api/v1/leif-johnson-buda/llms.txt
 tags:

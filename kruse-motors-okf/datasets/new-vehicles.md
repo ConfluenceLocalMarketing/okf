@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: New Vehicle Inventory — Kruse Motors
+title: New Vehicle Inventory - Kruse Motors
 description: New vehicle lineup across Ford, Lincoln, Buick, and GMC brands including trucks, SUVs, crossovers, sedans, and electric vehicles with custom ordering through Kruse Your Way.
 resource: https://krusemotors.com/inventory/new
 tags:
@@ -17,7 +17,7 @@ tags:
 timestamp: 2026-06-26
 ---
 
-# New Vehicle Inventory — Kruse Motors
+# New Vehicle Inventory - Kruse Motors
 
 Kruse Motors offers a multi-brand new vehicle lineup featuring Ford, Lincoln, Buick, and GMC vehicles. Customers can browse inventory on the lot or custom-order through the Kruse Your Way program.
 

@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Service Center — Jake Sweeney Chevrolet
+title: Service Center - Jake Sweeney Chevrolet
 description: Chevrolet-certified service center in Cincinnati, OH offering routine maintenance, diagnostics, major repairs, and OEM parts, serving all makes and models.
 resource: https://www.jakesweeneychevrolet.com/service/index.htm
 tags:
@@ -14,23 +14,23 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# Service Center — Jake Sweeney Chevrolet
+# Service Center - Jake Sweeney Chevrolet
 
 The Jake Sweeney Chevrolet Service Center provides certified maintenance and repair services at 33 West Kemper Road, Cincinnati, OH.
 
 ## Service Capabilities
 
-- **Routine Maintenance** — Oil changes, tire rotations, alignments, brake inspections
-- **Diagnostics** — Check engine light diagnosis, computerized system analysis
-- **Major Repairs** — Transmission service, alternator replacement, suspension work
-- **Recall Repairs** — OEM-specified recall and campaign work
-- **Scheduled Maintenance** — Following Chevrolet's recommended maintenance schedule
+- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections
+- **Diagnostics** - Check engine light diagnosis, computerized system analysis
+- **Major Repairs** - Transmission service, alternator replacement, suspension work
+- **Recall Repairs** - OEM-specified recall and campaign work
+- **Scheduled Maintenance** - Following Chevrolet's recommended maintenance schedule
 
 ## Service Team
 
-- **Mike Adams** — Service advisor praised for clear communication and walkthroughs
-- **Jess** — Service department staff, helpful and friendly
-- **Nolan** — Service department staff, helpful and friendly
+- **Mike Adams** - Service advisor praised for clear communication and walkthroughs
+- **Jess** - Service department staff, helpful and friendly
+- **Nolan** - Service department staff, helpful and friendly
 
 ## Service Experience
 

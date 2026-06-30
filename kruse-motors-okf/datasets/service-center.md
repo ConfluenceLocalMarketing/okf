@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Service Center — Kruse Motors
+title: Service Center - Kruse Motors
 description: Factory-authorized service centers at Kruse Motors Ford Lincoln and Kruse Motors Buick GMC offering routine maintenance, advanced diagnostics, major repairs, OEM parts, and accessories.
 resource: https://krusemotors.com/schedule-a-service
 tags:
@@ -20,7 +20,7 @@ tags:
 timestamp: 2026-06-26
 ---
 
-# Service Center — Kruse Motors
+# Service Center - Kruse Motors
 
 Kruse Motors operates two factory-authorized service centers staffed by trained technicians equipped to handle routine maintenance, advanced repairs, and vehicle diagnostics.
 
@@ -49,9 +49,9 @@ Kruse Motors operates two factory-authorized service centers staffed by trained 
 
 ## Parts & Accessories
 
-- **Genuine OEM Parts** — Factory-designed components engineered for Buick, GMC, Ford, and Lincoln vehicles
-- **Accessories** — Customization accessories available through online catalog with 360-degree vehicle view
-- **Service & Parts Financing** — Buy Now, Pay Later options through Sunbit
+- **Genuine OEM Parts** - Factory-designed components engineered for Buick, GMC, Ford, and Lincoln vehicles
+- **Accessories** - Customization accessories available through online catalog with 360-degree vehicle view
+- **Service & Parts Financing** - Buy Now, Pay Later options through Sunbit
 
 ## Specials
 

@@ -18,9 +18,9 @@ timestamp: 2026-06-24
 
 ## Leadership
 
-- **John Basil** — President (716-631-0400)
-- **Patrick Schultz** — Business Development Manager
-- **Jess Basil** — Marketing Director
+- **John Basil** - President (716-631-0400)
+- **Patrick Schultz** - Business Development Manager
+- **Jess Basil** - Marketing Director
 
 ## Sales & Finance
 

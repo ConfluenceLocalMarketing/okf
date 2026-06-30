@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: New Ford Vehicles — Leif Johnson Ford of Buda
+title: New Ford Vehicles - Leif Johnson Ford of Buda
 description: Full lineup of new Ford vehicles available at Leif Johnson Ford of Buda including trucks, SUVs, crossovers, vans, and electric models.
 resource: https://www.leifjohnsonfordofbuda.com/inventory/new-vehicles/
 tags:

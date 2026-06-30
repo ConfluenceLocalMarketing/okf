@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Customer Testimonials — Basil Mobility
+title: Customer Testimonials - Basil Mobility
 description: Customer reviews and ratings for Basil Mobility, sourced from the PromptGraph API testimonials endpoint.
 resource: https://api.promptgraph.ai/api/v1/basil-mobility/testimonials
 tags:
@@ -13,7 +13,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# Customer Testimonials — Basil Mobility
+# Customer Testimonials - Basil Mobility
 
 Customer testimonials are available from the PromptGraph API at `https://api.promptgraph.ai/api/v1/basil-mobility/testimonials`, returning reviews in JSON-LD format with aggregate rating data.
 

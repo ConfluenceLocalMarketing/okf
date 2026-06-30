@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Financing & Leasing — Kruse Motors
+title: Financing & Leasing - Kruse Motors
 description: Auto financing and leasing options at Kruse Motors including pre-qualification, online credit applications, student savings, lease specials, and flexible loan programs.
 resource: https://krusemotors.com/finance
 tags:
@@ -16,7 +16,7 @@ tags:
 timestamp: 2026-06-26
 ---
 
-# Financing & Leasing — Kruse Motors
+# Financing & Leasing - Kruse Motors
 
 The finance department at Kruse Motors works with a network of lenders to help customers secure competitive rates for vehicle purchases. Financing options are available for new and used vehicles across all brands.
 
@@ -24,7 +24,7 @@ The finance department at Kruse Motors works with a network of lenders to help c
 
 | Tool | Description | Link |
 |---|---|---|
-| Get Pre-Qualified | Soft credit check — no SSN or DOB needed, no credit score impact | /get-pre-qualified |
+| Get Pre-Qualified | Soft credit check - no SSN or DOB needed, no credit score impact | /get-pre-qualified |
 | Online Credit Application | Secure credit application to save time at the dealership | /get-pre-approved |
 | Budget Calculator | Estimate monthly payment based on down payment and credit score | Browse by Budget tool |
 

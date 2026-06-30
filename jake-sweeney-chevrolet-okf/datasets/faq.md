@@ -1,6 +1,6 @@
 ---
 type: Playbooks & Runbooks
-title: Frequently Asked Questions — Jake Sweeney Chevrolet
+title: Frequently Asked Questions - Jake Sweeney Chevrolet
 description: Common questions about Jake Sweeney Chevrolet's inventory, financing, service, and dealership operations in Cincinnati, OH.
 resource: https://api.promptgraph.ai/api/v1/jake-sweeney-chevrolet/prompts
 tags:
@@ -13,7 +13,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# Frequently Asked Questions — Jake Sweeney Chevrolet
+# Frequently Asked Questions - Jake Sweeney Chevrolet
 
 ## Inventory
 

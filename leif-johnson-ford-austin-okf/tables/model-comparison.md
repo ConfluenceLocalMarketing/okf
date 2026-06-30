@@ -1,6 +1,6 @@
 ---
 type: Table
-title: Ford Model Comparison — Leif Johnson Ford of Austin
+title: Ford Model Comparison - Leif Johnson Ford of Austin
 description: Comparison of key Ford models available at Leif Johnson Ford of Austin across body type, fuel options, passenger capacity, and starting price.
 resource: https://www.leifjohnsonford.com/model-lineup/
 tags:

@@ -16,16 +16,16 @@ timestamp: 2026-06-26
 
 # Data Hygiene & Enrichment
 
-Comprehensive data quality services including data appending, verification, enrichment, and real-time DMS/CRM synchronization. On average, 40% of customer data is incorrect — this product fixes that.
+Comprehensive data quality services including data appending, verification, enrichment, and real-time DMS/CRM synchronization. On average, 40% of customer data is incorrect - this product fixes that.
 
 ## Services
 
-- **Data Cleansing** — Correct outdated addresses, emails, phone numbers, and vehicle ownership records
-- **Data Enrichment** — Append missing contact details (alternate emails, verified phones, addresses)
-- **Reverse Append** — Start from a single data point and resolve full consumer identity
-- **DMS Sync** — Push corrected records back into Dealer Management Systems in real time
-- **Identity Graph Resolution** — Resolve consumer signals into unified profiles with verified identifiers
-- **Profile Maintenance** — Keep data continuously synced, clean, and current
+- **Data Cleansing** - Correct outdated addresses, emails, phone numbers, and vehicle ownership records
+- **Data Enrichment** - Append missing contact details (alternate emails, verified phones, addresses)
+- **Reverse Append** - Start from a single data point and resolve full consumer identity
+- **DMS Sync** - Push corrected records back into Dealer Management Systems in real time
+- **Identity Graph Resolution** - Resolve consumer signals into unified profiles with verified identifiers
+- **Profile Maintenance** - Keep data continuously synced, clean, and current
 
 ## Benefits
 

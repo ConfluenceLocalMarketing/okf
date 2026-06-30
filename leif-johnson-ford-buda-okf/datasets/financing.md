@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: Financing & Leasing — Leif Johnson Ford of Buda
+title: Financing & Leasing - Leif Johnson Ford of Buda
 description: Vehicle financing and leasing options at Leif Johnson Ford of Buda including online applications, trade-in valuation, and payment calculators.
 resource: https://www.leifjohnsonfordofbuda.com/finance-center/
 tags:

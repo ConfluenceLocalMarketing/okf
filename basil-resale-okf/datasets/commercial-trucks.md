@@ -19,10 +19,10 @@ Basil Resale Sheridan carries a dedicated inventory of commercial trucks and wor
 
 ## Available Types
 
-- **Light-duty pickups** — Half-ton trucks for daily work use
-- **Heavy-duty pickups** — Three-quarter and one-ton trucks for towing and hauling
-- **Cargo vans** — Enclosed transport and delivery vehicles
-- **Specialty commercial vehicles** — Box trucks, service bodies
+- **Light-duty pickups** - Half-ton trucks for daily work use
+- **Heavy-duty pickups** - Three-quarter and one-ton trucks for towing and hauling
+- **Cargo vans** - Enclosed transport and delivery vehicles
+- **Specialty commercial vehicles** - Box trucks, service bodies
 
 ## Popular Brands
 

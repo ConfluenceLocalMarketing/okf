@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: Financing & Leasing — Leif Johnson Ford of Austin
+title: Financing & Leasing - Leif Johnson Ford of Austin
 description: Vehicle financing and leasing options at Leif Johnson Ford of Austin including online applications, trade-in valuation, and payment calculators.
 resource: https://www.leifjohnsonford.com/finance-center/
 tags:

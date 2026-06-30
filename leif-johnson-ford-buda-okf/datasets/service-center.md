@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: Service Center — Leif Johnson Ford of Buda
+title: Service Center - Leif Johnson Ford of Buda
 description: Factory-authorized Ford service department in Buda, TX offering maintenance, repairs, OEM parts, and mobile service.
 resource: https://www.leifjohnsonfordofbuda.com/service-center/
 tags:
@@ -21,10 +21,10 @@ The Leif Johnson Ford of Buda Service Department provides factory-authorized mai
 
 - Routine maintenance: oil changes, tire rotations, inspections, preventative maintenance
 - Advanced diagnostics and repair: brake service, engine diagnostics, electrical service, transmission repairs
-- Ford-specific parts and accessories — OEM-engineered components
+- Ford-specific parts and accessories - OEM-engineered components
 - Tire sales and service through the [Tire Finder](https://www.leifjohnsonfordofbuda.com/tire-finder/)
-- Mobile Service — on-site repairs at your home or office
-- Ford Pickup & Delivery — vehicle pickup and return service
+- Mobile Service - on-site repairs at your home or office
+- Ford Pickup & Delivery - vehicle pickup and return service
 - FordPass Rewards integration
 - Ford Pro Elite Commercial Service Center for fleet and commercial vehicle maintenance
 

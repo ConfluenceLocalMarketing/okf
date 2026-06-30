@@ -14,7 +14,7 @@ timestamp: 2026-06-29
 
 # Leif Johnson Ford of Buda
 
-Leif Johnson Ford of Buda (formerly Truck City Ford) is a full-service Ford dealership located at 15301 South IH-35, Buda, TX 78610. Part of the Leif Johnson Automotive Group — a family-owned business operating for over 65 years — the dealership serves Buda, Austin, Kyle, San Marcos, New Braunfels, and the wider Central Texas region.
+Leif Johnson Ford of Buda (formerly Truck City Ford) is a full-service Ford dealership located at 15301 South IH-35, Buda, TX 78610. Part of the Leif Johnson Automotive Group - a family-owned business operating for over 65 years - the dealership serves Buda, Austin, Kyle, San Marcos, New Braunfels, and the wider Central Texas region.
 
 ## Contact Information
 
@@ -52,7 +52,7 @@ Full new Ford lineup including trucks, SUVs, crossovers, vans, and EVs. Pre-owne
 
 ## Ownership
 
-Leif Johnson Automotive Group — family-owned, over 65 years in business. Operates 3 Ford franchise dealerships and 5 pre-owned locations in and around Austin.
+Leif Johnson Automotive Group - family-owned, over 65 years in business. Operates 3 Ford franchise dealerships and 5 pre-owned locations in and around Austin.
 
 ## Community Involvement
 

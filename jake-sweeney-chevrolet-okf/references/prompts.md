@@ -1,6 +1,6 @@
 ---
 type: Playbooks & Runbooks
-title: PromptGraph Prompt Library — Jake Sweeney Chevrolet
+title: PromptGraph Prompt Library - Jake Sweeney Chevrolet
 description: Complete PromptGraph library of 119 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for Jake Sweeney Chevrolet.
 resource: https://api.promptgraph.ai/api/v1/jake-sweeney-chevrolet/prompts
 tags:
@@ -13,7 +13,7 @@ tags:
 timestamp: 2026-06-24
 ---
 
-# PromptGraph Prompt Library — Jake Sweeney Chevrolet
+# PromptGraph Prompt Library - Jake Sweeney Chevrolet
 
 The PromptGraph API at `https://api.promptgraph.ai/api/v1/jake-sweeney-chevrolet/prompts` exposes 119 structured Q&A prompt/response pairs. Below is a categorized summary.
 

@@ -1,6 +1,6 @@
 ---
 type: Entity
-title: Pre-Owned Vehicles — Leif Johnson Ford of Manor
+title: Pre-Owned Vehicles - Leif Johnson Ford of Manor
 description: Pre-owned and certified pre-owned vehicle inventory at Leif Johnson Ford of Manor including used cars, trucks, SUVs, and Ford Blue Advantage program.
 resource: https://www.leifjohnsonfordofmanor.com/inventory/used-vehicles/
 tags:
@@ -36,7 +36,7 @@ The dealership participates in the [Ford Blue Advantage](https://www.leifjohnson
 ## Trade-In
 
 The dealership offers trade-in evaluation through:
-- [Black Book Trade-In](https://www.leifjohnsonfordofmanor.com/black-book-trade-in/) — instant online valuation
+- [Black Book Trade-In](https://www.leifjohnsonfordofmanor.com/black-book-trade-in/) - instant online valuation
 - In-person appraisal at the dealership
 
 ## Specials

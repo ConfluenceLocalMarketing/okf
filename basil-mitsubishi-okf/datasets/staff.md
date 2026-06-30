@@ -18,22 +18,22 @@ timestamp: 2026-06-24
 
 ## Dealer Principals
 
-- **Joe Basil III** — Dealer Principal
-- **Will Basil** — Dealer Principal
+- **Joe Basil III** - Dealer Principal
+- **Will Basil** - Dealer Principal
 
 ## Management
 
-- **Robert Neuner** — General Manager
-- **Lauren Allison** — Sales Manager
-- **Robert Dikcis** — Inventory Manager
-- **Kire Gjorgievski** — Business Manager
+- **Robert Neuner** - General Manager
+- **Lauren Allison** - Sales Manager
+- **Robert Dikcis** - Inventory Manager
+- **Kire Gjorgievski** - Business Manager
 
 ## Service & Parts
 
-- **Ryan Twardowski** — Service Manager
-- **Eric Macchiaroli** — Parts Manager
-- **Alex Luciano** — Service Advisor
-- **Tom Allen** — Parts Consultant
+- **Ryan Twardowski** - Service Manager
+- **Eric Macchiaroli** - Parts Manager
+- **Alex Luciano** - Service Advisor
+- **Tom Allen** - Parts Consultant
 
 ## Sales Representatives
 

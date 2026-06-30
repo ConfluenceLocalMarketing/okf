@@ -1,6 +1,6 @@
 ---
 type: Tables & Datasets
-title: BraunAbility Conversion Model Comparison — Basil Mobility
+title: BraunAbility Conversion Model Comparison - Basil Mobility
 description: Side-by-side comparison of BraunAbility conversion options available at Basil Mobility, including compatible vehicles, ramp types, configurations, and pricing.
 resource: https://www.basilmobility.com/
 tags:
