@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ron-marhofer-nissan - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "ron-marhofer-nissan";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Ron Marhofer Nissan",
+        "type": "Entities",
+        "description": "Nissan dealership in Cuyahoga Falls, OH serving Akron, Hudson, Kent, and Stow with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.ronmarhofernissan.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Ron Marhofer Nissan",
+        "type": "Entities",
+        "description": "Common questions about Ron Marhofer Nissan's inventory, financing, service, and dealership operations in Cuyahoga Falls, OH.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-nissan/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Nissan Models - Ron Marhofer Nissan",
+        "type": "Entities",
+        "description": "New Nissan model lineup available at Ron Marhofer Nissan in Cuyahoga Falls, OH including Rogue, Altima, Sentra, Pathfinder, Frontier, Armada, Kicks, Murano, Maxima, Titan, Versa, Ariya, and LEAF.",
+        "resource": "https://www.ronmarhofernissan.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Ron Marhofer Nissan",
+        "type": "Entities",
+        "description": "Nissan-certified service center in Cuyahoga Falls, OH offering routine maintenance, diagnostics, major repairs, and genuine Nissan OEM parts.",
+        "resource": "https://www.ronmarhofernissan.com/service/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Ron Marhofer Nissan",
+        "type": "Entities",
+        "description": "Sales and service staff directory for Ron Marhofer Nissan in Cuyahoga Falls, OH, compiled from the dealership website and customer reviews.",
+        "resource": "https://www.ronmarhofernissan.com/meet-our-staff.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - Ron Marhofer Nissan",
+        "type": "Entities",
+        "description": "Large pre-owned inventory at Ron Marhofer Nissan in Cuyahoga Falls, OH, spanning multiple makes and models with 120+ point inspections and competitive pricing.",
+        "resource": "https://www.ronmarhofernissan.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Ron Marhofer Nissan",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Ron Marhofer Nissan, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.ronmarhofernissan.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Ron Marhofer Nissan",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for Ron Marhofer Nissan.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-nissan/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - Ron Marhofer Nissan",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 62 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for Ron Marhofer Nissan.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-nissan/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Ron Marhofer Nissan",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews collected via PromptGraph API for Ron Marhofer Nissan in Cuyahoga Falls, OH, with predominantly 5-star testimonials highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-nissan/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Nissan Model Lineup Comparison - Ron Marhofer Nissan",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Nissan models available at Ron Marhofer Nissan in Cuyahoga Falls, OH, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.ronmarhofernissan.com/showroom/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Ron Marhofer Nissan\n\nRon Marhofer Nissan is a full-service Nissan dealership located at **247 Howe Ave, Cuyahoga Falls, OH 44221-4903**, serving the greater Akron area including Stow, Hudson, Kent, Tallmadge, New Franklin, and Northeast Ohio.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Main | (330) 940-4001 |\n| Sales | (234) 245-6026 |\n| Service | 330-940-4422 |\n| Parts | 330-940-4014 |\n\nEmail: marhoferc@gmail.com\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 6:00 PM |\n| Wednesday | 9:00 AM - 6:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 6:00 PM |\n| Saturday | 9:00 AM - 5:00 PM |\n| Sunday | Closed |\n\n## Location\n\n- **Address:** 247 Howe Ave, Cuyahoga Falls, OH 44221-4903\n- **Geo:** 41.1198309, -81.4855967\n\n## New Vehicles\n\nNissan models available include:\n- **Rogue** - Compact SUV, best-selling Nissan, multiple trims including Rock Creek and Platinum\n- **Rogue Plug-In Hybrid** - Hybrid electric compact SUV\n- **Altima** - Mid-size sedan, available with AWD\n- **Sentra** - Compact sedan, value-oriented\n- **Pathfinder** - Mid-size 3-row SUV, available in S, SV, SL, and Platinum trims\n- **Armada** - Full-size SUV, powerful V8 engine\n- **Frontier** - Mid-size pickup truck, available in S, SV, and PRO-4X trims\n- **Murano** - Mid-size crossover SUV\n- **Kicks** - Subcompact crossover SUV\n- **Maxima** - Full-size sedan\n- **Titan / Titan XD** - Full-size pickup truck and heavy-duty variant\n- **Versa** - Subcompact sedan\n- **Ariya** - All-electric crossover SUV\n- **LEAF** - All-electric hatchback\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, Capital One pre-qualification\n- **Service Center** - Nissan-certified technicians, routine maintenance, diagnostics, major repairs, genuine Nissan parts\n- **Parts Department** - Genuine Nissan components, accessories, tires\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned)\n- Online service scheduling\n- Online credit application and pre-approval\n- Car payment calculator\n- Home delivery (free up to 150 miles)\n- Trade-in valuation tool\n\n## Staff\n\nSee [staff.md](staff.md) for full directory.\n\n## Reviews & Reputation\n\n- Aggregate rating: 4.7 / 5.0 (2,283 reviews) across major platforms\n- Google Business Profile: 4.7 stars (2,200+ reviews)\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **Marhofer Auto Family** - Part of the Marhofer group of dealerships\n- **Free Home Delivery** - Up to 150 miles\n- **Low-Stress Car Buying** - Transparent, no-pressure sales process\n- **120+ Point Inspection** - On all pre-owned vehicles\n- **30+ Lenders** - Financing options for various credit profiles\n\n## Affiliations\n\n- Part of the **Marhofer Auto Family**\n- **Marhofer Collision** - Collision repair center\n- **Marhofer Rentals** - Nissan rental services\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform",
+    "datasets/faq": "# Frequently Asked Questions - Ron Marhofer Nissan\n\n## Inventory\n\n**Q: What new Nissan models are available at Ron Marhofer Nissan?**\nA: The full Nissan lineup including Rogue, Rogue Plug-In Hybrid, Altima, Sentra, Pathfinder, Armada, Frontier, Murano, Kicks, Maxima, Titan, Titan XD, Versa, Ariya, and LEAF.\n\n**Q: What brands are available in the used vehicle inventory?**\nA: The pre-owned inventory spans multiple makes including Nissan, Chevrolet, Ford, Toyota, Honda, Hyundai, Kia, Volkswagen, GMC, Jeep, Ram, BMW, Mercedes-Benz, Land Rover, and Mitsubishi.\n\n**Q: Does Ron Marhofer Nissan offer certified pre-owned vehicles?**\nA: Yes, Nissan Certified Pre-Owned vehicles are available with factory-backed inspections, warranties, and 24/7 roadside assistance.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs. The dealership works with over 30 lenders to find the best terms.\n\n**Q: Does the dealership work with all credit profiles?**\nA: Yes, the finance team works with over 30 lenders to accommodate various credit situations and budgets.\n\n## Service\n\n**Q: Can the service center work on non-Nissan vehicles?**\nA: Yes, the service center can perform maintenance and repairs on various makes and models.\n\n**Q: Does the dealership offer Nissan Express Service?**\nA: Yes, Nissan Express Service provides quick in-and-out maintenance without an appointment.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the dealership website.\n\n**Q: Do you offer home delivery for serviced vehicles?**\nA: Yes, free home delivery up to 150 miles is available for completed vehicle service.\n\n## Dealership\n\n**Q: Where is Ron Marhofer Nissan located?**\nA: 247 Howe Ave, Cuyahoga Falls, OH 44221, serving Akron, Stow, Hudson, Kent, Tallmadge, and New Franklin.\n\n**Q: What is the Marhofer Auto Family?**\nA: Ron Marhofer Nissan is part of the Marhofer Auto Family, which also includes Marhofer Collision and Marhofer Rentals.\n\n**Q: Does the dealership offer home delivery?**\nA: Yes, free home delivery up to 150 miles is available for vehicle purchases.\n\n**Q: Is there a vehicle hold policy?**\nA: Yes, the dealership allows customers to hold vehicles before arriving.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New Nissan Models - Ron Marhofer Nissan\n\nRon Marhofer Nissan carries a full lineup of new Nissan vehicles. Below is a summary of available models and trims.\n\n## SUVs & Crossovers\n\n### Nissan Rogue\nCompact SUV, Nissan's best-selling model. Available trims include S, SV, Rock Creek, Midnight Edition, Platinum, and Dark Armor. Features the 1.5L VC-Turbo engine (201 hp) with Xtronic CVT. Available in FWD and AWD. Seats 5 passengers. Class-leading cargo space with 74.1 cu ft maximum.\n\n### Nissan Rogue Plug-In Hybrid\nHybrid electric compact SUV combining efficiency with versatility.\n\n### Nissan Pathfinder\nMid-size 3-row SUV seating up to 8 passengers. Available in S, SV, SL, and Platinum trims. Powered by a 3.5L V6 engine with 9-speed automatic transmission. Available in FWD and 4WD. Towing capacity up to 6,000 lbs.\n\n### Nissan Armada\nFull-size SUV with powerful 5.6L V8 engine. Seating up to 8 passengers. Premium trims and features. Maximum towing capacity.\n\n### Nissan Murano\nMid-size 2-row crossover SUV with distinctive styling. Available in multiple trims with a 3.5L V6 engine and Xtronic CVT.\n\n### Nissan Kicks\nSubcompact crossover SUV, value-oriented and fuel-efficient. Affordable entry point into the Nissan SUV lineup.\n\n### Nissan Ariya\nAll-electric crossover SUV available in multiple configurations. Up to 304 miles estimated range. Available in FWD and e-4ORCE AWD. Up to 389 hp in performance variants.\n\n## Cars\n\n### Nissan Altima\nMid-size sedan available with FWD or AWD. Features the 2.5L 4-cylinder engine with Xtronic CVT. Available trims include S, SV, SR, SL, and Platinum. Nissan Safety Shield 360 standard.\n\n### Nissan Sentra\nCompact sedan, stylish and fuel-efficient. Available in S, SV, and SR trims. Standard 2.0L 4-cylinder engine with Xtronic CVT.\n\n### Nissan Maxima\nFull-size sedan with sporty design. Available in multiple trims. Powerful V6 engine.\n\n### Nissan Versa\nSubcompact sedan, Nissan's most affordable model. Fuel-efficient and city-friendly.\n\n## Trucks\n\n### Nissan Frontier\nMid-size pickup truck available in S, SV, and PRO-4X trims. Powered by a 3.8L V6 engine (310 hp) with 9-speed automatic transmission. Available in 2WD and 4WD. Maximum towing capacity of 7,150 lbs.\n\n### Nissan Titan / Titan XD\nFull-size pickup truck with powerful 5.6L V8 engine. Available in multiple configurations including the heavy-duty Titan XD. Designed for maximum capability.\n\n## Electric Vehicles\n\n### Nissan Ariya\nAll-electric crossover SUV with up to 304 miles range. Advanced e-4ORCE AWD system available.\n\n### Nissan LEAF\nAll-electric hatchback, one of the best-selling EVs globally. Affordable electric mobility.\n\n## Promotions & Offers\n\nPromotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - Ron Marhofer Nissan\n\nThe Ron Marhofer Nissan Service Center provides certified maintenance and repair services at 247 Howe Avenue, Cuyahoga Falls, OH.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work\n- **Nissan Express Service** - Convenient maintenance without an appointment\n- **Recall Repairs** - OEM-specified recall and campaign work\n- **Tire Replacement and Alignment** - Full tire services\n- **Scheduled Maintenance** - Following Nissan's recommended maintenance schedule\n\n## Service Team\n\n- **Chase Swain** - Service Manager; former US Marine, with Marhofer since 2019\n- **Darius Roberts** - Service Advisor\n- **Jarred Taylor** - Service Advisor; 5 years automotive industry experience\n- **Maddi Brown** - Internal Service Advisor\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Nissan Express Service** - Quick in-and-out for routine maintenance\n- **Certified Nissan Technicians** - Factory-trained using genuine Nissan parts\n- **Free Home Delivery** - Available for completed service vehicles (up to 150 miles)\n\n## Service Specials\n\nThe dealership offers rotating service specials and coupons. See the service specials page for current promotions.\n\n## Parts Department\n\nGenuine Nissan OEM parts and accessories available including:\n- Nissan Genuine replacement parts\n- Tires and wheels\n- Accessories for Nissan vehicles\n- Order parts online or stop by\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 6:00 PM |\n| Wednesday | 9:00 AM - 6:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 6:00 PM |\n| Saturday | 9:00 AM - 5:00 PM |\n| Sunday | Closed |\n\nSee [staff.md](staff.md) for full service department directory.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - Ron Marhofer Nissan\n\nStaff directory compiled from the dealership website and customer reviews.\n\n## Management\n\n- **Nick Villella** - General Manager; automotive professional since 2015, joined Ron Marhofer Nissan in 2024\n- **Chad Casline** - New Car Team Leader\n- **Mike Richards** - Used Car Team Leader; with the company since 2002, over 20 years of experience\n\n## Finance Department\n\n- **Marcus Fortuna** - Business Manager\n- **Bo Hoover** - Business Manager\n- **Benjamin Ciufo** - Business Manager\n\n## Sales Consultants\n\n- **Peter Howard** - Sales Consultant; praised by customers for making the purchase process smooth and stress-free\n- **Marquet Graves** - Sales Consultant\n- **Jennifer Fincham** - Sales Consultant\n- **Joseph Fetz** - Sales Consultant\n- **Grace Hunt** - Internet Sales Leader / Business Development; with Marhofer since 2018\n- **Evan Richards** - Sales Consultant\n- **David Seymour** - Sales Consultant\n- **Kyle Grimes** - Sales Consultant; with Marhofer Nissan since 2015\n- **Brian Wells** - Sales Consultant; with the team since 1991, over 30 years of experience\n- **Gabor Kunstar** - Sales Consultant; with Marhofer for 10+ years, originally from Budapest, Hungary\n- **Darryl Thompson** - Sales Consultant\n- **Norvell** - Sales Consultant; praised for being outgoing without being pushy\n\n## Service Department\n\n- **Chase Swain** - Service Manager; former US Marine, with Marhofer since 2019\n- **Darius Roberts** - Service Advisor\n- **Jarred Taylor** - Service Advisor; 5 years in the automotive industry, passionate about cars\n- **Maddi Brown** - Internal Service Advisor\n\n## Parts Department\n\n- **Don Knisley** - Parts Team Leader\n- **Joseph Barker** - Parts Advisor\n- **Michael Freimuth** - Parts Advisor\n- **Debbie Dingess** - Parts Driver\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - Ron Marhofer Nissan\n\nRon Marhofer Nissan maintains a substantial pre-owned vehicle inventory in the Cuyahoga Falls area with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Total vehicles:** Extensive inventory across new and pre-owned (hundreds in stock)\n- **Multi-make selection** spanning Nissan, Chevrolet, Ford, Toyota, Honda, Hyundai, Kia, Volkswagen, GMC, Jeep, Ram, BMW, Mercedes-Benz, Land Rover, Mitsubishi, and more\n- **Price range:** Broad range from under $10,000 to premium vehicles\n- **Vehicle types:** Sedans, SUVs, trucks, vans, and coupes\n- **Daily fresh inventory** with regular turnover\n\n## Quality Assurance\n\n- **120+ Point Inspection** - All pre-owned vehicles inspected by certified technicians\n- **Nissan Certified Pre-Owned (CPO)** - Factory-backed inspections, warranties, and roadside assistance\n- **Vehicle Service Contracts** - Available for most vehicles to prevent unexpected expenses\n- **Carfax History Reports** - Available on request\n\n## Certified Pre-Owned Program\n\nNissan Certified Pre-Owned vehicles undergo rigorous inspection and include:\n- Nissan factory-backed warranty\n- 24/7 roadside assistance\n- Multi-point inspection by certified Nissan technicians\n- Competitive pricing with transparent value\n- Integration with financing and service departments\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- Value Your Trade tool\n- Car payment calculator\n- Online credit application and pre-approval\n- Home delivery (free up to 150 miles)\n- Vehicle hold policy\n\n## Trade-In\n\n- Trade-in appraisal available\n- High used vehicle sales volume means the dealership actively needs trade-ins\n- Cash offers for trade-ins (even without vehicle purchase)\n- Competitive trade-in values\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - Ron Marhofer Nissan\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer.com** platform.\n\nThe AI Discovery Page was successfully fetched and is available at `/ai-discovery-page.htm`.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-06-30T17:52:02.516Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n- **Contact:** marhoferc@gmail.com\n\nNote: The AI Manifest was not available at the standard `/.well-known/ai-manifest.json` path on the website (404), but is accessible via PromptGraph at the API endpoint.\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/ron-marhofer-nissan` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/prompts` | Q&A / FAQ prompts (62 prompts) |\n| `/testimonials` | Customer reviews |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n\n### Additional Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/ron-marhofer-nissan/business`:\n\n- **Name:** Ron Marhofer Nissan\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Nissan dealer, Car dealer, Car repair and maintenance service, Truck dealer, Used car dealer, Used truck dealer, Car leasing service, Motor vehicle dealer, Car inspection station, Car finance and loan company\n- **Address:** 247 Howe Avenue, Cuyahoga Falls, OH 44221-4903\n- **Geo:** 41.1198309, -81.4855967\n- **Telephone:** (330) 940-4001\n- **Email:** marhoferc@gmail.com\n- **URL:** `https://www.ronmarhofernissan.com/`\n- **Aggregate Rating:** 4.7 / 5.0 (2,283 reviews)\n- **Date Modified:** 2026-02-03T14:39:14.726Z\n- **Same As:** Facebook, Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wide selection of new Nissan models and used multi-make vehicles with detailed specifications, pricing, and availability.\n\n## Q&A Prompt Library (62 Prompts)\n\nThe `/prompts` endpoint exposes 62 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Vehicle shopping and model-specific inquiries\n- Financing, leasing, and trade-in questions\n- Service, parts, and warranty inquiries\n- Dealership information and customer support\n- Nissan Certified Pre-Owned program\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](testimonials.md) for details.\n\n## LLM-Accessible Actions (ReadAction)\n\nThe AI Discovery Page defines 9 structured `ReadAction` entries that agents can invoke:\n\n1. **Trusted Nissan Dealer with Customer-First Service** - Customer-focused sales process with transparent pricing\n2. **Full-Service Nissan Sales & Certified Maintenance** - Complete Nissan destination with sales, service, and parts\n3. **Serving Our Community with Trusted Nissan Service** - Community-focused dealership with local relationships\n4. **Cuyahoga Falls Nissan Dealer with Customer Service and a Smile** - Go-to dealership serving Akron, Stow, Hudson, Kent\n5. **New Nissan Models & Specials in Cuyahoga Falls OH** - Popular models with current specials and incentives\n6. **Nissan Certified Pre-Owned Excellence Near Akron OH** - Factory-backed CPO program with warranty and roadside assistance\n7. **Expert Nissan Service & Maintenance in Cuyahoga Falls** - Certified technicians, genuine parts, online scheduling\n8. **Flexible Nissan Financing & Leasing Cuyahoga Falls OH** - Stress-free options, competitive rates, online pre-approval\n9. **Used Cars & Trucks at Ron Marhofer Nissan Cuyahoga Falls** - Large used inventory with competitive pricing\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/ron-marhofer-nissan/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` |\n| LLMs.txt | `/llms.txt` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about Ron Marhofer Nissan without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - Ron Marhofer Nissan\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with Ron Marhofer Nissan's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [Ron Marhofer Nissan Home](https://www.ronmarhofernissan.com/) - Browse new and used Nissan vehicles at Ron Marhofer Nissan in Cuyahoga Falls, OH.\n- [Vehicle Inventory](https://www.ronmarhofernissan.com/all-inventory/index.htm) - Browse our inventory of Nissan vehicles for sale.\n- [Nissan Digital Showroom](https://www.ronmarhofernissan.com/showroom/index.htm) - Learn about all current Nissan models.\n- [New Inventory](https://www.ronmarhofernissan.com/new-inventory/index.htm) - Browse our new Nissan inventory.\n- [Used Inventory](https://www.ronmarhofernissan.com/used-inventory/index.htm) - Browse our used car inventory in Cuyahoga Falls.\n- [Financing Center](https://www.ronmarhofernissan.com/financing/index.htm) - Explore financing and lease options.\n- [Finance Application](https://www.ronmarhofernissan.com/financing/application.htm) - Online credit application.\n- [Service Center](https://www.ronmarhofernissan.com/service/index.htm) - Schedule an appointment for auto repair or regular maintenance.\n- [Parts Center](https://www.ronmarhofernissan.com/parts/index.htm) - Genuine Nissan parts and accessories.\n- [Specials](https://www.ronmarhofernissan.com/promotions/new/listing.htm) - Current Nissan offers and incentives.\n- [Nissan Specials & Incentives](https://www.ronmarhofernissan.com/global-incentives/index.htm) - Current Nissan incentives.\n\n### AI & LLM Resources\n\n- [AI Discovery Page](https://www.ronmarhofernissan.com/ai-discovery-page.htm) - Machine-readable knowledge base for AI agents\n\n### Social Media\n\n- [Facebook](https://www.facebook.com/RonMarhoferNissan)\n- [Instagram](https://www.instagram.com/ronmarhofernissan/)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/ron-marhofer-nissan/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/ron-marhofer-nissan/vehicles) - Complete inventory of vehicles with specifications, pricing, and availability in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/ron-marhofer-nissan/prompts) - 62 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/ron-marhofer-nissan/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/ron-marhofer-nissan/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/ron-marhofer-nissan/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/ron-marhofer-nissan/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/ron-marhofer-nissan/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/ron-marhofer-nissan/config.json) - System configuration and metadata\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - Ron Marhofer Nissan\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/ron-marhofer-nissan/prompts` exposes 62 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (10+ prompts)\n- Trusted Nissan dealer with customer-first service\n- Full-service Nissan sales and certified maintenance\n- Serving the community with trusted Nissan service\n- Cuyahoga Falls Nissan dealer with customer service and a smile\n- Dealer reputation, awards, and satisfaction\n\n### Vehicle Shopping (20+ prompts)\n- New Nissan models and specials in Cuyahoga Falls OH\n- Nissan certified pre-owned excellence near Akron OH\n- Used cars and trucks at Ron Marhofer Nissan\n- Upfront pricing structures and extended warranty protection plans\n- Vehicle model inquiries and comparisons\n- Lease options for Nissan models (Altima, Frontier, Rogue, Sentra)\n- Premium vehicle leasing with flexible down payment options\n\n### Financing (10+ prompts)\n- Flexible Nissan financing and leasing\n- Online pre-approval and credit applications\n- Finance deals for Nissan models\n- Lease and finance specials\n\n### Service & Parts (10+ prompts)\n- Expert Nissan service and maintenance\n- Certified Nissan technicians\n- Routine maintenance and major repairs\n- Genuine Nissan parts\n\n### Buying Experience (5+ prompts)\n- Stress-free car buying experience\n- Online and remote shopping tools\n- Home delivery options\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `trusted-nissan-dealer-with-customerfirst-service` | Dealership positioning |\n| 2 | `fullservice-nissan-sales-&-certified-maintenance` | Complete Nissan destination |\n| 3 | `serving-our-community-with-trusted-nissan-service` | Community focus |\n| 4 | `cuyahoga-falls-nissan-dealer-with-customer-service-and-a-smile` | Regional dealership |\n| 5 | `new-nissan-models-&-specials-in-cuyahoga-falls-oh` | New vehicle lineup |\n| 6 | `nissan-certified-pre-owned-excellence-near-akron-oh` | CPO program |\n| 7 | `expert-nissan-service-&-maintenance-in-cuyahoga-falls` | Service department |\n| 8 | `flexible-nissan-financing-&-leasing-cuyahoga-falls-oh` | Financing options |\n| 9 | `used-cars-&-trucks-at-ron-marhofer-nissan-cuyahoga-falls` | Used inventory |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - Ron Marhofer Nissan\n\nRon Marhofer Nissan has collected customer testimonials through the PromptGraph platform. Reviews are predominantly 5-star with strong themes of professional sales service, respect, and transparency.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 4.7 / 5.0 (2,283 reviews)\n- **PromptGraph Reviews:** Predominantly 5-star\n\n## Most-Praised Staff (by frequency)\n\n- **Peter Howard** - Excellent salesperson, smooth process, responsive to texts and calls\n- **Gabor Kunstar** - Knowledgeable, great service, worth driving 2.5 hours\n- **Jarred Taylor** - Professional, fast service, kept customer informed\n- **Norvell** - Outgoing without being pushy, honest, comfortable to work with\n- **Grace Hunt** - Internet Sales Leader making car-buying easy\n\n## Notable Excerpts\n\n> \"I purchased a vehicle at this dealership yesterday, and Peter Howard was an excellent salesperson. He made the process smooth and the car was ready and fully charged up when I arrived.\" - Jeffrey Sobell\n\n> \"Wonderful experience at Marhofer Nissan. From start to finish everyone was great. Gabor was our salesperson and was very knowledgeable. We will be back, and we drove 2.5 hrs!\" - Stephanie Cunningham\n\n> \"Everything went great. Jarred took care of everything. He is very professional. When it was done he told me fast and I was out on the road again asap.\" - Matthew Young\n\n> \"From start to finish I was treated with respect and kindness. They respected my time and were up front with the costs and terms.\" - Frank Rose\n\n> \"Very good experience in buying my new (used) car. Staff was good to work with and very helpful... my salesman, Norvell, was outgoing without being pushy.\" - Doug Peters\n\n## Sales Themes\n\n- **Professional service** - Sales staff praised for knowledge, responsiveness, and smooth processes\n- **Respectful treatment** - Multiple reviewers mention being treated with respect and kindness\n- **Transparent pricing** - Up-front about costs and terms\n- **Willingness to travel** - Customers drive significant distances for the dealership\n\n## Service Themes\n\n- **Fast turnaround** - Service completed quickly with good communication\n- **Professional advisors** - Service advisors keep customers informed throughout the process\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Nissan Model Lineup Comparison - Ron Marhofer Nissan\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP Tier | Key Trims |\n|---|---|---|---|---|---|---|\n| **Versa** | Subcompact Sedan | 5 | FWD | Entry-level | S, SV, SR |\n| **Sentra** | Compact Sedan | 5 | FWD | Value | S, SV, SR |\n| **Altima** | Mid-size Sedan | 5 | FWD / AWD | Mid-range | S, SV, SR, SL, Platinum |\n| **Maxima** | Full-size Sedan | 5 | FWD | Premium | SV, SR, Platinum, 40th Anniversary |\n| **Kicks** | Subcompact Crossover | 5 | FWD | Entry-level | S, SV, SR |\n| **Rogue** | Compact SUV | 5 | FWD / AWD | Mid-range | S, SV, Rock Creek, Platinum, Dark Armor |\n| **Rogue Plug-In Hybrid** | Compact Hybrid SUV | 5 | FWD / AWD | Mid-range | SV, Platinum |\n| **Murano** | Mid-size Crossover | 5 | FWD / AWD | Mid-range | S, SV, SL, Platinum |\n| **Pathfinder** | Mid-size 3-Row SUV | 7-8 | FWD / 4WD | Mid-range | S, SV, SL, Platinum, Rock Creek |\n| **Armada** | Full-size SUV | 7-8 | 4WD | Premium | SV, SL, Platinum, PRO-4X |\n| **Frontier** | Mid-size Pickup | 5 | RWD / 4WD | Mid-range | S, SV, PRO-4X, SL |\n| **Titan** | Full-size Pickup | 5-6 | RWD / 4WD | Premium | S, SV, PRO-4X, SL, Platinum Reserve |\n| **Titan XD** | Heavy-Duty Pickup | 5-6 | RWD / 4WD | Premium | S, SV, PRO-4X, SL, Platinum Reserve |\n| **Ariya** | Compact EV SUV | 5 | FWD / e-4ORCE AWD | Premium | Engage, Venture+, Evolve+, Empower+, Platinum+ |\n| **LEAF** | Compact EV Hatchback | 5 | FWD | Value | S, SV Plus |\n\n## Key Feature Comparison\n\n| Feature | Versa | Sentra | Altima | Rogue | Pathfinder | Armada | Frontier | Titan |\n|---|---|---|---|---|---|---|---|---|\n| Engine | 1.6L 4-cyl | 2.0L 4-cyl | 2.5L 4-cyl | 1.5L VC-Turbo | 3.5L V6 | 5.6L V8 | 3.8L V6 | 5.6L V8 |\n| Horsepower | 122 hp | 149 hp | 188 hp | 201 hp | 284 hp | 400 hp | 310 hp | 400 hp |\n| AWD Available | No | No | Yes | Yes | 4WD | 4WD | 4WD | 4WD |\n| 3rd Row | No | No | No | No | Yes | Yes | No | N/A |\n| Towing (max) | N/A | N/A | 1,000 lbs | 1,500 lbs | 6,000 lbs | 8,500 lbs | 7,150 lbs | 11,040 lbs |\n| Safety Shield 360 | Standard | Standard | Standard | Standard | Standard | Standard | Standard | Standard |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n| Wireless Android Auto | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n\n## Electric & Hybrid Options\n\n| Model | Type | Range (est.) | Notes |\n|---|---|---|---|\n| **LEAF** | Full EV | ~149-212 miles | Most affordable Nissan EV |\n| **Ariya** | Full EV | ~216-304 miles | Available with e-4ORCE AWD |\n| **Rogue Plug-In Hybrid** | Plug-In Hybrid | ~30+ miles EV | Hybrid efficiency with SUV versatility |\n\n## Warranty\n\nAll new Nissan models include:\n- **3-Year / 36,000-Mile Bumper-to-Bumper Limited Warranty**\n- **5-Year / 60,000-Mile Powertrain Limited Warranty**\n- **5-Year / Unlimited-Mile Corrosion Perforation Limited Warranty**\n- **3-Year / 36,000-Mile Roadside Assistance**\n- **2-Year / 24,000-Mile Scheduled Maintenance**\n\n## Nissan Safety Shield 360\n\nStandard across most Nissan models:\n- Automatic Emergency Braking with Pedestrian Detection\n- Blind Spot Warning\n- Rear Cross Traffic Alert\n- Lane Departure Warning\n- High Beam Assist\n- Rear Automatic Braking\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

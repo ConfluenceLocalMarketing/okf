@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ron-marhofer-hyundai-of-cuyahoga-falls - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "ron-marhofer-hyundai-of-cuyahoga-falls";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "Entity",
+        "description": "Hyundai dealership in Cuyahoga Falls, OH serving Akron, Canton, and Cleveland with new and pre-owned vehicles, financing, and factory-authorized service.",
+        "resource": "https://www.hyundaiofakron.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "Entity",
+        "description": "Common customer questions about Hyundai vehicles, financing, service, and dealership operations at Ron Marhofer Hyundai of Cuyahoga Falls.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Hyundai Vehicles - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "Entity",
+        "description": "Full lineup of new Hyundai vehicles available at Ron Marhofer Hyundai of Cuyahoga Falls including SUVs, sedans, EVs, hybrids, and the Santa Cruz pickup.",
+        "resource": "https://www.hyundaiofakron.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "Entity",
+        "description": "Factory-authorized Hyundai service department in Cuyahoga Falls, OH offering maintenance, repairs, genuine Hyundai parts, and certified technicians.",
+        "resource": "https://www.hyundaiofakron.com/hyundai-service.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "Entity",
+        "description": "Team directory for Ron Marhofer Hyundai of Cuyahoga Falls including sales, service, parts, and management departments.",
+        "resource": "https://www.hyundaiofakron.com/dealership/staff.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "Entity",
+        "description": "Pre-owned and certified pre-owned vehicle inventory at Ron Marhofer Hyundai of Cuyahoga Falls including used cars, SUVs, trucks, and Hyundai CPO program.",
+        "resource": "https://www.hyundaiofakron.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "APIs",
+        "description": "AI-optimized discovery page with structured JSON-LD endpoints for LLM consumption including business profile, vehicle inventory, prompts, and site directives.",
+        "resource": "https://www.hyundaiofakron.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "APIs",
+        "description": "AI discovery and consumption directive for Ron Marhofer Hyundai of Cuyahoga Falls providing structured API endpoints, schema types, and business context.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompt Library - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "Playbooks & Runbooks",
+        "description": "Structured Q&A prompts for consistent AI responses covering vehicles, financing, service, and dealership operations at Ron Marhofer Hyundai of Cuyahoga Falls.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews and ratings from Google Business Profile highlighting sales, service, and overall dealership experience.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Hyundai Model Comparison - Ron Marhofer Hyundai of Cuyahoga Falls",
+        "type": "Tables & Datasets",
+        "description": "Comparison of key Hyundai models available at Ron Marhofer Hyundai of Cuyahoga Falls across body type, fuel options, passenger capacity, and starting price.",
+        "resource": "https://www.hyundaiofakron.com/model-research/hyundai.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/used-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Ron Marhofer Hyundai of Cuyahoga Falls\n\nRon Marhofer Hyundai of Cuyahoga Falls is a full-service Hyundai dealership located at 1260 Main Street, Cuyahoga Falls, OH 44221. The dealership serves the Akron, Canton, Cleveland, and wider Northeast Ohio region with new and pre-owned Hyundai vehicles, factory-authorized service, genuine Hyundai parts, and flexible financing options.\n\n## Contact Information\n\n| Department | Phone |\n|---|---|\n| Sales | (234) 245-6086 |\n| Service | (234) 245-6086 |\n| Parts | (234) 245-6086 |\n\n**Email**: marhofergmcron@gmail.com\n\n## Location\n\n1260 Main Street, Cuyahoga Falls, OH 44221-4923\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 6:00 PM |\n| Wednesday | 9:00 AM - 6:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 6:00 PM |\n| Saturday | 9:00 AM - 5:00 PM |\n| Sunday | Closed |\n\n## Ratings\n\n- **Google Rating**: 4.5 / 5 (2,147 reviews)\n\n## Inventory\n\nThe dealership carries a full selection of new Hyundai vehicles including SUVs, sedans, EVs, hybrids, and the Santa Cruz compact pickup. A comprehensive pre-owned inventory spans multiple makes and models. Over 1,500 vehicles in current inventory.\n\n## Services\n\n- Factory-authorized Hyundai service and maintenance\n- Genuine Hyundai parts and accessories\n- Vehicle financing and leasing\n- Trade-in evaluation\n- Free home delivery up to 150 miles\n- 7-day money-back guarantee\n- Free brake inspections\n- Online service scheduling\n\n## Special Programs\n\n- Hyundai Complimentary Maintenance\n- Hyundai Blue Link connected services\n- College Graduate Program\n- Military Program\n- Hyundai EVolve initiative\n- Hyundai Hope on Wheels\n\n## Social Media\n\n- Facebook: https://www.facebook.com/pages/Ron-Marhofer-AutoPlex/239441369720\n\nSee [new-vehicles.md](new-vehicles.md) and [used-vehicles.md](used-vehicles.md) for current inventory. See [service-center.md](service-center.md) for service department details and [staff.md](staff.md) for team directory.",
+    "datasets/faq": "# Frequently Asked Questions\n\n## Vehicles & Inventory\n\n**Q: What Hyundai models are available at Ron Marhofer Hyundai of Cuyahoga Falls?**\nA: The dealership carries the full Hyundai lineup including Palisade, Santa Fe, Tucson, Kona, Venue, Elantra, Sonata, Santa Cruz, IONIQ 5, IONIQ 6, IONIQ 9, and hybrid/electric variants.\n\n**Q: Do you have used vehicles from other manufacturers?**\nA: Yes. The pre-owned inventory spans multiple makes and models beyond Hyundai.\n\n**Q: Can I custom-order a new Hyundai from the factory?**\nA: Yes. The dealership facilitates custom factory ordering directly with Hyundai to secure your preferred options.\n\n**Q: Do you offer electric and hybrid vehicles?**\nA: Yes. Hyundai's full electrified lineup is available including IONIQ 5, IONIQ 6, IONIQ 9, Kona Electric, Tucson Hybrid/PHEV, Santa Fe Hybrid, Elantra Hybrid, and Sonata Hybrid.\n\n## Financing\n\n**Q: Can I apply for financing online?**\nA: Yes. Complete the online [finance application](https://www.hyundaiofakron.com/financing/application.htm) from home.\n\n**Q: What credit situations do you work with?**\nA: The finance team works with multiple lending partners to accommodate various credit profiles.\n\n**Q: Do you offer both buying and leasing options?**\nA: Yes. The finance center provides both purchase financing and lease programs.\n\n**Q: Can I value my trade-in online?**\nA: Yes. Use the [Value Your Trade](https://www.hyundaiofakron.com/value-your-trade.htm) tool for online appraisal.\n\n**Q: Are there special programs for college graduates or military?**\nA: Yes. Hyundai offers a College Graduate Program and a Military Program with special incentives.\n\n## Service\n\n**Q: Do you offer complimentary maintenance?**\nA: Yes. New Hyundai vehicles include Hyundai Complimentary Maintenance for 3 years/36,000 miles covering oil changes and tire rotations.\n\n**Q: Do you offer free brake inspections?**\nA: Yes. Free brake inspections covering pads, rotors, fluid, and road test are available.\n\n**Q: Can I schedule service online?**\nA: Yes. Use the online [service appointment](https://www.hyundaiofakron.com/service-appointment.htm) form.\n\n**Q: Do you offer home delivery for serviced vehicles?**\nA: Free home delivery up to 150 miles is available on qualifying purchases.\n\n## Dealership\n\n**Q: What are your hours?**\nA: Monday and Thursday 9:00am-8:00pm, Tuesday/Wednesday/Friday 9:00am-6:00pm, Saturday 9:00am-5:00pm, Sunday closed.\n\n**Q: Where is the dealership located?**\nA: 1260 Main Street, Cuyahoga Falls, OH 44221.\n\n**Q: Is there a money-back guarantee?**\nA: Yes. The dealership offers a 7-day money-back guarantee on qualifying vehicle purchases.\n\n**Q: What payment types do you accept?**\nA: Contact the dealership for accepted payment methods.\n\n**Q: Do you offer free home delivery?**\nA: Yes. Free home delivery up to 150 miles is available on qualifying purchases.\n\nSee [dealership.md](dealership.md) for full business profile.",
+    "datasets/new-vehicles": "# New Hyundai Vehicles\n\nRon Marhofer Hyundai of Cuyahoga Falls carries a comprehensive selection of new Hyundai vehicles across all model lines.\n\n## SUVs & Crossovers\n\n| Model | Type | Key Features |\n|---|---|---|\n| Palisade | Full-size SUV | 3-row seating, available Palisade Hybrid, HTRAC AWD |\n| Santa Fe | Midsize SUV | Available Santa Fe Hybrid, bold redesign, 3-row option |\n| Tucson | Compact SUV | Available Tucson Hybrid/PHEV, HTRAC AWD, XRT trim |\n| Kona | Subcompact SUV | Available Kona Electric, redesigned styling |\n| Venue | Entry SUV | Affordable entry point, compact city SUV |\n| IONIQ 9 | All-electric SUV | 3-row electric SUV, long-range platform |\n\n## Electric & Hybrid Vehicles\n\n| Model | Type | Key Features |\n|---|---|---|\n| IONIQ 5 | All-electric crossover | Long-range, ultra-fast charging, available IONIQ 5 N |\n| IONIQ 6 | All-electric sedan | Streamlined design, impressive range, eco-friendly |\n| Kona Electric | All-electric SUV | Affordable EV, practical range |\n| Tucson Hybrid | Hybrid SUV | Efficient hybrid powertrain, available PHEV |\n| Tucson PHEV | Plug-in hybrid SUV | Electric-only driving range, tax credit eligible |\n| Santa Fe Hybrid | Hybrid SUV | Efficient 3-row hybrid, modern design |\n| Elantra Hybrid | Hybrid sedan | Exceptional fuel economy, stylish design |\n| Sonata Hybrid | Hybrid sedan | Sleek design, hybrid efficiency |\n\n## Sedans & Hatchbacks\n\n| Model | Type | Key Features |\n|---|---|---|\n| Elantra | Compact sedan | Available Elantra N Line, hybrid option, sporty design |\n| Elantra N Line | Sport compact | 201 hp turbo engine, sport-tuned suspension |\n| Sonata | Midsize sedan | Available Sonata Hybrid, spacious interior, advanced tech |\n\n## Trucks & Adventure\n\n| Model | Type | Key Features |\n|---|---|---|\n| Santa Cruz | Compact pickup | Car-like handling with truck bed, versatile adventure vehicle |\n\n## Special Programs\n\n- **Hyundai Complimentary Maintenance**: Free scheduled maintenance for 3 years/36,000 miles\n- **Hyundai Blue Link**: Connected car services with remote start, vehicle health, and more\n- **Hyundai EVolve**: Full EV ownership support including home charging solutions\n\n## Current Inventory\n\nBrowse online at the [new vehicle inventory page](https://www.hyundaiofakron.com/new-inventory/index.htm) and view current [new specials](https://www.hyundaiofakron.com/promotions/new/index.htm).\n\nSee [dealership.md](dealership.md) for full business profile and [model-comparison.md](/tables/model-comparison.md) for detailed model comparisons.",
+    "datasets/service-center": "# Service Center\n\nThe Ron Marhofer Hyundai of Cuyahoga Falls Service Department provides factory-authorized maintenance and repair services for all Hyundai models.\n\n## Services Offered\n\n- Routine maintenance: oil changes, tire rotations, multi-point inspections\n- Factory-scheduled maintenance per Hyundai recommendations\n- Hyundai Complimentary Maintenance (3 years/36,000 miles)\n- Advanced diagnostics and repair: brake service, engine diagnostics, electrical service, transmission repairs\n- Free brake inspections covering pads, rotors, fluid, and road test\n- Tire replacement and alignment\n- Battery service and testing\n- Genuine Hyundai parts and accessories\n- Hyundai Blue Link connected services support\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 6:00 PM |\n| Wednesday | 9:00 AM - 6:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 6:00 PM |\n| Saturday | 9:00 AM - 5:00 PM |\n| Sunday | Closed |\n\n## Contact\n\n**Service**: (234) 245-6086\n\n## Parts Department\n\nThe [Parts Center](https://www.hyundaiofakron.com/parts/center.htm) stocks genuine OEM Hyundai parts and accessories with options for online ordering and in-store pickup.\n\n## Online Scheduling\n\nSchedule service appointments online at the [service appointment page](https://www.hyundaiofakron.com/service-appointment.htm).\n\n## Service Specials\n\nView current [Service & Parts Specials](https://www.hyundaiofakron.com/service/service-parts-special-coupons.htm) for discounted maintenance packages.\n\n## Complimentary Maintenance\n\nNew Hyundai vehicles include Hyundai Complimentary Maintenance covering scheduled oil changes and tire rotations for 3 years or 36,000 miles.\n\nSee [staff.md](staff.md) for the service team directory and [dealership.md](dealership.md) for general business information.",
+    "datasets/staff": "# Staff Directory\n\nRon Marhofer Hyundai of Cuyahoga Falls employs a dedicated team across sales, service, parts, and management departments to serve the Cuyahoga Falls community.\n\n## Departments\n\n- **Management** - Dealership leadership and operations\n- **Sales** - New and pre-owned vehicle sales consultants including Andrew, Malakei, Nick, and other customer-focused specialists\n- **Service** - Factory-trained technicians and service advisors including Dan and Andrew, providing certified Hyundai care\n- **Parts** - Genuine Hyundai parts specialists and inventory management\n\n## Customer Feedback Highlights\n\nRecent customer reviews highlight Andrew for exceptional service and dedication. Malakei praised for professional and straightforward sales approach. Nick honored for excellent customer service throughout the purchase process. Dan recognized for accommodating service scheduling.\n\nFor specific staff listings, visit the [staff page](https://www.hyundaiofakron.com/dealership/staff.htm) on the dealership website.\n\nSee [dealership.md](dealership.md) for business profile and [service-center.md](service-center.md) for service department details.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles\n\nRon Marhofer Hyundai of Cuyahoga Falls maintains a diverse pre-owned inventory spanning multiple makes, models, and price points.\n\n## Inventory Categories\n\n| Category | Description |\n|---|---|\n| All Used Vehicles | Full pre-owned inventory across all makes and models |\n| Certified Pre-Owned | Hyundai-certified vehicles with factory-backed warranty |\n| Used Under $20k | Budget-friendly pre-owned options |\n| Pre-Owned Specials | Discounted pre-owned vehicles with special pricing |\n\n## Hyundai Certified Pre-Owned Program\n\nThe dealership participates in the Hyundai Certified Pre-Owned program, which provides:\n\n- Comprehensive warranty coverage\n- 173-point inspection and reconditioning\n- 24/7 roadside assistance\n- Trip interruption coverage\n- Rental car reimbursement\n- 10-year/100,000-mile powertrain limited warranty (CPO)\n\n## Trade-In\n\nThe dealership offers trade-in evaluation through:\n- [Value Your Trade](https://www.hyundaiofakron.com/value-your-trade.htm) - online appraisal form\n- In-person appraisal at the dealership\n\n## Specials\n\n- [Pre-Owned Specials](https://www.hyundaiofakron.com/pre-owned-specials.htm)\n- [Used Specials](https://www.hyundaiofakron.com/promotions/used/index.htm)\n\n## Home Delivery\n\nQualifying vehicles qualify for free home delivery up to 150 miles, making it easy to purchase without visiting the dealership.\n\n## 7-Day Guarantee\n\nThe dealership offers a 7-day money-back guarantee on qualifying vehicle purchases.\n\nSee [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) for new Hyundai inventory.",
+    "references/ai-discovery-page": "# AI Discovery Page\n\nRon Marhofer Hyundai of Cuyahoga Falls maintains an [AI Discovery Page](https://www.hyundaiofakron.com/ai-discovery-page.htm) with structured endpoints optimized for LLM and AI crawler consumption via PromptGraph.\n\n## Global Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest | `https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/.well-known/ai-manifest.json` |\n| llms.txt | `https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/llms.txt` |\n| robots.txt | `https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/robots.txt` |\n| Sitemap | `https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/sitemap.xml` |\n| Config | `https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/config.json` |\n\n## API Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Complete business profile with address, contact, hours, ratings (JSON-LD) |\n| `/vehicles` | Full vehicle inventory with specs, pricing, availability (JSON-LD) |\n| `/vehicles/{vin}` | Single vehicle lookup by VIN (JSON-LD) |\n| `/offers` | Current special offers and incentives |\n| `/prompts` | Structured Q&A prompts for consistent AI responses |\n| `/testimonials` | Customer reviews and ratings (JSON-LD) |\n| `/gbp-context` | Google Business Profile data including reviews, posts, images |\n| `/site-content` | Clean, plain-text site mirror for LLM ingestion |\n| `/llms.txt` | AI discovery and consumption directives |\n| `/.well-known/ai-manifest.json` | Machine-readable AI resource directory |\n\n## Schema Types\n\n- AutoDealer (LocalBusiness)\n- Car (vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (prompts/FAQs)\n\nSee [llms-txt.md](llms-txt.md) for the AI consumption directive and [prompts.md](prompts.md) for the prompt library.",
+    "references/llms-txt": "# llms.txt\n\nThe [llms.txt](https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/llms.txt) file provides AI systems with structured discovery and consumption directives for Ron Marhofer Hyundai of Cuyahoga Falls.\n\n## Format\n\n- **Format**: LLMForge v1.0\n- **Schema**: JSON-LD (Schema.org)\n- **Primary Discovery**: `/.well-known/ai-manifest.json`\n- **Last Updated**: 2026-06-30\n- **CORS**: Enabled for all origins\n\n## Discovery Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (address, contact, hours, location) |\n| `/vehicles` | Complete inventory with specs and pricing |\n| `/offers` | Current special offers and incentives |\n| `/prompts` | Structured Q&A prompts |\n| `/testimonials` | Customer reviews and ratings |\n| `/gbp-context` | Google Business Profile context |\n| `/site-content` | Full site text mirror |\n| `/.well-known/ai-manifest.json` | AI resource directory |\n\n## Schema Types\n\n- LocalBusiness / AutoDealer\n- Car (vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (prompts/FAQs)\n\n## Business Context\n\nRon Marhofer Hyundai of Cuyahoga Falls specializes in automotive sales and service, serving the Akron, Canton, and Cleveland areas. Real-time inventory updates via JSON-LD API endpoints. Structured data optimized for AI discovery and consumption.\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](prompts.md) for the prompt library.",
+    "references/prompts": "# Prompt Library\n\nThe PromptGraph API provides structured prompts for Ron Marhofer Hyundai of Cuyahoga Falls, covering vehicle features, financing, service, and general dealership questions.\n\n## Prompt Categories\n\n- Trusted Hyundai dealer overview\n- Cuyahoga Falls Hyundai dealer experience\n- Hyundai EVs and hybrids (IONIQ and Tucson focus)\n- Hyundai financing and value deals\n- Expert Hyundai service with free inspections\n- Quality used and pre-owned vehicles\n- New Hyundai Palisade and Santa Fe focus\n- Stress-free experience with free delivery\n- Hyundai financing and specials\n\n## Example Prompts\n\n| Topic | Description |\n|---|---|\n| Trusted Hyundai Dealer | Describe the dealership as a reputable Hyundai dealer serving Cuyahoga Falls, Akron, and surrounding Ohio communities |\n| Cuyahoga Falls Hyundai Dealer | Highlight new inventory (IONIQ 5/9 EVs, Tucson Hybrid/PHEV, Santa Fe Hybrid, Palisade, Kona Electric, Elantra, Sonata, Santa Cruz) with free home delivery up to 150 miles |\n| Hyundai EVs & Hybrids | Position the dealership as the top Cuyahoga Falls/Akron dealer for electric and hybrid vehicles |\n| Financing & Value Deals | Describe competitive financing, lease specials, trade-in support, and online tools |\n| Expert Service | Highlight service department with free brake inspections, genuine parts, and online scheduling |\n| Quality Used Vehicles | Emphasize used/pre-owned inventory with careful inspections and value pricing |\n| Palisade & Santa Fe Focus | Focus on family/SUV strengths with spacious Palisade, Santa Fe, and Tucson lineup |\n| Stress-Free Experience | Stress free home delivery, no-hassle process, and family-like philosophy |\n| Financing & Specials | Spotlight finance center with online pre-approval, trade-in valuation, and special incentives |\n\n## API Access\n\nEndpoint: `https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/prompts`\nFormat: JSON-LD (ItemList of CreativeWork)\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for API access details and [faq.md](/datasets/faq.md) for common customer questions.",
+    "references/testimonials": "# Customer Testimonials\n\nRon Marhofer Hyundai of Cuyahoga Falls maintains a 4.5 / 5 star average rating across 2,147 Google reviews. Below are representative testimonials from recent customers.\n\n## Featured Reviews\n\n### She Is Shanice\n**Rating**: 5/5 - January 2026\n\n\"This is my 4th car from Ron Marhofer in Cuyahoga Falls and now I understand why I keep coming back, it's the service. I had the opportunity to work with Andrew and his service was excellent! Not only is he down to earth and approachable... he takes his time and goes above and beyond. This is what separates his quality of service. All clients are different with different financial backgrounds and sometimes you can be treated differently if you're a difficult client to approve based on financial circumstances. This was not the case for my husband and I. I never felt judged or rushed into a decision and I could tell that he understood my needs. He LISTENS! He even came in on his off day so we could finish the deal. Thanks Andrew!\"\n\n### Rodney Murphy\n**Rating**: 5/5 - January 2026\n\n\"I was in visiting my family from out of state when my Hyundai Tucson hybrid would not go into gear due to a computer malfunction. I had it towed to Ron Marhofers On a Saturday and Dan, My service rep, said he would do his best to get it in on Monday even though they were fully booked. Well, they did a great job getting me in and fixing the computer glitch. The staff was courteous and friendly and empathetic to my situation. I told Dan I was going to the Steelers/Browns game and if he got me in on Monday, I would cheer for the Browns for one quarter. Unfortunately, it worked against me because my Steelers lost, but Dan was happy. Thanks Dan and the entire team for not making me a grinch in my holiday weekend!\"\n\n### Chris Eichorn\n**Rating**: 5/5 - December 2025\n\n\"I recently purchased a used 2023 Jeep Wrangler 4xe from Ron Marhofer Hyundai and had an outstanding experience from start to finish. The entire process was smooth and hassle-free, no pressure, no games, just honest communication and a deal that felt fair for both sides. A special shout-out to Malakei, who was professional, straightforward, and clearly takes pride in what he does. He made the buying experience enjoyable and efficient, answering every question with confidence and sincerity. I left feeling great about both the vehicle and the dealership. Highly recommend Ron Marhofer Hyundai if you're looking for a team that genuinely works with you to make a deal that makes sense.\"\n\n### caisja chandler\n**Rating**: 5/5 - November 2025\n\n\"I had a great experience today at the Ron Marhofer Hyundai of Cuyahoga Falls dealership. Huge shout out to Andrew. He took care of me and worked his magic just like he promised. He was extremely helpful in helping me get my dream car. Also, he's super cool too. If you're in town, go see Andrew he'll make it happen for you. Thanks again Andrew!\"\n\n### Matthew Vicario\n**Rating**: 5/5 - November 2025\n\n\"Under 2 hrs in and out this dealer is great, good customer service and excellent pricing. Will definitely purchase another vehicle from them. It was worth the drive. Best pricing on my vehicle within 3 hr drive. Ask for Nick, he took great care of us throughout the entire process. Keep up the good work!\"\n\n## Summary\n\n| Metric | Value |\n|---|---|\n| Overall Rating | 4.5 / 5 |\n| Total Reviews | 2,147 |\n| Recent Trend | Positive - all recent reviews are 5/5 |\n\nSee [dealership.md](/datasets/dealership.md) for full business profile and [staff.md](/datasets/staff.md) for team directory.",
+    "tables/model-comparison": "# Hyundai Model Comparison\n\n## Model Lineup\n\n| Model | Body Type | Fuel Options | Passenger Capacity | Key Competitors |\n|---|---|---|---|---|\n| Palisade | SUV | Gasoline, Hybrid | 7-8 | Honda Pilot, Toyota Grand Highlander |\n| Santa Fe | SUV | Gasoline, Hybrid | 5-7 | Honda Passport, Toyota 4Runner |\n| Tucson | SUV | Gasoline, Hybrid, PHEV | 5 | Honda CR-V, Toyota RAV4 |\n| Kona | SUV | Gasoline, Electric | 5 | Chevrolet Trailblazer, Honda HR-V |\n| Venue | SUV | Gasoline | 5 | Chevrolet Trax, Kia Soul |\n| IONIQ 5 | Crossover | All-Electric | 5 | Tesla Model Y, Ford Mustang Mach-E |\n| IONIQ 6 | Sedan | All-Electric | 5 | Tesla Model 3, BMW i4 |\n| IONIQ 9 | SUV | All-Electric | 7 | Tesla Model X, Rivian R1S |\n| Elantra | Sedan | Gasoline, Hybrid | 5 | Honda Civic, Toyota Corolla |\n| Sonata | Sedan | Gasoline, Hybrid | 5 | Honda Accord, Toyota Camry |\n| Santa Cruz | Pickup | Gasoline | 5 | Ford Maverick |\n\n## Electrified Options\n\n| Model | Electrification | Features |\n|---|---|---|\n| IONIQ 5 | All-Electric | Ultra-fast 800V charging, available N performance variant |\n| IONIQ 5 N | All-Electric (Performance) | 601 hp, N e-shift, drift mode |\n| IONIQ 6 | All-Electric | Streamlined aerodynamic design, long-range capable |\n| IONIQ 9 | All-Electric | 3-row electric SUV, E-GMP platform |\n| Kona Electric | All-Electric | Affordable entry EV, practical daily range |\n| Tucson Hybrid | Hybrid | Efficient hybrid, available HTRAC AWD |\n| Tucson PHEV | Plug-In Hybrid | Electric-only driving, tax credit eligible |\n| Santa Fe Hybrid | Hybrid | Efficient 3-row hybrid SUV |\n| Elantra Hybrid | Hybrid | Exceptional fuel economy, stylish compact sedan |\n| Sonata Hybrid | Hybrid | Sleek design with hybrid efficiency |\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed new vehicle inventory."
+  },
+  "types": [
+    "APIs",
+    "Entity",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entity": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

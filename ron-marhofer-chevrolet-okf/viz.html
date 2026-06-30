@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ron-marhofer-chevrolet - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "ron-marhofer-chevrolet";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Ron Marhofer Chevrolet",
+        "type": "Entities",
+        "description": "Chevrolet dealership in Stow, OH serving Akron, Kent, and Northeast Ohio with new and pre-owned vehicle sales, certified service, and financing.",
+        "resource": "https://www.ronmarhoferchevy.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions",
+        "type": "Entities",
+        "description": "Common questions about Ron Marhofer Chevrolet's sales, financing, service, and inventory policies.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Chevrolet Vehicles",
+        "type": "Entities",
+        "description": "Inventory of new Chevrolet vehicles available at Ron Marhofer Chevrolet including Silverado trucks, Trax, Trailblazer, and more.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/vehicles",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Chevrolet Service Center",
+        "type": "Entities",
+        "description": "Factory-certified Chevrolet service department at Ron Marhofer Chevrolet offering maintenance, repairs, genuine parts, and online scheduling.",
+        "resource": "https://www.ronmarhoferchevy.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Sales and Service Staff",
+        "type": "Entities",
+        "description": "Key team members at Ron Marhofer Chevrolet providing sales, financing, and service support.",
+        "resource": "https://www.ronmarhoferchevy.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Used and Pre-Owned Vehicles",
+        "type": "Entities",
+        "description": "Selection of quality used cars, trucks, and SUVs at Ron Marhofer Chevrolet with affordable pricing and CARFAX-certified options.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/vehicles",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page",
+        "type": "APIs",
+        "description": "Machine-readable AI manifest and API endpoint directory for Ron Marhofer Chevrolet's structured data resources.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/.well-known/ai-manifest.json",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt",
+        "type": "APIs",
+        "description": "LLM directives file for Ron Marhofer Chevrolet providing structured data endpoints, schema types, and AI-consumable content.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "AI Prompt Library",
+        "type": "Playbooks & Runbooks",
+        "description": "Structured prompts for consistent AI-generated responses about Ron Marhofer Chevrolet covering sales, service, financing, and customer segments.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials",
+        "type": "Playbooks & Runbooks",
+        "description": "Recent customer reviews and ratings for Ron Marhofer Chevrolet reflecting the dealership's service quality and customer satisfaction.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "New Chevrolet Model Comparison",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Chevrolet models available at Ron Marhofer Chevrolet including pricing, body type, and key specs.",
+        "resource": "https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/vehicles",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Ron Marhofer Chevrolet\n\n## Contact Information\n\n| Field | Details |\n|---|---|\n| Legal Name | Marhofer Chevrolet, INC. |\n| Address | 3423 Darrow Rd, Stow, OH 44224 |\n| Phone | (330) 752-1612 |\n| Email | cmarhofer@gmail.com |\n| Website | https://www.ronmarhoferchevy.com/ |\n| Rating | 4.5/5 (1,686 reviews) |\n\n## Hours of Operation\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 6:00 PM |\n| Wednesday | 9:00 AM - 6:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 6:00 PM |\n| Saturday | 9:00 AM - 5:00 PM |\n\n## Location\n\n- **Coordinates:** 41.1583, -81.4415\n- **Service Area:** Stow, Akron, Cuyahoga Falls, Hudson, Kent, Tallmadge, Portage County, Summit County, Northeast Ohio\n\n## Social Media\n\n- [Facebook](https://www.facebook.com/RonMarhoferChevrolet)\n- [Instagram](https://www.instagram.com/ronmarhoferchevrolet/)\n\n## Description\n\nRon Marhofer Chevrolet proudly services Stow, OH, and the surrounding communities including Akron and Kent. The Chevrolet lineup includes iconic new Chevrolet models such as the Camaro and Corvette, Colorado and Silverado, and the Equinox and Traverse. The dealership offers new and pre-owned Chevy trucks, SUVs, and cars, along with certified Chevrolet service for vehicle maintenance and repair needs.",
+    "datasets/faq": "# Frequently Asked Questions\n\n## Sales and Pricing\n\n- Upfront pricing structures and comprehensive extended warranty protection plans are available.\n- Special retail promotions and leasing options exist for new Chevrolet models.\n- Zero-obligation online auto finance pre-approvals are offered that do not lower credit scores.\n\n## Financing\n\n- Competitive financing, lease specials, trade-in support, and online tools help customers explore payment options.\n- Flexible auto loan financing with instant online pre-approval available for various credit profiles.\n- Secure online pre-approval for purchase and lease options.\n\n## New Vehicles\n\n- Massive inventory of rugged full-size pickup trucks like the Chevy Silverado 1500.\n- New premium three-row vehicles like the Chevy Tahoe available with flexible down payment options.\n- All-electric Chevy Blazer EV available for purchase or lease.\n- New Chevy Equinox crossover with special retail promotions.\n\n## Used Vehicles\n\n- Curated selection of pre-owned midsize trucks like a used Chevy Colorado.\n- Budget-friendly inventory of reliable used commuter sedans.\n- Verified inventory of high-quality used trucks with clean CARFAX reports.\n- Affordable used cars and reliable pre-owned SUVs under $15,000.\n- Certified Pre-Owned Chevrolet trucks available.\n\n## Service\n\n- Factory-certified Chevrolet service, oil changes, and genuine factory parts available.\n- Authorized service center with factory-trained technicians.\n- Expert wheel alignment and complimentary amenities with service.\n- Certified multi-point vehicle safety inspections and fast tire service.\n\n## Trade-Ins\n\n- Fast trade-in appraisal available online.\n- Sell a car outright or trade it in for a competitive valuation.\n- No-stress process for selling a vehicle privately.\n\n## Test Drives\n\n- Secure online upload of driver's license to book an express vehicle test drive.",
+    "datasets/new-vehicles": "# New Chevrolet Vehicles\n\n## Available Models\n\n| Model | Count | Body Type | Starting Price |\n|---|---|---|---|\n| Silverado 1500 | 19 | Truck | $44,000 |\n| Trax | 9 | SUV | $22,950 |\n| Trailblazer | 9 | SUV | $24,000 |\n| Tahoe | 3 | SUV | $55,000 |\n| Silverado 2500 HD | 3 | Truck | $65,000 |\n| Colorado | 2 | Truck | $38,000 |\n| Traverse | 2 | SUV | $45,000 |\n| Equinox | 1 | SUV | $30,000 |\n| Blazer | 1 | SUV | $40,000 |\n\n## Pricing Summary\n\n- **Price Range:** $22,950 - $88,585\n- **Average Price:** $44,889\n- **Total New Inventory:** 50+ vehicles\n\n## Body Type Breakdown\n\n- SUV: 25 vehicles (Trax, Trailblazer, Tahoe, Traverse, Equinox, Blazer)\n- Truck: 25 vehicles (Silverado 1500, Silverado 2500 HD, Colorado)\n\n## Key Features\n\n- Chevrolet Safety Assist suite on most models\n- Available 4WD/AWD drivetrains\n- Chevrolet Infotainment 3 system with wireless Apple CarPlay and Android Auto\n- OnStar connected services\n- Factory warranty included\n\nSee [dealership.md](dealership.md) for business hours and contact.\nSee [model-comparison.md](../tables/model-comparison.md) for detailed model comparison.",
+    "datasets/service-center": "# Chevrolet Service Center\n\n## Services Offered\n\n- Oil changes and fluid checks\n- Tire rotation, alignment, and replacement\n- Brake inspection and repair\n- Transmission service and repair\n- Engine diagnostics and repair\n- Multi-point vehicle safety inspections\n- Air conditioning service\n- Battery testing and replacement\n- Wheel alignment\n- Genuine Chevrolet parts sales\n\n## Service Features\n\n- Factory-trained Chevrolet technicians\n- Online appointment scheduling\n- Genuine OEM Chevrolet parts with online ordering and pickup\n- Quick turnaround emphasis\n- Complimentary amenities during service visits\n- Service available for all Chevrolet models\n\n## Parts Department\n\n- Genuine Chevrolet parts and accessories\n- Online ordering with in-store pickup\n- Competitive pricing on maintenance items\n\n## Commitment\n\nThe service center is dedicated to keeping vehicles running smoothly with outstanding care for Stow, Akron, Cuyahoga Falls, and Northeast Ohio Chevrolet owners.\n\nSee [dealership.md](dealership.md) for business hours and location.",
+    "datasets/staff": "# Sales and Service Staff\n\n## Sales Team\n\n| Name | Role | Notes |\n|---|---|---|\n| Andre | Sales Consultant | Friendly and helpful service, repeatedly praised by customers |\n| Dawn | Sales Consultant | Pleasure to work with, accommodating and no-pressure sales |\n| Bryan | Sales Consultant | Excellent customer interaction skills |\n| Ron Masters | Sales Consultant | Long-time team member with great attitude and consistent service |\n\n## Service Department\n\n- Factory-trained Chevrolet technicians\n- Certified multi-point safety inspections\n- Fast tire service and wheel alignment\n- Complimentary amenities with service visits\n\n## Finance Department\n\n- Competitive purchase and lease options\n- Secure online pre-approval\n- Tailored solutions for various credit profiles\n- Trade-in valuation and appraisal support\n\nSee [service-center.md](service-center.md) for service department details.",
+    "datasets/used-vehicles": "# Used and Pre-Owned Vehicles\n\n## Inventory Overview\n\n- **Total Inventory:** 551 vehicles\n- **Price Range:** $7,099 - $39,950\n- **Average Price:** ~$27,963\n- **Many options under $15,000**\n\n## Makes Available\n\n| Make | Count (sample) | Typical Models |\n|---|---|---|\n| Jeep | 25 | Grand Cherokee, Wrangler |\n| GMC | 17 | Sierra 1500, Terrain |\n| Ford | 14 | Escape, Bronco Sport, Ranger |\n| Ram | 12 | 1500, 1500 Classic |\n| Mitsubishi | 6 | Eclipse Cross |\n| Dodge | 6 | Challenger, Charger |\n| Buick | 4 | Envision, Encore |\n| Cadillac | 3 | LYRIQ, XT series |\n| Hyundai, Subaru, Kia, Nissan, and others | 2 each | Various models |\n\n## Body Type Distribution\n\n- SUV: 58%\n- Truck (Crew Cab, Quad Cab, Double Cab): 29%\n- Sedan: 7%\n- Other (Coupe, Hatchback, CUV): 6%\n\n## Model Years\n\n2024 and 2025 models account for the largest share of inventory, with a range from 2017 to 2026.\n\n## Benefits\n\n- Thorough multi-point safety inspections\n- Clean CARFAX reports available\n- Certified Pre-Owned Chevrolet options\n- Flexible financing with online pre-approval\n- Trade-in evaluations accepted\n\nSee [dealership.md](dealership.md) for hours and contact.",
+    "references/ai-discovery-page": "# AI Discovery Page\n\n## AI Manifest\n\nThe AI Manifest is available at:\n`https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/.well-known/ai-manifest.json`\n\n```json\n{\n  \"version\": \"1.0\",\n  \"name\": \"Ron Marhofer Chevrolet\",\n  \"schema_types\": [\"LocalBusiness\", \"AutoDealer\", \"Car\", \"ItemList\"],\n  \"last_updated\": \"2026-06-30T17:55:28.331Z\",\n  \"contact\": {\n    \"url\": \"https://www.ronmarhoferchevy.com/?utm_source=gbp&utm_medium=organic&utm_campaign=confluence\",\n    \"email\": \"cmarhofer@gmail.com\"\n  }\n}\n```\n\n## API Endpoints\n\n| Endpoint | URL | Description |\n|---|---|---|\n| Business | `/api/v1/ron-marhofer-chevrolet/business` | Complete business profile in JSON-LD |\n| Vehicles | `/api/v1/ron-marhofer-chevrolet/vehicles` | Full vehicle inventory with specs and pricing |\n| Prompts | `/api/v1/ron-marhofer-chevrolet/prompts` | Structured Q&A prompts for AI responses |\n| Testimonials | `/api/v1/ron-marhofer-chevrolet/testimonials` | Customer reviews and ratings |\n| LLM TXT | `/api/v1/ron-marhofer-chevrolet/llms.txt` | LLM-friendly site directive |\n| AI Manifest | `/api/v1/ron-marhofer-chevrolet/.well-known/ai-manifest.json` | Machine-readable resource directory |\n| Site Content | `/api/v1/ron-marhofer-chevrolet/site-content` | Clean plain-text site mirror |\n| Sitemap | `/api/v1/ron-marhofer-chevrolet/sitemap.xml` | XML sitemap for crawlers |\n| Config | `/api/v1/ron-marhofer-chevrolet/config.json` | System configuration |\n| GBP Context | `/api/v1/ron-marhofer-chevrolet/gbp-context` | Google Business Profile context for LLM ingestion |\n\n## Schema Types\n\n- LocalBusiness / AutoDealer\n- Car (for vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts and FAQs)\n\n## Base URL\n\n`http://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet`\n\nSee [llms-txt.md](llms-txt.md) for LLM directives.",
+    "references/llms-txt": "# llms.txt\n\n## Overview\n\nThe llms.txt file is available at:\n`https://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/llms.txt`\n\nIt provides a structured, AI-optimized directory of all available data endpoints for the Ron Marhofer Chevrolet dealership, following the LLMForge v1.0 format.\n\n## Key Sections\n\n### Discovery\n- Primary endpoint: `http://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet/.well-known/ai-manifest.json`\n- Format: JSON-LD following Schema.org standards\n- Update frequency: Real-time\n- CORS: Enabled for all origins\n- API Base: `http://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet`\n\n### API Endpoints\n\n| Resource | URL | Description |\n|---|---|---|\n| Business Information | `/business` | Complete business profile with address, contact, hours |\n| Vehicle Inventory | `/vehicles` | Complete inventory with specs, pricing, availability |\n| Prompts and FAQs | `/prompts` | 61 structured prompts for consistent AI responses |\n| Customer Testimonials | `/testimonials` | Customer reviews and ratings |\n| GBP Context | `/gbp-context` | Google Business Profile data for LLM ingestion |\n| Site Content | `/site-content` | Clean plain-text site mirror |\n| AI Manifest | `/.well-known/ai-manifest.json` | Machine-readable resource directory |\n\n### Schema Types\n\n- LocalBusiness / AutoDealer\n- Car\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork\n\n## Content\n\nRon Marhofer Chevrolet proudly services Stow, OH, and the surrounding communities including Akron and Kent. The Chevrolet lineup includes iconic new Chevrolet models such as the Camaro and Corvette, Colorado and Silverado, and the Equinox and Traverse. The dealership offers certified Chevrolet service for all vehicle maintenance and repair needs.\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the AI manifest details.",
+    "references/prompts": "# AI Prompt Library\n\n## Overview\n\nThe PromptGraph API provides 61 structured prompts (CreativeWork type) for generating consistent AI responses about Ron Marhofer Chevrolet. These cover sales, service, financing, trade-ins, and specific customer segments.\n\n## Prompt Categories\n\n### Sales and Shopping\n\n| Prompt | Description |\n|---|---|\n| Upfront Pricing and Warranty | Which dealership on Darrow Road provides upfront pricing structures and comprehensive extended warranty protection plans? |\n| Test Drive Booking | Where can I securely upload my driver's license online to book an express vehicle test drive in Stow? |\n| Trade-In Appraisal | Where can I get a fast trade-in appraisal online and skip the stress of selling a vehicle privately? |\n| Sell My Car | Where can I sell my car outright or trade it in for a competitive valuation in Northeast Ohio? |\n| Vehicle Research | Which dealership offers a massive inventory of rugged full-size pickup trucks like the Chevy Silverado 1500 in Ohio? |\n\n### New Vehicle Prompts\n\n| Prompt | Description |\n|---|---|\n| Silverado and Equinox Focus | Emphasizes strong truck/SUV focus: new Silverado series, Equinox SUV, Blazer EV, Suburban |\n| Trucks and SUVs | Position as leading Stow-area Chevrolet dealer for new vehicles, emphasizing trucks and SUVs |\n| Tahoe Leasing | Where can I lease a new premium three-row vehicle like the Chevy Tahoe with flexible down payment options? |\n| Blazer EV | Who is the most trusted local dealer to buy or lease an all-electric Chevy Blazer EV near Kent, OH? |\n| Equinox Specials | Which local car dealer has special retail promotions and leasing options for a new Chevy Equinox crossover? |\n\n### Used Vehicle Prompts\n\n| Prompt | Description |\n|---|---|\n| Quality Used Cars | Focus on used inventory: large selection of quality used cars, trucks, SUVs including Chevrolet and other brands |\n| Budget-Friendly Used | Where can I buy affordable used cars and reliable pre-owned SUVs under $15,000 near Cuyahoga Falls? |\n| Used Midsize Trucks | Where can I shop a curated selection of pre-owned midsize trucks like a used Chevy Colorado in Stow? |\n| Used Trucks with CARFAX | Where can I find a verified inventory of high-quality used trucks with clean CARFAX reports near Hudson, OH? |\n| CPO Trucks | Where can I find a trusted Chevrolet dealership near Stow and Akron offering Certified Pre-Owned trucks? |\n\n### Service Prompts\n\n| Prompt | Description |\n|---|---|\n| Certified Service | Who provides factory-certified Chevrolet service, oil changes, and genuine factory parts on Darrow Rd? |\n| Expert Service | Highlights certified technicians handling everything from oil changes to transmission repairs |\n| Inspections and Tire Service | Which dealership on Darrow Road offers certified multi-point vehicle safety inspections and fast tire service? |\n| Wheel Alignment | Which auto repair center near me specializes in expert wheel alignment and complimentary amenities with service? |\n\n### Financing Prompts\n\n| Prompt | Description |\n|---|---|\n| Financing and Value Deals | Competitive financing, lease specials, trade-in support, and online tools |\n| Zero-Obligation Pre-Approval | Who offers zero-obligation online auto finance pre-approvals that won't lower my credit score in Akron? |\n| Flexible Financing | Flexible auto loan financing with instant online pre-approval for drivers with poor credit in Summit County |\n| Leasing Options | Flexible Chevrolet financing and leasing in Stow OH |\n\n### Customer Segment Prompts\n\n| Segment | Focus |\n|---|---|\n| Small Business Owners | Chevrolet SUVs suited for professional use |\n| EV and Hybrid Buyers | Understanding Chevy EVs and hybrids in the local context |\n| Sports and Performance Enthusiasts | Chevrolet's performance heritage |\n| Retirees and Seniors | Chevrolets with comfort, visibility, and easy handling |\n| Tech-Focused Customers | Latest Chevrolet tech in infotainment, safety, and driver assists |\n| Pet-Owning Customers | SUVs with space for crates and easy-clean interiors |\n| Families with Children | SUVs with strong child-safety features and easy child-seat setups |\n| First-Time Chevrolet Buyers | Guidance for those new to the brand or new-car buying |\n\n## Usage\n\nThese prompts are designed to produce consistent, accurate, and brand-aligned AI responses about Ron Marhofer Chevrolet. They can be used in chatbots, voice assistants, and AI-powered customer service applications.",
+    "references/testimonials": "# Customer Testimonials\n\n## Overall Rating\n\n- **Rating:** 4.5 out of 5 stars\n- **Total Reviews:** 1,686\n\n## Recent Reviews\n\n| Customer | Rating | Date | Comment |\n|---|---|---|---|\n| Sharon Howle | 5 | 2026-01-19 | Top notch team making sure your needs are met with high standards. Totally friendly experience. |\n| Regina Wright | 5 | 2026-01-17 | Andre was very friendly and helpful! Definitely would recommend to family and friends for future car purchases! |\n| Marlene | 5 | 2026-01-16 | Very impressed with this dealership. Dawn was a pleasure to work with! The whole team was very accommodating in answering questions and letting test drive a few cars. No pressure sales and offered more for trade. Would buy from them again. |\n| Nichole Pridemore | 5 | 2026-01-15 | Bryan was the best I enjoyed having him work with me. |\n| Lee Lehman | 5 | 2026-01-14 | Ron Masters was spot on as usual always there to get me with a great attitude. |\n\n## Themes\n\n- Friendly and accommodating staff\n- No-pressure sales approach\n- Competitive trade-in valuations\n- Positive interactions with sales team (Andre, Dawn, Bryan, Ron Masters)\n\nSee [staff.md](../datasets/staff.md) for staff profiles.",
+    "tables/model-comparison": "# New Chevrolet Model Comparison\n\n## Model Overview\n\n| Model | Body Type | Starting Price | Seating | Drivetrain | Primary Use |\n|---|---|---|---|---|---|\n| Silverado 1500 | Truck | $44,000 | 5-6 | RWD/4WD | Work and towing |\n| Silverado 2500 HD | Truck | $65,000 | 5-6 | RWD/4WD | Heavy-duty towing |\n| Colorado | Truck | $38,000 | 5 | RWD/4WD | Midsize truck |\n| Trax | SUV | $22,950 | 5 | FWD | Compact crossover |\n| Trailblazer | SUV | $24,000 | 5 | FWD/AWD | Subcompact SUV |\n| Equinox | SUV | $30,000 | 5 | FWD/AWD | Compact SUV |\n| Blazer | SUV | $40,000 | 5 | FWD/AWD | Midsize SUV |\n| Blazer EV | SUV | $50,000 | 5 | AWD | Electric SUV |\n| Traverse | SUV | $45,000 | 7-8 | FWD/AWD | Three-row SUV |\n| Tahoe | SUV | $55,000 | 7-9 | RWD/4WD | Full-size SUV |\n\n## Available Inventory at Ron Marhofer Chevrolet\n\n| Model | Count in Stock | Price Range |\n|---|---|---|\n| Silverado 1500 | 19 | $44,000 - $58,000 |\n| Trax | 9 | $22,950 - $28,000 |\n| Trailblazer | 9 | $24,000 - $32,000 |\n| Tahoe | 3 | $55,000 - $78,000 |\n| Silverado 2500 HD | 3 | $65,000 - $88,585 |\n| Colorado | 2 | $38,000 - $48,000 |\n| Traverse | 2 | $45,000 - $55,000 |\n| Equinox | 1 | $30,000 |\n| Blazer | 1 | $40,000 |\n\n## Key Specifications\n\n### Engine Options\n\n| Model | Engine Options |\n|---|---|\n| Silverado 1500 | 2.7L Turbo, 5.3L V8, 6.2L V8 |\n| Silverado 2500 HD | 6.6L V8 Gas, 6.6L Duramax Turbo-Diesel |\n| Colorado | 2.7L Turbo |\n| Equinox | 1.5L Turbo |\n| Trax | 1.2L Turbo |\n| Trailblazer | 1.2L Turbo, 1.3L Turbo |\n| Blazer | 2.0L Turbo, 3.6L V6 |\n| Traverse | 2.5L Turbo |\n| Tahoe | 5.3L V8, 6.2L V8 |\n\n### Fuel Economy (Estimated)\n\n| Model | City (mpg) | Highway (mpg) |\n|---|---|---|\n| Trax | 28 | 32 |\n| Trailblazer | 26 | 31 |\n| Equinox | 26 | 31 |\n| Blazer | 22 | 29 |\n| Traverse | 20 | 27 |\n| Colorado | 19 | 25 |\n| Silverado 1500 | 16 | 23 |\n| Tahoe | 15 | 21 |\n\n## Warranty\n\n| Coverage | Term |\n|---|---|\n| Bumper-to-Bumper | 3 years / 36,000 miles |\n| Powertrain | 5 years / 60,000 miles |\n| Rust-Through | 6 years / 100,000 miles |\n| Roadside Assistance | 5 years / 60,000 miles |\n\nSee [new-vehicles.md](../datasets/new-vehicles.md) for full new inventory details.\nSee [dealership.md](../datasets/dealership.md) for business hours and contact."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
