@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>haselwood-auto-group - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "haselwood-auto-group";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Haselwood Auto Group",
+        "type": "Entities",
+        "description": "Multi-franchise auto group in Bremerton, WA operating 11+ member dealerships at the West Hills Autoplex representing Chevrolet, Buick, GMC, Hyundai, Volkswagen, Toyota, Ford, Honda, Kia, Mazda, Chrysler, Jeep, Dodge, and Ram with sales, service, financing, and parts.",
+        "resource": "https://www.haselwoodautogroup.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Haselwood Auto Group",
+        "type": "Entities",
+        "description": "Common questions about Haselwood Auto Group's inventory, financing, service, and dealership operations in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-auto-group/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Vehicles - Haselwood Auto Group",
+        "type": "Entities",
+        "description": "New vehicle lineup across Haselwood Auto Group member franchises in Bremerton, WA representing Chevrolet, Buick, GMC, Hyundai, Volkswagen, Toyota, Ford, Honda, Kia, Mazda, Chrysler, Jeep, Dodge, and Ram brands.",
+        "resource": "https://www.haselwoodautogroup.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Centers - Haselwood Auto Group",
+        "type": "Entities",
+        "description": "Multi-brand certified service centers across Haselwood Auto Group member dealerships in Bremerton, WA offering routine maintenance, diagnostics, major repairs, and genuine OEM parts.",
+        "resource": "https://www.haselwoodautogroup.com/service/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Haselwood Auto Group",
+        "type": "Entities",
+        "description": "Leadership and staff directory for Haselwood Auto Group in Bremerton, WA, compiled from the group website and customer reviews across member dealerships.",
+        "resource": "https://www.haselwoodautogroup.com/why-buy-bremerton-wa.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - Haselwood Auto Group",
+        "type": "Entities",
+        "description": "Large pre-owned inventory across Haselwood Auto Group member dealerships in Bremerton, WA with multi-brand selection, West Hills warranty, certified pre-owned programs, and online buying tools.",
+        "resource": "https://www.haselwoodautogroup.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Haselwood Auto Group",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Haselwood Auto Group, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph with MCP server support.",
+        "resource": "https://www.haselwoodautogroup.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Haselwood Auto Group",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for Haselwood Auto Group in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-auto-group/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - Haselwood Auto Group",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph prompt library covering vehicles, financing, service, parts, and auto group info for Haselwood Auto Group in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-auto-group/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Haselwood Auto Group",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews collected via PromptGraph API for Haselwood Auto Group member dealerships in Bremerton, WA, with predominantly 5-star testimonials highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-auto-group/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Popular Model Comparison - Haselwood Auto Group",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of popular vehicle models available across Haselwood Auto Group member brands in Bremerton, WA, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.haselwoodautogroup.com/new-car-models-bremerton-wa.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Haselwood Auto Group\n\nHaselwood Auto Group is a multi-franchise automotive dealership group based at the **West Hills Autoplex** in Bremerton, WA, serving the Kitsap Peninsula including Silverdale, Port Orchard, Poulsbo, Gig Harbor, and Tacoma. The group operates 11+ member dealerships representing 14+ automotive brands with new and pre-owned vehicle sales, certified service centers, genuine OEM parts, and flexible financing.\n\n## Corporate Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 362-4410 |\n| Service | (360) 362-4415 |\n\nEmail: gsjones.haselwood@gmail.com\n\n## Corporate Address\n\n950 West Hills Boulevard, Bremerton, WA 98312\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\n## Location\n\n- **Address:** 950 West Hills Boulevard, Bremerton, WA 98312\n- **Geo:** 47.5549005, -122.6781417\n\n## Member Dealerships\n\n| Dealership | Brands | Address | Sales Phone |\n|---|---|---|---|\n| Haselwood Chevrolet | Chevrolet, Buick | 501 West Hills Blvd, Bremerton | (360) 919-1063 |\n| Haselwood GMC | GMC | 501 W Hills Blvd, Bremerton | (360) 919-2226 |\n| Haselwood Hyundai | Hyundai | 5008 Auto Center Blvd, Bremerton | (360) 842-2566 |\n| Haselwood Volkswagen of Bremerton | Volkswagen | 5008 Auto Center Blvd, Bremerton | (360) 842-2521 |\n| Heartland Toyota | Toyota, Scion | 901 West Hills Blvd, Bremerton | (360) 728-3042 |\n| West Hills Autoplex | Multi-brand | 950 W Hills Blvd, Bremerton | (360) 362-4401 |\n| West Hills Chrysler Jeep Dodge RAM | Chrysler, Jeep, Dodge, Ram | 900 W Hills Blvd, Bremerton | (360) 728-3077 |\n| West Hills Ford | Ford | 1100 Oyster Bay Ave S, Bremerton | (360) 842-2413 |\n| West Hills Honda | Honda | 520 W Hills Blvd, Bremerton | (360) 728-3071 |\n| West Hills Kia | Kia | 515 West Hills Blvd NW, Bremerton | (360) 728-3062 |\n| West Hills Mazda | Mazda | 1000 Oyster Bay Ave S, Bremerton | (360) 842-2486 |\n\n## Services\n\n- **Sales** - New and pre-owned vehicle sales across all member brands\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal\n- **Service Centers** - Factory-trained and certified technicians, routine maintenance, diagnostics, major repairs\n- **Parts Department** - Genuine OEM components, accessories, tires\n- **West Hills Insurance** - On-site insurance agency for comprehensive coverage analysis\n- **On-Site Rental** - Rental car agency for extended service needs\n\n## Online Tools\n\n- Inventory browsing and filtering across all member dealerships\n- Click-N-Drive online purchasing with home delivery\n- Online service scheduling\n- Online credit application and pre-approval\n- Live-Market Pricing with third-party market evaluation\n- Free CarFax Report with every pre-owned vehicle\n- Deal Reveal technology for instant pricing transparency\n\n## History\n\nFounded by **Chuck Haselwood** (1923-). After serving in WWII under General Patton, he returned to Bremerton, partnered with Danny Jones to open a gas station, and started selling used cars on the side. He later partnered with Bud Higgs to open Chuck & Buds used cars, offering a pioneering 30-day warranty. Haselwood entered the new car industry with Buick and in 1974 became the first Honda franchise in the country. Over decades he expanded into Toyota, Kia, Chevrolet, Buick, GMC, Chrysler, Jeep, Dodge, and Ram, creating the West Hills Autoplex.\n\n## Leadership\n\n- **Eric Wiler** - President; awarded 2019 Kitsap Philanthropic Award and Leaders of Distinction Under 40 Award\n\n## Community Involvement\n\n- **Haselwood Family YMCA** - $2,000,000 donation; annual Drive for a Cause raised $795,934+ all-time\n- **Kitsap Humane Society** - Annual Drive for a Cause raised $475,598+ all-time\n- **Fred Hutch Cancer Center** - Annual Drive for a Cause raised $1,690,834+ with matched funds\n- **Marine Toys for Tots Foundation** - Annual toy drive partnership\n- **Admiral Theater** - Lead donation for full restoration\n- **Bremerton Ice Center** - Community ice arena supporter\n- **Olympic College Library** - $350,000 gift for library rebuild\n- **Bloodworks Northwest** - Car sponsorship and blood drive hosting\n- **Haselwood Car Guys Golf Tournament** - Annual charity event raising $60K+ for local charities\n- **Haselwood Family Foundation** - $5 from every car sold donated; match program for cause fund drives\n\n## Awards\n\n- **Haselwood Auto Group** - Kitsap Business Philanthropic Award (multiple years)\n- **Chuck Haselwood** - 1996 Dealer of the Year\n- **Chuck Haselwood** - 1998 Time Magazine Quality Dealer of the Year\n- **Chuck Haselwood** - Rex Brown Distinguished Service Award\n- **Chuck Haselwood** - Thunderbird Award for Philanthropy\n- **Eric Wiler** - 2019 Kitsap Philanthropic Award\n- **Eric Wiler** - Leaders of Distinction Under 40 Award\n- **Joanne Haselwood** - Rex Brown Award\n- **Haselwood Auto Group** - YMCA Lifetime Philanthropy Award\n\n## Affiliations\n\n- **West Hills Autoplex** - flagship auto park campus\n- **West Hills Insurance** - on-site Allstate agency\n- **Haselwood Family Foundation** - charitable foundation\n- **Klean Freak** - sister company career opportunities\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform\n\n## Reviews & Reputation\n\n- Aggregate rating: 3.5 / 5.0 (52 reviews) across major platforms\n- Reviews predominantly positive with strong service themes\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.",
+    "datasets/faq": "# Frequently Asked Questions - Haselwood Auto Group\n\n## Inventory\n\n**Q: What brands are available at Haselwood Auto Group?**\nA: 14+ brands across 11 member dealerships: Chevrolet, Buick, GMC, Hyundai, Volkswagen, Toyota, Ford, Honda, Kia, Mazda, Chrysler, Jeep, Dodge, and Ram.\n\n**Q: Where are the member dealerships located?**\nA: All located at the West Hills Autoplex in Bremerton, WA: 501 West Hills Blvd (Chevrolet, GMC), 5008 Auto Center Blvd (Hyundai, VW), 900-950 West Hills Blvd (Toyota, Chrysler Jeep Dodge Ram, Honda, Kia, Mazda, Autoplex), and 1000-1100 Oyster Bay Ave (Ford, Mazda).\n\n**Q: Does Haselwood Auto Group offer certified pre-owned vehicles?**\nA: Yes, factory-backed certified pre-owned programs are available for most brands including Chevrolet, GM, Hyundai, Volkswagen, Toyota, Ford, Honda, Kia, and Chrysler/Jeep/Dodge/Ram.\n\n**Q: What is the Economy Vehicle Program?**\nA: An exclusive program offering budget-friendly, pre-owned cars that undergo rigorous safety and dependability checks for first-time buyers and value-seekers.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs are available through each member dealership's finance department.\n\n**Q: Does the group offer online credit applications?**\nA: Yes, online credit application and pre-approval are available through the group website.\n\n**Q: Is trade-in accepted?**\nA: Yes, trade-in appraisals are available at any member dealership with competitive values based on third-party market evaluation.\n\n## Service\n\n**Q: Can the service centers work on vehicles not purchased from the group?**\nA: Yes, the service centers service all vehicles whether purchased from the group or elsewhere.\n\n**Q: Do you offer loaner vehicles?**\nA: Yes, service loaner vehicles are available for extended appointments, and there is an on-site rental car agency.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the group website for any of the 11 brand-specific service centers.\n\n**Q: What warranty comes with West Hills pre-owned vehicles?**\nA: A 3 Month or 3,000 Mile Customer Confidence Warranty on West Hills pre-owned vehicles, with Extended Service Plus plans available at purchase.\n\n## Dealership\n\n**Q: Who founded Haselwood Auto Group?**\nA: Chuck Haselwood, who started selling used cars in Bremerton after WWII and opened the first Honda franchise in the United States in 1974.\n\n**Q: What areas does Haselwood Auto Group serve?**\nA: Bremerton, Silverdale, Port Orchard, Poulsbo, Gig Harbor, Tacoma, and surrounding communities across the Kitsap Peninsula.\n\n**Q: Does the group offer home delivery?**\nA: Yes, Click-N-Drive online purchasing includes home delivery options.\n\n**Q: Is military appreciation offered?**\nA: Yes, the group has a dedicated Military Appreciation program with specialized incentives for active-duty members and veterans.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New Vehicles - Haselwood Auto Group\n\nHaselwood Auto Group member dealerships carry a full lineup of new vehicles across 14+ automotive brands. Below is a summary of brands and available models by member franchise location.\n\n## Chevrolet & Buick - Haselwood Chevrolet\n\n**Address:** 501 West Hills Blvd, Bremerton | **Sales:** (360) 919-1063\n\nPopular Chevrolet models: Silverado 1500, Silverado 2500HD/3500HD, Equinox, Trax, Trailblazer, Tahoe, Suburban, Malibu, Camaro, Corvette, Colorado, Bolt EV, Bolt EUV\n\nPopular Buick models: Enclave, Envision, Encore GX\n\n## GMC - Haselwood GMC\n\n**Address:** 501 W Hills Blvd, Bremerton | **Sales:** (360) 919-2226\n\nPopular GMC models: Sierra 1500, Sierra 2500HD/3500HD, Acadia, Terrain, Yukon, Yukon XL, Canyon\n\n## Hyundai - Haselwood Hyundai\n\n**Address:** 5008 Auto Center Blvd, Bremerton | **Sales:** (360) 842-2566\n\nPopular Hyundai models: Tucson, Elantra, Santa Fe, Palisade, Kona, Venue, Sonata, IONIQ 5, IONIQ 6\n\n## Volkswagen - Haselwood Volkswagen of Bremerton\n\n**Address:** 5008 Auto Center Blvd, Bremerton | **Sales:** (360) 842-2521\n\nPopular Volkswagen models: Tiguan, Taos, Jetta, ID.4, Atlas, Atlas Cross Sport, Golf GTI\n\n## Toyota - Heartland Toyota\n\n**Address:** 901 West Hills Blvd, Bremerton | **Sales:** (360) 728-3042\n\nPopular Toyota models: RAV4, Camry, Corolla, Corolla Cross, Tacoma, Tundra, Highlander, Grand Highlander, Sienna, 4Runner, bZ4X\n\n## Ford - West Hills Ford\n\n**Address:** 1100 Oyster Bay Ave S, Bremerton | **Sales:** (360) 842-2413\n\nPopular Ford models: F-150, Mustang, Explorer, Escape, Bronco, Bronco Sport, Edge, Ranger, Maverick, Expedition\n\n## Honda - West Hills Honda\n\n**Address:** 520 W Hills Blvd, Bremerton | **Sales:** (360) 728-3071\n\nPopular Honda models: Civic, Accord, CR-V, HR-V, Pilot, Passport, Odyssey\n\n## Kia - West Hills Kia\n\n**Address:** 515 West Hills Blvd NW, Bremerton | **Sales:** (360) 728-3062\n\nPopular Kia models: Sportage, Seltos, K5, K4, Forte, Sorento, Telluride, Niro, EV6, EV9\n\n## Mazda - West Hills Mazda\n\n**Address:** 1000 Oyster Bay Ave S, Bremerton | **Sales:** (360) 842-2486\n\nPopular Mazda models: CX-5, CX-30, CX-50, CX-90, Mazda3, MX-5 Miata\n\n## Chrysler, Jeep, Dodge, Ram - West Hills Chrysler Jeep Dodge RAM\n\n**Address:** 900 W Hills Blvd, Bremerton | **Sales:** (360) 728-3077\n\nPopular Jeep models: Grand Cherokee, Wrangler, Cherokee, Compass, Gladiator, Wagoneer, Grand Wagoneer\n\nPopular Dodge models: Durango, Charger, Challenger, Hornet\n\nPopular Ram models: Ram 1500, Ram 2500, Ram 3500, ProMaster\n\nPopular Chrysler models: Pacifica, Pacifica Plug-in Hybrid\n\n## Electric & Hybrid Vehicles\n\nAvailable across the group:\n\n- Chevrolet Bolt EV / Bolt EUV (all-electric)\n- Hyundai IONIQ 5, IONIQ 6 (all-electric)\n- Hyundai Tucson Plug-in Hybrid\n- Volkswagen ID.4 (all-electric)\n- Toyota bZ4X (all-electric)\n- Toyota RAV4 Hybrid / RAV4 Plug-in Hybrid\n- Toyota Camry Hybrid\n- Toyota Corolla Hybrid\n- Kia EV6, EV9 (all-electric)\n- Kia Niro Plug-in Hybrid\n- Chrysler Pacifica Plug-in Hybrid\n- Ford Mustang Mach-E (all-electric)\n- Ford F-150 Lightning (all-electric)\n\n## Promotions & Offers\n\nPromotions vary by brand and model including low APR financing, lease specials, and rebates. Contact individual member dealerships for current offers.\n\nSee [dealership.md](dealership.md) for member dealership contact information.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Centers - Haselwood Auto Group\n\nHaselwood Auto Group operates multiple certified service centers across member dealerships at the West Hills Autoplex in Bremerton, WA, providing professional automotive care for all makes and models.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work\n- **Tire Replacement and Alignment** - Full tire services\n- **Scheduled Maintenance** - Following manufacturer recommended maintenance schedules\n- **Recall Repairs** - OEM-specified recall and campaign work\n\n## Brand-Specific Service Centers\n\n| Service Center | Location | Service Phone | Specialization |\n|---|---|---|---|\n| Chevrolet Service Center | 501 West Hills Blvd | (360) 919-1151 | Chevrolet, Buick |\n| GMC Service Center | 501 W Hills Blvd | (360) 919-1064 | GMC |\n| Hyundai Service Center | 5008 Auto Center Blvd | (360) 842-2581 | Hyundai |\n| Volkswagen Service Center | 5008 Auto Center Blvd | (360) 842-2524 | Volkswagen |\n| Heartland Toyota Service | 901 West Hills Blvd | (360) 728-3043 | Toyota, Scion |\n| West Hills Autoplex Service | 950 W Hills Blvd | (360) 362-4412 | Multi-brand |\n| Chrysler Jeep Dodge RAM Service | 900 W Hills Blvd | (360) 728-3988 | Chrysler, Jeep, Dodge, Ram |\n| Ford Service Center | 1100 Oyster Bay Ave S | (360) 842-2420 | Ford |\n| Honda Service Center | 520 W Hills Blvd | (360) 728-3072 | Honda |\n| Kia Service Center | 515 West Hills Blvd NW | (360) 728-3063 | Kia |\n| Mazda Service Center | 1000 Oyster Bay Ave S | (360) 842-2490 | Mazda |\n\n## Service Experience\n\n- **Online scheduling** available through the group website\n- **Factory-trained and certified technicians** using genuine OEM parts\n- **State-of-the-art facilities** - Clean, safe, and healthy environments\n- **Service loaner vehicles** available for extended service appointments\n- **On-site rental car agency** for customers needing transportation\n\n## Service Specials\n\nRotating service specials and coupons available. See the group website for current promotions.\n\n## Parts Department\n\nGenuine OEM parts and accessories available at each brand-specific parts counter:\n\n| Parts Center | Phone |\n|---|---|\n| Chevrolet Parts | (360) 919-1115 |\n| GMC Parts | (360) 919-2220 |\n| Hyundai Parts | (360) 842-2612 |\n| Volkswagen Parts | (360) 842-2542 |\n| Heartland Toyota Parts | (360) 728-3044 |\n| Chrysler Jeep Dodge RAM Parts | (360) 842-2349 |\n| Ford Parts | (360) 842-2475 |\n| Honda Parts | (360) 728-3075 |\n| Kia Parts | (360) 728-3070 |\n| Mazda Parts | (360) 842-2520 |\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\nSee [dealership.md](dealership.md) for complete contact information and locations.",
+    "datasets/staff": "# Staff Directory - Haselwood Auto Group\n\nStaff directory compiled from the group website and customer reviews across member dealerships.\n\n## Executive Leadership\n\n- **Eric Wiler** - President of Haselwood Auto Group; awarded 2019 Kitsap Philanthropic Award and Leaders of Distinction Under 40 Award\n- **Chuck Haselwood** - Founder (1923-); established the group starting with a gas station in Bremerton, first Honda franchise in the US in 1974, 1998 Time Magazine Quality Dealer of the Year\n\n## Haselwood Chevrolet\n\n- **Tre'von Fobbs** - Sales representative, praised by customers for service at Ford and Chevrolet locations\n\n## West Hills Kia\n\n- **Jason** - Customer Service Representative; praised for professional, courteous service\n- **Keowa** - Finance team member; commended for getting the best rates and deals\n- **Deondre** - Sales representative; answered all questions and helped research used vehicle purchases\n\n## West Hills Honda\n\n- **Nina** - Service Advisor; helpful, knowledgeable, courteous, and professional\n- **Patrick** - Service Advisor; helpful, knowledgeable, courteous, and professional\n\n## West Hills Chrysler Jeep Dodge Ram\n\n- **Chad** - Service Advisor; helpful, knowledgeable, courteous, and professional\n\n## West Hills Ford\n\n- **Brian** - Sales representative; praised for helping find the right car within budget\n\n## Careers\n\nHaselwood Auto Group offers career opportunities through the UltiPro recruiting platform for:\n\n- Washington career opportunities\n- Klean Freak career opportunities (sister company)\n- Wyoming career opportunities\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - Haselwood Auto Group\n\nHaselwood Auto Group maintains a substantial pre-owned vehicle inventory across all member dealerships at the West Hills Autoplex in Bremerton, with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Total vehicles:** Extensive inventory across 11+ member dealership locations\n- **Multi-brand selection** spanning Chevrolet, Buick, GMC, Hyundai, Volkswagen, Toyota, Ford, Honda, Kia, Mazda, Chrysler, Jeep, Dodge, Ram, and more makes\n- **Price range:** Broad range from under $10,000 to premium vehicles, including the Economy Vehicle Program for budget-conscious buyers\n- **Vehicle types:** Sedans, SUVs, trucks, vans, coupes, and convertibles\n- **Daily fresh inventory** with regular turnover across locations\n\n## West Hills Pre-Owned Program\n\nThe West Hills Pre-Owned collection is a hallmark of the Haselwood Auto Group:\n\n- **3 Month / 3,000 Mile Warranty** - Customer confidence warranty on West Hills pre-owned vehicles\n- **West Hills Extended Service Plus** - Service plans available at time of vehicle purchase\n- **Free CarFax Report** - Included with every pre-owned vehicle\n- **Third-Party Market Evaluation** - Independent pricing verification\n- **Live-Market Pricing** - Actively researched competitive pricing\n- **Instant Deal Reveal** - Verified pricing transparency online\n\n## Certified Pre-Owned Programs\n\nFactory-backed certified programs available by brand:\n\n- **Chevrolet Certified Pre-Owned** - Rigorous inspection, warranty, and roadside assistance\n- **GM Certified Pre-Owned** (Buick, GMC) - Factory-backed with 12-month/12,000-mile bumper-to-bumper warranty\n- **Hyundai Certified Pre-Owned** - 10-year/100,000-mile powertrain coverage\n- **Volkswagen Certified Pre-Owned** - 2-year/24,000-mile bumper-to-bumper warranty\n- **Toyota Certified** - 12-month/12,000-mile comprehensive warranty, 7-year/100,000-mile limited powertrain\n- **Ford Blue Advantage** - Gold and Blue certifications with varying warranty coverage\n- **Honda Certified** - 12-month/12,000-mile comprehensive warranty, 7-year/100,000-mile powertrain\n- **Kia Certified Pre-Owned** - 10-year/100,000-mile powertrain warranty\n- **Chrysler, Jeep, Dodge, Ram Certified** - Factory-backed inspections and warranties\n\n## Economy Vehicle Program\n\nAn exclusive program offering budget-friendly, pre-owned cars that undergo rigorous safety and dependability checks. High-quality, low-cost alternatives for first-time buyers and value-seekers.\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering across all member dealerships\n- Click-N-Drive online purchasing with home delivery\n- Value Your Trade tool\n- Car payment calculator\n- Online credit application and pre-approval\n- Vehicle hold policy\n\n## Trade-In\n\n- Trade-in appraisal available at any member dealership\n- Competitive trade-in values with third-party market evaluation\n- Cash offers for trade-ins (even without vehicle purchase)\n\nSee [dealership.md](dealership.md) for member dealership locations and contact information.",
+    "references/ai-discovery-page": "# AI Discovery Page - Haselwood Auto Group\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer.com** platform.\n\nThe AI Discovery Page was successfully fetched and is available at `/ai-discovery-page.htm`.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-02-03T15:06:16.760Z\n- **Schema types:** `AutoDealer`, `LocalBusiness`, `Car`, `ItemList`\n- **Contact:** gsjones.haselwood@gmail.com\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-auto-group` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/vehicles/{vin}` | Individual vehicle by VIN |\n| `/prompts` | Q&A / FAQ prompts |\n| `/testimonials` | Customer reviews |\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/haselwood-auto-group/business`:\n\n- **Name:** Haselwood Auto Group\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Car dealer, Ram dealer, Ford dealer, Jeep dealer, Honda dealer, Truck dealer, Toyota dealer, Used car dealer, Auto repair shop, Chevrolet dealer\n- **Address:** 950 West Hills Boulevard, Bremerton, WA 98312\n- **Geo:** 47.5549005, -122.6781417\n- **Telephone:** (360) 362-4410\n- **Email:** gsjones.haselwood@gmail.com\n- **URL:** `https://www.haselwoodautogroup.com/locations/index.htm`\n- **Aggregate Rating:** 3.5 / 5.0 (52 reviews)\n- **Date Modified:** 2026-02-03T15:06:16.760Z\n- **Same As:** Facebook, Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wide selection of new and used vehicles across all member brands with detailed specifications, pricing, and availability. Individual vehicle data is available via `/vehicles/{vin}`.\n\n## LLM Inventory Page\n\nAn LLM-optimized inventory page is available at `/llm-inventory.htm` for AI agents requiring current vehicle stock, pricing, and model-specific features.\n\n## MCP Server\n\nHaselwood Auto Group provides a Model Context Protocol (MCP) server for browsing and searching vehicles in the PromptGraph AI inventory system. This server provides LLMs with tools to query vehicle listings by various filters.\n\n**MCP Session Endpoint:** `https://mcp.promptgraph.ai/haselwood-auto-group/mcp`\n**Inventory HTTP Route:** `https://www.haselwoodautogroup.com/llm-inventory.htm`\n**API Data URL:** `https://api.promptgraph.ai/api/v1/haselwood-auto-group/vehicles`\n\n### Available MCP Tools\n\n- `browse_inventory(slug, type, bodytype, year_min, year_max, price_min, price_max, keyword, make, model, limit, page)` - Browse all vehicles with optional filters\n- `browse_by_bodytype(slug, bodytype, price_max, year_min, keyword, limit)` - Filter vehicles by body type category\n- `browse_by_price(slug, price_max, price_min, bodytype, year_min, limit)` - Find vehicles within a price range\n- `browse_by_year(slug, year_min, year_max, bodytype, price_max, limit)` - Find vehicles from a specific year range\n- `search_vehicles(slug, keyword, bodytype, year_min, year_max, price_min, price_max, make, model, type, limit)` - Advanced search using multiple criteria\n\n## Q&A Prompt Library\n\nThe `/prompts` endpoint exposes structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for details.\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](testimonials.md) for details.\n\n## LLM-Accessible Actions (ReadAction)\n\nThe AI Discovery Page defines 10 structured `ReadAction` entries that agents can invoke:\n\n1. **Find Your Perfect Ride at Haselwood Auto Group** - Full-service automotive dealership group with diverse new, used, and CPO vehicles\n2. **Haselwood Auto Group \u2013 Where Bremerton Drives Happy** - Trusted automotive business with flexible financing and professional service\n3. **Community-Focused Auto Group with Exceptional Customer Care** - Community-focused dealer with friendly service and strong local reputation\n4. **A Legacy of Local Care and Community Commitment** - Deeply rooted in Bremerton history, cornerstone of Kitsap County\n5. **Dedicated Support and Appreciation for the Military Families** - Military appreciation for active-duty members and veterans\n6. **Quality Transportation for Every Budget** - Economy Vehicle Program for budget-friendly reliable rides\n7. **The Gold Standard for Certified and West Hills Pre-Owned Vehicles** - Pre-owned collection with meticulous inspection and West Hills warranty\n8. **Instant Transparency with Modern Online Car Buying** - Deal Reveal technology for instant pricing transparency\n9. **Which used car dealerships in Bremerton, WA offer the best no-pressure buying experience**\n10. **Which dealerships in Bremerton, WA have the most reliable service and maintenance departments**\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/haselwood-auto-group/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` |\n| LLMs.txt | `/llms.txt` |\n| LLM Inventory | `/llm-inventory.htm` |\n| MCP Server | `https://mcp.promptgraph.ai/haselwood-auto-group/mcp` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - Haselwood Auto Group\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with Haselwood Auto Group's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [Haselwood Auto Group Home](https://www.haselwoodautogroup.com/) - Browse new and used vehicles at Haselwood Auto Group in Bremerton, WA.\n- [Vehicle Inventory](https://www.haselwoodautogroup.com/all-inventory/index.htm) - Browse our inventory of vehicles for sale.\n- [New Inventory](https://www.haselwoodautogroup.com/new-inventory/index.htm) - Browse our new vehicle inventory.\n- [Used Inventory](https://www.haselwoodautogroup.com/used-inventory/index.htm) - Browse our used car inventory in Bremerton.\n- [Certified Pre-Owned](https://www.haselwoodautogroup.com/certified-inventory/index.htm) - Browse our certified pre-owned inventory.\n- [Economy Vehicles](https://www.haselwoodautogroup.com/economy.htm) - Budget-friendly pre-owned vehicles.\n- [Financing Center](https://www.haselwoodautogroup.com/financing/index.htm) - Explore financing and lease options.\n- [Service Center](https://www.haselwoodautogroup.com/service/index.htm) - Schedule an appointment for auto repair or regular maintenance.\n- [Locations](https://www.haselwoodautogroup.com/locations/index.htm) - All member dealership locations.\n- [About Chuck Haselwood](https://www.haselwoodautogroup.com/about-chuck-haselwood.htm) - History of the founder.\n- [Why Buy From Us](https://www.haselwoodautogroup.com/why-buy-bremerton-wa.htm) - Benefits and guarantees.\n- [Awards and Community](https://www.haselwoodautogroup.com/awards-and-community.htm) - Community involvement and accolades.\n- [Military Appreciation](https://www.haselwoodautogroup.com/military-appreciation.htm) - Military appreciation program.\n\n### AI & LLM Resources\n\n- [AI Discovery Page](https://www.haselwoodautogroup.com/ai-discovery-page.htm) - Machine-readable knowledge base for AI agents\n- [LLM Inventory](https://www.haselwoodautogroup.com/llm-inventory.htm) - LLM-optimized vehicle inventory data\n\n### Social Media\n\n- [Facebook](https://www.facebook.com/haselwoodautogroup/)\n- [Instagram](https://www.instagram.com/haselwood_auto_group/)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](https://api.promptgraph.ai/api/v1/haselwood-auto-group/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](https://api.promptgraph.ai/api/v1/haselwood-auto-group/vehicles) - Complete inventory of vehicles with specifications, pricing, and availability in JSON-LD format\n- [Vehicle by VIN](https://api.promptgraph.ai/api/v1/haselwood-auto-group/vehicles/{vin}) - Individual vehicle data by VIN\n- [Prompts & FAQs](https://api.promptgraph.ai/api/v1/haselwood-auto-group/prompts) - Structured prompts for consistent AI responses\n- [Customer Testimonials](https://api.promptgraph.ai/api/v1/haselwood-auto-group/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](https://api.promptgraph.ai/api/v1/haselwood-auto-group/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](https://api.promptgraph.ai/api/v1/haselwood-auto-group/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](https://api.promptgraph.ai/api/v1/haselwood-auto-group/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [MCP Server](https://mcp.promptgraph.ai/haselwood-auto-group/mcp) - Model Context Protocol server for vehicle browsing\n- [LLM Inventory](https://www.haselwoodautogroup.com/llm-inventory.htm) - LLM-optimized inventory data\n- [Sitemap](https://api.promptgraph.ai/api/v1/haselwood-auto-group/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](https://api.promptgraph.ai/api/v1/haselwood-auto-group/config.json) - System configuration and metadata\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - Haselwood Auto Group\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-auto-group/prompts` exposes structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Auto Group & Reputation (10+ prompts)\n- Full-service automotive dealership group description\n- Where Bremerton drives happy - community-focused positioning\n- Community-focused auto group with exceptional customer care\n- A legacy of local care and community commitment\n- Dedicated support and appreciation for military families\n- Dealer reputation, awards, and community involvement\n\n### Vehicle Shopping (20+ prompts)\n- New vehicle inventory across all member brands\n- Quality transportation for every budget (Economy Vehicle Program)\n- The gold standard for certified and West Hills Pre-Owned vehicles\n- Instant transparency with modern online car buying (Deal Reveal)\n- No-pressure buying experience in Bremerton\n- Vehicle model inquiries and comparisons\n- Lease options across member brands\n\n### Financing (5+ prompts)\n- Automotive financing solutions\n- Online pre-approval and credit applications\n- Flexible financing options for various credit situations\n- Trade-in support and valuation\n\n### Service & Parts (10+ prompts)\n- Professional automotive care across all member service centers\n- Factory-trained and certified technicians\n- Routine maintenance and major repairs\n- Reliable service and maintenance departments in Bremerton\n- Genuine OEM parts and accessories\n\n### Buying Experience (5+ prompts)\n- Online and remote shopping tools (Click-N-Drive)\n- Home delivery options\n- Military appreciation incentives\n- Economy Vehicle Program\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `find-your-perfect-ride-at-haselwood-auto-group` | Dealership positioning |\n| 2 | `haselwood-auto-group--where-bremerton-drives-happy` | Group description |\n| 3 | `communityfocused-auto-group-with-exceptional-customer-care` | Community focus |\n| 4 | `a-legacy-of-local-care-and-community-commitment` | Bremerton history |\n| 5 | `dedicated-support-and-appreciation-for-the-military-families` | Military appreciation |\n| 6 | `quality-transportation-for-every-budget` | Economy Vehicle Program |\n| 7 | `the-gold-standard-for-certified-and-west-hills-pre-owned-vehicles` | CPO and pre-owned |\n| 8 | `instant-transparency-with-modern-online-car-buying` | Deal Reveal |\n| 9 | `which-used-car-dealerships-in-bremerton-wa-offer-the-best-no-pressure-buying-experience` | Dealership comparison |\n| 10 | `which-dealerships-in-bremerton-wa-have-the-most-reliable-service-and-maintenance-departments` | Service reputation |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation and MCP server details.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - Haselwood Auto Group\n\nHaselwood Auto Group has collected customer testimonials through the PromptGraph platform. Reviews are predominantly 5-star with strong themes of professional service, attentive staff, and positive buying experiences.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 3.5 / 5.0 (52 reviews)\n- **PromptGraph Reviews:** Predominantly 5-star\n\n## Most-Praised Staff (by frequency)\n\n- **Keowa** - Finance team member who worked to get the best rate and deal\n- **Deondre** - Sales representative who answered all questions and provided personal updates\n- **Jason** - Customer Service Representative at Kia; professional, courteous\n- **Brian** - Sales representative at Ford; helped find right car within budget\n- **Nina** - Service Advisor at Honda; helpful, knowledgeable, courteous\n- **Patrick** - Service Advisor at Honda; helpful, knowledgeable, courteous\n- **Chad** - Service Advisor at CDJR; helpful, knowledgeable, courteous\n- **Tre'von Fobbs** - Sales representative at Ford/Chevrolet\n\n## Notable Excerpts\n\n> \"Keowa and the finance group worked with me to get the best rate and deal I could with my situation! Awesomely flexible and awesome rates.\" - Colin Cook\n\n> \"Deondre answered all my questions and helped me research my used vehicle purchase. He even checked their inventory and provided personal updates until the exact right car was found!\" - Shannon\n\n> \"I had my brakes worked on so the dealership loaned me a newer version on my 7 year old CRV. The work on my vehicle was completed quickly. Now the brakes work much better.\" - Janice Evalt\n\n> \"Brian from Ford was amazing! He really helped find a car within our price range. Not only is it perfect for what we needed but it is very affordable.\" - Jade Francisco\n\n> \"Great service at West Hills Honda and West Hills Chrysler, Dodge, Jeep, Ram. Service Advisers Nina and Patrick at Honda and Chad at CDJR were all very helpful, knowledgeable, courteous and professional.\" - Brad Fish\n\n## Sales Themes\n\n- **Professional service** - Sales staff praised for knowledge, responsiveness, and no-pressure approach\n- **Flexible financing** - Finance team works to find the best rates for customer situations\n- **Attentive follow-up** - Personal updates and inventory checks throughout the process\n- **Transparent pricing** - Deal Reveal technology for instant verified pricing\n\n## Service Themes\n\n- **Fast turnaround** - Service completed quickly with good communication\n- **Professional advisors** - Service advisors keep customers informed throughout the process\n- **Loaner vehicles** - Dealership provides newer loaner models during service\n- **Quality work** - Consistent praise for factory-trained technicians\n\n## Service Recovery\n\nOne notable review described an initial negative experience that was fully resolved through attentive management:\n\n> \"Upon several discrepancies - my family and I walked away from a deal. Luckily, the entirety of Haselwood Auto Group came together to rectify the issues. They saw the situation as a retraining opportunity, offered appropriate compensation, were extremely respectful, accountable, apologetic, and kind.\" - Madison R. Hayes\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Popular Model Comparison - Haselwood Auto Group\n\n## Compact & Midsize SUVs\n\n| Model | Brand | Passengers | Drivetrain | Engine | Starting MSRP Tier |\n|---|---|---|---|---|---|\n| **Equinox** | Chevrolet | 5 | FWD / AWD | 1.5L Turbo | Mid-range |\n| **Terrain** | GMC | 5 | FWD / AWD | 1.5L Turbo | Mid-range |\n| **Tucson** | Hyundai | 5 | FWD / AWD | 2.5L 4-cyl | Mid-range |\n| **Tiguan** | Volkswagen | 5-7 | FWD / 4MOTION | 2.0L Turbo | Mid-range |\n| **RAV4** | Toyota | 5 | FWD / AWD | 2.5L 4-cyl | Mid-range |\n| **CR-V** | Honda | 5 | FWD / AWD | 1.5L Turbo | Mid-range |\n| **Sportage** | Kia | 5 | FWD / AWD | 2.5L 4-cyl | Mid-range |\n| **CX-5** | Mazda | 5 | FWD / AWD | 2.5L 4-cyl | Mid-range |\n| **Escape** | Ford | 5 | FWD / AWD | 1.5L Turbo | Mid-range |\n| **Compass** | Jeep | 5 | FWD / 4WD | 2.0L Turbo | Mid-range |\n\n## Full-Size SUVs & Trucks\n\n| Model | Brand | Passengers | Drivetrain | Engine | Towing (max) |\n|---|---|---|---|---|---|\n| **Tahoe** | Chevrolet | 7-9 | RWD / 4WD | 5.3L V8 | 8,400 lbs |\n| **Suburban** | Chevrolet | 7-9 | RWD / 4WD | 5.3L V8 | 8,300 lbs |\n| **Yukon** | GMC | 7-9 | RWD / 4WD | 5.3L V8 | 8,400 lbs |\n| **F-150** | Ford | 5-6 | RWD / 4WD | 2.7L V6 EcoBoost | 13,500 lbs |\n| **Sierra 1500** | GMC | 5-6 | RWD / 4WD | 2.7L Turbo | 13,000 lbs |\n| **Silverado 1500** | Chevrolet | 5-6 | RWD / 4WD | 2.7L Turbo | 13,300 lbs |\n| **Ram 1500** | Ram | 5-6 | RWD / 4WD | 3.6L V6 eTorque | 12,750 lbs |\n| **Tundra** | Toyota | 5-6 | RWD / 4WD | 3.4L V6 Twin-Turbo | 12,000 lbs |\n| **Grand Cherokee** | Jeep | 5 | RWD / 4WD | 3.6L V6 | 6,200 lbs |\n\n## Sedans & Hatchbacks\n\n| Model | Brand | Passengers | Drivetrain | Engine | Key Features |\n|---|---|---|---|---|---|\n| **Malibu** | Chevrolet | 5 | FWD | 1.5L Turbo | Wireless Apple CarPlay, Safety Assist |\n| **Elantra** | Hyundai | 5 | FWD | 2.0L 4-cyl | Hyundai SmartSense, Digital Key |\n| **Sonata** | Hyundai | 5 | FWD | 2.5L 4-cyl | Smart Cruise Control, Bose Audio |\n| **Camry** | Toyota | 5 | FWD / AWD | 2.5L 4-cyl | Toyota Safety Sense 3.0, Wireless Connectivity |\n| **Corolla** | Toyota | 5 | FWD | 2.0L 4-cyl | Toyota Safety Sense 3.0, Fuel-efficient |\n| **Civic** | Honda | 5 | FWD | 2.0L 4-cyl | Honda Sensing, 7-inch Touchscreen |\n| **Accord** | Honda | 5 | FWD | 1.5L Turbo | Honda Sensing, Google Built-in |\n| **K5** | Kia | 5 | FWD | 1.6L Turbo | Kia Drive Wise, Panoramic Sunroof |\n| **Mazda3** | Mazda | 5 | FWD / AWD | 2.5L 4-cyl | i-Activsense, Premium Interior |\n| **Jetta** | Volkswagen | 5 | FWD | 1.5L Turbo | IQ.DRIVE, Beats Audio |\n\n## Key Feature Comparison\n\n| Feature | Equinox | Tucson | RAV4 | CR-V | Sportage | CX-5 |\n|---|---|---|---|---|---|---|\n| AWD Available | Yes | Yes | Yes | Yes | Yes | Yes |\n| Passenger Capacity | 5 | 5 | 5 | 5 | 5 | 5 |\n| Cargo Space (cu ft) | 63.9 | 74.8 | 69.8 | 76.9 | 74.1 | 59.6 |\n| Apple CarPlay/Android Auto | Standard | Standard | Standard | Standard | Standard | Standard |\n\n## Electric & Hybrid Options\n\n| Model | Brand | Type | Range (est.) | Notes |\n|---|---|---|---|---|\n| **Bolt EV** | Chevrolet | Full EV | ~259 miles | Affordable EV, compact hatchback |\n| **Bolt EUV** | Chevrolet | Full EV | ~247 miles | Larger Bolt with Super Cruise available |\n| **IONIQ 5** | Hyundai | Full EV | ~220-303 miles | 800V fast charging, V2L capability |\n| **IONIQ 6** | Hyundai | Full EV | ~240-361 miles | Streamlined aerodynamic sedan |\n| **Kona Electric** | Hyundai | Full EV | ~261 miles | Subcompact EV SUV |\n| **ID.4** | Volkswagen | Full EV | ~209-275 miles | Compact EV SUV, RWD or AWD |\n| **bZ4X** | Toyota | Full EV | ~222-252 miles | Toyota's first dedicated EV platform |\n| **EV6** | Kia | Full EV | ~232-310 miles | 800V fast charging, performance GT model |\n| **EV9** | Kia | Full EV | ~230-304 miles | 3-row EV SUV seating up to 7 |\n| **Mustang Mach-E** | Ford | Full EV | ~224-312 miles | Performance AWD, extended range option |\n| **F-150 Lightning** | Ford | Full EV | ~240-320 miles | Electric pickup, available Pro Power Onboard |\n| **Niro EV** | Kia | Full EV | ~253 miles | Compact utility EV |\n| **Pacifica Plug-in Hybrid** | Chrysler | Plug-In Hybrid | ~32 miles EV | Only plug-in hybrid minivan available |\n| **RAV4 Plug-in Hybrid** | Toyota | Plug-In Hybrid | ~42 miles EV | Best-selling plug-in hybrid SUV |\n| **Tucson Plug-in Hybrid** | Hyundai | Plug-In Hybrid | ~33 miles EV | Compact plug-in hybrid SUV |\n| **Camry Hybrid** | Toyota | Hybrid | ~51 mpg combined | Best-selling hybrid sedan |\n| **Civic Hybrid** | Honda | Hybrid | ~50 mpg combined | Compact hybrid sedan |\n| **Accord Hybrid** | Honda | Hybrid | ~44 mpg combined | Midsize hybrid sedan |\n\n## Warranty Comparison\n\n| Brand | Bumper-to-Bumper | Powertrain | Rust/Perforation | Roadside Assistance |\n|---|---|---|---|---|\n| Chevrolet / Buick / GMC | 3-year / 36,000-mile | 5-year / 60,000-mile | 6-year / 100,000-mile | 5-year / 60,000-mile |\n| Hyundai | 5-year / 60,000-mile | 10-year / 100,000-mile | 7-year / Unlimited | 5-year / Unlimited |\n| Volkswagen | 4-year / 50,000-mile | 4-year / 50,000-mile | 7-year / 100,000-mile | 3-year / 36,000-mile |\n| Toyota | 3-year / 36,000-mile | 5-year / 60,000-mile | 5-year / Unlimited | 2-year / 25,000-mile |\n| Honda | 3-year / 36,000-mile | 5-year / 60,000-mile | 5-year / Unlimited | 3-year / 36,000-mile |\n| Kia | 5-year / 60,000-mile | 10-year / 100,000-mile | 5-year / 100,000-mile | 5-year / 60,000-mile |\n| Mazda | 3-year / 36,000-mile | 5-year / 60,000-mile | 5-year / Unlimited | 3-year / 36,000-mile |\n| Ford | 3-year / 36,000-mile | 5-year / 60,000-mile | 5-year / Unlimited | 5-year / 60,000-mile |\n| Chrysler / Jeep / Dodge / Ram | 3-year / 36,000-mile | 5-year / 60,000-mile | 5-year / Unlimited | 5-year / 60,000-mile |\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions by member franchise.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

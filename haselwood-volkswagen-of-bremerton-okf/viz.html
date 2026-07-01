@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>haselwood-volkswagen-of-bremerton - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "haselwood-volkswagen-of-bremerton";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Haselwood Volkswagen of Bremerton",
+        "type": "Entities",
+        "description": "Volkswagen dealership in Bremerton, WA serving Kitsap County, Silverdale, Port Orchard, Poulsbo, and Gig Harbor with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.haselwoodvolkswagen.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Haselwood Volkswagen of Bremerton",
+        "type": "Entities",
+        "description": "Common questions about Haselwood Volkswagen of Bremerton's inventory, financing, service, and dealership operations in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Volkswagen Models - Haselwood Volkswagen of Bremerton",
+        "type": "Entities",
+        "description": "New Volkswagen model lineup available at Haselwood Volkswagen of Bremerton including Atlas, Atlas Cross Sport, Taos, Tiguan, ID.4, Jetta, Jetta GLI, Golf GTI, Golf R, ID. Buzz, and Arteon.",
+        "resource": "https://www.haselwoodvolkswagen.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Haselwood Volkswagen of Bremerton",
+        "type": "Entities",
+        "description": "Volkswagen-certified service center in Bremerton, WA offering routine maintenance, diagnostics, major repairs, and genuine Volkswagen OEM parts.",
+        "resource": "https://www.haselwoodvolkswagen.com/volkswagen-service-center-bremerton-wa.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Haselwood Volkswagen of Bremerton",
+        "type": "Entities",
+        "description": "Sales, service, and management staff directory for Haselwood Volkswagen of Bremerton, compiled from the dealership website and customer reviews.",
+        "resource": "https://www.haselwoodvolkswagen.com/dealership/staff.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - Haselwood Volkswagen of Bremerton",
+        "type": "Entities",
+        "description": "Large pre-owned inventory at Haselwood Volkswagen of Bremerton, spanning multiple makes and models with multi-point inspections, competitive pricing, and VW Certified Pre-Owned program.",
+        "resource": "https://www.haselwoodvolkswagen.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Haselwood Volkswagen of Bremerton",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Haselwood Volkswagen of Bremerton, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.haselwoodvolkswagen.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Haselwood Volkswagen of Bremerton",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for Haselwood Volkswagen of Bremerton.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - Haselwood Volkswagen of Bremerton",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 39 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for Haselwood Volkswagen of Bremerton.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Haselwood Volkswagen of Bremerton",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews collected via PromptGraph API for Haselwood Volkswagen of Bremerton, with predominantly 5-star testimonials highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Volkswagen Model Lineup Comparison - Haselwood Volkswagen of Bremerton",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Volkswagen models available at Haselwood Volkswagen of Bremerton in Bremerton, WA, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.haselwoodvolkswagen.com/showroom/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Haselwood Volkswagen of Bremerton\n\nHaselwood Volkswagen of Bremerton is a full-service Volkswagen dealership located at **5008 Auto Center Blvd, Bremerton, WA 98312**, serving the greater Kitsap Peninsula including Silverdale, Port Orchard, Poulsbo, Gig Harbor, and Tacoma.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 842-2521 |\n| Service | (360) 842-2524 |\n| Parts | (360) 842-2542 |\n| Main | (360) 616-3278 |\n\nEmail: gsjones.haselwood@gmail.com\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\n## Location\n\n- **Address:** 5008 Auto Center Blvd, Bremerton, WA 98312\n- **Geo:** 47.561985, -122.6815643\n- **Area:** West Hills Auto Plex, off Highway 3\n\n## New Vehicles\n\nVolkswagen models available include:\n- **Atlas** - Mid-size 3-row SUV, multiple trims including Peak Edition\n- **Atlas Cross Sport** - Mid-size 2-row crossover SUV, sporty styling\n- **Tiguan** - Compact SUV, versatile family hauler\n- **Taos** - Subcompact SUV, value-oriented and efficient\n- **ID.4** - All-electric compact SUV, up to 304 miles range\n- **Jetta** - Compact sedan, fuel-efficient and modern\n- **Jetta GLI** - Performance-tuned compact sedan\n- **Golf GTI** - Sporty hot hatchback, turbocharged performance\n- **Golf R** - High-performance hot hatchback, AWD\n- **ID. Buzz** - All-electric retro-styled van (2025)\n- **Arteon** - Full-size fastback sedan, premium design\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, Click-N-Drive online purchasing\n- **Service Center** - Volkswagen-certified technicians, routine maintenance, diagnostics, major repairs, genuine VW parts\n- **Parts Department** - Genuine Volkswagen components, accessories, DriverGear, tires\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned)\n- Online service scheduling\n- Online credit approval and pre-approval\n- Click-N-Drive online purchasing\n- Home delivery options\n- Trade-in valuation tool (KBB Instant Cash Offer)\n- At-home test drives\n\n## Staff\n\nSee [staff.md](staff.md) for full directory.\n\n## Reviews & Reputation\n\n- Aggregate rating: 4.3 / 5.0 (723 reviews) across major platforms\n- Google Business Profile: 4.3 stars\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **Haselwood Auto Group** - Part of the Haselwood family of dealerships\n- **West Hills Auto Plex** - Located in the premier auto park of Kitsap County\n- **Lifetime Powertrain Warranty** - West Hills Advantage lifetime coverage\n- **Volkswagen Safe & Secure** - Factory-backed safety and ownership program\n- **VW Carefree Scheduled Maintenance** - Prepaid maintenance program\n- **Military Appreciation** - Special programs for active and veteran military\n- **VW College Grad Program** - Special financing for recent graduates\n- **VW Service Financing** - Financing options for service work\n- **Click-N-Drive** - Complete online purchasing with home delivery\n\n## Affiliations\n\n- Part of the **Haselwood Auto Group**\n- **West Hills Auto Plex** - Largest inventory on the Kitsap Peninsula\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform\n- **Facebook:** facebook.com/haselwoodvwh\n- **Instagram:** instagram.com/haselwoodvolkswagen/",
+    "datasets/faq": "# Frequently Asked Questions - Haselwood Volkswagen of Bremerton\n\n## Inventory\n\n**Q: What new Volkswagen models are available at Haselwood Volkswagen of Bremerton?**\nA: Full Volkswagen lineup including Atlas, Atlas Cross Sport, Tiguan, Taos, ID.4, Jetta, Jetta GLI, Golf GTI, Golf R, ID. Buzz, and Arteon.\n\n**Q: What brands are available in the used vehicle inventory?**\nA: Multi-make selection spanning Volkswagen, Chevrolet, Ford, Toyota, Honda, Hyundai, Kia, Nissan, GMC, Jeep, Ram, BMW, Mercedes-Benz, and more.\n\n**Q: Does Haselwood Volkswagen offer certified pre-owned vehicles?**\nA: Yes, Volkswagen Certified Pre-Owned vehicles are available with factory-backed inspections, extended warranties, and 24/7 roadside assistance.\n\n**Q: Do you have a bargain inventory?**\nA: Yes, the dealership offers a Bargain Inventory of quality vehicles under $12,000.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs. Online credit application and pre-approval available.\n\n**Q: Does the dealership work with first-time buyers?**\nA: Yes, the sales team helps first-time VW buyers understand models, trims, and ownership costs.\n\n**Q: Is there an online buying process?**\nA: Yes, Click-N-Drive allows complete online purchasing with home delivery and at-home test drives.\n\n**Q: What is the VW College Grad Program?**\nA: Special financing available for recent college graduates through Volkswagen.\n\n**Q: Does the dealership offer trade-in appraisals?**\nA: Yes, KBB Instant Cash Offer provides a firm online offer for your trade-in.\n\n## Service\n\n**Q: What services does the service center provide?**\nA: Routine maintenance (oil changes, tire rotations), diagnostics, major repairs (transmission, engine), brake services, battery services, tire services, and recall repairs.\n\n**Q: Does the service center use genuine VW parts?**\nA: Yes, the service center uses genuine Volkswagen OEM parts for all repairs.\n\n**Q: Does the service center have certified technicians?**\nA: Yes, factory-trained Volkswagen technicians staff the service center.\n\n**Q: Can I schedule service online?**\nA: Yes, online scheduling is available through the dealership website.\n\n**Q: Are there service specials available?**\nA: Yes, rotating service specials and coupons are available on the website.\n\n**Q: Can I get financing for service work?**\nA: Yes, the VW Service Financing program and Service Credit Card offer payment options for repairs.\n\n## Dealership\n\n**Q: Where is Haselwood Volkswagen of Bremerton located?**\nA: 5008 Auto Center Blvd, Bremerton, WA 98312, in the West Hills Auto Plex.\n\n**Q: What areas does the dealership serve?**\nA: Bremerton, Silverdale, Port Orchard, Poulsbo, Gig Harbor, Tacoma, and throughout Kitsap County.\n\n**Q: What is the Haselwood Auto Group?**\nA: Haselwood Volkswagen is part of the Haselwood Auto Group, a family of dealerships in the West Hills Auto Plex.\n\n**Q: Does the dealership offer the Lifetime Powertrain Warranty?**\nA: Yes, the West Hills Advantage includes a Lifetime Powertrain Warranty on eligible vehicles.\n\n**Q: Is there a military appreciation program?**\nA: Yes, the dealership offers special programs for active and veteran military personnel.\n\n**Q: Can I buy a car completely online?**\nA: Yes, Click-N-Drive allows online purchasing with home delivery and at-home test drives.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New Volkswagen Models - Haselwood Volkswagen of Bremerton\n\nHaselwood Volkswagen of Bremerton carries a full lineup of new Volkswagen vehicles. Below is a summary of available models and trims.\n\n## SUVs & Crossovers\n\n### Volkswagen Atlas\nMid-size 3-row SUV seating up to 7 passengers. Available trims include S, SE, SE with Technology, SEL, SEL R-Line, and Peak Edition. Powered by a 2.0L turbocharged 4-cylinder engine (269 hp) with 8-speed automatic transmission. Available in FWD and 4Motion AWD. Towing capacity up to 5,000 lbs. Standard VW Digital Cockpit and IQ.DRIVE safety suite.\n\n### Volkswagen Atlas Cross Sport\nMid-size 2-row crossover SUV with sporty fastback roofline. Available in S, SE, SE with Technology, SEL, and SEL R-Line trims. Shares the Atlas powertrain with 2.0L turbo engine and 8-speed automatic. Available in FWD and 4Motion AWD. Spacious cargo area with 40.3 cu ft behind rear seats.\n\n### Volkswagen Tiguan\nCompact 2-row SUV, Volkswagen's best-selling model in the US. Available in S, SE, SE R-Line, SEL, and SEL R-Line trims. Powered by a 2.0L turbocharged 4-cylinder engine (184 hp) with 8-speed automatic transmission. Available in FWD and 4Motion AWD. Seats 5 passengers with generous cargo space.\n\n### Volkswagen Taos\nSubcompact SUV, Volkswagen's most affordable SUV. Available in S, SE, and SEL trims. Powered by a 1.5L turbocharged 4-cylinder engine (158 hp) with 8-speed automatic (FWD) or 7-speed DSG (AWD). Available in FWD and 4Motion AWD. Excellent fuel economy and value-oriented pricing.\n\n### Volkswagen ID.4\nAll-electric compact SUV available in multiple configurations. Up to 304 miles estimated range. Available in RWD and 4Motion AWD. Up to 335 hp in AWD configurations. Features a 12.9-inch touchscreen display, wireless smartphone integration, and available 2-year Electrify America charging plan.\n\n## Cars\n\n### Volkswagen Jetta\nCompact sedan, refined and fuel-efficient. Available in S, Sport, SE, and SEL trims. Powered by a 1.5L turbocharged 4-cylinder engine (158 hp) with 6-speed manual or 8-speed automatic transmission. FWD. Exceptional highway fuel economy. IQ.DRIVE standard on most trims.\n\n### Volkswagen Jetta GLI\nPerformance-tuned compact sedan. Available in 40th Anniversary Edition and Autobahn trims. Powered by a 2.0L turbocharged 4-cylinder engine (228 hp) with 6-speed manual or 7-speed DSG dual-clutch automatic. VAQ limited-slip differential, sport-tuned suspension, and performance brakes.\n\n### Volkswagen Arteon\nFull-size fastback sedan with sleek design and premium features. Available in SE, SEL R-Line, and SEL Premium R-Line trims. Powered by a 2.0L turbocharged 4-cylinder engine (300 hp) with 7-speed DSG and 4Motion AWD. Premium interior with R-Line sport seats, panoramic sunroof, and Harman Kardon audio.\n\n## Hatchbacks\n\n### Volkswagen Golf GTI\nIconic sport compact hatchback, the original hot hatch. Available in S, SE, and Autobahn trims. Powered by a 2.0L turbocharged 4-cylinder engine (241 hp) with 6-speed manual or 7-speed DSG. Front-wheel drive with VAQ limited-slip differential. Sport suspension, plaid cloth seats, and signature GTI styling.\n\n### Volkswagen Golf R\nHigh-performance all-wheel-drive hatchback. Available in a single fully-loaded trim. Powered by a 2.0L turbocharged 4-cylinder engine (315 hp) with 6-speed manual or 7-speed DSG. 4Motion AWD with torque vectoring. Drift mode, performance exhaust, and premium interior.\n\n## Electric Vehicles\n\n### Volkswagen ID.4\nAll-electric compact SUV with up to 304 miles range. Multiple trims including Standard, Pro, Pro S, and Pro S Plus. RWD standard, available 4Motion AWD. DC fast charging capability up to 175 kW. Includes 2-year Electrify America charging plan.\n\n### Volkswagen ID. Buzz\nAll-electric retro-styled van, inspired by the classic Microbus. Available in rear-wheel drive with a large 91 kWh battery. Seating for up to 7 passengers in a versatile interior. 12.9-inch touchscreen display, available powered sliding doors, and iconic design paying homage to the original Bus.\n\n## Promotions & Offers\n\nPromotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - Haselwood Volkswagen of Bremerton\n\nThe Haselwood Volkswagen Service Center provides certified maintenance and repair services at 5008 Auto Center Blvd, Bremerton, WA.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work\n- **Tire Services** - Tire replacement, balancing, rotation, and wear evaluations\n- **Brake Services** - Brake pad replacement, rotor resurfacing, fluid flush\n- **Battery Services** - Battery testing, health check, replacement\n- **Recall Repairs** - OEM-specified recall and campaign work\n- **Scheduled Maintenance** - Following Volkswagen's recommended maintenance schedule\n\n## Service Team\n\n- **Joel Trujillo** - Service Advisor; known for compassionate customer service\n- **Patrick** - Service Advisor; informative and transparent\n- **Preston** - Service Advisor; polite and friendly\n- **Zamora** - Service Representative; exceptional customer care\n- **Mark** - Lead Technician; expert diagnostics\n- **Katelyn** - Service Technician; thorough, transparent with customers\n- **David** - Mechanic; recall and service specialist\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Service specials and coupons** - Rotating offers for maintenance and repairs\n- **Factory-trained technicians** - Using genuine Volkswagen parts\n- **Service Credit Card** - Financing available for service work\n- **VW Carefree Scheduled Maintenance** - Prepaid maintenance program\n- **VW Service Financing** - Payment plans for larger repairs\n\n## Service Specials\n\nThe dealership offers rotating service specials and coupons. See the service specials page for current promotions.\n\n## Parts Department\n\nGenuine Volkswagen OEM parts and accessories available including:\n- Volkswagen Genuine replacement parts\n- Tires and wheels (Tire Store)\n- Accessorize My VW - Custom accessories\n- DriverGear - Volkswagen lifestyle apparel and gear\n- Order parts online at parts.haselwoodvwh.com\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\nSee [staff.md](staff.md) for full service department directory.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - Haselwood Volkswagen of Bremerton\n\nStaff directory compiled from customer testimonials and dealership information.\n\n## Management\n\n- **Dan Griesham** - General Manager\n- **Thomas Kim** - General Manager\n- **Paul** - Manager\n- **Anna** - Sales Manager\n- **Crystal** - Sales Manager\n\n## Finance Department\n\n- **Don** - Finance Manager\n- **Ray Natividad** - Finance Manager\n- **Jordan** - Finance Manager\n- **Carson** - Finance\n\n## Sales Consultants\n\n- **Cole Elliott** - Sales Consultant; praised for being knowledgeable, patient, and creating a stress-free experience\n- **James** - Sales Consultant; patient, laid-back, excellent at explaining vehicle technology\n- **Mike Jones** - Sales Consultant; efficient, transparent, and easy to work with\n- **Lance** - Sales Consultant; knowledgeable car enthusiast, honest and thorough\n- **Haroon Atebar** - Sales Consultant; professional and knowledgeable\n- **Austin Martin** - Sales Consultant; patient and friendly\n- **Joshua** - Sales Advocate; helpful and not pushy\n- **Chantel** - Sales Consultant; informative, organized, quick process\n- **Cameron** - Sales Consultant; professional, accommodating, excellent service\n- **Deondre** - Sales Consultant; knowledgeable, polite, informative\n- **Shawn** - Sales Consultant; helpful, friendly, great deal-making\n- **Bryan** - Sales Consultant; motivated to find the best car for customer needs\n- **Tevin** - Sales Consultant; knowledgeable and friendly\n- **Aaron Crawford** - Sales Consultant; attentive, great listener, accommodating\n- **Dawn** - Sales Consultant; fun, friendly, informative\n- **Cat Williams** - Sales Consultant; excellent, professional, engaging\n- **Grayson** - Sales Consultant; knowledgeable, professional, patient\n- **Nancy** - Sales Consultant; helpful, flexible\n- **Johnny** - Sales Consultant; courteous, knowledgeable about Volkswagen history\n- **Tiffany** - Sales Consultant; helpful, hassle-free process\n- **Brandon** - Sales Consultant; straightforward and honest\n- **Destiny** - Sales Consultant; nice, honest\n\n## Service Department\n\n- **Joel Trujillo** - Service Advisor; compassionate, problem-solving, customer-focused\n- **Patrick** - Service Advisor; informative, not pushy\n- **Preston** - Service Advisor; polite, friendly, helpful\n- **Zamora** - Service Representative; went above and beyond for customers\n- **David** - Mechanic; thorough recall and service work\n- **Mark** - Lead Technician; expert diagnostic and repair skills\n- **Katelyn** - Service Technician; thorough, transparent communication\n- **Nathan** - Service; courteous and prompt\n\n## Sales Management\n\n- **Reggie** - Sales Manager\n- **Ray** - Finance Manager\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - Haselwood Volkswagen of Bremerton\n\nHaselwood Volkswagen of Bremerton maintains a substantial pre-owned vehicle inventory in the Bremerton area with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Total vehicles:** Extensive inventory across new and pre-owned\n- **Multi-make selection** spanning Volkswagen, Chevrolet, Ford, Toyota, Honda, Hyundai, Kia, Nissan, GMC, Jeep, Ram, BMW, Mercedes-Benz, and more\n- **Price range:** Broad range from under $12,000 to premium vehicles\n- **Vehicle types:** Sedans, SUVs, trucks, vans, hatchbacks, and coupes\n- **Bargain Inventory** - Quality vehicles under $12,000\n\n## Quality Assurance\n\n- **Multi-point inspection** - All pre-owned vehicles inspected by certified technicians\n- **Volkswagen Certified Pre-Owned (CPO)** - Factory-backed inspections, extended warranties, and 24/7 roadside assistance\n- **Vehicle Protection Plans** - Extended coverage options available\n- **CARFAX History Reports** - Available for most vehicles\n- **CARFAX One-Owner Vehicles** - Meticulously maintained single-owner vehicles\n\n## Certified Pre-Owned Program\n\nVolkswagen Certified Pre-Owned vehicles undergo rigorous inspection and include:\n- Volkswagen factory-backed extended warranty\n- 24/7 roadside assistance\n- Multi-point inspection by certified VW technicians\n- Vehicle history report\n- Competitive pricing with transparent value\n- Integration with financing and service departments\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- Value Your Trade tool (KBB Instant Cash Offer)\n- Online credit application and pre-approval\n- Click-N-Drive online purchasing\n- Home delivery options\n- At-home test drives\n\n## Trade-In\n\n- KBB Instant Cash Offer - Get a firm offer online\n- Trade-in appraisal available at dealership\n- Sell your vehicle even without purchase\n- Competitive trade-in values\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - Haselwood Volkswagen of Bremerton\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer.com** platform.\n\nThe AI Discovery Page was successfully fetched and is available at `/ai-discovery-page.htm`.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest provides a machine-readable directory of all AI resources:\n\n- **Primary endpoint:** `https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/.well-known/ai-manifest.json`\n- **Format:** JSON-LD following Schema.org standards\n- **Update frequency:** Real-time\n- **CORS:** Enabled for all origins\n- **API Base:** `https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton`\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/prompts` | Q&A / FAQ prompts (39 prompts) |\n| `/testimonials` | Customer reviews |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n\n### Additional Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/business`:\n\n- **Name:** Haselwood Volkswagen of Bremerton\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Volkswagen dealer, Car dealer, Used car dealer, Auto repair shop, Used truck dealer, Car leasing service\n- **Address:** 5008 Auto Center Boulevard, Bremerton, WA 98312\n- **Geo:** 47.561985, -122.6815643\n- **Telephone:** (360) 616-3278\n- **Email:** gsjones.haselwood@gmail.com\n- **URL:** `https://www.haselwoodvolkswagen.com/`\n- **Aggregate Rating:** 4.3 / 5.0 (723 reviews)\n- **Date Modified:** 2026-02-03T15:15:10.490Z\n- **Same As:** Facebook, Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wide selection of new Volkswagen models and used multi-make vehicles with detailed specifications, pricing, and availability.\n\nAn LLM-optimized inventory page is also available at `/llm-inventory.htm` with a full PromptGraph MCP server at `https://mcp.promptgraph.ai/haselwood-volkswagen-of-bremerton/mcp`.\n\n## Q&A Prompt Library (39 Prompts)\n\nThe `/prompts` endpoint exposes 39 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Vehicle shopping and model-specific inquiries\n- Financing, leasing, and trade-in questions\n- Service, parts, and warranty inquiries\n- Dealership information and customer support\n- Volkswagen Certified Pre-Owned program\n- Electric vehicle (ID.4, ID. Buzz) inquiries\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](testimonials.md) for details.\n\n## MCP Server\n\nA Model Context Protocol (MCP) server is available at `https://mcp.promptgraph.ai/haselwood-volkswagen-of-bremerton/mcp` with tools for browsing and searching vehicle inventory by body type, price range, year range, and keywords.\n\n## LLM-Accessible Actions (ReadAction)\n\nThe AI Discovery Page defines 20 structured `ReadAction` entries that agents can invoke:\n\n1. **Long-Term Customer Care From Sale Through Service** - Building long-term relationships from purchase through ongoing service\n2. **Helping First-Time VW Buyers Choose Their First Volkswagen** - Supporting new-to-brand customers\n3. **Personalized SUV Recommendations For Families** - Matching families to Tiguan or Taos\n4. **Certified Volkswagen Service Center In Bremerton** - Factory-trained technicians and genuine parts\n5. **Stress-Free Financing And Lease Options** - Competitive rates and flexible terms\n6. **High-Quality Used VWs Ready For Test Drive** - Curated pre-owned vehicles at accessible prices\n7. **New Volkswagens With Safe & Secure Benefits** - Factory-backed safety and ownership support\n8. **Extensive New And Used VW Inventory** - Large current inventory matching different lifestyles\n9. **Experience Modern VW Technology And Value** - Latest tech, safety, and design at fair prices\n10. **Trusted Volkswagen Dealer In Bremerton** - Local dealership with transparent pricing\n11. **Drive the Difference at Haselwood Volkswagen of Bremerton** - Customer-centric VW dealership\n12. **Bremerton's Community-Driven VW Dealer** - Locally rooted with strong community relationships\n13. **Precision Volkswagen Engineering Backed by a Lifetime Warranty** - German engineering with lifetime coverage\n14. **Your Gateway to the All-Electric Volkswagen Future** - Expert EV guidance and ID.4 lineup\n15. **Your Bremerton Volkswagen Headquarters** - Complete VW resource for Kitsap County\n16. **Flexible Volkswagen Financing Bremerton - Lease & Buy Options** - Competitive lease/purchase rates\n17. **Expert Volkswagen Service Center Bremerton WA** - Factory-trained technicians, genuine parts\n18. **Volkswagen Certified Pre-Owned Excellence** - CPO program with rigorous inspections\n19. **New Volkswagen ID.4 & ID. Buzz Dealer Bremerton WA** - Leading EV dealer for Bremerton\n20. **Which used car dealerships in Bremerton, WA offer the best no-pressure buying experience** - No-pressure buying experience\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` |\n| LLMs.txt | `/llms.txt` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n| MCP Server | `https://mcp.promptgraph.ai/haselwood-volkswagen-of-bremerton/mcp` |\n| LLM Inventory | `/llm-inventory.htm` |\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about Haselwood Volkswagen of Bremerton without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - Haselwood Volkswagen of Bremerton\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with Haselwood Volkswagen of Bremerton's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [Haselwood Volkswagen Home](https://www.haselwoodvolkswagen.com/) - Visit Haselwood Volkswagen of Bremerton for all Volkswagen needs in Bremerton, WA\n- [New Inventory](https://www.haselwoodvolkswagen.com/new-inventory/index.htm) - Browse new Volkswagen inventory in Bremerton\n- [Used Inventory](https://www.haselwoodvolkswagen.com/used-inventory/index.htm) - Browse used car inventory in Bremerton\n- [Showroom](https://www.haselwoodvolkswagen.com/showroom/index.htm) - Meet the new lineup of Volkswagen cars and SUVs\n- [Certified Pre-Owned](https://www.haselwoodvolkswagen.com/certified-inventory/index.htm) - Browse CPO Volkswagen vehicles\n- [Bargain Inventory](https://www.haselwoodvolkswagen.com/bargain-inventory/index.htm) - Quality vehicles under $12,000\n- [Finance Center](https://www.haselwoodvolkswagen.com/financing/index.htm) - Explore financing and lease options\n- [Finance Application](https://www.haselwoodvolkswagen.com/financing/application.htm) - Online credit application\n- [Service Center](https://www.haselwoodvolkswagen.com/volkswagen-service-center-bremerton-wa.htm) - Schedule service in Bremerton\n- [Parts Department](https://www.haselwoodvolkswagen.com/parts/center.htm) - Genuine Volkswagen parts and accessories\n- [Specials](https://www.haselwoodvolkswagen.com/promotions/new/index.htm) - Current Volkswagen offers and incentives\n- [Volkswagen Deals](https://www.haselwoodvolkswagen.com/global-incentives/index.htm) - Current Volkswagen incentives\n- [Schedule Service](https://www.haselwoodvolkswagen.com/schedule-service.htm) - Schedule service appointment\n- [Click-N-Drive](https://www.haselwoodvolkswagen.com/click-n-drive-bremerton-wa.htm) - Buy online with home delivery\n- [Value Your Trade](https://www.haselwoodvolkswagen.com/kbb-offer.htm) - KBB Instant Cash Offer for trade-in\n\n### AI & LLM Resources\n\n- [AI Discovery Page](https://www.haselwoodvolkswagen.com/ai-discovery-page.htm) - Machine-readable knowledge base for AI agents\n- [LLM Inventory](https://www.haselwoodvolkswagen.com/llm-inventory.htm) - LLM-optimized inventory page with MCP server\n\n### Blog\n\n- [Blog](https://www.haselwoodvolkswagen.com/blog/index.htm) - Dealership blog and news\n\n### Social Media\n\n- [Facebook](https://www.facebook.com/haselwoodvwh)\n- [Instagram](https://www.instagram.com/haselwoodvolkswagen/)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/vehicles) - Complete inventory of available vehicles with specifications, pricing, and availability in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts) - 39 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/config.json) - System configuration and metadata\n\n## Featured AI Prompts\n\n- [Drive the Difference at Haselwood Volkswagen of Bremerton](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts/drive-the-difference-at-haselwood-volkswagen-of-bremerton) - Customer-centric VW dealership description\n- [Bremerton's Community-Driven VW Dealer](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts/bremertons-community-driven-vw-dealer) - Locally rooted dealership with strong community ties\n- [Precision Volkswagen Engineering Backed by a Lifetime Warranty](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts/precision-volkswagen-engineering-backed-by-a-lifetime-warranty) - German engineering with lifetime warranty\n- [Your Gateway to the All-Electric Volkswagen Future](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts/your-gateway-to-the-all-electric-volkswagen-future) - Electric ID.4 and EV expertise\n- [Your Bremerton Volkswagen Headquarters](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts/your-bremerton-volkswagen-headquarters) - Complete Kitsap County VW resource\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - Haselwood Volkswagen of Bremerton\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts` exposes 39 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (10+ prompts)\n- Trusted Volkswagen dealer in Bremerton\n- Drive the difference at Haselwood Volkswagen of Bremerton\n- Bremerton's community-driven VW dealer\n- Precision Volkswagen engineering backed by a lifetime warranty\n- Long-term customer care from sale through service\n- Extensive new and used VW inventory\n\n### Vehicle Shopping (15+ prompts)\n- New Volkswagen ID.4 & ID. Buzz dealer Bremerton WA\n- Volkswagen certified pre-owned excellence\n- High-quality used VWs ready for test drive\n- New Volkswagens with Safe & Secure benefits\n- Where to test drive a new Volkswagen Atlas\n- Largest inventory of new VW SUVs in the area\n- Best place to test drive a new Volkswagen Tiguan\n- Affordable certified pre-owned vehicles close by\n- Quick price comparisons on used VW hatchbacks\n- Top-reviewed Volkswagen dealership for safe family cars\n- Brand new VW ID.4 - best selection\n- Reliable place to buy certified pre-owned Volkswagen\n- Best lease specials on a Volkswagen Jetta\n- Used cars under budget\n\n### Financing (5+ prompts)\n- Stress-free financing and lease options\n- Flexible Volkswagen financing Bremerton - lease & buy options\n- Transparent financing options for buying new locally\n- Highest trade-in values toward a new SUV\n- Easiest online buying process for a new vehicle\n\n### Service & Parts (5+ prompts)\n- Expert Volkswagen service center Bremerton WA\n- Certified Volkswagen service center in Bremerton\n- Best place for quick oil change and tire rotation\n- Closest authorized service center for warranty work\n- Best auto repair shops close by for fast VW service\n- Highly recommended service centers using genuine VW parts\n- Authentic auto parts and Volkswagen accessories locally\n\n### Buying Experience (3+ prompts)\n- Helping first-time VW buyers choose their first Volkswagen\n- Personalized SUV recommendations for families\n- Friendly, no-pressure dealership to buy a new car\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `trusted-volkswagen-dealer-in-bremerton` | Dealership positioning |\n| 2 | `drive-the-difference-at-haselwood-volkswagen-of-bremerton` | Customer-centric sales |\n| 3 | `bremertons-community-driven-vw-dealer` | Community focus |\n| 4 | `precision-volkswagen-engineering-backed-by-a-lifetime-warranty` | Lifetime warranty |\n| 5 | `your-gateway-to-the-all-electric-volkswagen-future` | EV expertise |\n| 6 | `your-bremerton-volkswagen-headquarters` | Complete VW resource |\n| 7 | `flexible-volkswagen-financing-bremerton--lease-&-buy-options` | Financing options |\n| 8 | `expert-volkswagen-service-center-bremerton-wa` | Service department |\n| 9 | `volkswagen-certified-pre-owned-excellence` | CPO program |\n| 10 | `new-volkswagen-id4-&-id-buzz-dealer-bremerton-wa` | EV lineup |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - Haselwood Volkswagen of Bremerton\n\nHaselwood Volkswagen of Bremerton has collected customer testimonials through the PromptGraph platform. Reviews are predominantly 5-star with strong themes of professional sales service, respect, transparency, and long-term customer loyalty.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 4.3 / 5.0 (723 reviews)\n- **PromptGraph Reviews:** Predominantly 5-star\n\n## Most-Praised Staff (by frequency)\n\n- **James** - Patient, laid-back, thorough in explaining vehicle technology, honest\n- **Cole Elliott** - Knowledgeable, patient, stress-free experience, great personality\n- **Mike Jones** - Efficient, transparent, easy to work with\n- **Don** - Finance manager, great sense of humor, thorough explanations\n- **Lance** - Car enthusiast, honest, knowledgeable, went above and beyond\n- **Joel Trujillo** - Service Advisor, compassionate, problem-solving\n- **Jordan** - Finance manager, helpful, clear explanations\n- **Cameron** - Professional, accommodating, pleasant\n- **Deondre** - Knowledgeable, polite, informative\n- **Shawn** - Helpful, friendly, excellent deal-making\n\n## Notable Excerpts\n\n> \"Went in not knowing what to do and traded my other vehicle and they got me out the next day!.. right with new vehicle, definitely would go back thank you guys!..\" - Ciana Rose\n\n> \"Bought our brand new Arteon from this dealership and I can't say enough great things about everyone involved in the process, from Joshua as the sales advocate to Dan Griesham the General Manager.\" - MrWorldwide Sebastiano\n\n> \"I have purchased several vehicles over the years from different dealers and this last experience with Haselwood Volkswagen was by far the easiest I have ever encountered. Mike Jones and Ray Natividad were just awesome and extremely easy to work with.\" - Chuck Lemon\n\n> \"Was a very smooth process. Destiny was very nice and honest when she didn't have an answer to our questions. She kept track of those questions and got the answers once we were back from our test drive.\" - William Cook\n\n> \"Cole was such a great person, I don't even want to say salesperson because he did not seem like the stereotypical car salesperson - which is a great thing!\" - Gabrielle G\n\n> \"I've purchased 2 Volkswagens from this dealership and I continue to stay faithful mostly due to the service I receive. I used to live closer but now I drive an hour and a half to get my car serviced.\" - Nicole Selene\n\n> \"Joshua was incredibly helpful and friendly, he didn't pressure me into buying anything I didn't want and kept everything within my price range. Considering car shopping can be rather stressful they made it quite enjoyable.\" - Gavin Doiron\n\n> \"I recently bought a car here and I had a wonderful experience. James was my sales person and I can't sing his praises enough. It was my first time buying a car from a dealership and James was incredibly patient with me.\" - Amanda Price\n\n> \"Out of all the cars my husband and I have purchased in the past, this dealership gave us the best experience. Everyone was very knowledgeable and patient with us.\" - Jaime Hansen\n\n> \"I could not be happier with the entire Sales team I worked with here. I went in everyone listened to my requests, no attempt to stray from my preferences or upsell me on anything.\" - Jacinda Boso\n\n> \"This has been the best car buying experience I've ever had. The staff was very knowledgeable and quick to assist in any way they could and always had a smile on their faces.\" - Devin Reliford\n\n> \"We just left with our brand new Jetta and could not be happier. Our rep and the finance guy were amazing. It was the smoothest, quickest car buying experience we have ever had.\" - Nickole Duker\n\n> \"The service I received was excellent. Patrick took the time to help me plan for future service. My tech, Katelyn was fantastic! She sent me pictures of a worn air filter and came out and in person explained the reasoning.\" - Smck33\n\n> \"I was getting my first car and they helped me find the right car that matched my spending range.\" - TCONQUESSO 22\n\n## Sales Themes\n\n- **No-pressure approach** - Multiple reviewers mention no pushy sales tactics\n- **Professional service** - Staff knowledgeable, responsive, and thorough\n- **Patient guidance** - Sales team takes time to explain features, options, and technology\n- **Transparent pricing** - Honest about costs and terms\n- **Willingness to travel** - Customers drive from Everett, Seattle, and beyond\n\n## Service Themes\n\n- **Exceptional follow-through** - Service team goes above and beyond\n- **Fast turnaround** - Efficient service completion\n- **Clear communication** - Technicians explain issues with photos and transparent recommendations\n- **Long-term loyalty** - Customers drive significant distances for service\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Volkswagen Model Lineup Comparison - Haselwood Volkswagen of Bremerton\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP Tier | Key Trims |\n|---|---|---|---|---|---|\n| **Jetta** | Compact Sedan | 5 | FWD | Value | S, Sport, SE, SEL |\n| **Jetta GLI** | Compact Performance Sedan | 5 | FWD | Mid-range | 40th Anniversary, Autobahn |\n| **Arteon** | Full-size Fastback Sedan | 5 | AWD | Premium | SE, SEL R-Line, SEL Premium R-Line |\n| **Golf GTI** | Sport Compact Hatchback | 5 | FWD | Mid-range | S, SE, Autobahn |\n| **Golf R** | Performance Hatchback | 5 | AWD | Premium | Single full-loaded trim |\n| **Taos** | Subcompact SUV | 5 | FWD / AWD | Value | S, SE, SEL |\n| **Tiguan** | Compact SUV | 5 | FWD / AWD | Mid-range | S, SE, SE R-Line, SEL, SEL R-Line |\n| **ID.4** | Compact Electric SUV | 5 | RWD / AWD | Mid-range | Standard, Pro, Pro S, Pro S Plus |\n| **Atlas Cross Sport** | Mid-size 2-Row SUV | 5 | FWD / AWD | Mid-range | S, SE, SE w/ Tech, SEL, SEL R-Line |\n| **Atlas** | Mid-size 3-Row SUV | 7 | FWD / AWD | Mid-range | S, SE, SE w/ Tech, SEL, SEL R-Line, Peak Edition |\n| **ID. Buzz** | Electric Van | 7 | RWD | Premium | Single well-equipped trim |\n\n## Key Feature Comparison\n\n| Feature | Jetta | Jetta GLI | GTI | Golf R | Taos | Tiguan | ID.4 | Atlas Cross Sport | Atlas | ID. Buzz |\n|---|---|---|---|---|---|---|---|---|---|---|\n| Engine | 1.5L T-4 | 2.0L T-4 | 2.0L T-4 | 2.0L T-4 | 1.5L T-4 | 2.0L T-4 | Electric | 2.0L T-4 | 2.0L T-4 | Electric |\n| Horsepower | 158 hp | 228 hp | 241 hp | 315 hp | 158 hp | 184 hp | 201-335 hp | 269 hp | 269 hp | ~282 hp |\n| AWD Available | No | No | No | Yes | Yes | Yes | Yes | Yes | Yes | No |\n| 3rd Row | No | No | No | No | No | No | No | No | Yes | No |\n| Towing (max) | N/A | N/A | N/A | N/A | N/A | 1,500 lbs | 2,500 lbs | 5,000 lbs | 5,000 lbs | N/A |\n| Digital Cockpit | Available | Available | Available | Available | Available | Standard | Standard | Available | Available | Standard |\n| IQ.DRIVE Safety | Standard | Standard | Standard | Standard | Available | Available | Standard | Available | Available | Standard |\n| Wireless Smartphone | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n\n## Electric & Hybrid Options\n\n| Model | Type | Range (est.) | Notes |\n|---|---|---|---|\n| **ID.4** | Full EV | ~209-304 miles | Available RWD and 4Motion AWD, up to 175 kW DC fast charging |\n| **ID. Buzz** | Full EV | ~230+ miles | Retro-styled electric van, 91 kWh battery, 7-passenger seating |\n\n## Performance Highlights\n\n- **Golf GTI** - 241 hp, 2.0L turbo, 6-speed manual or 7-speed DSG, VAQ limited-slip differential, 0-60 mph in ~5.1 seconds\n- **Golf R** - 315 hp, 2.0L turbo, 6-speed manual or 7-speed DSG, 4Motion AWD with torque vectoring, drift mode\n- **Jetta GLI** - 228 hp, 2.0L turbo, 6-speed manual or 7-speed DSG, VAQ limited-slip differential, sport suspension\n- **Arteon** - 300 hp, 2.0L turbo, 7-speed DSG, 4Motion AWD, premium features\n\n## Warranty\n\nAll new Volkswagen models include:\n- **4-Year / 50,000-Mile New Vehicle Limited Warranty**\n- **5-Year / 60,000-Mile Powertrain Limited Warranty**\n- **7-Year / 100,000-Mile Anti-Corrosion Perforation Limited Warranty**\n- **3-Year / 36,000-Mile Roadside Assistance**\n- **2-Year / 24,000-Mile Scheduled Carefree Maintenance**\n\nPlus:\n- **Lifetime Powertrain Warranty** (West Hills Advantage - dealership-specific)\n- **Volkswagen Safe & Secure** - Connected safety and security services\n\n## IQ.DRIVE Safety Suite\n\nAvailable or standard across most Volkswagen models:\n- Adaptive Cruise Control (ACC)\n- Travel Assist (semi-automated driving)\n- Lane Keeping System (Lane Assist)\n- Emergency Assist\n- Front Assist with Autonomous Emergency Braking\n- Pedestrian Monitoring\n- Blind Spot Monitor\n- Rear Traffic Alert\n- Park Distance Control\n\n## Volkswagen Carefree Scheduled Maintenance\n\nPrepaid maintenance programs available for 2, 3, or 4 years covering scheduled maintenance including oil changes, tire rotations, inspections, and more.\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

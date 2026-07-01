@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>west-hills-autoplex - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "west-hills-autoplex";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/autoplex",
+        "label": "West Hills Auto Plex",
+        "type": "Entities",
+        "description": "Multi-franchise automotive group in Bremerton, WA operating five brand-specific dealerships \u2014 Honda, Chrysler Jeep Dodge RAM, Ford, Kia, and Mazda \u2014 as part of the Haselwood Auto Group.",
+        "resource": "https://www.westhillsautoplex.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - West Hills Auto Plex",
+        "type": "Entities",
+        "description": "Common questions about the West Hills Auto Plex group, member dealerships, inventory, financing, and service in Bremerton, WA.",
+        "resource": "https://www.westhillsautoplex.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-chrysler-jeep-dodge-ram",
+        "label": "West Hills Chrysler Jeep Dodge RAM",
+        "type": "Entities",
+        "description": "Chrysler, Jeep, Dodge, and RAM dealership in Bremerton, WA serving Kitsap Peninsula with new and pre-owned vehicles, Mopar-certified service, genuine parts, and flexible financing.",
+        "resource": "https://www.westhillscjd.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 45
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-ford",
+        "label": "West Hills Ford",
+        "type": "Entities",
+        "description": "Ford dealership in Bremerton, WA serving Kitsap Peninsula with new and pre-owned Ford vehicles, factory-certified service, genuine Ford parts, and flexible financing options.",
+        "resource": "https://www.westhillsford.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 27
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-honda",
+        "label": "West Hills Honda",
+        "type": "Entities",
+        "description": "Honda dealership in Bremerton, WA serving Kitsap Peninsula with new and pre-owned Honda vehicles, certified service, genuine parts, and flexible financing options.",
+        "resource": "https://www.westhillshonda.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-kia",
+        "label": "West Hills Kia",
+        "type": "Entities",
+        "description": "Kia dealership in Bremerton, WA serving Kitsap Peninsula with new and pre-owned Kia vehicles, factory-certified service, genuine Kia parts, and flexible financing options.",
+        "resource": "https://www.westhillskia.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-mazda",
+        "label": "West Hills Mazda",
+        "type": "Entities",
+        "description": "Mazda dealership in Bremerton, WA serving Kitsap Peninsula with new and pre-owned Mazda vehicles, factory-certified service, genuine Mazda parts, and flexible financing.",
+        "resource": "https://www.westhillsmazda.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Pages - West Hills Autoplex",
+        "type": "APIs",
+        "description": "Machine-readable knowledge bases and semantic data endpoints for the West Hills Auto Plex group and its member dealerships, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.westhillsautoplex.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - West Hills Autoplex",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for the West Hills Autoplex group and its member dealerships in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-autoplex/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - West Hills Autoplex",
+        "type": "Playbooks & Runbooks",
+        "description": "Structured Q&A prompts covering the West Hills Autoplex group, member dealerships, vehicles, financing, service, and dealership info for Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-autoplex/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/dealership-comparison",
+        "label": "West Hills Autoplex Dealership Comparison",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of all five member dealerships of the West Hills Auto Plex in Bremerton, WA including franchise, address, phone, hours, models, and ratings.",
+        "resource": "https://www.westhillsautoplex.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 33
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/autoplex__datasets/west-hills-honda",
+        "source": "datasets/autoplex",
+        "target": "datasets/west-hills-honda"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/autoplex__datasets/west-hills-chrysler-jeep-dodge-ram",
+        "source": "datasets/autoplex",
+        "target": "datasets/west-hills-chrysler-jeep-dodge-ram"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/autoplex__datasets/west-hills-ford",
+        "source": "datasets/autoplex",
+        "target": "datasets/west-hills-ford"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/autoplex__datasets/west-hills-kia",
+        "source": "datasets/autoplex",
+        "target": "datasets/west-hills-kia"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/autoplex__datasets/west-hills-mazda",
+        "source": "datasets/autoplex",
+        "target": "datasets/west-hills-mazda"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/autoplex",
+        "source": "datasets/faq",
+        "target": "datasets/autoplex"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-chrysler-jeep-dodge-ram__datasets/autoplex",
+        "source": "datasets/west-hills-chrysler-jeep-dodge-ram",
+        "target": "datasets/autoplex"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-ford__datasets/autoplex",
+        "source": "datasets/west-hills-ford",
+        "target": "datasets/autoplex"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-honda__datasets/autoplex",
+        "source": "datasets/west-hills-honda",
+        "target": "datasets/autoplex"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-kia__datasets/autoplex",
+        "source": "datasets/west-hills-kia",
+        "target": "datasets/autoplex"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/west-hills-mazda__datasets/autoplex",
+        "source": "datasets/west-hills-mazda",
+        "target": "datasets/autoplex"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/autoplex": "# West Hills Auto Plex\n\nThe West Hills Auto Plex is a multi-franchise automotive group located in Bremerton, WA, operating five brand-specific dealerships under the Haselwood Auto Group umbrella. The auto plex campus spans West Hills Boulevard and Oyster Bay Avenue South in Bremerton, serving the Kitsap Peninsula including Silverdale, Port Orchard, Poulsbo, Bainbridge Island, and the greater Seattle area.\n\n## History\n\n- **1940s** \u2014 Charles \"Chuck\" Haselwood hitchhiked from Ellensburg, WA to Bremerton after WWII service under General Patton, worked at Speed Service gas station downtown\n- **1950s** \u2014 Chuck opened his own gas station and began selling used cars on the side with a pioneering 30-Day Warranty\n- **1960s** \u2014 Opened first dedicated used car dealership on 6th Street in downtown Bremerton\n- **1970s-1980s** \u2014 Expanded into new-car franchises including Buick, GMC, and Toyota; became one of the first 25 Buick dealerships nationally\n- **1990s** \u2014 Rick Wiler (Chuck's stepson) joined and became President/Owner; built standalone Toyota facility and Chrysler Jeep Dodge facility; over 200 staff by 1994\n- **2015** \u2014 Purchased the Parr Dealership Group, adding Hyundai, Volkswagen, Ford, and Mazda brands\n- **Present** \u2014 Five franchise-branded dealerships covering Honda, Ford, Kia, Mazda, and Chrysler/Jeep/Dodge/RAM under the West Hills name; additional Haselwood-branded Chevrolet, GMC, Hyundai, Volkswagen, and Toyota stores in the group\n\n## Member Dealerships\n\n| Dealership | Address | Phone | Franchises |\n|---|---|---|---|\n| West Hills Honda | 520 W Hills Blvd, Bremerton, WA 98312 | (360) 616-3274 | Honda |\n| West Hills Chrysler Jeep Dodge RAM | 900 W Hills Blvd, Bremerton, WA 98312-6300 | (360) 616-3275 | Chrysler, Jeep, Dodge, RAM |\n| West Hills Ford | 1100 Oyster Bay Ave S, Bremerton, WA 98312 | (360) 616-3277 | Ford |\n| West Hills Kia | 515 West Hills Blvd NW, Bremerton, WA 98312 | (360) 616-3273 | Kia |\n| West Hills Mazda | 1000 Oyster Bay Ave S NW, Bremerton, WA 98312 | (360) 362-4172 | Mazda |\n\n## Group Sales Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\n## Leadership\n\n- **Rick Wiler** \u2014 Owner/President, Haselwood Auto Group\n- **David Gandel** \u2014 General Manager, West Hills Honda\n- **Clayton Crittenden** \u2014 General Manager, West Hills Ford\n\nSee individual dealership files for full staff directories.\n\n## Amenities\n\n- Click-N-Drive online purchasing with home delivery\n- Video walkarounds and virtual test drives\n- Maintenance pick-up and delivery\n- On-site rental car agency\n- State-of-the-art facilities with customer amenities\n- Free CarFax reports on all pre-owned vehicles\n- West Hills Extended Service Plus plans\n- Third-party market evaluation on pricing\n\n## Community Involvement\n\nThe West Hills Auto Plex supports local Kitsap County organizations including:\n- Kitsap Humane Society (DFAC partnership)\n- Local military appreciation programs (proximity to Naval Base Kitsap)\n- Various Bremerton-area charities and sponsorships\n\n## Affiliations\n\n- **Haselwood Auto Group** \u2014 Parent organization; also operates Haselwood Chevrolet GMC, Haselwood Hyundai, Haselwood Volkswagen of Bremerton, Heartland Toyota\n- **Dealer.com** \u2014 Website platform for all member dealerships\n- **PromptGraph** \u2014 AI platform powering AI Discovery Pages and structured data endpoints\n- **KBB** \u2014 Kelley Blue Book trade-in valuation partner\n\nSee [west-hills-honda.md](west-hills-honda.md), [west-hills-chrysler-jeep-dodge-ram.md](west-hills-chrysler-jeep-dodge-ram.md), [west-hills-ford.md](west-hills-ford.md), [west-hills-kia.md](west-hills-kia.md), and [west-hills-mazda.md](west-hills-mazda.md) for individual dealership profiles.",
+    "datasets/faq": "# Frequently Asked Questions - West Hills Auto Plex\n\n## Group\n\n**Q: What is the West Hills Auto Plex?**\nA: A multi-franchise automotive group in Bremerton, WA operating five brand-specific dealerships under the Haselwood Auto Group: West Hills Honda, West Hills Chrysler Jeep Dodge RAM, West Hills Ford, West Hills Kia, and West Hills Mazda.\n\n**Q: Where is the West Hills Auto Plex located?**\nA: Dealerships are located along West Hills Boulevard and Oyster Bay Avenue South in Bremerton, WA 98312, just off Route 3.\n\n**Q: Who owns the West Hills Auto Plex?**\nA: The group is owned and operated by Rick Wiler and the Haselwood Auto Group, continuing the legacy founded by Chuck Haselwood.\n\n**Q: What is the Haselwood Auto Group?**\nA: The parent organization that operates the West Hills-branded dealerships plus Haselwood Chevrolet GMC, Haselwood Hyundai, Haselwood Volkswagen of Bremerton, and Heartland Toyota.\n\n## Inventory\n\n**Q: What new vehicle brands are available?**\nA: Honda, Ford, Kia, Mazda, Chrysler, Jeep, Dodge, and RAM across five branded dealerships.\n\n**Q: Do you sell used vehicles?**\nA: Yes, all member dealerships carry pre-owned and certified pre-owned inventory spanning multiple makes and models.\n\n**Q: What is the West Hills Pre-Owned warranty?**\nA: A 3-Month or 3,000-Mile Customer Confidence Warranty on West Hills pre-owned vehicles.\n\n**Q: Do you offer certified pre-owned vehicles?**\nA: Yes, each franchise offers manufacturer-certified pre-owned programs with factory-backed inspections and warranties.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs through a network of nationally recognized lenders.\n\n**Q: Does the group work with all credit profiles?**\nA: Yes, the finance teams work with multiple lenders to accommodate various credit situations and budgets.\n\n**Q: Can I apply for financing online?**\nA: Yes, online credit applications are available for all member dealerships.\n\n**Q: How do I value my trade-in?**\nA: KBB (Kelley Blue Book) trade-in valuation is available online through all member dealership websites.\n\n## Service\n\n**Q: Can I service a vehicle at any West Hills dealership?**\nA: Service centers are brand-specific. Take your Honda to West Hills Honda, your Ford to West Hills Ford, etc. Most service centers can also work on other makes.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through each dealership's website.\n\n**Q: Do you offer home delivery for service?**\nA: Yes, maintenance pick-up and delivery is available in the local area.\n\n**Q: Do you have service coupons?**\nA: Yes, each dealership offers service specials and coupons on their websites.\n\n## Dealership Amenities\n\n**Q: Do you offer online purchasing?**\nA: Yes, Click-N-Drive online purchasing with home delivery is available across the group.\n\n**Q: Is there a rental car available during service?**\nA: Yes, some locations offer on-site rental car agencies and loaner vehicles.\n\n**Q: Do you serve military customers?**\nA: Yes, the group has dedicated military appreciation programs given its proximity to Naval Base Kitsap.\n\nSee [autoplex.md](autoplex.md) for the group overview and individual dealership profiles.",
+    "datasets/west-hills-chrysler-jeep-dodge-ram": "# West Hills Chrysler Jeep Dodge RAM\n\nWest Hills Chrysler Jeep Dodge RAM is a multi-franchise dealership located at **900 W Hills Blvd, Bremerton, WA 98312-6300**, serving the Kitsap Peninsula with new and pre-owned Chrysler, Jeep, Dodge, and RAM vehicles, Mopar-certified service, and Genuine Mopar parts.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 728-3077 |\n| Service | (360) 728-3988 |\n| Parts | (360) 842-2349 |\n| Main | (360) 616-3275 |\n\n## Hours\n\n| Department | Mon-Fri | Sat | Sun |\n|---|---|---|---|\n| Sales | 9:00 AM - 8:00 PM | 9:00 AM - 8:00 PM | 10:00 AM - 7:00 PM |\n| Service | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n| Parts | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n\n## Location\n\n- **Address:** 900 W Hills Blvd, Bremerton, WA 98312-6300\n- **Geo:** 47.5554348, -122.6782556\n\n## Available Models\n\n### Chrysler\n- **Pacifica / Pacifica Hybrid** \u2014 Minivan with available plug-in hybrid\n- **Voyager** \u2014 Value-oriented minivan\n- **300** \u2014 Full-size sedan\n\n### Jeep\n- **Wrangler / Wrangler 4xe** \u2014 Iconic off-road SUV with plug-in hybrid option\n- **Grand Cherokee / Grand Cherokee 4xe** \u2014 Mid-size premium SUV with plug-in hybrid\n- **Grand Cherokee L** \u2014 3-row extended Grand Cherokee\n- **Cherokee** \u2014 Compact SUV\n- **Compass** \u2014 Subcompact SUV\n- **Renegade** \u2014 Subcompact off-road capable SUV\n- **Gladiator** \u2014 Mid-size pickup truck with open-air off-road capability\n- **Wagoneer / Wagoneer L / Grand Wagoneer / Grand Wagoneer L** \u2014 Full-size luxury SUVs\n- **Wagoneer S** \u2014 All-electric luxury SUV\n- **Hornet** \u2014 Compact performance SUV\n\n### Dodge\n- **Charger** \u2014 Full-size sedan, available in high-performance variants\n- **Durango** \u2014 Mid-size 3-row SUV with available V8 power\n- **Hornet** \u2014 Compact performance SUV\n\n### RAM\n- **1500** \u2014 Light-duty pickup truck\n- **2500 / 3500** \u2014 Heavy-duty pickup trucks\n- **4500 / 5500 Chassis Cab** \u2014 Commercial chassis cabs\n- **ProMaster 1500 / 2500 / 3500** \u2014 Commercial cargo vans\n- **ProMaster 3500 EV** \u2014 All-electric commercial van\n- **ProMaster City** \u2014 Compact cargo van\n\n## Services\n\n- **Finance Center** \u2014 Online credit application, payment calculator, trade-in valuation\n- **Service Center** \u2014 Mopar-certified technicians, diagnostics, maintenance, major repairs, all makes and models\n- **Parts Department** \u2014 Genuine Mopar parts, performance parts, accessories\n\n## Amenities\n\n- Rental vehicles available\n- Saturday service hours\n- Certified technicians\n- Mopar performance parts\n- Authorized state inspections\n- Free WiFi\n\n## Reputation\n\n- Aggregate rating: 4.5 / 5.0 (2,660 reviews)\n\nSee [autoplex.md](autoplex.md) for the group overview.",
+    "datasets/west-hills-ford": "# West Hills Ford\n\nWest Hills Ford is a full-service Ford dealership located at **1100 Oyster Bay Ave South, Bremerton, WA 98312**, serving the Kitsap Peninsula including Silverdale, Port Orchard, Poulsbo, and Bainbridge Island. It is the flagship franchise of the West Hills Auto Plex.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 842-2413 |\n| Service | (360) 842-2420 |\n| Parts | (360) 842-2475 |\n| Main | (360) 616-3277 |\n\n## Hours\n\n| Department | Mon-Sat | Sun |\n|---|---|---|\n| Sales | 9:00 AM - 8:00 PM | 10:00 AM - 7:00 PM |\n| Service | 7:30 AM - 7:00 PM (Mon-Fri), 8:00 AM - 4:00 PM (Sat) | Closed |\n| Parts | 7:30 AM - 7:00 PM (Mon-Fri), 8:00 AM - 4:00 PM (Sat) | Closed |\n\n## Location\n\n- **Address:** 1100 Oyster Bay Ave South, Bremerton, WA 98312\n- **Geo:** 47.5538477, -122.6751049\n\n## Ford Models\n\n### SUVs & Crossovers\n- **Bronco** \u2014 Off-road SUV, available in 2-door and 4-door\n- **Bronco Sport** \u2014 Compact off-road capable SUV\n- **Escape** \u2014 Compact crossover SUV\n- **Edge** \u2014 Mid-size crossover SUV\n- **Explorer** \u2014 Mid-size 3-row SUV, America's best-selling SUV\n- **Expedition / Expedition Max** \u2014 Full-size 3-row SUV with heavy-duty towing\n- **Mustang Mach-E** \u2014 All-electric crossover SUV\n\n### Cars\n- **Mustang** \u2014 Iconic pony car, available in GT, Dark Horse, and high-performance variants\n\n### Trucks\n- **F-150** \u2014 Best-selling full-size pickup truck, multiple trims including Raptor\n- **F-250 / F-350 Super Duty** \u2014 Heavy-duty pickup trucks\n- **Maverick** \u2014 Compact hybrid pickup truck\n\n### Vans\n- **Transit** \u2014 Full-size commercial cargo/passenger van\n- **Transit Connect** \u2014 Compact cargo van\n- **E-Transit** \u2014 All-electric commercial van\n\n### Electrified\n- **F-150 PowerBoost Hybrid** \u2014 Full-size hybrid pickup\n- **Mustang Mach-E** \u2014 All-electric SUV\n- **E-Transit** \u2014 All-electric cargo van\n\n## Services\n\n- **Finance Center** \u2014 Online credit application, payment calculator, trade-in valuation, Ford lease specials\n- **Service Center** \u2014 Ford-certified technicians, diagnostics, routine maintenance, major repairs\n- **Parts Department** \u2014 Genuine Ford (OEM) parts and accessories\n\n## Online Tools\n\n- Click-N-Drive online purchasing with home delivery\n- Online service scheduling\n- Video walkarounds\n- Test Drive at Home\n- Maintenance Pick-up\n- KBB trade-in valuation\n\n## Staff\n\n- **Clayton Crittenden** \u2014 General Manager (360-616-3703)\n- **Zach Re** \u2014 General Sales Manager\n- **Magdy Boules** \u2014 Finance Director\n- **Richard Palmer** \u2014 Service Manager (360-616-3704)\n- **Chris Patton** \u2014 Parts Manager (360-616-3705)\n\n## Reputation\n\n- Aggregate rating: 4.6 / 5.0 (3,135 reviews)\n\nSee [autoplex.md](autoplex.md) for the group overview.",
+    "datasets/west-hills-honda": "# West Hills Honda\n\nWest Hills Honda is a full-service Honda dealership located at **520 W Hills Blvd, Bremerton, WA 98312**, serving the Kitsap Peninsula including Silverdale, Port Orchard, Poulsbo, Bainbridge Island, and the greater Seattle area.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 728-3071 |\n| Service | (360) 728-3072 |\n| Parts | (360) 728-3075 |\n| Main | (360) 616-3274 |\n\nEmail: gsjones.haselwood@gmail.com\n\n## Hours\n\n| Department | Mon-Fri | Sat | Sun |\n|---|---|---|---|\n| Sales | 9:00 AM - 8:00 PM | 9:00 AM - 8:00 PM | 10:00 AM - 7:00 PM |\n| Service | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n| Parts | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n\n## Location\n\n- **Address:** 520 W Hills Blvd, Bremerton, WA 98312\n- **Geo:** 47.5567767, -122.6778507\n\n## Honda Models\n\n- **Civic / Civic Hybrid** \u2014 Compact sedan and hatchback, a best-selling icon\n- **Accord / Accord Hybrid** \u2014 Mid-size sedan with refined performance\n- **CR-V / CR-V Hybrid** \u2014 Compact SUV, top-selling Honda in its class\n- **Pilot** \u2014 Mid-size 3-row SUV with seating for up to 8\n- **HR-V** \u2014 Subcompact crossover SUV\n- **Odyssey** \u2014 Minivan with family-friendly features\n- **Ridgeline** \u2014 Mid-size pickup truck with unibody construction\n- **Prologue** \u2014 All-electric SUV, Honda's first dedicated EV\n- **Passport** \u2014 Mid-size 2-row SUV with off-road capability\n\n## Services\n\n- **Finance Center** \u2014 Online credit application, payment calculator, trade-in valuation, multiple lenders\n- **Service Center** \u2014 Factory-trained technicians, Honda Express Service, diagnostics, maintenance, major repairs\n- **Parts Department** \u2014 Genuine Honda parts and accessories, tire center\n\n## Online Tools\n\n- Click-N-Drive online purchasing with home delivery\n- Online service scheduling\n- Online credit application and pre-approval\n- Payment calculator\n- Trade-in valuation tool\n\n## Special Programs\n\n- **West Hills Advantage** \u2014 Lifetime Powertrain Warranty on new vehicle purchases\n- **Honda Certified Pre-Owned** \u2014 Factory-backed with 7-year/100,000-mile powertrain warranty\n- **Military Appreciation** \u2014 Special incentives for service members near Naval Base Kitsap\n- **West Hills Extended Service Plus** \u2014 Protection plans at time of purchase\n\n## Awards\n\n- **Honda President's Award** \u2014 Multiple wins (2008, 2012, 2014, 2015, 2016)\n\n## Reputation\n\n- Aggregate rating: 4.6 / 5.0 (2,019 reviews)\n- Google Business Profile: 4.6 stars (1,870+ reviews)\n\nSee [autoplex.md](autoplex.md) for the group overview and member dealership listings.",
+    "datasets/west-hills-kia": "# West Hills Kia\n\nWest Hills Kia is a full-service Kia dealership located at **515 West Hills Blvd NW, Bremerton, WA 98312**, serving the Kitsap Peninsula including Silverdale, Port Orchard, Poulsbo, Bainbridge Island, and the greater Seattle area. Conveniently located off Route 3.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 728-3062 |\n| Service | (360) 728-3063 |\n| Parts | (360) 728-3070 |\n| Main | (360) 616-3273 |\n\n## Hours\n\n| Department | Mon-Fri | Sat | Sun |\n|---|---|---|---|\n| Sales | 9:00 AM - 8:00 PM | 9:00 AM - 8:00 PM | 10:00 AM - 7:00 PM |\n| Service | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n| Parts | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n\n## Location\n\n- **Address:** 515 West Hills Blvd NW, Bremerton, WA 98312\n- **Geo:** 47.5567436, -122.6790752\n\n## Kia Models\n\n### SUVs & Crossovers\n- **Sportage** \u2014 Compact SUV, multiple trims including X-Pro\n- **Sorento** \u2014 Mid-size 3-row SUV\n- **Telluride** \u2014 Full-size 3-row SUV, Kia's flagship\n- **Seltos** \u2014 Subcompact SUV\n- **EV9** \u2014 All-electric 3-row SUV\n- **Niro / Niro EV** \u2014 Subcompact hybrid/plug-in hybrid/electric crossover\n- **Carnival** \u2014 Minivan with SUV-inspired styling\n\n### Cars\n- **K4** \u2014 Compact sedan (replaces Forte)\n- **K5** \u2014 Mid-size sedan\n- **EV6** \u2014 All-electric crossover\n\n### Electrified\n- **EV6** \u2014 Dedicated all-electric crossover\n- **EV9** \u2014 All-electric 3-row SUV\n- **Niro EV** \u2014 Electric subcompact crossover\n- **Niro Plug-In Hybrid** \u2014 Plug-in hybrid crossover\n- **Sportage Plug-In Hybrid** \u2014 Plug-in hybrid compact SUV\n- **Sorento Plug-In Hybrid** \u2014 Plug-in hybrid mid-size SUV\n\n## Services\n\n- **Finance Center** \u2014 Online credit application, payment calculator, trade-in valuation\n- **Service Center** \u2014 Kia-certified technicians, diagnostics, routine maintenance, major repairs\n- **Parts Department** \u2014 Genuine Kia parts and accessories\n\n## Warranty\n\nKia's industry-leading 10-Year/100,000-Mile Limited Powertrain Warranty and 5-Year/60,000-Mile Limited Basic Warranty.\n\n## Online Tools\n\n- Click-N-Drive online purchasing\n- Online service scheduling\n- Payment calculator\n- KBB trade-in valuation\n- SMS notifications available\n\n## Reputation\n\n- Aggregate rating: 4.6 / 5.0 (1,277 reviews)\n\nSee [autoplex.md](autoplex.md) for the group overview.",
+    "datasets/west-hills-mazda": "# West Hills Mazda\n\nWest Hills Mazda is a full-service Mazda dealership located at **1000 Oyster Bay Ave S NW, Bremerton, WA 98312**, serving the Kitsap Peninsula including Silverdale, Port Orchard, Poulsbo, Bainbridge Island, and the greater Seattle area.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 842-2486 |\n| Service | (360) 842-2490 |\n| Parts | (360) 842-2520 |\n| Main | (360) 362-4172 |\n\n## Hours\n\n| Department | Mon-Fri | Sat | Sun |\n|---|---|---|---|\n| Sales | 9:00 AM - 8:00 PM | 9:00 AM - 8:00 PM | 10:00 AM - 7:00 PM |\n| Service | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n| Parts | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n\n## Location\n\n- **Address:** 1000 Oyster Bay Ave S NW, Bremerton, WA 98312\n- **Geo:** 47.5548305, -122.6751756\n\n## Mazda Models\n\n### Crossovers & SUVs\n- **CX-30** \u2014 Subcompact crossover SUV\n- **CX-5** \u2014 Compact crossover SUV, Mazda's best-seller\n- **CX-50 / CX-50 Hybrid** \u2014 Compact crossover with rugged styling, available hybrid\n- **CX-70** \u2014 Mid-size 2-row crossover SUV\n- **CX-90 / CX-90 Plug-In Hybrid** \u2014 Mid-size 3-row crossover SUV with available PHEV\n- **MX-30** \u2014 All-electric crossover\n\n### Cars\n- **Mazda3 Sedan** \u2014 Compact sedan with premium design\n- **Mazda3 Hatchback** \u2014 Compact hatchback, available with AWD\n\n### Sports Cars\n- **MX-5 Miata** \u2014 Iconic 2-seat convertible roadster\n- **MX-5 Miata RF** \u2014 Retractable fastback version\n\n### Electrified\n- **CX-90 Plug-In Hybrid** \u2014 3-row PHEV SUV\n- **CX-70 Plug-In Hybrid** \u2014 2-row PHEV SUV\n- **CX-50 Hybrid** \u2014 Compact hybrid SUV\n\n## Services\n\n- **Finance Center** \u2014 Online credit application, payment calculator, trade-in valuation, multiple lenders\n- **Service Center** \u2014 Mazda-certified technicians, genuine Mazda parts, routine maintenance, major repairs\n- **Parts Department** \u2014 Genuine Mazda parts and accessories\n\n## Online Tools\n\n- Online service scheduling\n- Payment calculator\n- KBB trade-in valuation\n- Mazda service coupons and rewards program\n- Online financing pre-qualification\n\n## Reputation\n\n- Aggregate rating: 4.7 / 5.0 (892 reviews)\n\nSee [autoplex.md](autoplex.md) for the group overview.",
+    "references/ai-discovery-page": "# AI Discovery Pages - West Hills Autoplex\n\nThe West Hills Auto Plex group and its member dealerships each maintain AI Discovery Pages powered by [PromptGraph](https://promptgraph.ai). These structured, machine-readable knowledge surfaces expose semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. All member dealership sites are built on the **Dealer.com** platform.\n\n## Group-Level AI Resources\n\n### AI Manifest (`/.well-known/ai-manifest.json`)\n\nAvailable via PromptGraph at `https://api.promptgraph.ai/api/v1/west-hills-autoplex/.well-known/ai-manifest.json`\n\n- **Schema types:** `AutoDealer`, `LocalBusiness`\n- **Contact:** gsjones.haselwood@gmail.com\n\n### PromptGraph API Base Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-autoplex` exposes:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Group business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/prompts` | Q&A / FAQ prompts |\n| `/testimonials` | Customer reviews |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n| `/gbp-context` | Flattened Google Business Profile data |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n\n## Member Dealership AI Resources\n\nEach branded dealership has its own PromptGraph API and AI Discovery Page:\n\n| Dealership | AI Discovery Page | PromptGraph API Base |\n|---|---|---|\n| West Hills Honda | `/ai-discovery-page.htm` | `api.promptgraph.ai/api/v1/west-hills-honda` |\n| West Hills Ford | `/ai-discovery-page.htm` | `api.promptgraph.ai/api/v1/west-hills-ford` |\n| West Hills Kia | `/ai-discovery-page.htm` | `api.promptgraph.ai/api/v1/west-hills-kia` |\n| West Hills Mazda | `/ai-discovery-page.htm` | `api.promptgraph.ai/api/v1/west-hills-mazda` |\n| West Hills Chrysler Jeep Dodge RAM | `/ai-discovery-page.htm` | `api.promptgraph.ai/api/v1/west-hills-chrysler-jeep-dodge-ram` |\n\n### Honda-Specific Features\n\nThe West Hills Honda AI Discovery Page additionally exposes an **MCP (Model Context Protocol) Server** at `https://mcp.promptgraph.ai/west-hills-honda/mcp` for real-time vehicle inventory queries via tools including `browse_inventory`, `browse_by_bodytype`, `browse_by_price`, `browse_by_year`, and `search_vehicles`.\n\nAn LLM-optimized inventory page is available at `/llm-inventory.htm`.\n\n## Group Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/west-hills-autoplex/business`:\n\n- **Name:** West Hills Autoplex\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Used car dealer, Car dealer, Truck dealer, Car leasing service\n- **Address:** 950 West Hills Boulevard, Bremerton, WA 98312\n- **Geo:** 47.5549135, -122.6756315\n- **Telephone:** (360) 616-3036\n- **Email:** gsjones.haselwood@gmail.com\n- **URL:** `https://www.westhillsautoplex.com/`\n- **Aggregate Rating:** 4.1 / 5.0 (628 reviews)\n- **Date Modified:** 2026-02-03T15:08:10.089Z\n- **Same As:** Facebook, Instagram, Google Maps\n\n### Member Business Profiles\n\n| Dealership | Rating | Reviews | Phone |\n|---|---|---|---|\n| West Hills Honda | 4.6 / 5.0 | 2,019 | (360) 616-3274 |\n| West Hills Ford | 4.6 / 5.0 | 3,135 | (360) 616-3277 |\n| West Hills Chrysler Jeep Dodge RAM | 4.5 / 5.0 | 2,660 | (360) 616-3275 |\n| West Hills Kia | 4.6 / 5.0 | 1,277 | (360) 616-3273 |\n| West Hills Mazda | 4.7 / 5.0 | 892 | (360) 362-4172 |\n\n## LLM-Accessible Actions (ReadAction)\n\nThe AI Discovery Pages define structured `ReadAction` entries. West Hills Honda, for example, defines actions including:\n1. **Your Trusted Honda Destination in Bremerton, WA**\n2. **Quality Cars & Exceptional Service at West Hills Honda**\n3. **Drive With Confidence: West Hills Honda Community Focus**\n4. **Award-Winning Honda Excellence with a Lifetime Advantage**\n5. **Dedicated Service for Our Bremerton Military Heroes**\n6. **The Gold Standard for Honda Certified Pre-Owned Vehicles**\n7. **Local Service with Global Inventory Power**\n8. **Factory-Certified Honda Service You Can Rely On**\n9. **Professionalism and Integrity: The Haselwood Difference**\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.",
+    "references/llms-txt": "# LLMs.txt - West Hills Autoplex\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with the West Hills Autoplex group web properties. It indexes key pages and structured API endpoints for the group and its member dealerships.\n\n## Group Site\n\n### Main Site\n\n- [West Hills Autoplex Home](https://www.westhillsautoplex.com/) - Browse used vehicles at West Hills Autoplex in Bremerton, WA.\n- [Used Inventory](https://www.westhillsautoplex.com/used-inventory/index.htm) - Browse our selection of used cars, trucks, and SUVs.\n- [New Inventory](https://www.westhillsautoplex.com/new-inventory/index.htm) - Browse new cars, trucks, and SUVs from multiple brands.\n- [Certified Inventory](https://www.westhillsautoplex.com/certified-inventory/index.htm) - Certified pre-owned vehicles.\n- [About Us](https://www.westhillsautoplex.com/locations/index.htm) - Learn about West Hills Autoplex and its locations.\n- [About Chuck Haselwood](https://www.westhillsautoplex.com/about-chuck-haselwood.htm) - History of the founder.\n- [Community & Awards](https://www.westhillsautoplex.com/awards-and-community.htm) - Community involvement and awards.\n- [Why Buy From Us](https://www.westhillsautoplex.com/why-buy-bremerton-wa.htm) - Benefits of buying from West Hills Autoplex.\n- [Contact Us](https://www.westhillsautoplex.com/contact.htm) - Contact information and directions.\n- [Financing Center](https://www.westhillsautoplex.com/click-n-drive-bremerton-wa.htm) - Click-N-Drive online purchasing.\n- [Service Locations](https://www.westhillsautoplex.com/locations/service.htm) - Service center locations.\n- [Parts Locations](https://www.westhillsautoplex.com/locations/parts.htm) - Parts department locations.\n- [Service Coupons](https://www.westhillsautoplex.com/promotions/service/index.htm) - Current service specials and coupons.\n- [Payment Calculator](https://www.westhillsautoplex.com/calculator/payment.htm) - Calculate loan and lease payments.\n- [Sell/Trade](https://www.westhillsautoplex.com/kbb-offer.htm) - KBB trade-in valuation.\n\n### AI & LLM Resources\n\n- [AI Discovery Page](https://www.westhillsautoplex.com/ai-discovery-page.htm) - Machine-readable knowledge base for AI agents\n\n## Member Dealership Sites\n\n### West Hills Honda\n\n- [West Hills Honda Home](https://www.westhillshonda.com/) - New and pre-owned Honda vehicles in Bremerton, WA.\n- [New Honda Inventory](https://www.westhillshonda.com/new-inventory/index.htm) - Browse new Honda models including CR-V, Civic, Accord, Pilot.\n- [Used Honda Inventory](https://www.westhillshonda.com/used-inventory/index.htm) - Browse pre-owned vehicles.\n- [Honda Service Center](https://www.westhillshonda.com/honda-service-center-bremerton-wa.htm) - Schedule service or maintenance.\n- [AI Discovery Page](https://www.westhillshonda.com/ai-discovery-page.htm) - Machine-readable knowledge base with MCP server.\n- [Facebook](https://www.facebook.com/whillshonda/)\n- [Instagram](https://www.instagram.com/westhillshonda/)\n\n### West Hills Ford\n\n- [West Hills Ford Home](https://www.westhillsford.com/) - New and pre-owned Ford vehicles in Bremerton, WA.\n- [New Ford Inventory](https://www.westhillsford.com/new-inventory/index.htm) - Browse new Ford models.\n- [Used Ford Inventory](https://www.westhillsford.com/used-inventory/index.htm) - Browse pre-owned vehicles.\n- [Ford Service Center](https://www.westhillsford.com/service/center.htm) - Schedule service or maintenance.\n- [AI Discovery Page](https://www.westhillsford.com/ai-discovery-page.htm) - Machine-readable knowledge base.\n- [Facebook](https://www.facebook.com/westhillsford)\n- [Instagram](https://www.instagram.com/westhillsford/)\n\n### West Hills Chrysler Jeep Dodge RAM\n\n- [West Hills CDJR Home](https://www.westhillscjd.com/) - New and pre-owned Chrysler, Jeep, Dodge, RAM vehicles.\n- [New CDJR Inventory](https://www.westhillscjd.com/new-inventory/index.htm) - Browse new Chrysler, Jeep, Dodge, RAM models.\n- [Used CDJR Inventory](https://www.westhillscjd.com/used-inventory/index.htm) - Browse pre-owned vehicles.\n- [CDJR Service Center](https://www.westhillscjd.com/service/mopar.htm) - Mopar-certified service.\n- [AI Discovery Page](https://www.westhillscjd.com/ai-discovery-page.htm) - Machine-readable knowledge base.\n- [Facebook](https://www.facebook.com/WestHillsCJDR)\n- [Instagram](https://www.instagram.com/westhillscjd/)\n\n### West Hills Kia\n\n- [West Hills Kia Home](https://www.westhillskia.com/) - New and pre-owned Kia vehicles in Bremerton, WA.\n- [New Kia Inventory](https://www.westhillskia.com/new-inventory/index.htm) - Browse new Kia models.\n- [Used Kia Inventory](https://www.westhillskia.com/used-inventory/index.htm) - Browse pre-owned vehicles.\n- [Kia Service Center](https://www.westhillskia.com/kia-service-center-bremerton-wa.htm) - Schedule service.\n- [AI Discovery Page](https://www.westhillskia.com/ai-discovery-page.htm) - Machine-readable knowledge base.\n- [Facebook](https://www.facebook.com/WestHillsKia)\n- [Instagram](https://www.instagram.com/westhillskia/)\n\n### West Hills Mazda\n\n- [West Hills Mazda Home](https://www.westhillsmazda.com/) - New and pre-owned Mazda vehicles in Bremerton, WA.\n- [New Mazda Inventory](https://www.westhillsmazda.com/new-inventory/index.htm) - Browse new Mazda models.\n- [Used Mazda Inventory](https://www.westhillsmazda.com/used-inventory/index.htm) - Browse pre-owned vehicles.\n- [Mazda Service Center](https://www.westhillsmazda.com/service/center.htm) - Schedule service.\n- [AI Discovery Page](https://www.westhillsmazda.com/ai-discovery-page.htm) - Machine-readable knowledge base.\n- [Facebook](https://www.facebook.com/WestHillsMazda/)\n- [Instagram](https://www.instagram.com/westhillsmazda/)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n### Group API\n\n- [Group Business Information](http://api.promptgraph.ai/api/v1/west-hills-autoplex/business) - Complete group business profile with address, contact, hours, and location\n- [Group Vehicle Inventory](http://api.promptgraph.ai/api/v1/west-hills-autoplex/vehicles) - Complete inventory with specifications and pricing\n- [Group Prompts & FAQs](http://api.promptgraph.ai/api/v1/west-hills-autoplex/prompts) - Structured prompts for consistent AI responses\n- [Group Testimonials](http://api.promptgraph.ai/api/v1/west-hills-autoplex/testimonials) - Customer reviews and ratings\n- [Group GBP Context](http://api.promptgraph.ai/api/v1/west-hills-autoplex/gbp-context) - Flattened Google Business Profile data\n- [Group Site Content](http://api.promptgraph.ai/api/v1/west-hills-autoplex/site-content) - Plain-text mirror of entire site\n- [Group AI Manifest](http://api.promptgraph.ai/api/v1/west-hills-autoplex/.well-known/ai-manifest.json) - Machine-readable AI resource directory\n- [Group Sitemap](http://api.promptgraph.ai/api/v1/west-hills-autoplex/sitemap.xml) - XML sitemap\n- [Group Config](http://api.promptgraph.ai/api/v1/west-hills-autoplex/config.json) - System configuration\n\n### Member Dealership APIs\n\n- [West Hills Honda Business](http://api.promptgraph.ai/api/v1/west-hills-honda/business) - Honda dealership business profile\n- [West Hills Honda Inventory](http://api.promptgraph.ai/api/v1/west-hills-honda/vehicles) - Honda vehicle inventory\n- [West Hills Ford Business](http://api.promptgraph.ai/api/v1/west-hills-ford/business) - Ford dealership business profile\n- [West Hills Ford Inventory](http://api.promptgraph.ai/api/v1/west-hills-ford/vehicles) - Ford vehicle inventory\n- [West Hills Kia Business](http://api.promptgraph.ai/api/v1/west-hills-kia/business) - Kia dealership business profile\n- [West Hills Kia Inventory](http://api.promptgraph.ai/api/v1/west-hills-kia/vehicles) - Kia vehicle inventory\n- [West Hills Mazda Business](http://api.promptgraph.ai/api/v1/west-hills-mazda/business) - Mazda dealership business profile\n- [West Hills Mazda Inventory](http://api.promptgraph.ai/api/v1/west-hills-mazda/vehicles) - Mazda vehicle inventory\n- [West Hills Chrysler Jeep Dodge RAM Business](http://api.promptgraph.ai/api/v1/west-hills-chrysler-jeep-dodge-ram/business) - CDJR dealership business profile\n- [West Hills Chrysler Jeep Dodge RAM Inventory](http://api.promptgraph.ai/api/v1/west-hills-chrysler-jeep-dodge-ram/vehicles) - CDJR vehicle inventory\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - West Hills Autoplex\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-autoplex/prompts` exposes structured Q&A prompt/response pairs. Below is a categorized summary covering the group and its five member dealerships.\n\n## Prompt Categories\n\n### Group & History (10+ prompts)\n- West Hills Auto Plex overview and member dealerships\n- Haselwood Auto Group history and Chuck Haselwood legacy\n- Community involvement and awards\n- Locations and directions on the Kitsap Peninsula\n- West Hills Pre-Owned warranty program\n\n### Honda Dealership (10+ prompts)\n- New Honda models at West Hills Honda (Civic, Accord, CR-V, Pilot, HR-V, Odyssey, Ridgeline, Prologue)\n- Honda Certified Pre-Owned program\n- West Hills Honda service center and Express Service\n- Honda financing and West Hills Advantage Lifetime Powertrain Warranty\n- Military appreciation program near Naval Base Kitsap\n\n### Ford Dealership (10+ prompts)\n- New Ford models at West Hills Ford (Bronco, F-150, Explorer, Mustang, Escape, Expedition)\n- Ford Certified Pre-Owned vehicles\n- Ford service center and OEM parts\n- Ford financing and lease specials\n- Click-N-Drive online purchasing with home delivery\n\n### Chrysler Jeep Dodge RAM Dealership (10+ prompts)\n- New Chrysler, Jeep, Dodge, and RAM models\n- Jeep Wrangler 4xe and electrified options\n- RAM truck lineup including heavy-duty and commercial\n- Mopar-certified service and performance parts\n- CDJR financing and special offers\n\n### Kia Dealership (10+ prompts)\n- New Kia models at West Hills Kia (Sportage, Sorento, Telluride, EV6, EV9, K5, Carnival)\n- Kia 10-Year/100,000-Mile Warranty program\n- Kia EV lineup including EV6, EV9, and Niro EV\n- Kia service center and genuine parts\n- Kia financing and lease options\n\n### Mazda Dealership (10+ prompts)\n- New Mazda models at West Hills Mazda (CX-5, CX-30, CX-50, CX-90, Mazda3, MX-5 Miata)\n- Mazda CX-90 Plug-In Hybrid and electrified lineup\n- Mazda-certified service and genuine parts\n- Mazda financing and payment options\n- Mazda service rewards program\n\n### Financing & Purchasing (10+ prompts)\n- West Hills Click-N-Drive online purchasing process\n- Online credit application and pre-approval\n- Payment calculator and budget planning\n- Trade-in valuation with KBB\n- Home delivery and test drive at home options\n\n### Service & Parts (10+ prompts)\n- Service center hours and locations\n- Schedule service appointments online\n- Service specials and coupons\n- Genuine OEM parts and accessories\n- Maintenance pick-up and delivery services\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `west-hills-autoplex-overview` | Group overview and member dealerships |\n| 2 | `haselwood-auto-group-history` | Chuck Haselwood legacy and company history |\n| 3 | `new-honda-models-in-bremerton` | Honda vehicle lineup |\n| 4 | `new-ford-models-in-bremerton` | Ford vehicle lineup |\n| 5 | `new-cdjr-models-in-bremerton` | Chrysler, Jeep, Dodge, RAM lineup |\n| 6 | `new-kia-models-in-bremerton` | Kia vehicle lineup |\n| 7 | `new-mazda-models-in-bremerton` | Mazda vehicle lineup |\n| 8 | `west-hills-online-purchasing` | Click-N-Drive and home delivery |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "tables/dealership-comparison": "# West Hills Autoplex Dealership Comparison\n\n## Overview\n\n| Dealership | Franchise(s) | Address | Sales Phone | Service Phone | Parts Phone |\n|---|---|---|---|---|---|\n| West Hills Honda | Honda | 520 W Hills Blvd, Bremerton, WA 98312 | (360) 728-3071 | (360) 728-3072 | (360) 728-3075 |\n| West Hills Chrysler Jeep Dodge RAM | Chrysler, Jeep, Dodge, RAM | 900 W Hills Blvd, Bremerton, WA 98312-6300 | (360) 728-3077 | (360) 728-3988 | (360) 842-2349 |\n| West Hills Ford | Ford | 1100 Oyster Bay Ave S, Bremerton, WA 98312 | (360) 842-2413 | (360) 842-2420 | (360) 842-2475 |\n| West Hills Kia | Kia | 515 West Hills Blvd NW, Bremerton, WA 98312 | (360) 728-3062 | (360) 728-3063 | (360) 728-3070 |\n| West Hills Mazda | Mazda | 1000 Oyster Bay Ave S NW, Bremerton, WA 98312 | (360) 842-2486 | (360) 842-2490 | (360) 842-2520 |\n\n## Sales Hours\n\nAll dealerships follow the same sales hours:\n\n| Day | Hours |\n|---|---|\n| Monday - Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\n## Service Hours\n\n| Dealership | Mon-Fri | Saturday | Sunday |\n|---|---|---|---|\n| West Hills Honda | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n| West Hills Chrysler Jeep Dodge RAM | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n| West Hills Ford | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n| West Hills Kia | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n| West Hills Mazda | 7:30 AM - 7:00 PM | 8:00 AM - 4:00 PM | Closed |\n\n## Ratings\n\n| Dealership | Rating | Reviews |\n|---|---|---|\n| West Hills Mazda | 4.7 / 5.0 | 892 |\n| West Hills Honda | 4.6 / 5.0 | 2,019 |\n| West Hills Ford | 4.6 / 5.0 | 3,135 |\n| West Hills Kia | 4.6 / 5.0 | 1,277 |\n| West Hills Chrysler Jeep Dodge RAM | 4.5 / 5.0 | 2,660 |\n\n## Model Categories\n\n| Category | Honda | Ford | Kia | Mazda | Chrysler/Jeep/Dodge/RAM |\n|---|---|---|---|---|---|\n| **Sedans** | Civic, Accord | \u2014 | K4, K5 | Mazda3 | Chrysler 300, Dodge Charger |\n| **Compact SUV** | CR-V, HR-V | Bronco Sport, Escape | Sportage, Seltos | CX-30, CX-5, CX-50 | Jeep Cherokee, Compass, Hornet |\n| **Mid-size SUV** | Passport, Pilot | Edge, Explorer | Sorento | CX-70, CX-90 | Dodge Durango, Jeep Grand Cherokee |\n| **Full-size SUV** | \u2014 | Expedition, Expedition Max | Telluride | \u2014 | Jeep Wagoneer, Grand Wagoneer |\n| **Off-road SUV** | \u2014 | Bronco | \u2014 | \u2014 | Jeep Wrangler, Gladiator |\n| **Pickup Trucks** | Ridgeline | F-150, Maverick, Super Duty | \u2014 | \u2014 | RAM 1500, 2500, 3500 |\n| **Minivans/Vans** | Odyssey | Transit, Transit Connect | Carnival | \u2014 | Chrysler Pacifica, Voyager, RAM ProMaster |\n| **Sports Cars** | \u2014 | Mustang | \u2014 | MX-5 Miata | Dodge Charger (high-performance) |\n| **Electric** | Prologue | Mustang Mach-E, E-Transit | EV6, EV9, Niro EV | MX-30 | Jeep Wagoneer S, RAM ProMaster EV |\n| **Hybrid/PHEV** | Civic Hybrid, Accord Hybrid, CR-V Hybrid | F-150 PowerBoost | Niro PHEV, Sportage PHEV, Sorento PHEV | CX-50 Hybrid, CX-70 PHEV, CX-90 PHEV | Jeep Wrangler 4xe, Grand Cherokee 4xe, Pacifica Hybrid |\n\n## Group Affiliation\n\nAll five dealerships are owned and operated by the **Haselwood Auto Group** and are part of the **West Hills Auto Plex** campus in Bremerton, WA.\n\nSee [autoplex.md](/datasets/autoplex.md) for the full group profile.\nSee individual dealership files for detailed profiles:\n- [west-hills-honda.md](/datasets/west-hills-honda.md)\n- [west-hills-chrysler-jeep-dodge-ram.md](/datasets/west-hills-chrysler-jeep-dodge-ram.md)\n- [west-hills-ford.md](/datasets/west-hills-ford.md)\n- [west-hills-kia.md](/datasets/west-hills-kia.md)\n- [west-hills-mazda.md](/datasets/west-hills-mazda.md)"
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

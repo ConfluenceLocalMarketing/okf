@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>west-hills-mazda - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "west-hills-mazda";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "West Hills Mazda",
+        "type": "Entities",
+        "description": "Mazda dealership in Bremerton, WA serving the Kitsap Peninsula with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.westhillsmazda.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - West Hills Mazda",
+        "type": "Entities",
+        "description": "Common questions about West Hills Mazda's inventory, financing, service, and dealership operations in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-mazda/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Mazda Models - West Hills Mazda",
+        "type": "Entities",
+        "description": "New Mazda model lineup available at West Hills Mazda in Bremerton, WA including CX-30, CX-5, CX-50, CX-70, CX-90, Mazda3, MX-5 Miata, MX-30, and CX-90 Plug-In Hybrid.",
+        "resource": "https://www.westhillsmazda.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - West Hills Mazda",
+        "type": "Entities",
+        "description": "Mazda-certified service center in Bremerton, WA offering routine maintenance, diagnostics, major repairs, and genuine Mazda OEM parts.",
+        "resource": "https://www.westhillsmazda.com/mazda-service-center-bremerton-wa.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - West Hills Mazda",
+        "type": "Entities",
+        "description": "Sales and service staff directory for West Hills Mazda in Bremerton, WA, compiled from customer reviews and mention data.",
+        "resource": "https://www.westhillsmazda.com/dealership/about.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - West Hills Mazda",
+        "type": "Entities",
+        "description": "Large pre-owned inventory at West Hills Mazda in Bremerton, WA, spanning multiple makes and models with detailed inspections and competitive pricing.",
+        "resource": "https://www.westhillsmazda.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - West Hills Mazda",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for West Hills Mazda, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.westhillsmazda.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - West Hills Mazda",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for West Hills Mazda.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-mazda/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - West Hills Mazda",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 10 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for West Hills Mazda.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-mazda/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - West Hills Mazda",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews collected via PromptGraph API for West Hills Mazda in Bremerton, WA, with predominantly 5-star testimonials highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-mazda/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Mazda Model Lineup Comparison - West Hills Mazda",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Mazda models available at West Hills Mazda in Bremerton, WA, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.westhillsmazda.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# West Hills Mazda\n\nWest Hills Mazda is a full-service Mazda dealership located at **1000 Oyster Bay Ave S, Bremerton, WA 98312**, serving the greater Kitsap Peninsula including Silverdale, Port Orchard, Poulsbo, and surrounding communities. The dealership is part of the **Haselwood Auto Group**.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Main | (360) 362-4172 |\n| Sales | 360-842-2486 |\n| Service | 360-842-2490 |\n| Parts | 360-842-2520 |\n\nEmail: shelm@haselwood.com\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\n## Location\n\n- **Address:** 1000 Oyster Bay Ave S, Bremerton, WA 98312\n- **Geo:** 47.5548305, -122.6751756\n\n## New Vehicles\n\nMazda models available include:\n- **CX-30** - Subcompact crossover SUV, available in multiple trims including Select Sport, Premium, Carbon Edition, and Turbo variants\n- **CX-5** - Compact crossover SUV, one of Mazda's best-sellers, available in S, Select, Preferred, Premium, Carbon Edition, Turbo, and Signature trims\n- **CX-50** - Compact crossover SUV with rugged styling, available in 2.5 S and Turbo variants, multiple trims\n- **CX-70** - Mid-size 2-row crossover SUV, available with Plug-In Hybrid powertrain\n- **CX-90** - Mid-size 3-row crossover SUV, available with Plug-In Hybrid and inline-6 Turbo powertrains\n- **Mazda3** - Compact sedan and hatchback, available with AWD option\n- **MX-5 Miata** - Iconic 2-seat convertible sports car, available in soft-top and RF hardtop\n- **MX-30** - All-electric crossover SUV\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, payment calculator\n- **Service Center** - Mazda-certified technicians, routine maintenance, diagnostics, major repairs, genuine Mazda parts\n- **Parts Department** - Genuine Mazda OEM components, accessories, tires\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned)\n- Online service scheduling\n- Online credit application and pre-approval\n- Car payment calculator\n- Trade-in valuation tool (KBB)\n\n## Staff\n\nSee [staff.md](staff.md) for full directory.\n\n## Reviews & Reputation\n\n- Aggregate rating: 4.7 / 5.0 (892 reviews) across major platforms\n- Google Business Profile: 4.7 stars (882+ reviews)\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **Haselwood Auto Group** - Part of the Haselwood group of dealerships\n- **Low-Stress Car Buying** - Boutique-style, transparent, no-pressure sales process\n- **Mazda Certified Pre-Owned** - Factory-backed inspections and warranties\n- **Online Buying Tools** - Complete purchase journey from home\n- **Service Coupons** - Regular maintenance specials and promotions\n\n## Affiliations\n\n- Part of the **Haselwood Auto Group**\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform\n- Mazda Brand Academy training for staff",
+    "datasets/faq": "# Frequently Asked Questions - West Hills Mazda\n\n## Inventory\n\n**Q: What new Mazda models are available at West Hills Mazda?**\nA: The full Mazda lineup including CX-30, CX-5, CX-50, CX-70, CX-90, CX-90 Plug-In Hybrid, Mazda3 (sedan and hatchback), MX-5 Miata (soft-top and RF), and MX-30 EV. Over 150 new vehicles typically in stock.\n\n**Q: What brands are available in the used vehicle inventory?**\nA: The pre-owned inventory spans multiple makes including Mazda, Ford, Chevrolet, Toyota, Honda, Hyundai, Kia, Subaru, BMW, Mercedes-Benz, and more.\n\n**Q: Does West Hills Mazda offer certified pre-owned vehicles?**\nA: Yes, Mazda Certified Pre-Owned vehicles are available with factory-backed inspections, warranties, and 24/7 roadside assistance.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs through the Haselwood Auto Group's network of lenders.\n\n**Q: Does the dealership work with all credit profiles?**\nA: Yes, the finance team works to accommodate various credit situations and budgets.\n\n**Q: Is there an online credit application?**\nA: Yes, a secure online credit application is available through the dealership website.\n\n## Service\n\n**Q: What service does West Hills Mazda offer?**\nA: Routine maintenance (oil changes, tire rotations, brake inspections), diagnostics, major repairs (transmission, engine, suspension), collision repair, and recall work.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the dealership website, or you can call the service department.\n\n**Q: Are there service coupons or specials?**\nA: Yes, the dealership offers rotating service promotions and coupons.\n\n**Q: Does the service center use genuine Mazda parts?**\nA: Yes, Genuine Mazda OEM parts are used for all repairs and maintenance.\n\n## Dealership\n\n**Q: Where is West Hills Mazda located?**\nA: 1000 Oyster Bay Ave S, Bremerton, WA 98312, serving Silverdale, Port Orchard, Poulsbo, and the Kitsap Peninsula.\n\n**Q: What is the Haselwood Auto Group?**\nA: West Hills Mazda is part of the Haselwood Auto Group, which also includes other dealerships in the region.\n\n**Q: What are the dealership hours?**\nA: Monday through Saturday 9:00 AM - 8:00 PM, Sunday 10:00 AM - 7:00 PM.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New Mazda Models - West Hills Mazda\n\nWest Hills Mazda carries a full lineup of new Mazda vehicles with over 150 new Mazdas in stock. Below is a summary of available models and trims.\n\n## SUVs & Crossovers\n\n### Mazda CX-30\nSubcompact crossover SUV with upscale interior and engaging driving dynamics. Available trims include 2.5 S, Select Sport, Preferred, Premium, Carbon Edition, Turbo, and Turbo Premium Plus. Powered by a 2.5L 4-cylinder engine (191 hp) or 2.5L Turbo (250 hp) with 6-speed automatic transmission. Available in FWD and AWD. Seats 5 passengers.\n\n### Mazda CX-5\nCompact crossover SUV, Mazda's best-selling model. Available trims include 2.5 S, Select, Preferred, Premium, Premium Plus, Carbon Edition, Turbo, Turbo Signature. Powered by a 2.5L 4-cylinder engine (187 hp) or 2.5L Turbo (256 hp). Available in FWD and AWD. Seats 5 passengers.\n\n### Mazda CX-50\nCompact crossover SUV with rugged off-road-inspired styling. Available in 2.5 S and 2.5 Turbo variants across multiple trims. Powered by a 2.5L 4-cylinder or 2.5L Turbo engine. Available in FWD and AWD.\n\n### Mazda CX-70\nMid-size 2-row crossover SUV with bold proportions. Available with Plug-In Hybrid powertrain combining a 2.5L 4-cylinder engine with electric motor. Premium Package trim with luxurious interior.\n\n### Mazda CX-90\nMid-size 3-row crossover SUV seating up to 8 passengers. Available with e-Skyactiv G 3.3L Turbo Inline-6 or Plug-In Hybrid powertrain. Multiple trims including Select, Preferred, Premium, Premium Plus, and Turbo S variants. Available in RWD and AWD.\n\n### MX-30\nAll-electric crossover SUV with distinctive freestyle doors. Compact and city-friendly with a focus on sustainable materials.\n\n## Cars\n\n### Mazda3\nCompact sedan and hatchback available in 2.5 S, Select Sport, Preferred, Premium, Carbon Edition, Turbo, and Turbo Premium Plus trims. Powered by 2.5L 4-cylinder (191 hp) or 2.5L Turbo (250 hp). Available in FWD and AWD with 6-speed automatic transmission. Hatchback offers versatile cargo space.\n\n### MX-5 Miata\nIconic 2-seat roadster available in soft-top (Sport, Club, Grand Touring) and RF (Retractable Fastback) configurations. Powered by 2.0L 4-cylinder engine (181 hp) with 6-speed manual or automatic transmission. RWD. Celebrated for its lightweight design and exceptional handling.\n\n## Hybrid & Electric Options\n\n### Mazda CX-70 Plug-In Hybrid\nMid-size plug-in hybrid crossover combining efficiency with performance. Premium Package trim with advanced technology.\n\n### Mazda CX-90 Plug-In Hybrid\n3-row plug-in hybrid SUV with up to 26 miles EV-only range. Combines a 2.5L 4-cylinder engine with electric motor for 323 hp combined output.\n\n### MX-30 EV\nAll-electric crossover with a compact footprint and distinctive design.\n\n## Promotions & Offers\n\nPromotions vary by model and include low APR financing, lease specials, and rebates. West Hills Mazda frequently offers discounts below MSRP on in-stock vehicles. Contact the dealership for current offers.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - West Hills Mazda\n\nThe West Hills Mazda Service Center provides certified maintenance and repair services at 1000 Oyster Bay Ave S, Bremerton, WA.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work\n- **Collision Repair** - Body work and paint services\n- **Recall Repairs** - OEM-specified recall and campaign work\n- **Tire Replacement and Alignment** - Full tire services\n- **Scheduled Maintenance** - Following Mazda's recommended maintenance schedule\n\n## Service Team\n\n- **Brian Hull** - Service Advisor\n- **David** - Service Advisor\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Service coupons and promotions** available for routine maintenance\n- **Certified Mazda Technicians** - Factory-trained using genuine Mazda parts\n- **Mazda Brand Academy** trained professionals\n\n## Service Specials\n\nThe dealership offers rotating service specials and coupons. See the service specials page for current promotions.\n\n## Parts Department\n\nGenuine Mazda OEM parts and accessories available including:\n- Mazda Genuine replacement parts\n- Tires and wheels\n- Accessories for Mazda vehicles\n- Order parts online or stop by\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\nSee [staff.md](staff.md) for full service department directory.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - West Hills Mazda\n\nStaff directory compiled from customer reviews and dealership data.\n\n## Sales Consultants\n\n- **Jon Rohlman** - Sales consultant praised for being thorough, attentive, and knowledgeable about vehicle features\n- **David (Sales)** - Sales consultant commended for excellent communication and recommendations\n- **Jake** - Sales/service consultant praised for being helpful and friendly\n- **John Henry** - Staff member frequently mentioned in positive reviews\n- **Chance** - Staff member recognized for customer service\n\n## Finance Department\n\n- **Magdy** - Finance manager praised for honest recommendations and transparent processes\n\n## Service Department\n\n- **Brian Hull** - Service Advisor praised for being extremely helpful, professional, and expert\n- **David (Service)** - Service advisor commended for excellent communication\n- **Jake** - Service consultant noted for helping with service plan questions\n\n## Management\n\n- Management team oversees sales, service, and parts operations as part of the Haselwood Auto Group\n\n## Training\n\n- Staff participate in **Mazda Brand Academy** ongoing training programs\n- Emphasis on professionalism over pressure\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - West Hills Mazda\n\nWest Hills Mazda maintains a substantial pre-owned vehicle inventory in the Bremerton area with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Total vehicles:** Extensive inventory across new and pre-owned (hundreds in stock)\n- **Multi-make selection** spanning Mazda, Ford, Chevrolet, Toyota, Honda, Hyundai, Kia, Subaru, BMW, Mercedes-Benz, and more\n- **Price range:** Broad range from budget-friendly to premium vehicles\n- **Vehicle types:** SUVs, crossovers, sedans, trucks, vans, and coupes\n- **Daily fresh inventory** with regular turnover\n- **Bargain inventory** available for budget-conscious buyers\n\n## Quality Assurance\n\n- **Detailed inspections** - All pre-owned vehicles inspected by certified technicians\n- **Mazda Certified Pre-Owned (CPO)** - Factory-backed inspections, warranties, and roadside assistance\n- **Vehicle history reports** - Available on request\n- **Low-mileage options** across multiple makes\n\n## Certified Pre-Owned Program\n\nMazda Certified Pre-Owned vehicles undergo rigorous inspection and include:\n- Mazda factory-backed warranty\n- 24/7 roadside assistance\n- Multi-point inspection by certified Mazda technicians\n- Competitive pricing with transparent value\n- Integration with financing and service departments\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- Value Your Trade tool (KBB)\n- Car payment calculator\n- Online credit application and pre-approval\n- Vehicle hold policy\n\n## Trade-In\n\n- Trade-in appraisal available through KBB instant offer\n- Competitive trade-in values\n- Cash offers for trade-ins (even without vehicle purchase)\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - West Hills Mazda\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer.com** platform.\n\nThe AI Discovery Page was successfully fetched and is available at `/ai-discovery-page.htm`.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Primary endpoint:** `https://api.promptgraph.ai/api/v1/west-hills-mazda/.well-known/ai-manifest.json`\n- **Schema types:** `AutoDealer`, `Car`, `ItemList`\n- **Format:** JSON-LD following Schema.org standards\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-mazda` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/offers` | Current offers and promotions |\n| `/prompts` | Q&A / FAQ prompts (10 prompts) |\n| `/testimonials` | Customer reviews |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n\n### Additional Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/west-hills-mazda/business`:\n\n- **Name:** West Hills Mazda\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Mazda dealer, Car dealer, Used car dealer, Auto repair shop, Used truck dealer, Car leasing service\n- **Address:** 1000 Oyster Bay Ave South, Bremerton, WA 98312\n- **Geo:** 47.5548305, -122.6751756\n- **Telephone:** (360) 362-4172\n- **Email:** shelm@haselwood.com\n- **URL:** `https://www.westhillsmazda.com/`\n- **Aggregate Rating:** 4.7 / 5.0 (892 reviews)\n- **Date Modified:** 2026-02-03T15:33:18.772Z\n- **Same As:** Facebook, Twitter, Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wide selection of new Mazda models and used multi-make vehicles with detailed specifications, pricing, and availability. The inventory is also accessible via a special LLM-enabled inventory page at `https://www.westhillsmazda.com/llm-inventory.htm`.\n\n## Q&A Prompt Library (10 Prompts)\n\nThe `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Vehicle shopping and model-specific inquiries\n- Financing, leasing, and trade-in questions\n- Service, parts, and warranty inquiries\n- Dealership information and customer support\n- Mazda Certified Pre-Owned program\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](testimonials.md) for details.\n\n## LLM-Accessible Actions (ReadAction)\n\nThe AI Discovery Page defines multiple structured `ReadAction` entries that agents can invoke:\n\n1. **Drive With Style & Confidence at West Hills Mazda** - Trusted Mazda dealership with curated new Mazda cars and SUVs, quality pre-owned vehicles, welcoming customer-first buying experience\n2. **Bremerton's Top Mazda Dealership for Families** - Premier full-service dealership with new Mazda models, pre-owned inventory, personalized financing, certified mechanics\n3. **West Hills Mazda: Dream Cars to Road-Ready Service** - Full lineup of new vehicles, quality used cars, flexible financing, dedicated service center\n4. **Certified Mazda Service at West Hills Bremerton** - Trusted dealership with diverse pre-owned options, budget-tailored loans, expert service\n5. **Unlock Mazda Thrills at West Hills Mazda** - Exciting Bremerton dealer with new Mazda cars, strong pre-owned inventory, personalized financing\n6. **West Hills Mazda: Full Lineup, Full Service** - Dynamic full-lineup dealer with new Mazda3, CX-5, CX-9, pre-owned variety, flexible financing\n7. **Family Mazda Adventures** - Bremerton family adventure hub with new Mazda models, used inventory, custom-fit loans, certified service\n8. **West Hills Mazda: From Test Drive to Tune-Ups** - Ultimate Mazda partner blending new models with pre-owned excellence and budget-friendly financing\n9. **Do People Like Working with West Hills Mazda?** - Dealership workplace culture insights\n10. **What's It Actually Like Dealing with West Hills Mazda?** - Boutique-style, low-pressure dealership with measurable customer satisfaction data\n\n## PromptGraph MCP Server\n\nThe dealership offers a Model Context Protocol (MCP) server at `https://mcp.promptgraph.ai/west-hills-mazda/mcp` with tools for:\n- `browse_inventory` - Browse all vehicles with optional filters\n- `browse_by_bodytype` - Filter vehicles by body type category\n- `browse_by_price` - Find vehicles within a price range\n- `browse_by_year` - Find vehicles from specific years\n- `search_vehicles` - Advanced search using multiple criteria\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/west-hills-mazda/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` |\n| LLMs.txt | `/llms.txt` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n| MCP Server | `https://mcp.promptgraph.ai/west-hills-mazda/mcp` |\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about West Hills Mazda without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - West Hills Mazda\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with West Hills Mazda's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [West Hills Mazda Home](https://www.westhillsmazda.com/) - Browse new and used Mazda vehicles at West Hills Mazda in Bremerton, WA.\n- [New Inventory](https://www.westhillsmazda.com/new-inventory/index.htm) - Browse our new Mazda inventory.\n- [Used Inventory](https://www.westhillsmazda.com/used-inventory/index.htm) - Browse our used car inventory in Bremerton.\n- [Certified Pre-Owned](https://www.westhillsmazda.com/certified-inventory/index.htm) - Mazda Certified Pre-Owned vehicles.\n- [Bargain Inventory](https://www.westhillsmazda.com/bargain-inventory/index.htm) - Budget-friendly vehicle options.\n- [Financing Center](https://www.westhillsmazda.com/financing/index.htm) - Explore financing and lease options.\n- [Finance Application](https://www.westhillsmazda.com/financing/application.htm) - Online credit application.\n- [Service Center](https://www.westhillsmazda.com/mazda-service-center-bremerton-wa.htm) - Schedule an appointment for auto repair or regular maintenance.\n- [Parts Center](https://www.westhillsmazda.com/parts/center.htm) - Genuine Mazda parts and accessories.\n- [Specials](https://www.westhillsmazda.com/promotions/index.htm) - Current Mazda offers and incentives.\n- [About Us](https://www.westhillsmazda.com/dealership/about.htm) - Learn about West Hills Mazda.\n- [LLM Inventory](https://www.westhillsmazda.com/llm-inventory.htm) - LLM-enabled inventory page.\n\n### AI & LLM Resources\n\n- [AI Discovery Page](https://www.westhillsmazda.com/ai-discovery-page.htm) - Machine-readable knowledge base for AI agents\n\n### Social Media\n\n- [Facebook](https://www.facebook.com/westhillsfordmazda/)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/west-hills-mazda/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/west-hills-mazda/vehicles) - Complete inventory of vehicles with specifications, pricing, and availability in JSON-LD format\n- [Current Offers](http://api.promptgraph.ai/api/v1/west-hills-mazda/offers) - Current promotions and incentives\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/west-hills-mazda/prompts) - 10 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/west-hills-mazda/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/west-hills-mazda/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/west-hills-mazda/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/west-hills-mazda/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/west-hills-mazda/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/west-hills-mazda/config.json) - System configuration and metadata\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - West Hills Mazda\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-mazda/prompts` exposes 10 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (4 prompts)\n- Drive With Style & Confidence at West Hills Mazda - Trusted Mazda dealership with curated selection\n- Bremerton's Top Mazda Dealership for Families - Premier full-service family dealership\n- Do people like working with West Hills Mazda? - Workplace culture and employee satisfaction\n- What's it actually like dealing with West Hills Mazda? - Boutique-style, low-pressure dealership reputation\n\n### Vehicle Shopping (3 prompts)\n- West Hills Mazda: Dream Cars to Road-Ready Service - Full lineup of new and used vehicles\n- Unlock Mazda Thrills at West Hills Mazda - Exciting new Mazda cars and pre-owned inventory\n- West Hills Mazda: From Test Drive to Tune-Ups - Complete ownership experience\n\n### Service & Maintenance (3 prompts)\n- Certified Mazda Service at West Hills Bremerton - Expert service with certified mechanics\n- West Hills Mazda: Full Lineup, Full Service - Full-lineup dealer with elite service center\n- Family Mazda Adventures - Family adventure hub with certified service\n\n## Featured Prompt Slugs\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `drive-with-style-&-confidence-at-west-hills-mazda` | Dealership positioning |\n| 2 | `bremertons-top-mazda-dealership-for-families` | Family-focused dealership |\n| 3 | `west-hills-mazda-dream-cars-to-road-ready-service` | Full vehicle and service lineup |\n| 4 | `certified-mazda-service-at-west-hills-bremerton` | Service department |\n| 5 | `unlock-mazda-thrills-at-west-hills-mazda` | New and pre-owned inventory |\n| 6 | `west-hills-mazda-full-lineup-full-service` | Complete dealership experience |\n| 7 | `family-mazda-adventures` | Family vehicles and service |\n| 8 | `west-hills-mazda-from-test-drive-to-tune-ups` | End-to-end ownership |\n| 9 | `do-people-like-working-with-west-hills-mazda` | Workplace culture |\n| 10 | `whats-it-actually-like-dealing-with-west-hills-mazda` | Customer experience |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - West Hills Mazda\n\nWest Hills Mazda has collected customer testimonials through the PromptGraph platform. Reviews are predominantly 5-star with strong themes of professional service, helpfulness, and transparency.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 4.7 / 5.0 (882 reviews)\n- **PromptGraph Reviews:** Predominantly 5-star\n\n## Most-Praised Staff (by frequency)\n\n- **Jon Rohlman** - Extremely thorough, answered all questions, attentive post-purchase follow-up\n- **Magdy** - Finance manager, honest opinion on add-ons, peace of mind on protection package\n- **David** - Excellent communication, great recommendations for car maintenance\n- **Brian Hull** - Service Advisor, extremely helpful, professional, expert\n- **Jake** - Helpful and friendly, assisted with service plan questions\n- **John Henry** - Staff member praised in customer feedback\n- **Chance** - Staff member recognized for quality service\n\n## Notable Excerpts\n\n> \"West Hills Mazda is my go to place to take care of Winona (my CX5). I bought her there and all of her service is there.\" - Victrinia Ridgeway\n\n> \"Jon Rohlman helped me pick out the most amazing 2024 CX-5 turbo. He was extremely thorough, answered all of my questions & showed me every cool feature the car had.\" - Connor Putnal\n\n> \"Magdy from the finance department is amazing as well. He was to the point, gave me his honest opinion on some of the add ons, and helped me choose a protection package that brings me such peace of mind.\" - Connor Putnal\n\n> \"Great experience at Bremerton Mazda! David helped me out, and the entire team was excellent at communicating throughout the visit.\" - Kimberly N.\n\n> \"I took my Mazda in for regular service, and worked with Brian Hull (Service Advisor). Brian was extremely helpful, professional and clearly an expert.\" - Kristan Webster\n\n## Sales Themes\n\n- **Thorough sales process** - Staff praised for detailed vehicle walkthroughs and post-purchase follow-up\n- **Honest finance recommendations** - Transparent advice on protection packages and add-ons\n- **Helpful and friendly** - Staff consistently described as approachable and knowledgeable\n- **Customer-first approach** - Boutique-style, low-pressure dealership environment\n\n## Service Themes\n\n- **Expert service advisors** - Professional, communicative, and skilled\n- **Trustworthy maintenance** - Great recommendations for car care\n- **Loyal customer base** - Customers return for both purchase and service needs\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Mazda Model Lineup Comparison - West Hills Mazda\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP Tier | Key Trims |\n|---|---|---|---|---|---|\n| **Mazda3 Sedan** | Compact Sedan | 5 | FWD / AWD | Value | 2.5 S, Select Sport, Preferred, Premium, Carbon Edition, Turbo |\n| **Mazda3 Hatchback** | Compact Hatchback | 5 | FWD / AWD | Mid-range | 2.5 S, Select Sport, Preferred, Premium, Carbon Edition, Turbo, Turbo Premium Plus |\n| **MX-5 Miata** | Convertible Roadster | 2 | RWD | Mid-range | Sport, Club, Grand Touring |\n| **MX-5 Miata RF** | Retractable Hardtop | 2 | RWD | Premium | Club, Grand Touring |\n| **CX-30** | Subcompact Crossover | 5 | FWD / AWD | Value | 2.5 S, Select Sport, Preferred, Premium, Carbon Edition, Turbo, Turbo Premium Plus |\n| **CX-5** | Compact SUV | 5 | FWD / AWD | Mid-range | 2.5 S, Select, Preferred, Premium, Premium Plus, Carbon Edition, Turbo, Turbo Signature |\n| **CX-50** | Compact SUV | 5 | FWD / AWD | Mid-range | 2.5 S Preferred, 2.5 S Premium, Turbo Premium, Turbo Premium Plus |\n| **CX-70** | Mid-size 2-Row SUV | 5 | RWD / AWD | Premium | Premium Package |\n| **CX-70 PHEV** | Mid-size Plug-In Hybrid SUV | 5 | AWD | Premium | Premium Package |\n| **CX-90** | Mid-size 3-Row SUV | 7-8 | RWD / AWD | Premium | Select, Preferred, Premium, Premium Plus, Turbo S |\n| **CX-90 PHEV** | Mid-size 3-Row PHEV SUV | 7-8 | AWD | Premium | Preferred, Premium, Premium Plus |\n| **MX-30** | Subcompact EV Crossover | 5 | FWD | Mid-range | Standard |\n\n## Engine & Performance\n\n| Model | Engine | Horsepower | Transmission | EPA Combined MPG / MPGe |\n|---|---|---|---|---|\n| **Mazda3** | 2.5L I-4 | 191 hp | 6-speed Auto | 28-34 mpg |\n| **Mazda3 Turbo** | 2.5L Turbo I-4 | 250 hp | 6-speed Auto | 26-29 mpg |\n| **MX-5 Miata** | 2.0L I-4 | 181 hp | 6-speed Manual / Auto | 29-30 mpg |\n| **CX-30** | 2.5L I-4 | 191 hp | 6-speed Auto | 26-30 mpg |\n| **CX-30 Turbo** | 2.5L Turbo I-4 | 250 hp | 6-speed Auto | 25-28 mpg |\n| **CX-5** | 2.5L I-4 | 187 hp | 6-speed Auto | 26-28 mpg |\n| **CX-5 Turbo** | 2.5L Turbo I-4 | 256 hp | 6-speed Auto | 24-26 mpg |\n| **CX-50** | 2.5L I-4 | 187 hp | 6-speed Auto | 27-28 mpg |\n| **CX-50 Turbo** | 2.5L Turbo I-4 | 256 hp | 6-speed Auto | 25 mpg |\n| **CX-70 PHEV** | 2.5L I-4 + Electric Motor | 323 hp | 8-speed Auto | 56 MPGe / 26 mpg |\n| **CX-90** | 3.3L Turbo I-6 | 280-340 hp | 8-speed Auto | 25-28 mpg |\n| **CX-90 PHEV** | 2.5L I-4 + Electric Motor | 323 hp | 8-speed Auto | 56 MPGe / 25 mpg |\n| **MX-30** | Electric Motor | 143 hp | Single-speed | 98 MPGe |\n\n## Key Feature Comparison\n\n| Feature | Mazda3 | CX-30 | CX-5 | CX-50 | CX-70 | CX-90 |\n|---|---|---|---|---|---|---|\n| AWD Available | Yes | Yes | Yes | Yes | Yes | Yes |\n| 3rd Row | No | No | No | No | No | Yes |\n| Turbo Option | Yes | Yes | Yes | Yes | PHEV | Yes |\n| PHEV Option | No | No | No | No | Yes | Yes |\n| Towing (max) | N/A | 2,000 lbs | 2,000 lbs | 3,500 lbs | 3,500 lbs | 5,000 lbs |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Yes | Yes | Yes |\n| Wireless Android Auto | Yes | Yes | Yes | Yes | Yes | Yes |\n| i-Activsense Safety | Standard | Standard | Standard | Standard | Standard | Standard |\n\n## Electric & Hybrid Options\n\n| Model | Type | Range / Efficiency | Notes |\n|---|---|---|---|\n| **MX-30** | Full EV | ~100 miles | Distinctive freestyle doors, sustainable materials |\n| **CX-70 PHEV** | Plug-In Hybrid | ~26 miles EV | 2-row mid-size SUV with premium features |\n| **CX-90 PHEV** | Plug-In Hybrid | ~26 miles EV | 3-row family SUV, 323 hp combined |\n\n## Warranty\n\nAll new Mazda models include:\n- **3-Year / 36,000-Mile Bumper-to-Bumper Limited Warranty**\n- **5-Year / 60,000-Mile Powertrain Limited Warranty**\n- **5-Year / Unlimited-Mile Corrosion Perforation Limited Warranty**\n- **3-Year / 36,000-Mile 24/7 Roadside Assistance**\n- **3-Year / 36,000-Mile Mazda Certified Collision Center Repairs**\n\n## i-Activsense Safety\n\nStandard across most Mazda models:\n- Smart Brake Support (Collision Avoidance)\n- Mazda Radar Cruise Control with Stop & Go\n- Lane Departure Warning with Lane-Keep Assist\n- Blind Spot Monitoring with Rear Cross Traffic Alert\n- Driver Attention Alert\n- High Beam Control\n- 360-Degree View Monitor (select trims)\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

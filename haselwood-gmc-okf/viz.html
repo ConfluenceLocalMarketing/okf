@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>haselwood-gmc - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "haselwood-gmc";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Haselwood GMC",
+        "type": "Entities",
+        "description": "GMC dealership in Bremerton, WA serving Kitsap County with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.shophaselwoodgmc.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Haselwood GMC",
+        "type": "Entities",
+        "description": "Common questions about Haselwood GMC's inventory, financing, service, and dealership operations in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-gmc/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New GMC Models - Haselwood GMC",
+        "type": "Entities",
+        "description": "New GMC model lineup available at Haselwood GMC in Bremerton, WA including Acadia, Terrain, Yukon, Yukon XL, Canyon, Sierra 1500, Sierra 2500 HD, Sierra 3500 HD, HUMMER EV SUV, HUMMER EV Pickup, and Sierra EV.",
+        "resource": "https://www.shophaselwoodgmc.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Haselwood GMC",
+        "type": "Entities",
+        "description": "GMC-certified service center in Bremerton, WA offering routine maintenance, diagnostics, major repairs, genuine GMC OEM parts, and mobile service.",
+        "resource": "https://www.shophaselwoodgmc.com/service/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Haselwood GMC",
+        "type": "Entities",
+        "description": "Sales and service staff directory for Haselwood GMC in Bremerton, WA, compiled from the dealership website.",
+        "resource": "https://www.shophaselwoodgmc.com/dealership/staff.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - Haselwood GMC",
+        "type": "Entities",
+        "description": "Large pre-owned inventory at Haselwood GMC in Bremerton, WA, spanning multiple makes and models with thorough inspections and competitive pricing.",
+        "resource": "https://www.shophaselwoodgmc.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Haselwood GMC",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Haselwood GMC, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.shophaselwoodgmc.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Haselwood GMC",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for Haselwood GMC.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-gmc/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - Haselwood GMC",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 40 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for Haselwood GMC.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-gmc/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Haselwood GMC",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews for Haselwood GMC in Bremerton, WA, collected from Google Business Profile and PromptGraph platform.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-gmc/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "GMC Model Lineup Comparison - Haselwood GMC",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new GMC models available at Haselwood GMC in Bremerton, WA, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.shophaselwoodgmc.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Haselwood GMC\n\nHaselwood GMC is a full-service GMC dealership located at **501 W Hills Blvd #2, Bremerton, WA 98312**, serving drivers throughout Kitsap County and nearby communities including Port Orchard, Silverdale, Poulsbo, and Bainbridge Island.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 919-2226 |\n| Service | (360) 919-1064 |\n| Parts | (360) 919-2220 |\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 10:00 AM - 7:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\n## Location\n\n- **Address:** 501 W Hills Blvd #2, Bremerton, WA 98312\n\n## New Vehicles\n\nGMC models available include:\n- **Acadia** - Mid-size 3-row SUV, available in multiple trims\n- **Terrain** - Compact SUV, value-oriented and fuel-efficient\n- **Yukon** - Full-size SUV, powerful V8 engine, seating up to 8\n- **Yukon XL** - Extended-length full-size SUV, maximum cargo and passenger space\n- **Canyon** - Mid-size pickup truck, available in AT4 and Denali trims\n- **Sierra 1500** - Full-size light-duty pickup truck, multiple trims including Denali and AT4\n- **Sierra 2500 HD** - Heavy-duty pickup truck, maximum towing capability\n- **Sierra 3500 HD** - Heavy-duty pickup truck, maximum payload capacity\n- **HUMMER EV SUV** - All-electric supertruck SUV, available in 3X and Edition 1\n- **HUMMER EV Pickup** - All-electric supertruck pickup\n- **Sierra EV** - All-electric full-size pickup truck, available in Denali trim\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, GMC Protection plans\n- **Service Center** - GMC-certified technicians, routine maintenance, diagnostics, major repairs, genuine GMC parts, mobile service\n- **Parts Department** - Genuine GMC components, OEM accessories, tires\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned, CarBravo)\n- Online service scheduling\n- Online credit application and pre-approval\n- Mobile service scheduling\n- Trade-in valuation tool\n- GMC Protection plans\n- My GMC Rewards program\n\n## Staff\n\nSee [staff.md](staff.md) for full directory.\n\n## Reviews & Reputation\n\n- PromptGraph AI platform data available\n- Google Business Profile connected via OAuth\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **Haselwood Auto Group** - Part of the Haselwood family of dealerships\n- **CarBravo** - GM's certified used vehicle program with nationwide inventory\n- **Mobile Service** - Let service come to you\n- **GMC Protection** - Extended service contracts and protection plans\n- **My GMC Rewards** - Earn rewards on eligible service and parts purchases\n- **Super Cruise** - Available on select GMC models\n- **GM Energy** - Home charging solutions for electric vehicles\n- **Lifetime Powertrain Limited Warranty** - Available on select vehicles\n\n## Amenities\n\n- Online scheduling\n- Quiet customer lounge\n- Weekly service specials\n- Free car wash with service\n\n## Affiliations\n\n- Part of the **Haselwood Auto Group**\n- Location at **West Hills Auto Plex**\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform",
+    "datasets/faq": "# Frequently Asked Questions - Haselwood GMC\n\n## Inventory\n\n**Q: What new GMC models are available at Haselwood GMC?**\nA: The full GMC lineup including Acadia, Terrain, Yukon, Yukon XL, Canyon, Sierra 1500, Sierra 2500 HD, Sierra 3500 HD, HUMMER EV SUV, HUMMER EV Pickup, and Sierra EV.\n\n**Q: Does Haselwood GMC have a good selection of Certified Pre-Owned GMC trucks and SUVs?**\nA: Yes, Haselwood GMC keeps a great stock of pre-owned and CPO vehicles. Every pre-owned model is offered at a competitive price and thoroughly inspected for quality.\n\n**Q: Does Haselwood GMC have commercial GMC fleet vehicles?**\nA: Yes, Haselwood GMC serves businesses in the Bremerton area by providing commercial GMC fleet vehicles including the Savana Cargo Van.\n\n## Financing\n\n**Q: What financing options are available at Haselwood GMC?**\nA: Traditional loans, leases, and special financing programs. The finance team works with various lenders to find the best terms.\n\n**Q: Does Haselwood GMC work with buyers with bad credit?**\nA: Yes, the finance specialists work with various lenders to help find the right plan regardless of credit situation.\n\n**Q: What are the current lease deals for GMC vehicles?**\nA: Haselwood GMC offers rotating monthly specials, such as low APRs and bonus cash on models like the Sierra 1500 and Terrain.\n\n## Service\n\n**Q: Can I schedule an oil change and tire rotation at Haselwood GMC?**\nA: Absolutely. You can schedule by calling (360) 919-1064 or booking online through their website.\n\n**Q: Does Haselwood GMC have mobile service?**\nA: Yes, Haselwood GMC offers mobile service where technicians come to your home or work for select maintenance.\n\n**Q: Does Haselwood GMC have an express lane for quick oil changes?**\nA: Contact the service department for express service availability.\n\n**Q: Is Haselwood GMC a certified GM warranty repair center?**\nA: Yes, Haselwood GMC specializes in GM certified warranty repairs with factory-trained technicians.\n\n## Dealership\n\n**Q: Where is Haselwood GMC located?**\nA: 501 W Hills Blvd #2, Bremerton, WA 98312, serving Kitsap County communities.\n\n**Q: What are the sales and service hours?**\nA: Sales is open Monday-Saturday from 9:00 AM to 8:00 PM, and Sunday from 10:00 AM to 7:00 PM.\n\n**Q: Does Haselwood GMC buy used cars for cash?**\nA: Yes, Haselwood GMC will appraise and make an offer on your vehicle even if you aren't trading it in for a new one.\n\n**Q: How can I get the best trade-in value for my used truck?**\nA: Bring your vehicle to Haselwood GMC for a physical appraisal. They offer competitive trade-in values and periodically run trade assistance specials.\n\n**Q: What is the Haselwood Auto Group?**\nA: Haselwood GMC is part of the Haselwood Auto Group, a family of dealerships in the Bremerton area.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New GMC Models - Haselwood GMC\n\nHaselwood GMC carries a full lineup of new GMC vehicles. Below is a summary of available models and trims.\n\n## SUVs\n\n### GMC Acadia\nMid-size 3-row SUV seating up to 8 passengers. Available in multiple trims. Powered by a turbocharged engine with 9-speed automatic transmission. Available in FWD and AWD. Modern design with spacious interior and advanced safety features.\n\n### GMC Terrain\nCompact SUV, value-oriented and fuel-efficient. Available in multiple trims including AT4 and Denali. Compact size with impressive cargo versatility and available AWD.\n\n### GMC Yukon\nFull-size SUV with powerful V8 engine options. Seating up to 8 passengers. Available in SLE, SLT, AT4, and Denali trims. Maximum towing capacity. Premium interior materials and advanced technology.\n\n### GMC Yukon XL\nExtended-length full-size SUV offering maximum cargo space behind the third row. Seating up to 8 passengers with generous legroom throughout. Available in Denali and AT4 trims with V8 power.\n\n### GMC HUMMER EV SUV\nAll-electric supertruck SUV. Available in 3X and Edition 1 configurations. Up to 830 hp in 3X trim with CrabWalk and Extract Mode. Approx 300+ miles estimated range. UltraVision underbody cameras.\n\n## Trucks\n\n### GMC Canyon\nMid-size pickup truck available in Elevation, AT4, and Denali trims. Powered by a turbocharged engine. Available in 2WD and 4WD. Off-road capability with AT4 trim featuring Terrain Mode and off-road suspension.\n\n### GMC Sierra 1500\nFull-size light-duty pickup truck. Available in Pro, SLE, Elevation, SLT, AT4, and Denali trims. Multiple engine options including turbocharged 4-cylinder, V8, and Duramax diesel. Available in 2WD and 4WD. MultiPro Tailgate available on select trims.\n\n### GMC Sierra 2500 HD\nHeavy-duty pickup truck with maximum towing capability. Available in Pro, SLE, SLT, AT4, and Denali trims. Powerful gas and diesel engine options. Designed for serious work and towing.\n\n### GMC Sierra 3500 HD\nHeavy-duty pickup truck with maximum payload capacity. Available in Pro, SLE, SLT, AT4, and Denali trims. Dual rear wheel configuration available. Class-leading towing and payload specs.\n\n### GMC HUMMER EV Pickup\nAll-electric supertruck pickup. Available in 2X and 3X trims. Up to 830 hp with Watts to Freedom mode. CrabWalk diagonal driving capability. Approx 300+ miles estimated range. Available with adaptive air suspension.\n\n### GMC Sierra EV\nAll-electric full-size pickup truck. Available in Denali trim. Up to 440 miles estimated range. MultiPro Tailgate and MidGate for flexible cargo configurations. Available with Super Cruise hands-free driving.\n\n## Commercial Vehicles\n\n- **GMC Savana** - Full-size cargo van, ideal for commercial fleet use\n- **GMC Canyon Chassis Cab** - Commercial mid-size truck platform\n\n## Electric & Hybrid Options\n\n- **GMC HUMMER EV SUV** - Full EV, up to 830 hp, CrabWalk capability\n- **GMC HUMMER EV Pickup** - Full EV, Watts to Freedom mode\n- **GMC Sierra EV** - Full EV, up to 440 miles estimated range\n\n## Promotions & Offers\n\nPromotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - Haselwood GMC\n\nThe Haselwood GMC Service Center provides certified maintenance and repair services at 501 W Hills Blvd, Bremerton, WA.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work\n- **Mobile Service** - Let the service team come to you for select maintenance\n- **Recall Repairs** - OEM-specified recall and campaign work\n- **Tire Replacement and Alignment** - Full tire services\n- **Battery Services** - Battery testing, replacement, and maintenance\n- **Scheduled Maintenance** - Following GMC's recommended maintenance schedule\n\n## Service Team\n\n- **Bill Baker** - Service Manager\n- Factory-trained GMC certified technicians\n- Dedicated service advisors\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Mobile Service** - Schedule for on-site maintenance at home or work\n- **Certified GMC Technicians** - Factory-trained using genuine GMC parts\n- **Quiet Customer Lounge** - Comfortable waiting area\n- **Free Car Wash** - With every service visit\n- **Weekly Service Specials** - Rotating promotions and coupons\n\n## Service Specials\n\nThe dealership offers rotating service specials and coupons. See the service specials page for current promotions.\n\n## Parts Department\n\nGenuine GMC OEM parts and accessories available including:\n- GMC Genuine replacement parts\n- OEM accessories (floor liners, cargo mats, lift kits)\n- Tires and wheels\n- Order parts online or stop by\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 10:00 AM - 7:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\nSee [staff.md](staff.md) for full service department directory.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - Haselwood GMC\n\nStaff directory compiled from the dealership website.\n\n## Management\n\n- **Josh Kolbas** - General Manager\n- **Ashkan Morshedi** - General Sales Manager\n- **Mike Lidstrom** - Used Car Manager\n\n## Finance Department\n\n- **Brandon Mayfield** - Finance Director\n\n## Sales Department\n\n- **New Car Manager** - New Car Manager\n\n## Service Department\n\n- **Bill Baker** - Service Manager\n\n## Parts Department\n\n- **Amanda Campbell** - Parts Manager\n\n## Quality Assurance\n\n- **Chloe Mange** - Quality Assurance Manager\n\n## Staff Phone Numbers\n\n| Staff Member | Position | Phone |\n|---|---|---|\n| Josh Kolbas | General Manager | (360) 473-1402 |\n| Ashkan Morshedi | General Sales Manager | (360) 616-5000 |\n| Mike Lidstrom | Used Car Manager | (360) 616-5000 |\n| Brandon Mayfield | Finance Director | (360) 616-5000 |\n| Bill Baker | Service Manager | (360) 473-1512 |\n| Amanda Campbell | Parts Manager | (360) 473-1562 |\n| Chloe Mange | Quality Assurance Manager | (360) 473-1642 |\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - Haselwood GMC\n\nHaselwood GMC maintains a substantial pre-owned vehicle inventory in the Bremerton area with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Total vehicles:** Extensive inventory across new and pre-owned\n- **Multi-make selection** spanning GMC, Chevrolet, Buick, Cadillac, Ford, Toyota, Honda, Hyundai, Kia, Jeep, Ram, Audi, Subaru, Nissan, and more\n- **Price range:** Broad range from under $10,000 to premium vehicles\n- **Vehicle types:** Sedans, SUVs, trucks, vans, and coupes\n- **Daily fresh inventory** with regular turnover\n- **CarBravo** - GM's certified used vehicle marketplace with nationwide inventory search\n\n## Quality Assurance\n\n- **Thorough Inspection** - All pre-owned vehicles inspected by certified technicians\n- **GM Certified Pre-Owned** - Factory-backed inspections and warranties\n- **Vehicle Service Contracts** - Available through GMC Protection\n- **Carfax History Reports** - Available on request\n\n## Certified Pre-Owned Program\n\nGM Certified Pre-Owned vehicles undergo rigorous inspection and include:\n- GM factory-backed warranty\n- 24/7 roadside assistance\n- Multi-point inspection by certified technicians\n- Competitive pricing with transparent value\n- Integration with financing and service departments\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- Value Your Trade tool\n- Online credit application and pre-approval\n- Vehicle hold policy\n- CarBravo nationwide inventory search\n\n## Trade-In\n\n- Trade-in appraisal available\n- Cash offers for trade-ins (even without vehicle purchase)\n- Competitive trade-in values\n- KBB Instant Cash Offer available\n\n## CarBravo\n\nCarBravo is GM's certified used vehicle program that offers:\n- Nationwide inventory of GM and non-GM vehicles\n- Multi-point inspection\n- 90-day/4,000-mile limited warranty\n- Flexible return policy\n- Online buying and at-home delivery options\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - Haselwood GMC\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer.com** platform.\n\nNote: The AI Discovery Page at `/ai-discovery-page.htm` was not accessible on the website (timeout), but the PromptGraph API is fully functional.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-07-01T12:22:53.290Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n- **Description:** Full-service GMC dealership in Bremerton, Washington\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-gmc` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/prompts` | Q&A / FAQ prompts (40 prompts) |\n| `/testimonials` | Customer reviews |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n\n### Additional Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/offers` | Current offers and specials |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/haselwood-gmc/business`:\n\n- **Name:** Haselwood GMC\n- **Type:** AutoDealer (Schema.org)\n- **Additional Type:** GMC dealer\n- **Address:** 501 W Hills Blvd #2, Bremerton, WA 98312\n- **Telephone:** (360) 919-2226\n- **URL:** `https://www.shophaselwoodgmc.com/`\n- **Date Modified:** 2026-05-26T10:39:08.660Z\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data featuring new GMC models and used multi-make vehicles with detailed specifications, pricing, and availability.\n\n## Q&A Prompt Library (40 Prompts)\n\nThe `/prompts` endpoint exposes 40 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Vehicle shopping and model-specific inquiries\n- Financing, leasing, and trade-in questions\n- Service, parts, and warranty inquiries\n- Dealership information and customer support\n- GMC Certified Pre-Owned program\n- Electric vehicle inquiries (HUMMER EV, Sierra EV)\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data. The PromptGraph testimonials collection is currently empty. See [testimonials.md](testimonials.md) for details from Google Business Profile.\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/haselwood-gmc/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` |\n| LLMs.txt | `/llms.txt` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about Haselwood GMC without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - Haselwood GMC\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with Haselwood GMC's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [Haselwood GMC Home](https://www.shophaselwoodgmc.com/) - New and pre-owned GMC vehicles at Haselwood GMC in Bremerton, WA.\n- [New Inventory](https://www.shophaselwoodgmc.com/new-inventory/index.htm) - Browse our new GMC inventory.\n- [Used Inventory](https://www.shophaselwoodgmc.com/used-inventory/index.htm) - Browse our used car inventory in Bremerton.\n- [CarBravo](https://buy.shophaselwoodgmc.com/carbravo/) - Certified used vehicle marketplace.\n- [Financing Center](https://www.shophaselwoodgmc.com/financing/index.htm) - Explore financing and lease options.\n- [Finance Application](https://www.shophaselwoodgmc.com/financing/application.htm) - Online credit application.\n- [Service Center](https://www.shophaselwoodgmc.com/service/index.htm) - Schedule an appointment for auto repair or regular maintenance.\n- [Parts Center](https://www.shophaselwoodgmc.com/parts/index.htm) - Genuine GMC parts and accessories.\n- [Specials](https://www.shophaselwoodgmc.com/promotions/new/index.htm) - Current GMC offers and incentives.\n- [GMC Incentives](https://www.shophaselwoodgmc.com/global-incentives/index.htm) - Current GMC incentives and rebates.\n- [Meet Our Staff](https://www.shophaselwoodgmc.com/dealership/staff.htm) - Staff directory.\n- [About Us](https://www.shophaselwoodgmc.com/dealership/about.htm) - Dealership information.\n\n### AI & LLM Resources\n\n- [AI Discovery Page](https://www.shophaselwoodgmc.com/ai-discovery-page.htm) - Machine-readable knowledge base for AI agents\n\n## AI Manifest Endpoint\n\nThe PromptGraph AI Manifest is available at:\n- `https://api.promptgraph.ai/api/v1/haselwood-gmc/.well-known/ai-manifest.json`\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/haselwood-gmc/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/haselwood-gmc/vehicles) - Complete inventory of vehicles with specifications, pricing, and availability in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/haselwood-gmc/prompts) - 40 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/haselwood-gmc/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Current Offers](http://api.promptgraph.ai/api/v1/haselwood-gmc/offers) - Current promotions and specials\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/haselwood-gmc/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/haselwood-gmc/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/haselwood-gmc/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/haselwood-gmc/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/haselwood-gmc/config.json) - System configuration and metadata\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - Haselwood GMC\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-gmc/prompts` exposes 40 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (5+ prompts)\n- Top-rated GMC dealer in Kitsap County\n- Find a reliable GMC dealership in Bremerton\n- Dealership hours and location inquiries\n- Service center ratings\n\n### Vehicle Shopping (15+ prompts)\n- New GMC models and availability\n- GMC Sierra 1500 inventory for towing\n- GMC Acadia family SUV inquiries\n- GMC Yukon XL passenger space for large families\n- GMC Canyon off-road capability\n- GMC Yukon test drive scheduling\n- GMC heavy-duty trucks (Sierra 2500 HD, 3500 HD)\n- HUMMER EV availability (SUV and Pickup)\n- Used GMC Terrain under $25,000\n- GMC Certified Pre-Owned program\n- Truck inventory comparisons\n\n### Financing (5+ prompts)\n- Auto financing options including bad credit\n- GMC lease deals in Bremerton\n- Trade-in value comparisons\n- Commercial fleet GMC vehicle inquiries\n\n### Service & Parts (10+ prompts)\n- Oil change and tire rotation scheduling\n- GMC parts department contact\n- OEM GMC accessories (floor liners, cargo mats, lift kits)\n- GM certified warranty repairs\n- Express oil change inquiries\n- GMC Canyon maintenance scheduling\n\n### Buying Experience (5+ prompts)\n- Selling a car to Haselwood for cash\n- Best trade-in value for used trucks\n- Vehicle upgrade program\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `haselwood-gmc-parts-department` | Parts department contact |\n| 2 | `sell-car-to-haselwood` | Cash offers for used cars |\n| 3 | `gmc-yukon-xl-passenger-space` | Yukon XL family seating |\n| 4 | `gmc-certified-pre-owned` | CPO program |\n| 5 | `commercial-fleet-gmc-vehicles` | Fleet vehicles |\n| 6 | `top-rated-gmc-dealer-wa` | Dealership reputation |\n| 7 | `gmc-lease-deals-bremerton` | Lease specials |\n| 8 | `hummer-ev-availability` | HUMMER EV inquiries |\n| 9 | `gmc-acadia-family-suv` | Acadia 3-row SUV |\n| 10 | `oem-gmc-accessories` | OEM accessories |\n| 11 | `gmc-canyon-off-road` | Canyon capability |\n| 12 | `gmc-heavy-duty-trucks` | Sierra HD trucks |\n| 13 | `gmc-trade-in-value` | Trade-in appraisal |\n| 14 | `test-drive-gmc-yukon` | Yukon test drive |\n| 15 | `haselwood-gmc-financing` | Financing options |\n| 16 | `haselwood-gmc-hours` | Dealership hours |\n| 17 | `haselwood-gmc-service-center` | Service scheduling |\n| 18 | `gmc-sierra-1500-inventory` | Sierra 1500 availability |\n| 19 | `find-local-gmc-dealer` | Dealership location |\n| 20 | `used-gmc-terrain-bremerton` | Used Terrain search |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - Haselwood GMC\n\n## Aggregate Ratings\n\n- **PromptGraph API:** Testimonials data available via PromptGraph endpoint\n- **Google Business Profile:** Connected via OAuth, GBP data synced as of 2026-05-26\n\n## PromptGraph Testimonials Collection\n\nThe PromptGraph testimonials endpoint returned an empty collection at the time of fetching. Customer reviews are available through the Google Business Profile context endpoint.\n\n## Google Business Profile Context\n\nThe dealership is connected to Google Business Profile via OAuth with synced fields including name, description, category, address, phone, website, and hours.\n\n## Review Themes (from site content)\n\n- **Top-rated service** - Haselwood GMC is recognized as a highly-rated dealership in Kitsap County\n- **Seamless car buying** - Customers praise seamless buying experiences\n- **Superb service department** - The service department is noted for exceptional customer care\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# GMC Model Lineup Comparison - Haselwood GMC\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP Tier | Key Trims |\n|---|---|---|---|---|---|\n| **Terrain** | Compact SUV | 5 | FWD / AWD | Value | Elevation, AT4, Denali |\n| **Acadia** | Mid-size 3-Row SUV | 7-8 | FWD / AWD | Mid-range | Elevation, AT4, Denali |\n| **Yukon** | Full-size SUV | 7-8 | RWD / 4WD | Premium | SLE, SLT, AT4, Denali |\n| **Yukon XL** | Extended Full-size SUV | 7-8 | RWD / 4WD | Premium | SLE, SLT, AT4, Denali |\n| **Canyon** | Mid-size Pickup | 5 | RWD / 4WD | Mid-range | Elevation, AT4, Denali |\n| **Sierra 1500** | Full-size Pickup | 5-6 | RWD / 4WD | Mid-range | Pro, SLE, Elevation, SLT, AT4, Denali |\n| **Sierra 2500 HD** | Heavy-Duty Pickup | 5-6 | RWD / 4WD | Premium | Pro, SLE, SLT, AT4, Denali |\n| **Sierra 3500 HD** | Heavy-Duty Pickup | 5-6 | RWD / 4WD | Premium | Pro, SLE, SLT, AT4, Denali |\n| **HUMMER EV SUV** | Full-size EV SUV | 5 | e-4WD | Premium | 3X, Edition 1 |\n| **HUMMER EV Pickup** | Full-size EV Pickup | 5 | e-4WD | Premium | 2X, 3X, Edition 1 |\n| **Sierra EV** | Full-size EV Pickup | 5 | e-4WD | Premium | Denali |\n\n## Key Feature Comparison\n\n| Feature | Terrain | Acadia | Yukon | Canyon | Sierra 1500 | Sierra 2500 HD | Sierra 3500 HD |\n|---|---|---|---|---|---|---|---|\n| Engine | 1.5L Turbo | 2.5L Turbo | 5.3L/6.2L V8 | 2.7L Turbo | 2.7L Turbo/5.3L V8/6.2L V8/3.0L Diesel | 6.6L V8 Gas/6.6L V8 Diesel | 6.6L V8 Gas/6.6L V8 Diesel |\n| Horsepower | ~175 hp | ~328 hp | ~355-420 hp | ~310 hp | ~310-420 hp | ~401-470 hp | ~401-470 hp |\n| AWD/4WD Available | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n| 3rd Row | No | Yes | Yes | No | No | No | No |\n| Towing (max) | 1,500 lbs | 5,000 lbs | 8,400 lbs | 7,700 lbs | 13,300 lbs | 22,500 lbs | 36,000 lbs |\n| MultiPro Tailgate | No | No | No | No | Available | Available | Available |\n| Super Cruise Available | No | Yes | Yes | No | Yes | Yes | Yes |\n\n## Electric Models\n\n| Model | Type | Horsepower | Drive | Key Features |\n|---|---|---|---|---|\n| **HUMMER EV SUV** | Full EV | Up to 830 hp | e-4WD | CrabWalk, Extract Mode, UltraVision cameras, ~300 mi range |\n| **HUMMER EV Pickup** | Full EV | Up to 830 hp | e-4WD | Watts to Freedom, CrabWalk, adaptive air suspension |\n| **Sierra EV Denali** | Full EV | Up to 754 hp | e-4WD | MultiPro Tailgate, MidGate, up to 440 mi range, Super Cruise |\n\n## Warranty\n\nAll new GMC models include:\n- **3-Year / 36,000-Mile Bumper-to-Bumper Limited Warranty**\n- **5-Year / 60,000-Mile Powertrain Limited Warranty**\n- **5-Year / Unlimited-Mile Corrosion Perforation Limited Warranty**\n- **3-Year / 36,000-Mile Roadside Assistance**\n- **2-Year / 24,000-Mile Scheduled Maintenance**\n\n## GMC Safety Features\n\nAvailable across most GMC models:\n- Automatic Emergency Braking\n- Forward Collision Alert\n- Lane Keep Assist with Lane Departure Warning\n- Following Distance Indicator\n- IntelliBeam headlamps\n- Rear Cross Traffic Alert\n- Blind Zone Steering Assist\n- HD Surround Vision\n- Trailer Side Blind Zone Alert\n\n## GMC Technology\n\n- **Super Cruise** - Hands-free driving on compatible highways (available on Acadia, Yukon, Sierra 1500, Sierra EV)\n- **MultiPro Tailgate** - Six-function tailgate (Sierra models)\n- **ProGrade Trailering System** - Advanced trailering technology\n- **Google Built-In** - Google Assistant, Google Maps, Google Play\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

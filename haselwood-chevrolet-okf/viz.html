@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>haselwood-chevrolet - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "haselwood-chevrolet";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Haselwood Chevrolet",
+        "type": "Entities",
+        "description": "Chevrolet, Buick, and GMC dealership in Bremerton, WA serving Port Orchard, Silverdale, Gig Harbor, Bainbridge Island, Poulsbo, and Tacoma with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.haselwood.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Haselwood Chevrolet",
+        "type": "Entities",
+        "description": "Common questions about Haselwood Chevrolet's inventory, financing, service, and dealership operations in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-chevrolet/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Chevrolet, Buick & GMC Models - Haselwood Chevrolet",
+        "type": "Entities",
+        "description": "New Chevrolet, Buick, and GMC model lineup available at Haselwood Chevrolet in Bremerton, WA including Silverado, Equinox, Trax, Tahoe, Suburban, Blazer, Trailblazer, Traverse, Colorado, Corvette, Camaro, Malibu, and EV models.",
+        "resource": "https://www.haselwood.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Haselwood Chevrolet",
+        "type": "Entities",
+        "description": "Chevrolet-certified service center in Bremerton, WA offering routine maintenance, diagnostics, major repairs, mobile service, and genuine GM OEM parts.",
+        "resource": "https://www.haselwood.com/service/scheduler.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Haselwood Chevrolet",
+        "type": "Entities",
+        "description": "Sales, service, and parts staff directory for Haselwood Chevrolet in Bremerton, WA, compiled from the dealership website and customer reviews.",
+        "resource": "https://www.haselwood.com/dealership/staff.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and CarBravo Certified Vehicles - Haselwood Chevrolet",
+        "type": "Entities",
+        "description": "Large pre-owned inventory at Haselwood Chevrolet in Bremerton, WA, spanning multiple makes and models with certified inspections and competitive pricing.",
+        "resource": "https://www.haselwood.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Haselwood Chevrolet",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Haselwood Chevrolet, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.haselwood.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Haselwood Chevrolet",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for Haselwood Chevrolet.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-chevrolet/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - Haselwood Chevrolet",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 7 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for Haselwood Chevrolet.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-chevrolet/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Haselwood Chevrolet",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews collected via PromptGraph API for Haselwood Chevrolet in Bremerton, WA, with a 4.4 aggregate rating highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-chevrolet/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Chevrolet Model Lineup Comparison - Haselwood Chevrolet",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Chevrolet models available at Haselwood Chevrolet in Bremerton, WA, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.haselwood.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Haselwood Chevrolet\n\nHaselwood Chevrolet is a full-service Chevrolet, Buick, and GMC dealership located at **501 West Hills Blvd, Bremerton, WA 98312**, serving the greater Puget Sound region including Port Orchard, Silverdale, Gig Harbor, Bainbridge Island, Poulsbo, and Tacoma for over 50 years. It is the original dealership of the West Hills Auto Plex.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 919-1063 |\n| Service | (360) 919-1151 |\n| Parts | (360) 919-1115 |\n\nEmail: gsjones.haselwood@gmail.com\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\n## Location\n\n- **Address:** 501 West Hills Blvd, Bremerton, WA 98312\n- **Geo:** 47.5578434, -122.6768733\n\n## New Vehicles\n\nChevrolet, Buick, and GMC models available include:\n- **Silverado 1500** - Full-size pickup, best-selling Chevrolet\n- **Silverado 2500HD / 3500HD** - Heavy-duty pickup trucks\n- **Silverado EV** - All-electric full-size pickup\n- **Equinox** - Compact SUV, popular family choice\n- **Equinox EV** - All-electric compact SUV\n- **Trax** - Subcompact SUV, value-oriented\n- **Trailblazer** - Subcompact SUV, sporty styling\n- **Blazer** - Mid-size SUV\n- **Blazer EV** - All-electric mid-size SUV\n- **Traverse** - Mid-size 3-row SUV\n- **Tahoe** - Full-size SUV\n- **Suburban** - Full-size extended SUV\n- **Colorado** - Mid-size pickup truck\n- **Bolt EV / Bolt EUV** - All-electric subcompact\n- **Corvette Stingray / E-Ray / ZO6** - Sports car\n- **Camaro** - Muscle car\n- **Malibu** - Mid-size sedan\n- **Express Cargo** - Full-size cargo van\n- **GMC Sierra 1500** - Full-size pickup\n- **Buick Enclave / Envision / Encore** - Luxury SUVs\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, Capital One pre-qualification\n- **Service Center** - Chevrolet-certified technicians, routine maintenance, diagnostics, major repairs, genuine OEM parts\n- **Parts Department** - Genuine GM components, accessories, tires, online ordering\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, CarBravo certified)\n- Online service scheduling\n- Online credit application and pre-approval\n- Car payment calculator\n- Mobile service (service van comes to you)\n- Trade-in valuation tool (KBB Instant Cash Offer)\n\n## Staff\n\nSee [staff.md](staff.md) for full directory.\n\n## Reviews & Reputation\n\n- Aggregate rating: 4.4 / 5.0 (2,071 reviews) across major platforms\n- Google Business Profile: 4.4 stars (2,000+ reviews)\n- DealerRater: 4.7 stars (766+ reviews)\n- Multiple dealer awards including state and consumer awards\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **Haselwood Auto Group** - Part of the Haselwood family of dealerships\n- **West Hills Advantage** - Lifetime Powertrain Warranty on new and qualifying pre-owned vehicles\n- **CarBravo** - Chevrolet-certified pre-owned vehicle program\n- **Economy Vehicle Program** - Low-cost, reliable transportation for budget-conscious buyers\n- **Military Appreciation** - Special incentives and support for service members\n- **Mobile Service** - Service van comes to your home or office\n- **EV Charging Station** - On-site charging for electric vehicles\n- **Free courtesy transportation vehicles** available during service\n\n## Affiliations\n\n- Part of the **Haselwood Auto Group**\n- Located in the **West Hills Auto Plex**\n- Proudly serving the **Kitsap Peninsula** for over 50 years\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform",
+    "datasets/faq": "# Frequently Asked Questions - Haselwood Chevrolet\n\n## Inventory\n\n**Q: What new Chevrolet models are available at Haselwood Chevrolet?**\nA: The full Chevrolet lineup including Silverado 1500, Silverado 2500HD/3500HD, Silverado EV, Colorado, Equinox, Equinox EV, Trax, Trailblazer, Blazer, Blazer EV, Traverse, Tahoe, Suburban, Corvette Stingray, Corvette E-Ray, Corvette ZO6, Camaro, Malibu, Bolt EV, and Express Cargo.\n\n**Q: Does Haselwood also sell Buick and GMC vehicles?**\nA: Yes, as a Chevrolet Buick GMC dealership, Haselwood offers new Buick models (Enclave, Envision, Encore GX) and GMC models (Sierra 1500 and more).\n\n**Q: What brands are available in the used vehicle inventory?**\nA: The pre-owned inventory spans multiple makes including Chevrolet, Buick, GMC, Ford, Toyota, Honda, Hyundai, Kia, Volkswagen, Jeep, Ram, BMW, and Mercedes-Benz.\n\n**Q: Does Haselwood Chevrolet offer CarBravo certified pre-owned vehicles?**\nA: Yes, CarBravo is Chevrolet's certified pre-owned program available with factory-backed inspections and warranties.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs. The dealership works with multiple lenders to find the best terms.\n\n**Q: Does the dealership offer a Lifetime Powertrain Warranty?**\nA: Yes, the West Hills Advantage includes a Lifetime Powertrain Warranty on new and qualifying pre-owned vehicles.\n\n**Q: Can I get pre-approved online?**\nA: Yes, online credit application and pre-approval are available through the dealership website.\n\n## Service\n\n**Q: Does the service center offer mobile service?**\nA: Yes, the mobile service van can come to your home or office for convenient maintenance and repairs.\n\n**Q: Does Haselwood have an EV charging station?**\nA: Yes, there is an EV charging station on site for customer use.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the dealership website, or you can call the service department.\n\n**Q: Are courtesy vehicles available during service?**\nA: Yes, courtesy transportation vehicles are available during service appointments.\n\n## Dealership\n\n**Q: Where is Haselwood Chevrolet located?**\nA: 501 West Hills Blvd, Bremerton, WA 98312, located in the West Hills Auto Plex just off Highway 3.\n\n**Q: What is the Haselwood Auto Group?**\nA: Haselwood Chevrolet is part of the Haselwood Auto Group, a family of dealerships serving the Puget Sound region for over 50 years.\n\n**Q: What is the West Hills Advantage?**\nA: The West Hills Advantage is a Lifetime Powertrain Warranty offered on new and qualifying pre-owned vehicles, making Haselwood the safest choice for car buyers.\n\n**Q: Does the dealership offer military discounts?**\nA: Yes, Haselwood offers military appreciation programs with specialized incentives for service members.\n\n**Q: Are there economy vehicles available?**\nA: Yes, the Economy Vehicle Program provides low-cost, reliable, safety-inspected transportation for budget-conscious buyers.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New Chevrolet, Buick & GMC Models - Haselwood Chevrolet\n\nHaselwood Chevrolet carries a full lineup of new Chevrolet, Buick, and GMC vehicles. Below is a summary of available models.\n\n## SUVs & Crossovers\n\n### Chevrolet Trax\nSubcompact SUV, Chevrolet's most affordable SUV. Redesigned for 2026 with bold styling, more space, and smart tech. Turbocharged engine with automatic transmission. Seats 5 passengers.\n\n### Chevrolet Trailblazer\nSubcompact SUV with sporty RS trim available. Compact footprint with available AWD. Perfect for city driving with SUV versatility.\n\n### Chevrolet Equinox\nCompact SUV, popular family choice. Available in multiple trims including LT, RS, and Premier. Efficient turbocharged engine. Available in FWD and AWD.\n\n### Chevrolet Equinox EV\nAll-electric compact SUV. Modern design with impressive range. Available in multiple configurations with FWD or AWD. Advanced Ultium platform.\n\n### Chevrolet Blazer\nMid-size SUV with bold styling. Available in LT, RS, and Premier trims. Multiple engine options including available V6. Sporty handling.\n\n### Chevrolet Blazer EV\nAll-electric mid-size SUV built on the Ultium platform. Modern design with advanced technology. Available in multiple trims.\n\n### Chevrolet Traverse\nMid-size 3-row SUV seating up to 8 passengers. Available in LS, LT, RS, Z71, and High Country trims. Powerful V6 engine with 9-speed automatic. Available in FWD and AWD.\n\n### Chevrolet Tahoe\nFull-size SUV seating up to 9 passengers. Available in LS, LT, RST, Z71, Premier, and High Country trims. Multiple engine options including V8. Maximum towing capacity.\n\n### Chevrolet Suburban\nFull-size extended SUV, the longest-running nameplate in automotive history. Seating up to 9 passengers. Available in same trims as Tahoe with additional cargo space.\n\n### Buick Enclave\nPremium mid-size 3-row SUV. Luxury interior with quiet tuning. Available in preferred trim levels.\n\n### Buick Envision\nCompact luxury SUV. Premium styling and refined ride. Available with AWD.\n\n### Buick Encore GX\nSubcompact luxury SUV. Efficient and city-friendly with upscale interior.\n\n## Trucks\n\n### Chevrolet Colorado\nMid-size pickup truck available in WT, LT, Z71, ZR2, and Trail Boss trims. Turbocharged 2.7L 4-cylinder engine (up to 310 hp) with 8-speed automatic. Available in 2WD and 4WD. Maximum towing capacity.\n\n### Chevrolet Silverado 1500\nFull-size pickup, Chevrolet's best-selling vehicle. Available in WT, Custom, LT, RST, LTZ, ZR2, and High Country trims. Multiple engine options including turbo 4-cylinder, V8, and Diesel. Available in 2WD and 4WD. Maximum towing capacity up to 13,300 lbs.\n\n### Chevrolet Silverado 2500HD / 3500HD\nHeavy-duty pickup trucks for maximum capability. Available in WT, LT, LTZ, and High Country trims. Powerful 6.6L V8 gas or Duramax diesel engine. Maximum towing capacity over 20,000 lbs (3500HD).\n\n### Chevrolet Silverado EV\nAll-electric full-size pickup. Available in WT and RST trims. Ultium platform with up to 400 miles estimated range. Multi-Flex Midgate for extended cargo. Up to 10,000 lbs towing capacity.\n\n### Chevrolet Express Cargo\nFull-size cargo van for commercial use. Available in 2500 and 3500 configurations. Multiple roof and wheelbase options.\n\n### GMC Sierra 1500\nFull-size pickup, premium counterpart to Silverado. Available in Pro, SLE, Elevation, SLT, AT4, and Denali trims.\n\n## Cars & Performance\n\n### Chevrolet Malibu\nMid-size sedan, comfortable and fuel-efficient. Available in LS, RS, and Premier trims. Standard 1.5L turbocharged engine with CVT.\n\n### Chevrolet Camaro\nIconic muscle car available in LT, LT1, and SS trims. Powerful V6 or V8 engines. Available as coupe or convertible.\n\n### Chevrolet Corvette Stingray\nMid-engine sports car, America's supercar. 6.2L V8 engine with 490 hp. Available as coupe or convertible with Z51 performance package.\n\n### Chevrolet Corvette E-Ray\nHybrid all-wheel-drive Corvette. Combined 655 hp. Electric front axle for AWD traction and quick acceleration.\n\n### Chevrolet Corvette ZO6\nHigh-performance Corvette with naturally aspirated 5.5L V8 engine producing 670 hp. Track-focused design and aerodynamics.\n\n## Electric Vehicles\n\n### Chevrolet Bolt EV / Bolt EUV\nAll-electric subcompact hatchback/SUV. Affordable EV option with impressive range. Available in 2027 model year at Haselwood.\n\n### Chevrolet Equinox EV\nAll-electric compact SUV with Ultium platform.\n\n### Chevrolet Blazer EV\nAll-electric mid-size SUV with Ultium platform.\n\n### Chevrolet Silverado EV\nAll-electric full-size pickup with Ultium platform.\n\n## Promotions & Offers\n\nPromotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.\n\n## West Hills Advantage\n\nAll new vehicles qualify for the **Lifetime Powertrain Warranty** through the West Hills Advantage program.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - Haselwood Chevrolet\n\nThe Haselwood Chevrolet Service Center provides certified maintenance and repair services at 501 West Hills Blvd, Bremerton, WA.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work, AC repair\n- **Mobile Service** - Service van comes to your home or office\n- **Recall Repairs** - OEM-specified recall and campaign work\n- **Tire Replacement and Alignment** - Full tire services including rotation and balancing\n- **Battery Service** - Testing and replacement\n- **Brake Service** - Inspection, repair, and replacement\n- **Scheduled Maintenance** - Following Chevrolet's recommended maintenance schedule\n- **EV Charging Station** - On-site charging available for electric vehicles\n\n## Service Team\n\n- **Tim** - Service Team; praised for great service\n- **Chris** - Service Advisor; praised for friendly, knowledgeable service and discounts\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Mobile Service** - Let us come to you! Service van with two technicians\n- **Certified Technicians** - Factory-trained using genuine GM parts\n- **Courtesy Transportation Vehicles** - Available during service appointments\n- **Service and Parts Financing** - Buy now, pay later options available\n- **My GM Rewards** - Earn rewards on service and parts\n\n## Service Specials\n\nThe dealership offers rotating service coupons and specials. See the service specials page for current promotions.\n\n## Parts Department\n\nGenuine GM OEM parts and accessories available including:\n- GM Genuine replacement parts\n- AC Delco components\n- Tires and wheels\n- Accessories for Chevrolet, Buick, and GMC vehicles\n- Order parts online through the Parts Order Form\n- Auto parts warranty available\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\nSee [staff.md](staff.md) for full service department directory.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - Haselwood Chevrolet\n\nStaff directory compiled from the dealership website and customer reviews.\n\n## Management\n\n- **Chuck Haselwood** - CFO; part of the Haselwood family operation\n- **Josh Kolbas** - General Manager; frequently responds to customer reviews\n- **Michael Columbus** - Sales Manager\n- **Tiffany Fulweiler** - Management (referenced in reviews)\n\n## Finance Department\n\n- **Bob Villa** - Finance Manager; praised for quick and professional service\n\n## Sales Consultants\n\n- **Adam Parson** - Sales Consultant; praised for listening to customer needs and finding the right vehicle\n- **Patrick Merrill** - Sales Consultant; frequently mentioned in positive reviews\n- **Mason** - Sales Consultant; praised for helpfulness with test drives and answering finance questions\n- **Jason** - Sales Consultant; praised for locking in trade and price before long commutes\n- **Jeremiah Sprague** - Sales Consultant\n- **Reggie Ross** - Sales Consultant (referenced in reviews)\n\n## Service Department\n\n- **Tim** - Service Team; praised for great service on Silverado EV warranty work\n- **Chris** - Service Advisor; praised for friendly, knowledgeable check-in and discounts\n- **Patrick Merrill** - Service (referenced in reviews)\n- **Chloe Mange** - Service (referenced in reviews)\n- **Drew Bowen** - Customer; praised service department in testimonial\n\n## Parts Department\n\n- Parts team available for genuine GM parts, accessories, and tires\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and CarBravo Certified Vehicles - Haselwood Chevrolet\n\nHaselwood Chevrolet maintains a substantial pre-owned vehicle inventory in Bremerton with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Total vehicles:** Extensive inventory across new and pre-owned (hundreds in stock)\n- **Multi-make selection** spanning Chevrolet, Buick, GMC, Ford, Toyota, Honda, Hyundai, Kia, Volkswagen, Jeep, Ram, BMW, Mercedes-Benz, and more\n- **Price range:** Broad range from under $10,000 to premium vehicles, including an Economy Vehicle Program\n- **Vehicle types:** Sedans, SUVs, trucks, vans, coupes, and sports cars\n- **Daily fresh inventory** with regular turnover\n- **Carfax One Owner vehicles** available\n\n## Quality Assurance\n\n- **Vehicle Inspection** - All pre-owned vehicles inspected by certified technicians\n- **CarBravo Certified** - Chevrolet's certified pre-owned program with factory-backed inspections and warranties\n- **Service Contracts** - Available for most vehicles\n- **Carfax History Reports** - Available on request\n- **Economy Vehicle Program** - Safety-inspected, affordable cars for first-time buyers or budget-conscious families\n\n## CarBravo Program\n\nCarBravo is Chevrolet's certified pre-owned program offering:\n- Factory-backed warranty coverage\n- 24/7 roadside assistance\n- Multi-point inspection by certified technicians\n- Competitive pricing with transparent value\n- Convenient online shopping at carbravo.haselwood.com\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- KBB Instant Cash Offer trade-in tool\n- Car payment calculator\n- Online credit application and pre-approval\n- Mobile service available\n- Vehicle hold policy\n\n## Trade-In\n\n- KBB Instant Cash Offer - get a firm offer online\n- High used vehicle sales volume means the dealership actively needs trade-ins\n- Cash offers for trade-ins (even without vehicle purchase)\n- Competitive trade-in values\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - Haselwood Chevrolet\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer.com** platform.\n\nThe AI Discovery Page was not accessible at `/ai-discovery-page.htm` (404), but PromptGraph endpoints are available via the API.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-07-01T12:23:07.725Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n- **Contact:** gsjones.haselwood@gmail.com\n\nNote: The AI Manifest is accessible via PromptGraph at the API endpoint.\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-chevrolet` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/prompts` | Q&A / FAQ prompts (7 prompts) |\n| `/testimonials` | Customer reviews |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/config.json` | System configuration |\n\n### Additional Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/haselwood-chevrolet/business`:\n\n- **Name:** Haselwood Chevrolet GMC\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Chevrolet dealer, GMC dealer, Car dealer, Truck dealer, Used car dealer, Used truck dealer, Car leasing service, Auto repair shop\n- **Address:** 501 West Hills Boulevard, Bremerton, WA 98312\n- **Geo:** 47.5578434, -122.6768733\n- **Telephone:** (564) 226-2030\n- **Email:** gsjones.haselwood@gmail.com\n- **URL:** `https://www.haselwood.com/`\n- **Aggregate Rating:** 4.4 / 5.0 (2,071 reviews)\n- **Date Modified:** 2026-02-03T15:12:09.354Z\n- **Same As:** Facebook, Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wide selection of new Chevrolet, Buick, and GMC models and used multi-make vehicles with detailed specifications, pricing, and availability.\n\n## Q&A Prompt Library (7 Prompts)\n\nThe `/prompts` endpoint exposes 7 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Vehicle shopping and model-specific inquiries\n- Financing, leasing, and trade-in questions\n- Service, parts, and warranty inquiries\n- Dealership information and customer support\n- Lifetime Powertrain Warranty program\n- Military appreciation and special programs\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data with a 4.4 aggregate rating. See [testimonials.md](testimonials.md) for details.\n\n## LLM-Accessible Actions\n\nThe PromptGraph API defines structured prompts that agents can invoke:\n\n1. **Drive Confident: Your Chevrolet & GMC Experts** - Customer-first buying experience with transparent pricing\n2. **Explore Top Chevrolet & GMC Vehicles All in One Place** - Comprehensive dealership supporting purchase through ownership\n3. **Smart Deals, Great Financing & Your Next Chevy or GMC** - Competitive financing, value deals, lease specials\n4. **Your Premier Destination for Chevrolet & GMC Performance and Utility** - Trucks, performance vehicles, Silverado, Sierra, Corvette\n5. **Unbeatable Peace of Mind with the Lifetime Powertrain Warranty** - West Hills Advantage program\n6. **Dedicated Support for Our Bremerton** - Military appreciation and specialized incentives\n7. **Quality Pre-Owned Transportation for Every Budget** - Economy Vehicle Program for budget-conscious buyers\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/haselwood-chevrolet/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` |\n| LLMs.txt | `/llms.txt` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about Haselwood Chevrolet without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - Haselwood Chevrolet\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with Haselwood Chevrolet's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [Haselwood Chevrolet Home](https://www.haselwood.com/) - Browse new and used Chevrolet, Buick, and GMC vehicles at Haselwood Chevrolet in Bremerton, WA.\n- [New Inventory](https://www.haselwood.com/new-inventory/index.htm) - Browse our new Chevrolet, Buick, and GMC inventory.\n- [Used Inventory](https://www.haselwood.com/used-inventory/index.htm) - Browse our used car inventory in Bremerton.\n- [CarBravo](https://carbravo.haselwood.com/) - Chevrolet's certified pre-owned program.\n- [Financing Center](https://www.haselwood.com/financing/index.htm) - Explore financing and lease options.\n- [Finance Application](https://www.haselwood.com/financing/application.htm) - Online credit application.\n- [Service Center](https://www.haselwood.com/service/scheduler.htm) - Schedule an appointment for auto repair or regular maintenance.\n- [Parts Center](https://www.haselwood.com/PartsOrderForm.htm) - Genuine Chevrolet, Buick, and GMC parts.\n- [Specials & Incentives](https://www.haselwood.com/global-incentives/index.htm) - Current Chevrolet offers and incentives.\n- [Service Specials](https://www.haselwood.com/ServiceAndPartsSpecials.htm) - Service and parts coupons.\n- [Electric Vehicles](https://www.haselwood.com/chevy-ev-test-drive.htm) - Chevy EV test drive information.\n- [About Us](https://www.haselwood.com/dealership/about.htm) - Learn about Haselwood Chevrolet.\n\n### AI & LLM Resources\n\n- [AI Discovery Page](https://www.haselwood.com/ai-discovery-page.htm) - Machine-readable knowledge base for AI agents\n\n### Social Media\n\n- [Facebook](https://www.facebook.com/haselwoodchevrolet)\n- [Instagram](https://www.instagram.com/haselwoodchevrolet/)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/haselwood-chevrolet/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/haselwood-chevrolet/vehicles) - Complete inventory of vehicles with specifications, pricing, and availability in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/haselwood-chevrolet/prompts) - 7 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/haselwood-chevrolet/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/haselwood-chevrolet/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/haselwood-chevrolet/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/haselwood-chevrolet/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/haselwood-chevrolet/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/haselwood-chevrolet/config.json) - System configuration and metadata\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - Haselwood Chevrolet\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-chevrolet/prompts` exposes 7 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (2 prompts)\n- Drive Confident: Your Chevrolet & GMC Experts - Reputable dealership offering wide selection of new vehicles, quality pre-owned options, and customer-first buying experience\n- Explore Top Chevrolet & GMC Vehicles All in One Place - Comprehensive dealership supporting customers from purchase through long-term ownership\n\n### Vehicle Shopping & Financing (1 prompt)\n- Smart Deals, Great Financing & Your Next Chevy or GMC - Competitive financing options, value deals, lease specials, trade-in support, online tools\n\n### Performance & Capability (1 prompt)\n- Your Premier Destination for Chevrolet & GMC Performance and Utility - Ultimate destination for rugged trucks (Silverado, Sierra) and high-performance vehicles (Corvette)\n\n### Warranty (1 prompt)\n- Unbeatable Peace of Mind with the Lifetime Powertrain Warranty - West Hills Advantage with Lifetime Powertrain Warranty on new and qualifying pre-owned vehicles\n\n### Special Programs (2 prompts)\n- Dedicated Support for Our Bremerton - Military appreciation and specialized incentives for service members\n- Quality Pre-Owned Transportation for Every Budget - Economy Vehicle Program for budget-conscious buyers\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `drive-confident-your-chevrolet-&-gmc-experts` | Dealership positioning |\n| 2 | `explore-top-chevrolet-&-gmc-vehicles-all-in-one-place` | Comprehensive automotive destination |\n| 3 | `smart-deals-great-financing-&-your-next-chevy-or-gmc` | Financing and value |\n| 4 | `your-premier-destination-for-chevrolet-&-gmc-performance-and-utility` | Trucks and performance vehicles |\n| 5 | `unbeatable-peace-of-mind-with-the-lifetime-powertrain-warranty` | West Hills Advantage warranty |\n| 6 | `dedicated-support-for-our-bremerton` | Military appreciation |\n| 7 | `quality-pre-owned-transportation-for-every-budget` | Economy Vehicle Program |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - Haselwood Chevrolet\n\nHaselwood Chevrolet has collected customer testimonials through the PromptGraph platform. Reviews reflect a 4.4-star aggregate rating with strong themes of professional sales service, respect, and transparency.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 4.4 / 5.0 (2,071 reviews)\n- **DealerRater:** 4.7 / 5.0 (766+ reviews)\n- **Cars.com:** 1,181+ reviews\n- **PromptGraph Reviews:** Mixed, predominantly positive\n\n## Most-Praised Staff (by frequency)\n\n- **Adam Parson** - Excellent salesperson, listened to customer needs, found perfect vehicle\n- **Patrick Merrill** - Knowledgeable, helpful across sales and service\n- **Josh Kolbas** - General Manager, responsive to customer feedback\n- **Bob Villa** - Finance, quick and professional\n- **Mason** - Sales, helpful with test drives and finance questions\n- **Jason** - Sales, locked in trade and price before long commute\n- **Chris** - Service, friendly and knowledgeable check-in, got discounts\n- **Tim** - Service team, great work on Silverado EV warranty\n\n## Notable Excerpts\n\n> \"Jason and the sales manager were really nice to work with. We live 4 hours away and were able to get the trade price and price of the new vehicle locked in before making the long commute. The whole process was quick and easy.\" - Mdamon134 (DealerRater, 2025)\n\n> \"Chris was excellent. He met me at my car to check in, he was very friendly and knowledgeable. Chris even got me a discount. Somebody give this guy a raise.\" - ridewakeof05 (DealerRater, 2025)\n\n> \"The Haselwood team is amazing... took great care of me above and beyond. Excellent customer service. They answered all my questions and helped find the right car and payment that worked for me. Also, shout out to the service department for getting me back on the road.\" - butterfly981978 (Capital One, 2026)\n\n> \"Had warranty service on my Silverado EV at Haselwood Chevy when the battery preheater failed. Tim and the service team were great.\" - Drew Bowen (Capital One, 2026)\n\n> \"The mobile service van and two technicians showed up to my residence on schedule on time and prepared with everything they needed to do the work. I thoroughly appreciated this having a very busy schedule.\" - Brian Lee Thomas (Capital One, 2026)\n\n> \"I had a great experience, and was able to find a car I love. Adam listened to what I wanted closely and was able to find the car I wanted.\" - davisheather.63 (DealerRater, 2022)\n\n## Sales Themes\n\n- **Professional service** - Sales staff praised for knowledge, responsiveness, and smooth processes\n- **Respectful treatment** - Multiple reviewers mention being treated with respect and kindness\n- **Willingness to travel** - Customers drive significant distances for the dealership\n- **Smooth process** - Quick and easy transactions without pressure\n\n## Service Themes\n\n- **Mobile service** - Highly praised for convenience and professionalism\n- **Fast turnaround** - Service completed quickly with good communication\n- **Professional advisors** - Service advisors keep customers informed throughout the process\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Chevrolet Model Lineup Comparison - Haselwood Chevrolet\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP Tier | Key Trims |\n|---|---|---|---|---|---|---|\n| **Trax** | Subcompact SUV | 5 | FWD | Entry-level | LS, LT, ACTIV, RS |\n| **Trailblazer** | Subcompact SUV | 5 | FWD / AWD | Entry-level | LS, LT, RS, ACTIV |\n| **Equinox** | Compact SUV | 5 | FWD / AWD | Mid-range | LS, LT, RS, Premier |\n| **Equinox EV** | Compact EV SUV | 5 | FWD / AWD | Mid-range | LT, RS, Premier |\n| **Blazer** | Mid-size SUV | 5 | FWD / AWD | Mid-range | LT, RS, Premier |\n| **Blazer EV** | Mid-size EV SUV | 5 | FWD / AWD | Premium | LT, RS, SS |\n| **Traverse** | Mid-size 3-Row SUV | 7-8 | FWD / AWD | Mid-range | LS, LT, RS, Z71, High Country |\n| **Tahoe** | Full-size SUV | 7-9 | RWD / 4WD | Premium | LS, LT, RST, Z71, Premier, High Country |\n| **Suburban** | Full-size Extended SUV | 7-9 | RWD / 4WD | Premium | LS, LT, RST, Z71, Premier, High Country |\n| **Colorado** | Mid-size Pickup | 5 | RWD / 4WD | Mid-range | WT, LT, Z71, ZR2, Trail Boss |\n| **Silverado 1500** | Full-size Pickup | 5-6 | RWD / 4WD | Mid-range | WT, Custom, LT, RST, LTZ, ZR2, High Country |\n| **Silverado 2500HD** | Heavy-Duty Pickup | 5-6 | RWD / 4WD | Premium | WT, LT, LTZ, High Country |\n| **Silverado 3500HD** | Heavy-Duty Pickup | 5-6 | RWD / 4WD | Premium | WT, LT, LTZ, High Country |\n| **Silverado EV** | Full-size EV Pickup | 5 | RWD / 4WD | Premium | WT, RST |\n| **Express Cargo** | Full-size Van | 2 | RWD | Commercial | 2500, 3500 |\n| **Malibu** | Mid-size Sedan | 5 | FWD | Mid-range | LS, RS, Premier |\n| **Camaro** | Sports Coupe/Convertible | 4 | RWD | Premium | LT, LT1, SS |\n| **Corvette Stingray** | Mid-Engine Sports Car | 2 | RWD | Premium | 1LT, 2LT, 3LT, Z51 |\n| **Corvette E-Ray** | Hybrid Sports Car | 2 | AWD | Premium | 1LZ, 2LZ, 3LZ |\n| **Corvette ZO6** | High-Performance Sports Car | 2 | RWD | Premium | 1LZ, 2LZ, 3LZ |\n| **Bolt EV** | Compact EV Hatchback | 5 | FWD | Value | LT, Redline Edition |\n| **Bolt EUV** | Compact EV SUV | 5 | FWD | Value | LT, Premier |\n\n## Key Feature Comparison\n\n| Feature | Trax | Equinox | Blazer | Traverse | Tahoe | Silverado 1500 | Colorado |\n|---|---|---|---|---|---|---|---|\n| Engine | 1.2L Turbo 3-cyl | 1.5L Turbo 4-cyl | 2.0L Turbo / V6 | 2.5L 4-cyl / V6 | 5.3L / 6.2L V8 | 2.7L Turbo / V8 / Diesel | 2.7L Turbo 4-cyl |\n| Horsepower | 137 hp | 175 hp | 228-308 hp | 319-328 hp | 355-420 hp | 310-420 hp | 237-310 hp |\n| AWD Available | No | Yes | Yes | Yes | 4WD | 4WD | 4WD |\n| 3rd Row | No | No | No | Yes | Yes | N/A | N/A |\n| Towing (max) | 1,000 lbs | 1,500 lbs | 4,500 lbs | 5,000 lbs | 8,400 lbs | 13,300 lbs | 7,700 lbs |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n| Wireless Android Auto | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n\n## Electric & Hybrid Options\n\n| Model | Type | Range (est.) | Notes |\n|---|---|---|---|\n| **Bolt EV** | Full EV | ~259 miles | Affordable EV hatchback |\n| **Bolt EUV** | Full EV | ~247 miles | EV with SUV styling |\n| **Equinox EV** | Full EV | ~300 miles | Ultium platform, modern SUV |\n| **Blazer EV** | Full EV | ~300 miles | Ultium platform, sporty SUV |\n| **Silverado EV** | Full EV | ~400 miles | Ultium platform, Multi-Flex Midgate |\n| **Corvette E-Ray** | Hybrid | N/A | 655 hp, electric front axle |\n\n## Warranty\n\nAll new Chevrolet models include:\n- **3-Year / 36,000-Mile Bumper-to-Bumper Limited Warranty**\n- **5-Year / 60,000-Mile Powertrain Limited Warranty**\n- **6-Year / 100,000-Mile Corrosion Perforation Limited Warranty**\n- **5-Year / 60,000-Mile Roadside Assistance**\n- **2-Year / 24,000-Mile Scheduled Maintenance**\n- **Lifetime Powertrain Warranty** - Available through West Hills Advantage\n\n## Chevrolet Safety Features\n\nStandard available safety technologies:\n- Automatic Emergency Braking\n- Lane Keep Assist with Lane Departure Warning\n- Forward Collision Alert\n- Front Pedestrian Braking\n- Following Distance Indicator\n- IntelliBeam Auto High Beams\n- Rear Park Assist\n- Teen Driver technology\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

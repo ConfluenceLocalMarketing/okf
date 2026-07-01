@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>west-hills-chrysler-jeep-dodge-ram - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "west-hills-chrysler-jeep-dodge-ram";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "West Hills Chrysler Jeep Dodge RAM",
+        "type": "Entities",
+        "description": "Chrysler, Jeep, Dodge, and RAM dealership in Bremerton, WA serving Kitsap County, Port Orchard, Silverdale, Tacoma, and Seattle with new and pre-owned vehicles, Mopar service, and parts.",
+        "resource": "https://www.westhillscjd.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - West Hills Chrysler Jeep Dodge RAM",
+        "type": "Entities",
+        "description": "Common questions about West Hills CJDR's inventory, financing, service, and dealership operations in Bremerton, WA.",
+        "resource": "https://www.westhillscjd.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Vehicle Models - West Hills Chrysler Jeep Dodge RAM",
+        "type": "Entities",
+        "description": "New Chrysler, Jeep, Dodge, and RAM model lineup available at West Hills CJDR in Bremerton, WA including Pacifica, Wrangler, Grand Cherokee, Charger, Durango, RAM trucks, ProMaster vans, and more.",
+        "resource": "https://www.westhillscjd.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - West Hills Chrysler Jeep Dodge RAM",
+        "type": "Entities",
+        "description": "Mopar-certified service center in Bremerton, WA offering routine maintenance, diagnostics, major repairs, and genuine Mopar OEM parts for Chrysler, Jeep, Dodge, and RAM vehicles.",
+        "resource": "https://www.westhillscjd.com/service/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - West Hills Chrysler Jeep Dodge RAM",
+        "type": "Entities",
+        "description": "Sales, service, parts, and management staff directory for West Hills CJDR in Bremerton, WA, compiled from the dealership website.",
+        "resource": "https://www.westhillscjd.com/dealership/staff.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - West Hills Chrysler Jeep Dodge RAM",
+        "type": "Entities",
+        "description": "Large pre-owned inventory at West Hills CJDR in Bremerton, WA spanning multiple makes and models with certified pre-owned program, online buying tools, and value your trade service.",
+        "resource": "https://www.westhillscjd.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - West Hills Chrysler Jeep Dodge RAM",
+        "type": "APIs",
+        "description": "Assessment of AI-facing infrastructure for West Hills CJDR. The Dealer.com-powered site does not host an AI Discovery Page, llms.txt, or PromptGraph API endpoints as of July 2026. (synthesized)",
+        "resource": "https://www.westhillscjd.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - West Hills Chrysler Jeep Dodge RAM",
+        "type": "APIs",
+        "description": "Assessment of llms.txt availability for West Hills CJDR \u2014 the site does not host an llms.txt file as of July 2026. (synthesized)",
+        "resource": "https://www.westhillscjd.com/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "AI Prompt Library - West Hills Chrysler Jeep Dodge RAM",
+        "type": "Playbooks & Runbooks",
+        "description": "Recommended AI prompt patterns for querying West Hills CJDR knowledge, compiled from the dealership's web presence and inventory structure. (synthesized)",
+        "resource": "https://www.westhillscjd.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - West Hills Chrysler Jeep Dodge RAM",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews and reputation overview for West Hills CJDR in Bremerton, WA, compiled from website and online review sources. (synthesized)",
+        "resource": "https://www.westhillscjd.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Model Lineup Comparison - West Hills Chrysler Jeep Dodge RAM",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Chrysler, Jeep, Dodge, and RAM models available at West Hills CJDR in Bremerton, WA, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.westhillscjd.com/showroom/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# West Hills Chrysler Jeep Dodge RAM\n\nWest Hills Chrysler Jeep Dodge RAM is a full-service dealership located at **900 W Hills Blvd, Bremerton, WA 98312-6300**, serving the greater Kitsap County area including Port Orchard, Silverdale, Poulsbo, Bainbridge Island, Tacoma, and Seattle. It is part of the **Haselwood Auto Group**.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | 360-728-3077 |\n| Service | 360-728-3988 |\n| Parts | 360-842-2349 |\n\n## Sales Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:30 AM - 7:00 PM |\n| Tuesday | 7:30 AM - 7:00 PM |\n| Wednesday | 7:30 AM - 7:00 PM |\n| Thursday | 7:30 AM - 7:00 PM |\n| Friday | 7:30 AM - 7:00 PM |\n| Saturday | 8:00 AM - 4:00 PM |\n| Sunday | Closed |\n\n## Parts Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:30 AM - 7:00 PM |\n| Tuesday | 7:30 AM - 7:00 PM |\n| Wednesday | 7:30 AM - 7:00 PM |\n| Thursday | 7:30 AM - 7:00 PM |\n| Friday | 7:30 AM - 7:00 PM |\n| Saturday | 8:00 AM - 4:00 PM |\n| Sunday | Closed |\n\n## Location\n\n- **Address:** 900 W Hills Blvd, Bremerton, WA 98312-6300\n\n## New Vehicles\n\nMulti-franchise inventory spanning four brands:\n- **Chrysler** - Pacifica, Pacifica Hybrid, Voyager minivans\n- **Jeep** - Cherokee, Compass, Grand Cherokee, Grand Cherokee L, Grand Wagoneer, Grand Wagoneer L, Wrangler, Gladiator\n- **Dodge** - Charger, Durango\n- **RAM** - 1500, 2500, 3500, 4500, 5500 trucks, ProMaster cargo vans\n\nSee [new-vehicles.md](new-vehicles.md) for detailed model lineup.\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, vehicle upgrade program\n- **Service Center** - Mopar-certified technicians, routine maintenance, diagnostics, major repairs, genuine Mopar parts, brand-specific service centers for Chrysler, Dodge, Jeep, and RAM\n- **Parts Department** - Genuine Mopar components, accessories, tires, online ordering\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned)\n- Online service scheduling\n- Online credit application\n- Value Your Trade tool\n- Vehicle Upgrade Program\n- Commercial vehicle configurator\n- Tire finder via Mopar\n\n## Staff\n\nSee [staff.md](staff.md) for full directory.\n\n## Special Programs\n\n- **Haselwood Auto Group** - Multi-dealership group serving Kitsap County\n- **No Dealer Mark-up Program** - Transparent pricing on most vehicles\n- **Military Appreciation** - Special programs for military personnel\n- **Vehicle Upgrade Program** - Trade up to a newer vehicle\n- **Certified Pre-Owned** - Factory-backed inspections and warranties\n\n## Community & Awards\n\n- **Mission:** Creating Remarkable Experiences for Each Other and Our Communities with Integrity, Respect and Loyalty\n- **Haselwood Family Foundation** - $5 from every car sold donated to foundation\n- **Drive for a Cause** - Monthly charity drives for YMCA, Kitsap Humane Society, Fred Hutch Cancer Center, Toys for Tots\n- **Kitsap County Day of Caring** - Annual volunteer event\n- **Chuck Haselwood** - 1996 Dealer of the Year, 1998 Time Magazine Quality Dealer Award\n- **Haselwood Auto Group** - Multiple Kitsap Business Philanthropic Awards\n\n## Affiliations\n\n- Part of the **Haselwood Auto Group**\n- **West Hills Autoplex** - Auto park location\n- Website powered by **Dealer.com**\n- **Haselwood Family YMCA** - Major donor ($2,000,000)\n- **Admiral Theater** - Lead donor for restoration\n- **Olympic College** - Library rebuilding donor",
+    "datasets/faq": "# Frequently Asked Questions - West Hills Chrysler Jeep Dodge RAM\n\n## Inventory\n\n**Q: What new vehicle brands are available at West Hills CJDR?**\nA: Chrysler, Jeep, Dodge, and RAM \u2014 including the Pacifica, Wrangler, Grand Cherokee, Charger, Durango, RAM 1500 trucks, and ProMaster vans.\n\n**Q: What brands are available in the used vehicle inventory?**\nA: The pre-owned inventory spans multiple makes including Chrysler, Jeep, Dodge, RAM, Ford, Chevrolet, Toyota, Honda, Nissan, Hyundai, Kia, and more.\n\n**Q: Does West Hills CJDR offer certified pre-owned vehicles?**\nA: Yes, Chrysler, Jeep, Dodge, and RAM Certified Pre-Owned vehicles are available with factory-backed inspections, warranties, and roadside assistance.\n\n**Q: Do you have vehicles under $12,000?**\nA: Yes, a Bargain Inventory category features vehicles priced under $12,000, and Economy Vehicles are available for budget-conscious shoppers.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs. The finance team works with various lenders to find the best terms. Online credit application is available.\n\n**Q: What's better, buying or leasing?**\nA: Leasing typically offers lower monthly payments but has mileage and customization restrictions. Financing builds equity with higher payments but lower lifetime cost.\n\n**Q: How long is a typical car loan?**\nA: Most loan terms fall between 48-72 months, with longer terms resulting in lower payments.\n\n**Q: Can I get financing with bad credit or no credit?**\nA: Yes, the finance team works with customers across all credit profiles. No credit, no problem \u2014 they can secure financing options.\n\n**Q: Can I finance a vehicle without a down payment?**\nA: In most cases, financing with no down payment is available. Taxes, registration, and fees can often be rolled into the financing deal.\n\n## Service\n\n**Q: Does the service center work on all CJDR brands?**\nA: Yes, there are dedicated service centers for Chrysler, Dodge, Jeep, and RAM vehicles, all staffed by certified Mopar technicians.\n\n**Q: What service hours are available?**\nA: Service is open Monday-Friday 7:30 AM - 7:00 PM, Saturday 8:00 AM - 4:00 PM. Closed Sunday.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the dealership website.\n\n**Q: Do you offer parts and service financing?**\nA: Yes, Sunbit Service & Parts Financing is available for buy now, pay later options.\n\n## Dealership\n\n**Q: Where is West Hills CJDR located?**\nA: 900 W Hills Blvd, Bremerton, WA 98312-6300, serving Kitsap County, Port Orchard, Silverdale, Tacoma, and Seattle.\n\n**Q: What is the Haselwood Auto Group?**\nA: West Hills CJDR is part of the Haselwood Auto Group, a family of dealerships serving Kitsap County with a strong focus on community giving.\n\n**Q: What is the No Dealer Mark-up Program?**\nA: Transparent pricing on most new vehicles where the listed price reflects MSRP plus dealer-installed accessories. Excludes Grand Wagoneer Series II.\n\n**Q: Does the dealership offer military appreciation programs?**\nA: Yes, special programs are available for military personnel.\n\n**Q: What charitable causes does the dealership support?**\nA: Haselwood Family YMCA, Kitsap Humane Society, Fred Hutch Cancer Center, Marine Toys for Tots, Bloodworks Northwest, and the Haselwood Family Foundation.",
+    "datasets/new-vehicles": "# New Vehicle Models - West Hills Chrysler Jeep Dodge RAM\n\nWest Hills Chrysler Jeep Dodge RAM carries a full lineup of new vehicles across four brands: Chrysler, Jeep, Dodge, and RAM. Below is a summary of available 2026 models.\n\n## Chrysler\n\n### Chrysler Pacifica\nMid-size minivan seating up to 8 passengers. Available in multiple trims. Features Stow 'n Go seating and Chrysler's innovative family-focused technology. Powered by a 3.6L V6 engine with 9-speed automatic transmission. Available in FWD.\n\n### Chrysler Pacifica Hybrid\nPlug-in hybrid electric minivan. Combines Pacifica's versatility with electric-only driving range. Available in Select and Pinnacle trims.\n\n### Chrysler Voyager\nValue-oriented minivan, ideal for families and commercial fleet use. Seating up to 8 passengers. Powered by 3.6L V6 engine.\n\n## Jeep\n\n### Jeep Cherokee\nCompact SUV with confident styling. Available in Latitude, Latitude Lux, Trailhawk, and Limited trims. Available with 2.4L 4-cylinder or 3.2L V6 engine. Jeep Active Drive 4x4 system available.\n\n### Jeep Compass\nSubcompact crossover SUV. Available in Sport, Latitude, Latitude Lux, Limited, and Trailhawk trims. Standard 2.0L 4-cylinder engine with 9-speed automatic. Jeep Active Drive 4x4 available.\n\n### Jeep Grand Cherokee\nMid-size 2-row SUV. Available in Laredo, Altitude, Limited, Overland, Summit, and Summit Reserve trims. Engine options include 3.6L V6, 5.7L V8, and 6.4L V8 (SRT). Quadra-Trac 4x4 systems available. Seats 5 passengers.\n\n### Jeep Grand Cherokee L\nMid-size 3-row SUV. Same trims as Grand Cherokee with third-row seating for up to 7 passengers. Extended wheelbase design.\n\n### Jeep Grand Wagoneer\nFull-size luxury SUV. Available in Series I, Series II, Series III, and Obsidian trims. Powered by 6.4L V8 engine. Premium interior with up to 75 inches of screen space. Seats up to 8 passengers.\n\n### Jeep Grand Wagoneer L\nExtended length version of Grand Wagoneer with additional cargo space and third-row legroom.\n\n### Jeep Wrangler\nIconic off-road SUV. Available in Sport, Sport S, Willys, Sahara, High Altitude, Rubicon, and Rubicon 392 trims. Engine options include 2.0L turbo 4-cylinder, 3.6L V6, 6.4L V8 (Rubicon 392), and 3.0L EcoDiesel V6. Available in 2-door and 4-door (Unlimited) configurations.\n\n### Jeep Gladiator\nMid-size pickup truck based on Wrangler platform. Available in Sport, Sport S, Willy, Overland, High Altitude, Rubicon, and Mojave trims. Powered by 3.6L V6 engine. Maximum towing capacity of 7,650 lbs. Removable doors and roof.\n\n## Dodge\n\n### Dodge Charger\nFull-size sedan (muscle car). Available in GT, R/T, Scat Pack, and SRT Hellcat trims. Engine options include 3.6L V6, 5.7L V8, 6.4L V8, and 6.2L supercharged V8 (Hellcat). Available in RWD and AWD (V6 models).\n\n### Dodge Durango\nMid-size 3-row SUV. Available in SXT, GT, R/T, Citadel, SRT 392, and SRT Hellcat trims. Engine options include 3.6L V6, 5.7L V8, 6.4L V8, and 6.2L supercharged V8 (Hellcat). Towing capacity up to 8,700 lbs. Seats up to 7 passengers.\n\n## RAM\n\n### RAM 1500\nFull-size light-duty pickup truck. Available in Tradesman, HFE, Big Horn, Lone Star, Laramie, Rebel, Longhorn, Limited, and TRX trims. Engine options include 3.6L V6 eTorque, 5.7L V8 eTorque, and 6.2L supercharged V8 (TRX). Maximum towing up to 12,750 lbs.\n\n### RAM 2500 / 3500\nHeavy-duty pickup trucks. Available in Tradesman, Big Horn, Laramie, Power Wagon (2500), Longhorn, and Limited trims. Engine options include 6.4L V8 and 6.7L Cummins Turbo Diesel I6. Maximum towing up to 37,090 lbs.\n\n### RAM 4500 / 5500 Chassis Cab\nCommercial-grade chassis cab trucks for upfitting. Available in Tradesman and Laramie trims. Powered by 6.4L V8 or 6.7L Cummins Turbo Diesel I6. Designed for commercial and fleet applications.\n\n### RAM ProMaster City / ProMaster\nFull-size cargo vans. Available in 1500, 2500, and 3500 roof and wheelbase configurations, plus Window Van variants. Powered by 3.6L V6 engine with 9-speed automatic. Designed for commercial cargo and passenger transport.\n\n## Promotions & Offers\n\nWest Hills CJDR offers the **No Dealer Mark-up Program** (excludes Grand Wagoneer Series II). Promotions vary and include low APR financing, lease specials, and rebates. Monthly specials available through Chrysler Capital and other lenders.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - West Hills Chrysler Jeep Dodge RAM\n\nThe West Hills CJDR Service Center provides certified maintenance and repair services at 900 W Hills Blvd, Bremerton, WA, serving Chrysler, Jeep, Dodge, and RAM vehicles.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work, A/C service\n- **Brand-Specific Service Centers** - Dedicated service for Chrysler, Dodge, Jeep, and RAM\n- **Recall Repairs** - Mopar-specified recall and campaign work\n- **Tire Replacement and Alignment** - Full tire services\n- **Battery Service** - Testing and replacement for all CJDR vehicles\n\n## Service Team\n\n- **Marc Wheeler** - Service Manager; 360-473-1515\n- **Tyler Massingill** - Quality Assurance Manager; 360-473-1721\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Certified Mopar Technicians** - Factory-trained using genuine Mopar parts\n- **Sunbit Service & Parts Financing** - Buy now, pay later options for service and parts\n- **Mopar Accessories Catalogs** - Customization and accessory options\n- **Recall Information** - Mopar recall lookup available\n\n## Parts Department\n\nGenuine Mopar OEM parts and accessories available including:\n- Mopar genuine replacement parts\n- Tires and wheels (Mopar Tire Finder)\n- Accessories for Chrysler, Jeep, Dodge, and RAM vehicles\n- Order parts online or stop by\n- Parts Manager: **Brandon Gilchrist**; 360-473-1565\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:30 AM - 7:00 PM |\n| Tuesday | 7:30 AM - 7:00 PM |\n| Wednesday | 7:30 AM - 7:00 PM |\n| Thursday | 7:30 AM - 7:00 PM |\n| Friday | 7:30 AM - 7:00 PM |\n| Saturday | 8:00 AM - 4:00 PM |\n| Sunday | Closed |\n\n## Parts Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:30 AM - 7:00 PM |\n| Tuesday | 7:30 AM - 7:00 PM |\n| Wednesday | 7:30 AM - 7:00 PM |\n| Thursday | 7:30 AM - 7:00 PM |\n| Friday | 7:30 AM - 7:00 PM |\n| Saturday | 8:00 AM - 4:00 PM |\n| Sunday | Closed |\n\nSee [staff.md](staff.md) for full service department directory.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - West Hills Chrysler Jeep Dodge RAM\n\nStaff directory compiled from the dealership website.\n\n## Management\n\n- **Ryan Zieg** - General Manager; 360-473-1405\n- **Bret Underwood** - General Sales Manager; 360-377-4418\n- **Matthew Arehart** - New Car Manager; 360-377-4418\n- **Farbod Mavadatnia** - Used Car Manager; 360-377-4418\n\n## Finance Department\n\n- **Brandon Mayfield** - Finance Director; 360-377-4418\n- **Michael Lash** - Finance Manager; 360-377-1300\n\n## Service & Parts\n\n- **Marc Wheeler** - Service Manager; 360-473-1515\n- **Brandon Gilchrist** - Parts Manager; 360-473-1565\n- **Tyler Massingill** - Quality Assurance Manager; 360-473-1721\n\n## Haselwood Auto Group Leadership\n\n- **Eric Wiler** - President, Haselwood Auto Group; 2019 Kitsap Philanthropic Award recipient, Leaders of Distinction Under 40 Award recipient\n- **Chuck Haselwood** - Founder; 1996 Dealer of the Year, 1998 Time Magazine Quality Dealer of the Year, Rex Brown Distinguished Service Award, Thunderbird Award for Philanthropy\n- **Joanne Haselwood** - Rex Brown Award recipient for athletics commitment in Kitsap County\n\nSee [dealership.md](dealership.md) for dealership contact information.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - West Hills Chrysler Jeep Dodge RAM\n\nWest Hills Chrysler Jeep Dodge RAM maintains a substantial pre-owned vehicle inventory in the Bremerton, WA area with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Multi-make selection** spanning Chrysler, Jeep, Dodge, RAM, Ford, Chevrolet, Toyota, Honda, Nissan, Hyundai, Kia, GMC, BMW, Mercedes-Benz, Subaru, Volkswagen, and more\n- **Vehicle types:** Sedans, SUVs, trucks, vans, coupes, and convertibles\n- **Price range:** Broad range from under $12,000 to premium vehicles (Vehicles Under 12k and Economy Vehicles categories available)\n- **Bargain Inventory** - Vehicles priced under $12,000\n- **Economy Vehicles** - Fuel-efficient and budget-friendly options\n- **Certified Pre-Owned** - Factory-backed vehicles with warranty\n\n## Certified Pre-Owned Program\n\nChrysler, Jeep, Dodge, and RAM Certified Pre-Owned vehicles undergo rigorous inspection and include:\n- Factory-backed warranty coverage\n- 24/7 roadside assistance\n- Multi-point inspection by certified Mopar technicians\n- CARFAX vehicle history reports\n- Competitive pricing with transparent value\n\n## Quality Assurance\n\n- **Certified Pre-Owned** - Factory-backed inspections and warranties\n- **Vehicle history reports** - Available on request\n- **No Dealer Mark-up Program** pricing philosophy applies to select used vehicles\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- Value Your Trade tool (powered by KBB)\n- Online credit application and pre-approval\n- Vehicle Upgrade Program - Trade up to a newer vehicle\n- CarFinder service - Get notified when matching vehicles arrive\n\n## Trade-In\n\n- Trade-in appraisal available via KBB Instant Cash Offer\n- Competitive trade-in values\n- Sell or Trade options available online\n\n## Service Contracts\n\nVehicle service contracts and extended warranty protection plans available for most pre-owned vehicles.\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - West Hills Chrysler Jeep Dodge RAM\n\nAs of July 2026, West Hills Chrysler Jeep Dodge RAM does **not** host an AI Discovery Page, `llms.txt`, or PromptGraph API. The site is built on the **Dealer.com** platform but lacks the optional AI-facing infrastructure that some Dealer.com sites have enabled.\n\n## Tested Endpoints\n\nThe following were checked and returned errors or 404:\n\n| Resource | URL | Status |\n|---|---|---|\n| AI Discovery Page | `/ai-discovery-page.htm` | 404 Not Found |\n| LLMs.txt | `/llms.txt` | Served sitemap-style TXT content, not llms.txt |\n| AI Manifest | `/.well-known/ai-manifest.json` | 404 Not Found |\n| PromptGraph API | `https://api.promptgraph.ai/api/v1/westhillscjd/business` | Not Found |\n| PromptGraph API | `https://api.promptgraph.ai/api/v1/west-hills-chrysler-jeep-dodge-ram/business` | Not Found |\n\n## Available Structured Data\n\nWhile no dedicated AI surface exists, the site provides:\n\n- **Schema.org JSON-LD** embedded in pages (auto dealer, vehicle, local business markup via Dealer.com platform)\n- **Standard sitemap** at `/sitemap.xml`\n- **Robots.txt** at `/robots.txt`\n- **Standard HTML metadata** including Open Graph and meta descriptions\n\n## Recommendation\n\nTo enable AI agent discovery, the dealership could enable a PromptGraph integration (available on Dealer.com), add an `llms.txt` file, or create an AI Discovery Page at `/ai-discovery-page.htm` \u2014 all supported by the Dealer.com platform but not currently activated.\n\nSee [llms-txt.md](llms-txt.md) for the llms.txt assessment.",
+    "references/llms-txt": "# LLMs.txt - West Hills Chrysler Jeep Dodge RAM\n\nThe `llms.txt` file is **not available** at `https://www.westhillscjd.com/llms.txt`. The URL returns a plain-text TXT sitemap-like content rather than a structured llms.txt directive.\n\n## Key Site Pages\n\nDespite the lack of a formal llms.txt, the following key pages are available for AI crawling:\n\n### Main Site\n\n- [West Hills CJDR Home](https://www.westhillscjd.com/) - Chrysler, Jeep, Dodge, RAM dealership in Bremerton, WA\n- [New Inventory](https://www.westhillscjd.com/new-inventory/index.htm) - Browse new Chrysler, Jeep, Dodge, and RAM vehicles\n- [Used Inventory](https://www.westhillscjd.com/used-inventory/index.htm) - Browse used cars, trucks, and SUVs\n- [Showroom](https://www.westhillscjd.com/showroom/index.htm) - Research all new CJDR models\n- [Finance Center](https://www.westhillscjd.com/financing/index.htm) - Auto loan and leasing options\n- [Finance Application](https://www.westhillscjd.com/financing/application.htm) - Online credit application\n- [Service Center](https://www.westhillscjd.com/service/index.htm) - Schedule maintenance and repair appointments\n- [Parts Department](https://www.westhillscjd.com/parts/index.htm) - Genuine Mopar parts and accessories\n- [Specials](https://www.westhillscjd.com/promotions/new/index.htm) - Current West Hills CJDR deals and offers\n- [Service Specials](https://www.westhillscjd.com/promotions/service/index.htm) - Current service promotions\n\n### About & Community\n\n- [About Us](https://www.westhillscjd.com/dealership/about.htm) - Dealership information and philosophy\n- [Meet Our Staff](https://www.westhillscjd.com/dealership/staff.htm) - Staff directory\n- [Awards & Community](https://www.westhillscjd.com/awards-and-community.htm) - Community involvement and philanthropy\n- [West Hills Autoplex History](https://www.westhillscjd.com/west-hills-auto-plex-smart-shoppers-buy.htm) - Dealership history\n\n### Social Media & Affiliates\n\n- [Haselwood Auto Group](https://www.haselwoodautogroup.com/) - Parent auto group\n\n## API Endpoints\n\nNo structured JSON-LD API endpoints were discovered beyond standard Dealer.com platform page markup and sitemap.\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint assessment.",
+    "references/prompts": "# AI Prompt Library - West Hills Chrysler Jeep Dodge RAM\n\nAs there is no PromptGraph API for this dealership, the following prompt categories are derived from the site's structure and content. These can be used by AI agents to answer common questions about the dealership.\n\n## Prompt Categories\n\n### Dealership Overview\n- Chrysler, Jeep, Dodge, RAM dealership in Bremerton, WA serving Kitsap County\n- Part of the Haselwood Auto Group with strong community focus\n- No Dealer Mark-up Program for transparent pricing\n- Multiple philanthropic initiatives through Haselwood Family Foundation\n\n### Vehicle Shopping\n- New model lineup across four brands (Chrysler, Jeep, Dodge, RAM)\n- Used and certified pre-owned multi-make inventory\n- Bargain inventory under $12,000\n- Commercial vehicles including RAM ProMaster and chassis cabs\n- Vehicle Upgrade Program for trading up\n\n### Financing\n- Online credit application and pre-approval\n- Loan and lease options with flexible terms (48-72 months)\n- Financing available for all credit profiles\n- No down payment options available\n- Vehicle Upgrade Program\n\n### Service & Parts\n- Mopar-certified technicians for all four brands\n- Brand-specific service centers (Chrysler, Dodge, Jeep, RAM)\n- Genuine Mopar OEM parts\n- Online service scheduling\n- Sunbit service/parts financing available\n\n### Community Involvement\n- Drive for a Cause monthly charity programs\n- Haselwood Family YMCA support ($943,831+ all-time giving)\n- Kitsap Humane Society partnership\n- Fred Hutch Cancer Center donations\n- Toys for Tots annual toy drive\n- Day of Caring volunteer event\n\n### Awards & Recognition\n- Chuck Haselwood \u2014 1996 Dealer of the Year\n- Chuck Haselwood \u2014 1998 Time Magazine Quality Dealer of the Year\n- Haselwood Auto Group \u2014 Multiple Kitsap Business Philanthropic Awards\n- Eric Wiler \u2014 2019 Kitsap Philanthropic Award\n- Haselwood Auto Group \u2014 YMCA Lifetime Philanthropy Award\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the AI infrastructure assessment.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - West Hills Chrysler Jeep Dodge RAM\n\nWest Hills Chrysler Jeep Dodge RAM emphasizes customer satisfaction as a core value. The dealership's mission is \"Creating Remarkable Experiences for Each Other and Our Communities with Integrity, Respect and Loyalty.\"\n\n## Dealership Reputation\n\n- **Mission-driven** service with guiding principles of Professionalism, Integrity, Commitment, Humility, Generosity, and Respect\n- **Car Shopping Made Easy** philosophy \u2014 transparent, no-pressure sales process\n- Commitment to getting customers \"out the door in as little as 15 minutes\"\n- Focus on exceptional customer care and service with a smile\n\n## Online Presence\n\nCustomers can leave reviews through the dealership's website and popular review platforms. The homepage features a \"What Our Recent Customers Say\" section linking to review platforms.\n\n## Staff Praised in Reviews\n\nStaff members recognized for customer service include:\n- **Ryan Zieg** - General Manager\n- **Bret Underwood** - General Sales Manager\n- **Sales and service teams** noted for commitment to customer satisfaction\n\n## Service Themes\n\n- **Fast turnaround** - Commitment to efficient service\n- **Professional advisors** - Service team keeps customers informed\n- **Quality Assurance** - Tyler Massingill oversees QA for service satisfaction\n\n## Community Reputation\n\nThe Haselwood Auto Group has received multiple awards recognizing community service and philanthropy, reflecting the dealership's commitment to the Kitsap County community.\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.\nSee [dealership.md](/datasets/dealership.md) for community involvement details.",
+    "tables/model-comparison": "# Model Lineup Comparison - West Hills Chrysler Jeep Dodge RAM\n\n## Chrysler Models\n\n| Model | Body Type | Passengers | Drivetrain | Engine | Key Trims |\n|---|---|---|---|---|---|\n| **Pacifica** | Minivan | 7-8 | FWD | 3.6L V6 | Touring, Touring L, Limited, Pinnacle |\n| **Pacifica Hybrid** | Plug-In Hybrid Minivan | 7-8 | FWD | 3.6L V6 + Electric | Select, Pinnacle |\n| **Voyager** | Minivan | 7-8 | FWD | 3.6L V6 | L, LX |\n\n## Jeep Models\n\n| Model | Body Type | Passengers | Drivetrain | Engine | Key Trims |\n|---|---|---|---|---|---|\n| **Cherokee** | Compact SUV | 5 | FWD / 4x4 | 2.4L 4-cyl / 3.2L V6 | Latitude, Latitude Lux, Trailhawk, Limited |\n| **Compass** | Subcompact Crossover | 5 | FWD / 4x4 | 2.0L 4-cyl | Sport, Latitude, Latitude Lux, Limited, Trailhawk |\n| **Grand Cherokee** | Mid-size 2-Row SUV | 5 | RWD / 4x4 | 3.6L V6 / 5.7L V8 / 6.4L V8 | Laredo, Altitude, Limited, Overland, Summit, Summit Reserve |\n| **Grand Cherokee L** | Mid-size 3-Row SUV | 7 | RWD / 4x4 | 3.6L V6 / 5.7L V8 | Laredo, Altitude, Limited, Overland, Summit, Summit Reserve |\n| **Grand Wagoneer** | Full-size Luxury SUV | 7-8 | 4x4 | 6.4L V8 | Series I, Series II, Series III, Obsidian |\n| **Grand Wagoneer L** | Full-size Luxury SUV (extended) | 7-8 | 4x4 | 6.4L V8 | Series I, Series II, Series III, Obsidian |\n| **Wrangler** | Off-Road SUV | 4-5 | 4x4 | 2.0L Turbo / 3.6L V6 / 6.4L V8 / 3.0L Diesel | Sport, Sport S, Willys, Sahara, Rubicon, Rubicon 392 |\n| **Gladiator** | Mid-size Pickup | 5 | 4x4 | 3.6L V6 | Sport, Sport S, Overland, Rubicon, Mojave |\n\n## Dodge Models\n\n| Model | Body Type | Passengers | Drivetrain | Engine | Key Trims |\n|---|---|---|---|---|---|\n| **Charger** | Full-size Sedan | 5 | RWD / AWD | 3.6L V6 / 5.7L V8 / 6.4L V8 / 6.2L S/C V8 | GT, R/T, Scat Pack, SRT Hellcat |\n| **Durango** | Mid-size 3-Row SUV | 7 | RWD / AWD | 3.6L V6 / 5.7L V8 / 6.4L V8 / 6.2L S/C V8 | SXT, GT, R/T, Citadel, SRT 392, SRT Hellcat |\n\n## RAM Models\n\n| Model | Body Type | Passengers | Drivetrain | Engine | Key Trims |\n|---|---|---|---|---|---|\n| **1500** | Full-size Light-Duty Pickup | 5-6 | RWD / 4WD | 3.6L V6 eTorque / 5.7L V8 eTorque / 6.2L S/C V8 | Tradesman, Big Horn, Laramie, Rebel, Longhorn, Limited, TRX |\n| **2500** | Heavy-Duty Pickup | 5-6 | RWD / 4WD | 6.4L V8 / 6.7L Cummins Diesel I6 | Tradesman, Big Horn, Laramie, Power Wagon, Longhorn, Limited |\n| **3500** | Heavy-Duty Pickup | 5-6 | RWD / 4WD | 6.4L V8 / 6.7L Cummins Diesel I6 | Tradesman, Big Horn, Laramie, Longhorn, Limited |\n| **4500 Chassis Cab** | Commercial Chassis Cab | 2-3 | RWD / 4WD | 6.4L V8 / 6.7L Cummins Diesel I6 | Tradesman, Laramie |\n| **5500 Chassis Cab** | Commercial Chassis Cab | 2-3 | RWD / 4WD | 6.4L V8 / 6.7L Cummins Diesel I6 | Tradesman, Laramie |\n| **ProMaster 1500/2500/3500** | Full-size Cargo Van | 2 | FWD | 3.6L V6 | Cargo Van, Window Van |\n\n## Key Feature Comparison\n\n| Feature | Grand Cherokee | Wrangler | Charger | Durango | RAM 1500 |\n|---|---|---|---|---|---|\n| AWD/4WD Available | Yes | 4x4 | AWD (V6) | AWD | 4WD |\n| 3rd Row Available | Grand Cherokee L | No | No | Yes | No |\n| Max Towing | 7,200 lbs | 3,500 lbs | N/A | 8,700 lbs | 12,750 lbs |\n| Off-Road Capability | Trailhawk trim | Standard | No | No | Rebel/TRX |\n| Luxury Trim | Summit Reserve | High Altitude | SRT Hellcat | SRT Hellcat | Limited/Longhorn |\n\n## Electric & Hybrid Options\n\n| Model | Type | Notes |\n|---|---|---|\n| **Pacifica Hybrid** | Plug-In Hybrid | Electric-only driving range, minivan versatility |\n| **RAM 1500 eTorque** | Mild Hybrid | V6 and V8 with mild hybrid assist for efficiency |\n\n## Warranty\n\nAll new Chrysler, Jeep, Dodge, and RAM models include:\n- **3-Year / 36,000-Mile Bumper-to-Bumper Limited Warranty**\n- **5-Year / 60,000-Mile Powertrain Limited Warranty**\n- **5-Year / Unlimited-Mile Corrosion Perforation Limited Warranty**\n- **3-Year / 36,000-Mile Roadside Assistance**\n- **Jeep Brand: 3-Year / 36,000-Mile 24-Hour Roadside Assistance**\n\n## Safety & Technology\n\nStandard and available features across models:\n- Advanced airbag systems\n- Rearview camera (standard on all models)\n- Uconnect infotainment with Apple CarPlay and Android Auto\n- Available forward collision warning and automatic emergency braking\n- Available blind spot monitoring and rear cross-path detection\n- Available adaptive cruise control\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

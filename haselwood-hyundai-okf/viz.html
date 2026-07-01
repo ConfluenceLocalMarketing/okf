@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>haselwood-hyundai - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "haselwood-hyundai";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Haselwood Hyundai",
+        "type": "Entities",
+        "description": "Hyundai dealership in Bremerton, WA serving Kitsap Peninsula, Silverdale, Port Orchard, Poulsbo, and Gig Harbor with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.haselwoodhyundai.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Haselwood Hyundai",
+        "type": "Entities",
+        "description": "Common questions about Haselwood Hyundai's inventory, financing, service, and dealership operations in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Hyundai Models - Haselwood Hyundai",
+        "type": "Entities",
+        "description": "New Hyundai model lineup available at Haselwood Hyundai in Bremerton, WA including Tucson, Santa Fe, Palisade, Elantra, Sonata, Kona, IONIQ 5, IONIQ 6, IONIQ 9, Venue, Santa Cruz, and hybrid/electric variants.",
+        "resource": "https://www.haselwoodhyundai.com/showroom/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Haselwood Hyundai",
+        "type": "Entities",
+        "description": "Hyundai-certified service center in Bremerton, WA offering routine maintenance, diagnostics, major repairs, genuine Hyundai OEM parts, and complimentary maintenance program.",
+        "resource": "https://www.haselwoodhyundai.com/hyundai-service.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Haselwood Hyundai",
+        "type": "Entities",
+        "description": "Sales and service staff directory for Haselwood Hyundai in Bremerton, WA, compiled from the dealership website and customer reviews.",
+        "resource": "https://www.haselwoodhyundai.com/dealership/staff.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - Haselwood Hyundai",
+        "type": "Entities",
+        "description": "Large pre-owned inventory at Haselwood Hyundai in Bremerton, WA, spanning multiple makes and models with 173-point CPO inspections and competitive pricing.",
+        "resource": "https://www.haselwoodhyundai.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Haselwood Hyundai",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Haselwood Hyundai, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.haselwoodhyundai.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Haselwood Hyundai",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for Haselwood Hyundai.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-hyundai/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - Haselwood Hyundai",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 59 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for Haselwood Hyundai.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Haselwood Hyundai",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews collected via PromptGraph API for Haselwood Hyundai in Bremerton, WA, with predominantly 5-star testimonials highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/haselwood-hyundai/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Hyundai Model Lineup Comparison - Haselwood Hyundai",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Hyundai models available at Haselwood Hyundai in Bremerton, WA, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.haselwoodhyundai.com/showroom/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Haselwood Hyundai\n\nHaselwood Hyundai is a full-service Hyundai dealership located at **5008 Auto Center Blvd, Bremerton, WA 98312**, serving the greater Kitsap Peninsula including Silverdale, Port Orchard, Poulsbo, Gig Harbor, Bainbridge Island, Kingston, and Port Townsend.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 842-2566 |\n| Service | (360) 842-2581 |\n| Parts | (360) 842-2612 |\n| Main | (360) 377-3855 |\n\nEmail: gsjones.haselwood@gmail.com\n\n## Hours\n\n| Day | Sales Hours | Service Hours | Parts Hours |\n|---|---|---|---|\n| Monday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM | 7:30 AM - 7:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM | 7:30 AM - 7:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM | 7:30 AM - 7:00 PM |\n| Thursday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM | 7:30 AM - 7:00 PM |\n| Friday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM | 7:30 AM - 7:00 PM |\n| Saturday | 9:00 AM - 8:00 PM | 8:00 AM - 4:00 PM | 8:00 AM - 4:00 PM |\n| Sunday | 10:00 AM - 7:00 PM | Closed | Closed |\n\n## Location\n\n- **Address:** 5008 Auto Center Blvd, Bremerton, WA 98312\n- **Geo:** 47.5620694, -122.6841288\n- **Part of West Hills Autoplex** - Multi-brand auto complex\n\n## New Vehicles\n\nHyundai models available include:\n- **Venue** - Subcompact SUV, most affordable entry point\n- **Elantra** - Compact sedan, available in hybrid and high-performance N variants\n- **Kona / Kona Electric** - Subcompact crossover, available as full EV\n- **Tucson / Tucson Hybrid / Tucson Plug-In Hybrid** - Compact SUV, available in gasoline, hybrid, and plug-in hybrid\n- **Santa Fe / Santa Fe Hybrid** - Mid-size SUV, modern design with hybrid option\n- **Santa Cruz** - Compact pickup truck (Sport Adventure Vehicle)\n- **Sonata / Sonata Hybrid** - Mid-size sedan, available with hybrid powertrain\n- **Palisade / Palisade Hybrid** - Full-size 3-row SUV, available with hybrid option\n- **IONIQ 5** - All-electric compact crossover\n- **IONIQ 5 N** - High-performance all-electric crossover\n- **IONIQ 6** - All-electric streamlined sedan\n- **IONIQ 9** - All-electric 3-row flagship SUV\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, pre-qualification\n- **Service Center** - Hyundai-certified technicians, routine maintenance, diagnostics, major repairs, genuine Hyundai parts\n- **Parts Department** - Genuine Hyundai OEM components, accessories, tires\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned)\n- Online service scheduling\n- Online credit application and pre-approval\n- Car payment calculator\n- Deal Reveal technology - instant transparency on pricing and discounts\n- Trade-in valuation tool\n- Remote purchasing and delivery options\n\n## Staff\n\nSee [staff.md](staff.md) for full directory.\n\n## Reviews & Reputation\n\n- **PromptGraph:** 4.4 / 5.0 (848 reviews)\n- **SureCritic:** 4.6 / 5.0 (1,209 reviews)\n- **DealerRater:** 4.6 / 5.0 (976 reviews)\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **Hyundai Complimentary Maintenance** - 3 years / 36,000 miles on new vehicles\n- **Deal Reveal** - Instant online pricing transparency\n- **Hyundai Certified Pre-Owned** - 173-point inspection, factory warranty\n- **Economy Vehicle Program** - Affordable pre-owned options for budget-conscious buyers\n- **Hyundai College Grad Program** - Special financing for recent graduates\n- **First Responders Program** - Special offers for first responders\n- **Hyundai Military Program** - Pricing program for military personnel\n- **Mobility Program** - Adaptive vehicle solutions\n\n## Affiliations\n\n- Part of the **Haselwood Auto Group**\n- Part of the **West Hills Autoplex** - Bremerton's multi-brand auto complex\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform",
+    "datasets/faq": "# Frequently Asked Questions - Haselwood Hyundai\n\n## Inventory\n\n**Q: What new Hyundai models are available at Haselwood Hyundai?**\nA: The full Hyundai lineup including Venue, Elantra (gas, hybrid, N), Kona (gas, electric), Tucson (gas, hybrid, plug-in hybrid), Santa Fe (gas, hybrid), Sonata (gas, hybrid), Palisade (gas, hybrid), Santa Cruz, IONIQ 5, IONIQ 5 N, IONIQ 6, and IONIQ 9.\n\n**Q: What brands are available in the used vehicle inventory?**\nA: The pre-owned inventory spans multiple makes including Hyundai, Volkswagen, Chevrolet, GMC, Ford, Toyota, Honda, Kia, and more.\n\n**Q: Does Haselwood Hyundai offer certified pre-owned vehicles?**\nA: Yes, Hyundai Certified Pre-Owned vehicles are available with a 173-point inspection, remainder of 5yr/60k mi new vehicle warranty, and 10yr/100k mi CPO powertrain warranty.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs. The finance team works with a network of lenders to accommodate various credit situations.\n\n**Q: Does the dealership work with all credit profiles?**\nA: Yes, the finance team works with multiple lenders to find the best terms for various credit situations.\n\n**Q: What special financing programs are offered?**\nA: Hyundai College Grad Program, First Responders Program, Hyundai Military Program, and Mobility Program.\n\n## Service\n\n**Q: Does the dealership offer complimentary maintenance?**\nA: Yes, new Hyundai vehicles include Hyundai Complimentary Maintenance for 3 years or 36,000 miles.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the dealership website.\n\n**Q: Will the service department communicate updates?**\nA: Yes, the service team provides text message updates on service progress and any recommended additional services.\n\n**Q: Can I wait at the dealership during service?**\nA: Yes, the waiting area features Wi-Fi, coffee, snacks, and charging stations.\n\n## Dealership\n\n**Q: Where is Haselwood Hyundai located?**\nA: 5008 Auto Center Blvd, Bremerton, WA 98312, serving Silverdale, Port Orchard, Poulsbo, Gig Harbor, Bainbridge Island, Kingston, and Port Townsend.\n\n**Q: What is the Haselwood Auto Group?**\nA: Haselwood Hyundai is part of the Haselwood Auto Group, which includes multiple dealership brands at the West Hills Autoplex.\n\n**Q: Does the dealership offer Deal Reveal pricing?**\nA: Yes, Deal Reveal technology provides instant online pricing transparency with real-time discounts.\n\n**Q: Is there an Economy Vehicle Program?**\nA: Yes, the dealership offers safety-checked, affordable pre-owned options for first-time buyers and budget-conscious customers.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New Hyundai Models - Haselwood Hyundai\n\nHaselwood Hyundai carries a full lineup of new Hyundai vehicles. Below is a summary of available models and trims.\n\n## SUVs & Crossovers\n\n### Hyundai Venue\nSubcompact SUV, Hyundai's most affordable model. Fuel-efficient and city-friendly with a starting MSRP around $20,550.\n\n### Hyundai Kona\nSubcompact crossover SUV available in multiple trims. Available as a conventional gasoline model or the all-electric **Kona Electric** (starting around $32,975).\n\n### Hyundai Tucson\nCompact SUV, Hyundai's best-selling model. Available in gasoline, **Tucson Hybrid**, and **Tucson Plug-In Hybrid** variants. Features bold design, available AWD, and advanced safety technology. Starting MSRP around $29,450.\n\n### Hyundai Santa Fe\nMid-size SUV with modern, boxy design. Available in gasoline and **Santa Fe Hybrid** variants. Seats up to 5 passengers. Starting MSRP around $35,050.\n\n### Hyundai Palisade\nFull-size 3-row SUV seating up to 8 passengers. Available in gasoline and **Palisade Hybrid** variants. Premium features and trims. Starting MSRP around $39,435.\n\n### Hyundai IONIQ 5\nAll-electric compact crossover with up to 303 miles estimated range. Available in RWD and e-AWD configurations. Features 800V ultra-fast charging capability. Starting MSRP around $35,000.\n\n### Hyundai IONIQ 5 N\nHigh-performance all-electric crossover. Up to 601 hp with N Grin Boost. Track-capable with Drift Optimizer and N e-shift.\n\n### Hyundai IONIQ 9\nAll-electric 3-row flagship SUV. Premium electric SUV with spacious interior and advanced technology. Starting MSRP around $58,955.\n\n### Hyundai Santa Cruz\nCompact pickup truck (Sport Adventure Vehicle) combining SUV comfort with truck utility. Available in multiple trims. Starting MSRP around $29,750.\n\n## Cars\n\n### Hyundai Elantra\nCompact sedan, stylish and fuel-efficient. Available in gasoline, **Elantra Hybrid**, and high-performance **Elantra N** variants. Starting MSRP around $22,625.\n\n### Hyundai Sonata\nMid-size sedan with sleek design. Available in gasoline and **Sonata Hybrid** variants. Advanced safety and convenience features. Starting MSRP around $27,450.\n\n## Electric & Hybrid Vehicles\n\n| Model | Type | Range (est.) | Notes |\n|---|---|---|---|\n| **IONIQ 5** | Full EV | ~220-303 miles | 800V fast charging, available e-AWD |\n| **IONIQ 5 N** | High-Performance EV | ~221 miles | 601 hp, track-capable |\n| **IONIQ 6** | Full EV Sedan | ~240-361 miles | Aerodynamic design, efficient |\n| **IONIQ 9** | Full EV 3-Row SUV | ~TBD | Flagship electric SUV |\n| **Kona Electric** | Full EV | ~200+ miles | Affordable EV entry |\n| **Elantra Hybrid** | Hybrid Sedan | ~54 mpg combined | Fuel-efficient commuting |\n| **Sonata Hybrid** | Hybrid Sedan | ~52 mpg combined | Mid-size hybrid sedan |\n| **Tucson Hybrid** | Hybrid SUV | ~37 mpg combined | Popular hybrid SUV |\n| **Tucson Plug-In Hybrid** | Plug-In Hybrid | ~33 miles EV | Extended EV driving |\n| **Santa Fe Hybrid** | Hybrid SUV | ~34 mpg combined | Efficient mid-size SUV |\n\n## Hyundai Safety & Technology\n\nMost new Hyundai models include:\n- **Hyundai SmartSense** - Advanced driver assistance suite\n- **Forward Collision-Avoidance Assist**\n- **Blind-Spot Collision-Avoidance Assist**\n- **Lane Keeping Assist**\n- **Safe Exit Assist**\n- **Rear Cross-Traffic Collision-Avoidance Assist**\n- **Smart Cruise Control**\n- **Bluelink Connected Services** - Remote start, lock/unlock, vehicle monitoring\n\n## Complimentary Maintenance\n\nAll new Hyundai vehicles purchased or leased from Haselwood Hyundai include **Hyundai Complimentary Maintenance** for 3 years or 36,000 miles, covering oil changes, tire rotations, and multi-point inspections.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - Haselwood Hyundai\n\nThe Haselwood Hyundai Service Center provides certified maintenance and repair services at 5008 Auto Center Blvd, Bremerton, WA.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work\n- **Hyundai Complimentary Maintenance** - Factory-scheduled maintenance at no cost for 3 years / 36,000 miles\n- **Recall Repairs** - OEM-specified recall and campaign work\n- **Tire Replacement and Alignment** - Full tire services\n- **Scheduled Maintenance** - Following Hyundai's recommended maintenance schedule\n- **EV Diagnostics and Service** - Specialized electric vehicle maintenance\n\n## Service Team\n\n- **Susanmarie** - Assistant Service Manager; thorough, communicative\n- **Ryan** - Service Advisor; outstanding customer service, transparent text communication\n- **Alysa Morgan** - Service Advisor; on-time, keeps customers informed\n- **Nicole** - Service Advisor; expert updates, professional\n- **Sam** - Service Agent; advocates for customers\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Complimentary multi-point inspections** with every service visit\n- **Genuine Hyundai OEM parts** - Perfect fit and long-lasting performance\n- **State-of-the-art equipment** and diagnostic tools\n- **Text message updates** - Proactive communication during service\n- **Comfortable waiting area** with Wi-Fi, coffee, snacks, and charging stations\n- **Factory-trained Hyundai technicians** - Experts on maintaining to factory standards\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:30 AM - 7:00 PM |\n| Tuesday | 7:30 AM - 7:00 PM |\n| Wednesday | 7:30 AM - 7:00 PM |\n| Thursday | 7:30 AM - 7:00 PM |\n| Friday | 7:30 AM - 7:00 PM |\n| Saturday | 8:00 AM - 4:00 PM |\n| Sunday | Closed |\n\n## Parts Department\n\nGenuine Hyundai OEM parts and accessories available including:\n- Hyundai Genuine replacement parts\n- Tires and wheels\n- Accessories for Hyundai vehicles\n- Order parts online or stop by\n\n## Complimentary Maintenance Program\n\nNew Hyundai vehicles purchased or leased from Haselwood Hyundai include complimentary scheduled maintenance for up to 3 years or 36,000 miles, covering:\n- Hyundai-approved oil and oil filter changes\n- Tire rotations at factory-recommended intervals\n- Multi-point vehicle inspections\n- Maintenance by certified Hyundai technicians\n\n## Service Specials\n\nThe dealership offers rotating service specials and coupons. See the service specials page for current promotions.\n\nSee [staff.md](staff.md) for full service department directory.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - Haselwood Hyundai\n\nStaff directory compiled from the dealership website and customer reviews.\n\n## Management\n\n- **Dan** - General Manager; praised for being kind, respectful, and customer-focused\n- **Haroon** - General Sales Manager; easy to talk to, made purchase easy\n- **Michelle** - Manager; professional, helpful\n- **Susanmarie** - Assistant Service Manager; thorough, communicative, patient\n- **Scott Heston** - Manager; compassionate, helped resolve difficult situations\n\n## Finance Department\n\n- **Don Semmier** - Finance Manager; seamless process, enjoyable, thorough\n- **Brandon** - Finance Manager; great finance package, helpful\n- **Carson** - Finance Manager; smooth financing, excellent customer service\n- **Jordan** - Finance Manager; professional, individualized approach\n- **Marshay** - Finance staff; real, authentic, no fake customer service voice\n\n## Sales Consultants\n\n- **Mike Jones** - Sales Consultant; most frequently praised, honest, straightforward, no pressure, excellent follow-up\n- **Cole** - Sales Consultant; professional, knowledgeable, relaxed approach, man of his word\n- **Chantel** - Sales Consultant; went above and beyond, knowledgeable, helped first-time buyer\n- **Cameron** - Sales Consultant; knowledgeable, patient, made process smooth and happy\n- **Deondre Perry** - Sales Consultant; helpful, professional, knowledgeable, great with customers\n- **James Hawkins** - Sales Consultant; knowledgeable about EVs, went out of way to accommodate\n- **Grayson** - Sales Consultant; patient, knew vehicles thoroughly, no pressure\n- **Aaron** - Sales Consultant; listened to needs, found the right fit\n- **Shawn** - Sales Consultant; engineering background, knowledgeable about tech, no pressure\n- **Lance** - Sales Consultant; kind, patient, no surprises\n- **Anthony (AJ)** - Sales Consultant; knowledgeable, friendly, no pressure\n- **Brian Brase** - Sales Consultant; saved time by showing across brands\n- **Nancy** - Sales Consultant; excellent, explained vehicles, let customer choose\n- **Bryan Deweese** - Sales Consultant; efficient, kind, honest\n- **Joel** - Sales Consultant; helpful, informative\n- **Nick** - Sales Consultant; knowledgeable\n- **Barry** - Sales Consultant; long-term trusted advisor\n- **Elli** - Sales Consultant (new); straight forward, not pushy\n- **Rabar** - Sales Consultant; professional, honest, patient\n- **Darren** - Sales Consultant; helped with test drives across brands\n- **Quinn** - Sales Consultant; excellent\n- **Blake** - Sales Consultant; delight to work with\n- **Jordan** - Sales Consultant; made car buying easy\n- **Jamahl Flowers** - Sales Consultant; wonderful\n- **Colton Weeks** - Sales Consultant; helpful\n- **Angelina** - Sales Consultant; friendly\n- **Bryan Deweese** - Sales Consultant; kind, knowledgeable\n- **James** - Sales Consultant; professional, exceptionally friendly\n- **Chantel** - Sales Consultant; great with order, thorough walk-through\n- **Deandre** - Sales Consultant; courteous, helpful, patient\n- **Shawn** - Sales Consultant; attentive, patient, no pressure, engineering background\n- **Lance** - Sales Consultant; kind from moment arrived\n\n## Service Department\n\n- **Ryan** - Service Advisor; outstanding customer service, transparent communication via text\n- **Alysa Morgan** - Service Advisor; on-time, fabulous, kept informed\n- **Nicole** - Service Advisor; expert updates, pertinent information\n- **Sam** - Service Agent; fought for customer with corporate\n\n## Service Technicians\n\n- **Carson Chandler** - Technician; great professional expertise\n- **Austin Ford** - Technician; went to great links to show options\n\n## Parts Department\n\nParts service available through the dealership with genuine Hyundai OEM components.\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - Haselwood Hyundai\n\nHaselwood Hyundai maintains a substantial pre-owned vehicle inventory in the Bremerton area with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Total vehicles:** Extensive inventory across new and pre-owned (140+ new, hundreds pre-owned)\n- **Multi-make selection** spanning Hyundai, Volkswagen, Chevrolet, GMC, Ford, Toyota, Honda, Kia, and more\n- **Price range:** Broad range including the Economy Vehicle Program for budget-conscious buyers\n- **Vehicle types:** Sedans, SUVs, trucks, vans, and coupes\n- **Daily fresh inventory** with regular turnover\n\n## Quality Assurance\n\n- **173-Point Inspection** - Hyundai Certified Pre-Owned rigorous inspection\n- **Hyundai Certified Pre-Owned (CPO)** - Factory-backed inspections, remainder of 5yr/60k mi new vehicle warranty, 10yr/100k mi CPO powertrain warranty\n- **Vehicle Service Contracts** - Available for most vehicles\n- **Carfax History Reports** - Available on request\n\n## Certified Pre-Owned Program\n\nHyundai Certified Pre-Owned vehicles undergo rigorous 173-point inspection and include:\n- Remainder of 5-Year / 60,000-Mile New Vehicle Limited Warranty\n- 10-Year / 100,000-Mile CPO Powertrain Warranty\n- 24/7 roadside assistance\n- Comprehensive vehicle history report\n- Multi-point inspection by certified Hyundai technicians\n\n## Economy Vehicle Program\n\nSpecial program offering safety-checked, affordable pre-owned options for first-time buyers and budget-conscious customers seeking high-value second vehicles.\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- Value Your Trade tool (KBB Instant Cash Offer)\n- Car payment calculator\n- Online credit application and pre-approval\n- Deal Reveal - instant pricing transparency\n- Remote vehicle purchasing\n\n## Trade-In\n\n- Trade-in appraisal via KBB Instant Cash Offer\n- Cash offers for trade-ins (even without vehicle purchase)\n- Competitive trade-in values\n- Vehicle Upgrade Program\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - Haselwood Hyundai\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer.com** platform.\n\nThe AI Discovery Page was successfully fetched and is available at `/ai-discovery-page.htm`.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-02-03T15:13:20.485Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n- **Contact:** gsjones.haselwood@gmail.com\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-hyundai` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/prompts` | Q&A / FAQ prompts (59 prompts) |\n| `/testimonials` | Customer reviews |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/offers` | Current offers and incentives |\n\n## MCP Server\n\nPromptGraph provides a Model Context Protocol (MCP) server for vehicle inventory browsing:\n\n- **MCP Session Endpoint:** `https://mcp.promptgraph.ai/haselwood-hyundai/mcp`\n- **Inventory HTTP Route:** `https://www.haselwoodhyundai.com/llm-inventory.htm`\n\nMCP tools include: `browse_inventory`, `browse_by_bodytype`, `browse_by_price`, `browse_by_year`, `search_vehicles`.\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/haselwood-hyundai/business`:\n\n- **Name:** Haselwood Hyundai\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Hyundai dealer, Car dealer, Truck dealer, Used car dealer, Auto repair shop, Used truck dealer, Car leasing service\n- **Address:** 5008 Auto Center Boulevard, Bremerton, WA 98312\n- **Geo:** 47.5620694, -122.6841288\n- **Telephone:** (360) 377-3855\n- **Email:** gsjones.haselwood@gmail.com\n- **URL:** `https://www.haselwoodhyundai.com/`\n- **Aggregate Rating:** 4.4 / 5.0 (848 reviews)\n- **Date Modified:** 2026-02-03T15:13:20.485Z\n- **Same As:** Facebook, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wide selection of new Hyundai models and used multi-make vehicles with detailed specifications, pricing, and availability.\n\n## Q&A Prompt Library (59 Prompts)\n\nThe `/prompts` endpoint exposes 59 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Vehicle shopping and model-specific inquiries\n- Financing, leasing, and trade-in questions\n- Service, parts, and warranty inquiries\n- Dealership information and customer support\n- Hyundai Certified Pre-Owned program\n- Electric vehicle education (IONIQ series, hybrids)\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](testimonials.md) for details.\n\n## LLM-Accessible Actions (ReadAction)\n\nThe AI Discovery Page defines 7 structured `ReadAction` entries that agents can invoke:\n\n1. **Drive Happy with Haselwood Hyundai** - Trusted Hyundai dealer with wide selection, transparent pricing, personalized service\n2. **Your Hyundai Destination in Bremerton, WA** - Go-to hub for new/pre-owned vehicles, service, and ownership care\n3. **Bremerton's Hub for Hyundai Innovation and Electric Vehicles** - Leader in automotive technology, IONIQ EVs and hybrids\n4. **Instant Transparency with the Hyundai Deal Reveal Experience** - Digital-first shopping with instant discounts and verified pricing\n5. **Premium Quality and Value with Hyundai Certified Pre-Owned** - 173-point inspection, factory-backed warranty coverage\n6. **Reliable Transportation for Every Budget** - Economy Vehicle Program for budget-conscious buyers\n7. **Factory-Certified Care to Keep Your Hyundai Running Like New** - State-of-the-art service with factory-trained technicians\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/haselwood-hyundai/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` |\n| LLMs.txt | `/llms.txt` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n| LLM Inventory | `/llm-inventory.htm` |\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about Haselwood Hyundai without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - Haselwood Hyundai\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with Haselwood Hyundai's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [Haselwood Hyundai Home](https://www.haselwoodhyundai.com/) - Browse new and used Hyundai vehicles at Haselwood Hyundai in Bremerton, WA.\n- [Vehicle Inventory](https://www.haselwoodhyundai.com/all-inventory/index.htm) - Browse our inventory of vehicles for sale.\n- [New Inventory](https://www.haselwoodhyundai.com/new-inventory/index.htm) - Browse our new Hyundai inventory.\n- [Used Inventory](https://www.haselwoodhyundai.com/used-inventory/index.htm) - Browse our used car inventory in Bremerton.\n- [Financing Center](https://www.haselwoodhyundai.com/financing/index.htm) - Explore financing and lease options.\n- [Online Credit Application](https://www.haselwoodhyundai.com/financing/application.htm) - Apply for credit online.\n- [Service Center](https://www.haselwoodhyundai.com/hyundai-service.htm) - Schedule an appointment for auto repair or regular maintenance.\n- [Parts Center](https://www.haselwoodhyundai.com/parts/center.htm) - Genuine Hyundai parts and accessories.\n- [Service Specials](https://www.haselwoodhyundai.com/promotions/service/index.htm) - Current service offers.\n- [Specials](https://www.haselwoodhyundai.com/promotions/new/index.htm) - Current Hyundai offers and incentives.\n- [Showroom](https://www.haselwoodhyundai.com/showroom/index.htm) - Research all Hyundai models.\n- [EV Hub](https://www.haselwoodhyundai.com/HyundaiEVHub/overview.htm) - Electric vehicle education.\n- [Hyundai Programs](https://www.haselwoodhyundai.com/assurance.htm) - Blue Link, warranty, roadside assistance.\n- [LLM Inventory](https://www.haselwoodhyundai.com/llm-inventory.htm) - Special LLM-enabled inventory file.\n\n### AI & LLM Resources\n\n- [AI Discovery Page](https://www.haselwoodhyundai.com/ai-discovery-page.htm) - Machine-readable knowledge base for AI agents\n\n### Social Media\n\n- [Facebook](https://www.facebook.com/haselwoodvwh/)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/haselwood-hyundai/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/haselwood-hyundai/vehicles) - Complete inventory of vehicles with specifications, pricing, and availability in JSON-LD format\n- [Current Offers](http://api.promptgraph.ai/api/v1/haselwood-hyundai/offers) - Current incentives and special offers\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts) - 59 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/haselwood-hyundai/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/haselwood-hyundai/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/haselwood-hyundai/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/haselwood-hyundai/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/haselwood-hyundai/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/haselwood-hyundai/config.json) - System configuration and metadata\n\n## Featured Products\n\n- [Drive Happy with Haselwood Hyundai](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts/drive-happy-with-haselwood-hyundai) - Trusted Hyundai dealer with wide selection\n- [Your Hyundai Destination in Bremerton, WA](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts/your-hyundai-destination-in-bremerton-wa) - Go-to hub for Hyundai vehicles and service\n- [Bremerton's Hub for Hyundai Innovation and Electric Vehicles](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts/bremertons-hub-for-hyundai-innovation-and-electric-vehicles) - Automotive technology leader with IONIQ EVs\n- [Instant Transparency with the Hyundai Deal Reveal Experience](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts/instant-transparency-with-the-hyundai-deal-reveal-experience) - Digital-first shopping with Deal Reveal\n- [Premium Quality and Value with Hyundai Certified Pre-Owned](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts/premium-quality-and-value-with-hyundai-certified-pre-owned) - 173-point CPO inspection program\n- [Reliable Transportation for Every Budget](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts/reliable-transportation-for-every-budget) - Economy Vehicle Program\n- [Factory-Certified Care to Keep Your Hyundai Running Like New](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts/factory-certified-care-to-keep-your-hyundai-running-like-new) - Hyundai factory-trained service\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - Haselwood Hyundai\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts` exposes 59 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (10+ prompts)\n- Drive Happy with Haselwood Hyundai\n- Your Hyundai Destination in Bremerton, WA\n- Dealer reputation, awards, and satisfaction\n- Transparent and no-pressure sales approach\n\n### Vehicle Shopping (20+ prompts)\n- New Hyundai models and specials in Bremerton\n- Hyundai certified pre-owned excellence\n- Used cars and trucks at Haselwood Hyundai\n- Deal Reveal pricing technology\n- Vehicle model inquiries and comparisons\n- Lease options for Hyundai models (Tucson, Elantra, Santa Fe)\n- Economy Vehicle Program for budget buyers\n\n### Electric Vehicles (5+ prompts)\n- Bremerton's hub for Hyundai innovation and EVs\n- IONIQ 5, IONIQ 6, and IONIQ 9 information\n- Hyundai hybrid and plug-in hybrid options\n- EV education and charging information\n\n### Financing (10+ prompts)\n- Flexible Hyundai financing and leasing\n- Online pre-approval and credit applications\n- College Grad, Military, and First Responders programs\n- Lease and finance specials\n\n### Service & Parts (10+ prompts)\n- Factory-certified care for your Hyundai\n- Hyundai Complimentary Maintenance program\n- Certified Hyundai technicians\n- Routine maintenance and major repairs\n- Genuine OEM parts\n\n### Buying Experience (5+ prompts)\n- Stress-free car buying experience\n- Online and remote shopping tools\n- Instant transparency with Deal Reveal\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `drive-happy-with-haselwood-hyundai` | Dealership positioning |\n| 2 | `your-hyundai-destination-in-bremerton-wa` | Full-service hub |\n| 3 | `bremertons-hub-for-hyundai-innovation-and-electric-vehicles` | EV and tech focus |\n| 4 | `instant-transparency-with-the-hyundai-deal-reveal-experience` | Pricing transparency |\n| 5 | `premium-quality-and-value-with-hyundai-certified-pre-owned` | CPO program |\n| 6 | `reliable-transportation-for-every-budget` | Economy Vehicle Program |\n| 7 | `factory-certified-care-to-keep-your-hyundai-running-like-new` | Service department |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - Haselwood Hyundai\n\nHaselwood Hyundai has collected customer testimonials through the PromptGraph platform. Reviews are predominantly 5-star with strong themes of professional sales service, no-pressure approach, and transparent pricing.\n\n## Aggregate Ratings\n\n- **PromptGraph / Google Business Profile:** 4.4 / 5.0 (848 reviews)\n- **SureCritic:** 4.6 / 5.0 (1,209 reviews)\n- **DealerRater:** 4.6 / 5.0 (976 reviews)\n- **PromptGraph Reviews:** Predominantly 5-star (71% 5-star)\n\n## Most-Praised Staff (by frequency)\n\n- **Mike Jones** - Honest, straightforward, no pressure, excellent follow-up, helps find the right vehicle\n- **Cole** - Professional, knowledgeable, relaxed approach, great with customers\n- **Chantel** - Went above and beyond, knowledgeable, perfect for first-time buyers\n- **Cameron** - Patient, knowledgeable, made the process smooth and happy\n- **Deondre Perry** - Helpful, professional, stress-free experience\n- **Don Semmier** - Finance Manager, seamless process, thorough and helpful\n- **James Hawkins** - Knowledgeable about EVs, accommodating, went the extra mile\n- **Ryan** - Service Advisor; outstanding text communication and transparency\n\n## Notable Excerpts\n\n> \"Mike Jones was so awesome to work with. Honest, informative and very helpful in every way. Highly recommend asking for him, you won't be disappointed.\" - Robert Robbins\n\n> \"Cole in sales has sold my wife and I both of our cars and is a man of his word. If you're in the market for a vehicle ask for Cole, he's the G.S.O.A.T (greatest salesman of all time)\" - Xavierre Reyes\n\n> \"Nancy was the best! Had a pleasant time there with my purchase! Lovely staff!\" - Bunnaran Gnoy\n\n> \"From start to finish the whole team at Haselwood Hyundai made my car buying experience so wonderful. Especially Don and Chantel for being so knowledgeable and helpful. As a first time car buyer they made the process smooth and easy.\" - Alivia Brian\n\n> \"I would give 100 stars if I could!\" - Alivia Brian\n\n> \"No pressure, no BS, calm and professional staff. Haselwood is what a car dealer should be.\" - Mark Powell\n\n> \"We had one of the best buying experiences of our life. No pressure, no haggling, friendly and respectable.\" - Marie Osborne\n\n## Sales Themes\n\n- **No-pressure approach** - Multiple reviewers mention zero pressure, no haggling\n- **Transparent pricing** - Deal Reveal technology, upfront pricing, no games\n- **Knowledgeable staff** - Sales consultants know vehicles inside and out\n- **Customer-first focus** - Staff listen to needs and find the right vehicle\n- **Smooth process** - Efficient paperwork, fast turnaround, in-and-out\n\n## Service Themes\n\n- **Excellent communication** - Text message updates, proactive notifications\n- **Professional advisors** - Ryan, Alysa, Nicole praised for thoroughness\n- **Comfortable facility** - Clean waiting area, Wi-Fi, coffee, snacks\n- **Fair pricing** - Willing to match competitor pricing on service\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Hyundai Model Lineup Comparison - Haselwood Hyundai\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP Tier | Key Trims |\n|---|---|---|---|---|---|\n| **Venue** | Subcompact SUV | 5 | FWD | Entry-level | SE, SEL, Denim |\n| **Elantra** | Compact Sedan | 5 | FWD | Value | SE, SEL, N Line, Limited |\n| **Elantra Hybrid** | Compact Hybrid Sedan | 5 | FWD | Mid-range | Blue, Limited |\n| **Elantra N** | High-Performance Sedan | 5 | FWD | Premium | N |\n| **Kona** | Subcompact Crossover | 5 | FWD / AWD | Value | SE, SEL, N Line, Limited |\n| **Kona Electric** | Subcompact EV Crossover | 5 | FWD | Mid-range | SE, SEL, Limited |\n| **Tucson** | Compact SUV | 5 | FWD / AWD | Mid-range | SE, SEL, XRT, N Line, Limited |\n| **Tucson Hybrid** | Compact Hybrid SUV | 5 | FWD / AWD | Mid-range | Blue, SEL Convenience, Limited |\n| **Tucson Plug-In Hybrid** | Compact PHEV SUV | 5 | AWD | Premium | SEL, Limited |\n| **Santa Fe** | Mid-size SUV | 5-7 | FWD / AWD | Mid-range | SE, SEL, XRT, Limited, Calligraphy |\n| **Santa Fe Hybrid** | Mid-size Hybrid SUV | 5-7 | AWD | Mid-range | SEL, Limited, Calligraphy |\n| **Santa Cruz** | Compact Pickup (SAV) | 5 | FWD / AWD | Mid-range | SE, SEL, Night, XRT, Limited |\n| **Sonata** | Mid-size Sedan | 5 | FWD | Mid-range | SE, SEL, N Line, Limited |\n| **Sonata Hybrid** | Mid-size Hybrid Sedan | 5 | FWD | Mid-range | Blue, SEL, Limited |\n| **Palisade** | Full-size 3-Row SUV | 7-8 | FWD / AWD | Premium | SE, SEL, XRT, Limited, Calligraphy |\n| **Palisade Hybrid** | Full-size 3-Row Hybrid SUV | 7-8 | AWD | Premium | SEL, Limited, Calligraphy |\n| **IONIQ 5** | Compact EV Crossover | 5 | RWD / e-AWD | Premium | SE, SEL, Limited |\n| **IONIQ 5 N** | High-Performance EV Crossover | 5 | e-AWD | Performance | N |\n| **IONIQ 6** | Mid-size EV Sedan | 5 | RWD / e-AWD | Premium | SE, SEL, Limited |\n| **IONIQ 9** | Full-size EV 3-Row SUV | 7 | e-AWD | Flagship | SE, SEL, Limited, Calligraphy |\n\n## Key Feature Comparison\n\n| Feature | Elantra | Sonata | Tucson | Santa Fe | Palisade | IONIQ 5 | Kona |\n|---|---|---|---|---|---|---|---|\n| Base Engine | 2.0L 4-cyl | 2.5L 4-cyl | 2.5L 4-cyl | 2.5L 4-cyl | 3.8L V6 | Electric | 2.0L 4-cyl |\n| Horsepower | 147 hp | 191 hp | 187 hp | 191 hp | 291 hp | 168-320 hp | 147 hp |\n| AWD Available | No | No | Yes | Yes | Yes | e-AWD | Yes |\n| 3rd Row | No | No | No | Optional | Yes | No | No |\n| Towing (max) | N/A | N/A | 2,000 lbs | 3,500 lbs | 5,000 lbs | N/A | N/A |\n| SmartSense | Standard | Standard | Standard | Standard | Standard | Standard | Standard |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n| Wireless Android Auto | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n\n## Electric & Hybrid Options\n\n| Model | Type | Range (est.) | Notes |\n|---|---|---|---|\n| **IONIQ 5** | Full EV | ~220-303 miles | 800V fast charging, vehicle-to-load |\n| **IONIQ 5 N** | Performance EV | ~221 miles | 601 hp, N Grin Boost, Drift Optimizer |\n| **IONIQ 6** | Full EV Sedan | ~240-361 miles | Ultra-low drag coefficient (0.21 Cd) |\n| **IONIQ 9** | Full EV 3-Row SUV | ~TBD | Flagship electric SUV |\n| **Kona Electric** | Full EV | ~200+ miles | Affordable compact EV |\n| **Elantra Hybrid** | Hybrid | ~54 mpg combined | Efficient commuting |\n| **Sonata Hybrid** | Hybrid | ~52 mpg combined | Sleek mid-size hybrid |\n| **Tucson Hybrid** | Hybrid | ~37 mpg combined | Popular hybrid SUV |\n| **Tucson Plug-In Hybrid** | Plug-In Hybrid | ~33 miles EV | Extended electric driving |\n| **Santa Fe Hybrid** | Hybrid | ~34 mpg combined | Efficient 3-row hybrid |\n\n## Warranty\n\nAll new Hyundai models include:\n\n- **5-Year / 60,000-Mile New Vehicle Limited Warranty**\n- **10-Year / 100,000-Mile Powertrain Limited Warranty**\n- **7-Year / Unlimited-Mile Anti-Perforation Limited Warranty**\n- **5-Year / Unlimited-Mile Roadside Assistance**\n- **3-Year / 36,000-Mile Complimentary Maintenance (Hyundai Complimentary Maintenance)**\n\n## Hyundai SmartSense Safety\n\nStandard across most Hyundai models:\n\n- Forward Collision-Avoidance Assist\n- Blind-Spot Collision-Avoidance Assist\n- Rear Cross-Traffic Collision-Avoidance Assist\n- Lane Keeping Assist\n- Lane Following Assist\n- Safe Exit Assist\n- Driver Attention Warning\n- Smart Cruise Control\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

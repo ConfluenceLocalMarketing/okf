@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>west-hills-kia - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "west-hills-kia";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "West Hills Kia",
+        "type": "Entities",
+        "description": "Kia dealership in Bremerton, WA serving Kitsap County, Silverdale, Port Orchard, Poulsbo, and Tacoma with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.westhillskia.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - West Hills Kia",
+        "type": "Entities",
+        "description": "Common questions about West Hills Kia's inventory, financing, service, and dealership operations in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-kia/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Kia Models - West Hills Kia",
+        "type": "Entities",
+        "description": "New Kia model lineup available at West Hills Kia in Bremerton, WA including EV9, EV6, Niro EV, Sportage, Sorento, Telluride, Seltos, K4, K5, Carnival, and multiple hybrid/plug-in variants.",
+        "resource": "https://www.westhillskia.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - West Hills Kia",
+        "type": "Entities",
+        "description": "Kia-certified service center in Bremerton, WA offering routine maintenance, diagnostics, major repairs, and genuine Kia OEM parts.",
+        "resource": "https://www.westhillskia.com/service/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - West Hills Kia",
+        "type": "Entities",
+        "description": "Sales and service staff directory for West Hills Kia in Bremerton, WA, compiled from the dealership website, customer reviews, and PromptGraph data.",
+        "resource": "https://www.westhillskia.com/dealership/about.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - West Hills Kia",
+        "type": "Entities",
+        "description": "Large pre-owned inventory at West Hills Kia in Bremerton, WA, spanning multiple makes and models with competitive pricing and online buying tools.",
+        "resource": "https://www.westhillskia.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - West Hills Kia",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for West Hills Kia, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.westhillskia.com/ai-discovery-page.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - West Hills Kia",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for West Hills Kia.",
+        "resource": "https://www.westhillskia.com/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - West Hills Kia",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 10 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for West Hills Kia.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-kia/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - West Hills Kia",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews collected via PromptGraph API for West Hills Kia in Bremerton, WA, with predominantly 4-5 star testimonials highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-kia/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Kia Model Lineup Comparison - West Hills Kia",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Kia models available at West Hills Kia in Bremerton, WA, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.westhillskia.com/showroom/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# West Hills Kia\n\nWest Hills Kia is a full-service Kia dealership located at **515 West Hills Blvd, Bremerton, WA 98312**, serving the greater Kitsap County area including Silverdale, Port Orchard, Poulsbo, Gig Harbor, Tacoma, and surrounding Washington communities.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (360) 728-3062 |\n| Service | (360) 728-3063 |\n| Parts | (360) 728-3070 |\n\nEmail: dgandel@westhillshonda.com\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\n## Location\n\n- **Address:** 515 West Hills Blvd, Bremerton, WA 98312\n- **Geo:** 47.5567436, -122.6790752\n\n## New Vehicles\n\nKia models available include:\n\n### Electric Vehicles\n- **EV9** - Three-row all-electric SUV, up to 304 miles range, ultra-fast charging\n- **EV6** - All-electric crossover, sporty styling, available dual-motor AWD\n- **Niro EV** - Compact all-electric crossover, ideal for daily commuting\n\n### Hybrid Vehicles\n- **Sportage Hybrid** - Compact SUV with excellent fuel efficiency\n- **Sorento Hybrid** - Three-row SUV with hybrid efficiency\n- **Niro Hybrid** - Compact crossover, outstanding MPG\n- **Carnival Hybrid** - Minivan versatility with hybrid efficiency\n- **Telluride Hybrid** - Three-row SUV with hybrid powertrain\n\n### Plug-In Hybrid Vehicles\n- **Sportage Plug-In Hybrid** - Compact SUV PHEV\n- **Sorento Plug-In Hybrid** - Three-row SUV PHEV\n- **Niro Plug-In Hybrid** - Compact crossover PHEV\n\n### SUVs & Crossovers\n- **Telluride** - Award-winning three-row SUV, upscale interior\n- **Sorento** - Flexible three-row SUV, multiple powertrain options\n- **Sportage** - Versatile compact SUV, available in gas/hybrid/PHEV\n- **Seltos** - Stylish subcompact SUV\n\n### Sedans\n- **K4** - All-new compact sedan replacing the Forte\n- **K5** - Mid-size sedan, stylish design\n\n### Vans\n- **Carnival** - Multi-purpose passenger van, available as hybrid\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, pre-qualification\n- **Service Center** - Kia-certified technicians, routine maintenance, diagnostics, major repairs, genuine Kia parts\n- **Parts Department** - Genuine Kia components, accessories, tires\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned)\n- Online service scheduling\n- Online credit application and pre-approval\n- Car payment calculator\n- Trade-in valuation tool\n- Vehicle Upgrade Program\n\n## Staff\n\nSee [staff.md](staff.md) for full directory.\n\n## Reviews & Reputation\n\n- Aggregate rating: 4.6 / 5.0 (1,277+ reviews) across major platforms\n- Google Business Profile: 4.6 stars (1,200+ reviews)\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **Haselwood Auto Group** - Part of the Haselwood family of dealerships\n- **Haselwood Military Appreciation Program** - $500 discount and 90-day no-payment option for active military and veterans\n- **Vehicle Upgrade Program** - Upgrade to a newer vehicle\n- **Fair Pricing** - Transparent, MSRP-based pricing\n- **Certified Pre-Owned** - Kia CPO program with factory-backed inspections\n\n## Affiliations\n\n- Part of the **Haselwood Auto Group**\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform",
+    "datasets/faq": "# Frequently Asked Questions - West Hills Kia\n\n## Inventory\n\n**Q: What new Kia models are available at West Hills Kia?**\nA: A full Kia lineup including EV9, EV6, Niro EV, Sportage, Sorento, Telluride, Seltos, K4, K5, Carnival, plus hybrid and plug-in hybrid variants of Sportage, Sorento, Niro, and Carnival.\n\n**Q: What brands are available in the used vehicle inventory?**\nA: The pre-owned inventory spans multiple makes including Kia, Chevrolet, Ford, Toyota, Honda, Hyundai, and more.\n\n**Q: Does West Hills Kia offer certified pre-owned vehicles?**\nA: Yes, Kia Certified Pre-Owned vehicles are available with factory-backed inspections, warranties, and 24/7 roadside assistance.\n\n**Q: Do you have electric and hybrid vehicles available?**\nA: Yes, EVs (EV9, EV6, Niro EV), hybrids (Sportage Hybrid, Sorento Hybrid, Niro Hybrid, Carnival Hybrid, Telluride Hybrid), and plug-in hybrids (Sportage PHEV, Sorento PHEV, Niro PHEV).\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs. The dealership works with a network of lenders to find the best terms.\n\n**Q: Does the dealership offer a military appreciation program?**\nA: Yes, the Haselwood Military Appreciation Program offers a $500 discount and 90-day no-payment option for active military and veterans.\n\n**Q: How do I apply for financing?**\nA: The online credit application is available through the dealership website for fast, secure processing.\n\n## Service\n\n**Q: Does the service center work on non-Kia vehicles?**\nA: Yes, the service center can perform maintenance and repairs on various makes and models.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the dealership website.\n\n**Q: Are there service specials available?**\nA: Yes, rotating service coupons and specials are available on the service promotions page.\n\n**Q: Does the service center handle electric and hybrid vehicles?**\nA: Yes, the certified technicians are trained on Kia EV and hybrid systems.\n\n## Dealership\n\n**Q: Where is West Hills Kia located?**\nA: 515 West Hills Blvd, Bremerton, WA 98312, serving Kitsap County, Silverdale, Port Orchard, Poulsbo, Gig Harbor, and Tacoma.\n\n**Q: What is the Haselwood Auto Group?**\nA: West Hills Kia is part of the Haselwood Auto Group, a family of dealerships in the Pacific Northwest.\n\n**Q: What are your hours?**\nA: Monday through Saturday 9:00 AM - 8:00 PM, Sunday 10:00 AM - 7:00 PM.\n\n**Q: Do you offer trade-in evaluations?**\nA: Yes, through the KBB Instant Cash Offer tool \u2014 get a value for your car online.\n\n**Q: Is there a vehicle hold policy?**\nA: Yes, the dealership allows customers to hold vehicles before arriving.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New Kia Models - West Hills Kia\n\nWest Hills Kia carries a full lineup of new Kia vehicles. Below is a summary of available models and trims.\n\n## Electric Vehicles\n\n### Kia EV9\nThree-row all-electric SUV, Kia's flagship EV. Up to 304 miles estimated range. Ultra-fast 800V DC charging (10-80% in ~24 minutes). Available in Light, Wind, Land, and GT-Line trims. Available in RWD and e-AWD. Seats up to 7 passengers. Towing capacity up to 5,000 lbs.\n\n### Kia EV6\nAll-electric crossover with sporty styling and performance. Up to 310 miles estimated range. 800V DC fast-charging capable. Available in RWD and dual-motor e-AWD. GT version delivers 576 hp.\n\n### Kia Niro EV\nCompact all-electric crossover. Practical range for daily commuting. Available in Wind and Wave trims. Ideal for Kitsap County drivers making the switch to electric.\n\n## Hybrid Vehicles\n\n### Kia Sportage Hybrid\nCompact SUV with excellent fuel efficiency. Available in LX, EX, and SX Prestige trims. Combined ~43 MPG estimated. Standard AWD.\n\n### Kia Sorento Hybrid\nThree-row SUV with hybrid efficiency. Seats up to 7 passengers. Available in S, EX, and SX Prestige trims. Excellent fuel economy for a three-row SUV.\n\n### Kia Niro Hybrid\nCompact crossover designed for outstanding MPG - up to 53 city / 54 highway. Available in LX, EX, and SX Touring trims.\n\n### Kia Carnival Hybrid\nMinivan versatility with hybrid efficiency. Seats up to 8 passengers. 33 MPG combined, 242 hp. Perfect for growing families in Kitsap County.\n\n### Kia Telluride Hybrid\nAward-winning three-row SUV now available with hybrid powertrain. Upscale interior and advanced technology.\n\n## Plug-In Hybrid Vehicles\n\n### Kia Sportage Plug-In Hybrid\nCompact SUV PHEV with ~34 miles all-electric range. Combined 470+ miles total range. Available in X-Line and X-Line Prestige trims.\n\n### Kia Sorento Plug-In Hybrid\nThree-row SUV PHEV with ~32 miles all-electric range. Seats up to 6 passengers.\n\n### Kia Niro Plug-In Hybrid\nCompact crossover PHEV with ~33 miles all-electric range. Outstanding total range.\n\n## SUVs & Crossovers\n\n### Kia Telluride\nAward-winning three-row SUV. Available in LX, S, EX, SX, and SX Prestige trims. Powered by 3.8L V6 engine (291 hp). Seats up to 8 passengers. Towing capacity up to 5,000 lbs.\n\n### Kia Sorento\nFlexible three-row SUV available with gas, hybrid, and plug-in hybrid powertrains. Available in LX, S, EX, SX, and SX Prestige trims. Seats up to 7 passengers.\n\n### Kia Sportage\nVersatile compact SUV available in gas, hybrid, and plug-in hybrid versions. Redesigned interior with dual 12.3-inch displays. Available AWD.\n\n### Kia Seltos\nStylish subcompact SUV. Available in LX, S, EX, and SX trims. Available AWD. Perfect entry-level SUV.\n\n## Sedans\n\n### Kia K4\nAll-new compact sedan replacing the Forte. Modern design with advanced technology. Available in LX, EX, and GT-Line trims.\n\n### Kia K5\nMid-size sedan with bold design. Available in LX, EX, GT-Line, and GT trims. GT version features 2.5L turbo engine (290 hp).\n\n## Vans\n\n### Kia Carnival\nMulti-purpose passenger van. Available in LX, EX, SX, and SX Prestige trims. Powered by 3.5L V6 engine. Seats up to 8 passengers. Sliding doors for easy access.\n\n## Promotions & Offers\n\nPromotions vary by model and include low APR financing, lease specials, and rebates. Kia offers national and regional incentives. Contact the dealership for current offers.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - West Hills Kia\n\nThe West Hills Kia Service Center provides certified maintenance and repair services at 515 West Hills Blvd, Bremerton, WA.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work\n- **EV Maintenance** - Specialized electric vehicle service and battery health checks\n- **Hybrid Service** - Hybrid system diagnostics and maintenance\n- **Tire Replacement and Alignment** - Full tire services including balancing\n- **Brake Service** - Pad replacement, rotor replacement, fluid flush\n- **Battery Service** - Testing, replacement, and electrical system diagnostics\n- **A/C Service** - Air conditioning repair and maintenance\n- **Scheduled Maintenance** - Following Kia's recommended maintenance schedule\n\n## Service Team\n\n- **Jason Crosier** - Service Advisor; praised for outstanding communication and warranty advocacy\n- **Jason** - Service Advisor; praised for efficient service and clear explanations\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Service Coupons** - Rotating service specials and discounts\n- **Certified Kia Technicians** - Factory-trained using genuine Kia parts\n- **Full-Service Support** - From routine oil changes to major collision repairs\n\n## Service Specials\n\nThe dealership offers rotating service specials and coupons. See the service specials page for current promotions.\n\n## Parts Department\n\nGenuine Kia OEM parts and accessories available including:\n- Kia Genuine replacement parts\n- Tires and wheels\n- Accessories for Kia vehicles\n- Order parts online or stop by\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 8:00 PM |\n| Saturday | 9:00 AM - 8:00 PM |\n| Sunday | 10:00 AM - 7:00 PM |\n\nSee [staff.md](staff.md) for full service department directory.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - West Hills Kia\n\nStaff directory compiled from the dealership website, customer reviews, and PromptGraph data.\n\n## Management\n\n- **Ken Hynek** - General Manager; long-tenured leader known for supportive management culture\n- **Colton Weeks** - Sales management; consistently praised across a decade of customer reviews\n\n## Sales Consultants\n\n- **Colton Weeks** - Sales professional; praised by customers for patience, listening skills, and finding the right vehicle within budget\n- **Gabe Kilroy** - Sales Consultant; known for going above and beyond to get customers a great deal\n- **Stephen** - Sales Consultant; praised for knowledge and bringing amazing prices without pressure\n- **Matt M. / Matthew Moreland** - Sales Consultant; long-term staff member praised since 2016 for listening skills\n- **Jamal** - Sales Consultant; praised for helping customers feel comfortable\n- **Jose** - Sales Consultant; part of the team making the buying process smooth\n- **Michael** - Sales Consultant; praised for making first-time car buying amazing\n\n## Finance Department\n\n- **Hailey** - Finance staff; praised for making the finance process smooth and clear\n- **Dan S.** - Finance staff; documented in historical reviews for transparent negotiation\n\n## Service Department\n\n- **Jason Crosier** - Service Advisor; praised for going above and beyond on warranty issues, explaining what needs immediate attention versus what can wait, outstanding communication\n- **Jason** - Service Advisor; praised for fixing issues and providing updates\n\n## Parts Department\n\nParts team available to assist with genuine Kia parts and accessories. Contact the parts department at (360) 728-3070.\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - West Hills Kia\n\nWest Hills Kia maintains a substantial pre-owned vehicle inventory in the Bremerton area with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Total vehicles:** Extensive inventory across new and pre-owned (hundreds in stock)\n- **Multi-make selection** spanning Kia, Chevrolet, Ford, Toyota, Honda, Hyundai, and more\n- **Price range:** Broad range from under $10,000 to premium vehicles\n- **Vehicle types:** Sedans, SUVs, trucks, vans, coupes, and EVs\n- **Vehicles under $20,000** - Dedicated budget-friendly selection\n- **Daily fresh inventory** with regular turnover\n\n## Quality Assurance\n\n- **Multi-Point Inspection** - All pre-owned vehicles inspected by certified technicians\n- **Kia Certified Pre-Owned (CPO)** - Factory-backed inspections, warranties, and roadside assistance\n- **Vehicle Service Contracts** - Available for most vehicles to prevent unexpected expenses\n- **Carfax History Reports** - Available on request\n\n## Certified Pre-Owned Program\n\nKia Certified Pre-Owned vehicles undergo rigorous inspection and include:\n- Kia factory-backed limited warranty\n- 24/7 roadside assistance\n- Multi-point inspection by certified Kia technicians\n- Competitive pricing with transparent value\n- Integration with financing and service departments\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- Value Your Trade tool (KBB Instant Cash Offer)\n- Car payment calculator\n- Online credit application and pre-approval\n- Vehicle hold policy\n- Vehicle Upgrade Program\n\n## Trade-In\n\n- Trade-in appraisal available (KBB Instant Cash Offer)\n- Cash offers for trade-ins (even without vehicle purchase)\n- Competitive trade-in values\n- Sell your car online tool\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - West Hills Kia\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, inventory data, and LLM-friendly action definitions. The site is built on the **Dealer.com** platform.\n\nThe AI Discovery Page was successfully fetched and is available at `/ai-discovery-page.htm`.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-07-01T12:31:13.424Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`, `Review`, `AggregateRating`, `Offer`\n- **Contact:** dgandel@westhillshonda.com\n\nNote: The AI Manifest is accessible via PromptGraph API and may not be available at the standard `/.well-known/ai-manifest.json` path.\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-kia` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/prompts` | Q&A / FAQ prompts (10 prompts) |\n| `/testimonials` | Customer reviews |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/config.json` | System configuration |\n\n### Additional Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n| `/offers` | Current offers and incentives |\n\n## MCP Server\n\nWest Hills Kia provides a Model Context Protocol (MCP) server for AI agent inventory queries:\n\n- **MCP Endpoint:** `https://mcp.promptgraph.ai/west-hills-kia/mcp`\n- **HTTP Inventory Route:** `/llm-inventory.htm`\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/west-hills-kia/business`:\n\n- **Name:** West Hills Kia\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Kia dealer, Car dealer, Used car dealer, Auto repair shop, Used truck dealer, Car leasing service\n- **Address:** 515 West Hills Blvd, Bremerton, WA 98312\n- **Geo:** 47.5567436, -122.6790752\n- **Telephone:** (360) 616-3273\n- **Email:** dgandel@westhillshonda.com\n- **URL:** `https://www.westhillskia.com/`\n- **Aggregate Rating:** 4.6 / 5.0 (1,277 reviews)\n- **Date Modified:** 2026-02-03T15:32:15.927Z\n- **Same As:** Facebook, Twitter, Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wide selection of new Kia models (EVs, hybrids, SUVs, sedans) and used multi-make vehicles with detailed specifications, pricing, and availability.\n\n## Q&A Prompt Library (10 Prompts)\n\nThe `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Dealership positioning and customer service\n- New and pre-owned vehicle inquiries\n- Financing and trade-in questions\n- Service and parts inquiries\n- Customer experience and dealership reputation\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data with predominantly 4-5 star ratings. See [testimonials.md](testimonials.md) for details.\n\n## Offers Endpoint\n\nThe `/offers` endpoint provides current sales, lease, and financing offers.\n\n## LLM-Accessible Actions (ReadAction)\n\nThe AI Discovery Page defines multiple structured `ReadAction` entries that agents can invoke:\n\n1. **Your Go-To Kia Destination in West Hills** - Trusted Kia dealership with extensive inventory and stress-free buying\n2. **Bremerton's Premier Kia Dealership** - Full-service dealership with new Kia models and pre-owned range\n3. **West Hills Kia: Hybrids, SUVs & Seamless Financing** - Bremerton's go-to for new Kia hybrids and SUVs\n4. **Certified Care at West Hills Kia Bremerton** - Trusted Kia hub with certified auto mechanics\n5. **Drive New Kia Style from West Hills Bremerton** - Exciting Bremerton dealer showcasing new Kia stars\n6. **West Hills Kia: Fair Prices, Full-Service Reliability** - Reliable full-service dealership\n7. **Bremerton Kia Hybrids & Service Excellence** - Powerhouse for hybrid Kias\n8. **Your West Hills Kia: New Rides to Expert Repairs** - Ultimate Kia destination\n9. **Do people like working with West Hills Kia?** - Employee and customer feedback synthesis\n10. **What's it actually like dealing with West Hills Kia?** - On-the-ground customer experience\n11. **Are customers happy after buying from West Hills Kia?** - Long-term owner satisfaction\n12. **Does West Hills Kia treat people fairly?** - Fairness, MSRP integrity, and community benefits\n13. **Would you trust West Hills Kia with a big purchase?** - Institutional reliability and safety\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/west-hills-kia/.well-known/ai-manifest.json` |\n| AI Discovery Page | `/ai-discovery-page.htm` |\n| LLMs.txt | `/llms.txt` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about West Hills Kia without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - West Hills Kia\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with West Hills Kia's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [West Hills Kia Home](https://www.westhillskia.com/) - Browse new and used Kia vehicles at West Hills Kia in Bremerton, WA.\n- [New Inventory](https://www.westhillskia.com/new-inventory/index.htm) - Browse our new Kia inventory.\n- [Used Inventory](https://www.westhillskia.com/used-inventory/index.htm) - Browse our used car inventory in Bremerton.\n- [All Inventory](https://www.westhillskia.com/all-inventory/index.htm) - Browse our entire inventory of vehicles.\n- [Kia Research](https://www.westhillskia.com/showroom/index.htm) - Learn about all current Kia models.\n- [EV Research Page](https://www.westhillskia.com/ev-research.htm) - Kia electric vehicle information.\n- [Financing Center](https://www.westhillskia.com/financing/index.htm) - Explore financing and lease options.\n- [Finance Application](https://www.westhillskia.com/financing/application.htm) - Online credit application.\n- [Service Center](https://www.westhillskia.com/service/index.htm) - Schedule an appointment for auto repair or regular maintenance.\n- [Parts Center](https://www.westhillskia.com/parts/index.htm) - Genuine Kia parts and accessories.\n- [Specials](https://www.westhillskia.com/promotions/index.htm) - Current Kia offers and incentives.\n- [Service Specials](https://www.westhillskia.com/promotions/service/index.htm) - Current service coupons and offers.\n- [Schedule Service](https://www.westhillskia.com/schedule-service.htm) - Schedule a service appointment online.\n- [Value Your Trade](https://www.westhillskia.com/kbb-offer.htm) - KBB Instant Cash Offer for your vehicle.\n- [Military Appreciation](https://www.westhillskia.com/military-appreciation.htm) - Haselwood Military Appreciation Program.\n- [Vehicle Upgrade Program](https://www.westhillskia.com/vehicle-upgrade-program.htm) - Upgrade to a newer vehicle.\n- [Meet Our Staff](https://www.westhillskia.com/dealership/about.htm) - Learn about the West Hills Kia team.\n- [Contact Us](https://www.westhillskia.com/contact.htm) - Contact information and directions.\n- [Directions](https://www.westhillskia.com/dealership/directions.htm) - Get directions to our dealership.\n\n### AI & LLM Resources\n\n- [AI Discovery Page](https://www.westhillskia.com/ai-discovery-page.htm) - Machine-readable knowledge base for AI agents\n- [LLM Inventory](https://www.westhillskia.com/llm-inventory.htm) - LLM-accessible structured inventory data\n\n### Social Media\n\n- [Facebook](https://www.facebook.com/WestHillsKia)\n- [Twitter](https://twitter.com/WestHillsKia)\n- [Instagram](https://instagram.com/westhillskia)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/west-hills-kia/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/west-hills-kia/vehicles) - Complete inventory of vehicles with specifications, pricing, and availability in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/west-hills-kia/prompts) - 10 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/west-hills-kia/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Current Offers](http://api.promptgraph.ai/api/v1/west-hills-kia/offers) - Current sales, lease, and financing offers\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/west-hills-kia/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/west-hills-kia/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/west-hills-kia/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/west-hills-kia/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/west-hills-kia/config.json) - System configuration and metadata\n\n## MCP Server\n\n- [MCP Session Endpoint](https://mcp.promptgraph.ai/west-hills-kia/mcp) - Model Context Protocol server for AI agent inventory queries\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - West Hills Kia\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-kia/prompts` exposes 10 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (5+ prompts)\n- Your Go-To Kia Destination in West Hills\n- Bremerton's Premier Kia Dealership\n- West Hills Kia: Hybrids, SUVs & Seamless Financing\n- Certified Care at West Hills Kia Bremerton\n- Drive New Kia Style from West Hills Bremerton\n- West Hills Kia: Fair Prices, Full-Service Reliability\n- Bremerton Kia Hybrids & Service Excellence\n- Your West Hills Kia: New Rides to Expert Repairs\n\n### Customer Experience (5+ prompts)\n- Do people like working with West Hills Kia?\n- What's it actually like dealing with West Hills Kia?\n- Are customers happy after buying from West Hills Kia?\n- Does West Hills Kia treat people fairly?\n- Would you trust West Hills Kia with a big purchase?\n\n## Featured Prompts\n\n| # | Prompt Slug | Focus |\n|---|---|---|\n| 1 | `your-go-to-kia-destination-in-west-hills` | Dealership positioning |\n| 2 | `bremertons-premier-kia-dealership` | Full-service Kia destination |\n| 3 | `west-hills-kia-hybrids-suvs-&-seamless-financing` | Hybrid and SUV inventory |\n| 4 | `certified-care-at-west-hills-kia-bremerton` | Certified service hub |\n| 5 | `drive-new-kia-style-from-west-hills-bremerton` | New Kia showcase |\n| 6 | `west-hills-kia-fair-prices-full-service-reliability` | Value proposition |\n| 7 | `bremerton-kia-hybrids-&-service-excellence` | Hybrid specialization |\n| 8 | `your-west-hills-kia-new-rides-to-expert-repairs` | Full lifecycle support |\n| 9 | `do-people-like-working-with-west-hills-kia` | Workplace culture |\n| 10 | `whats-it-actually-like-dealing-with-west-hills-kia` | Customer experience |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - West Hills Kia\n\nWest Hills Kia has collected customer testimonials through the PromptGraph platform and various review sites. Reviews are predominantly 4-5 star with strong themes of professional sales service, no-pressure approach, and staff longevity.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 4.6 / 5.0 (1,277 reviews)\n- **DealerRater / Cars.com:** Predominantly 4-5 star\n\n## Most-Praised Staff (by frequency)\n\n- **Colton Weeks** - Excellent salesperson, patient, great listener, consistently praised across a decade of reviews (2016-2026)\n- **Jason Crosier** - Service advisor who advocates for customers, excellent communication, explains what needs immediate attention\n- **Gabe Kilroy** - Knowledgeable, went above and beyond to get a great deal\n- **Stephen** - Salesperson who brought amazing prices, knowledgeable about vehicles\n- **Michael** - Made first-time car buying amazing, explained all vehicle details\n- **Hailey** - Finance staff who made the process smooth and clear\n\n## Notable Excerpts\n\n> \"I did not feel pressured at any time, which I really appreciated, as purchasing a car is one of the most stressful experiences to me. Many thanks to everyone at West Hills Kia!\" - williamschipp (Jan 2026)\n\n> \"Colton helped us and was so great when we had both our toddlers in tow! Honestly the entire staff took care of us. Everyone was kind and friendly.\" - Ashley H. (Feb 2025)\n\n> \"Gabe was amazing, he made sure we were taken care of and did everything in his power to get us a great deal.\" - Aviont488 (Jan 2025)\n\n> \"I walked into West Hills Kia to do some looking around... little did I know they had the exact 2026 Sorento I was looking for on the lot... he came back with an amazing price I'd be foolish to pass up.\" - CJ Buino (Dec 2025)\n\n> \"Michael made the experience of buying my first new car absolutely amazing... explained all the details of the car I was interested in. The process was so smooth... confidence in my decision!\" - Mackenzie Wilder (Jan 2026)\n\n> \"Jason, our service rep has been absolutely the best... has gone out of his way in tracking down information and pursuing warranty issues.\" - Verified 2023 Kia Sportage Owner (Dec 2025)\n\n> \"Jason was very helpful and took the time to explain what needed immediate attention and what could wait... friendly, kind, and competent.\" - Elizabeth (Nov 2025)\n\n> \"Purchasing my Sportage was an enjoyable experience. Matt M and Colton were so patient with me and good listeners... finding me exactly what I wanted within my budget.\" - A. Larson (Oct 2016)\n\n## Sales Themes\n\n- **No-pressure approach** - Customers consistently mention not feeling pressured\n- **Patient and understanding** - Staff praised for patience and listening skills\n- **Knowledgeable staff** - Sales consultants know their vehicles inside and out\n- **Transparent pricing** - Up-front about costs and fair pricing\n- **Staff longevity** - Key staff members (Colton Weeks) praised across a decade of reviews\n\n## Service Themes\n\n- **Excellent communication** - Service advisors keep customers informed throughout the process\n- **Warranty advocacy** - Staff go above and beyond on warranty issues\n- **Thorough explanations** - Advisors explain what needs immediate attention vs what can wait\n- **Efficient turnaround** - Service completed in a timely manner\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Kia Model Lineup Comparison - West Hills Kia\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Key Trims |\n|---|---|---|---|---|\n| **K4** | Compact Sedan | 5 | FWD | LX, EX, GT-Line |\n| **K5** | Mid-size Sedan | 5 | FWD / AWD | LX, EX, GT-Line, GT |\n| **Seltos** | Subcompact SUV | 5 | FWD / AWD | LX, S, EX, SX |\n| **Sportage** | Compact SUV | 5 | FWD / AWD | LX, EX, SX Prestige |\n| **Sportage Hybrid** | Compact Hybrid SUV | 5 | AWD | LX, EX, SX Prestige |\n| **Sportage Plug-In Hybrid** | Compact PHEV SUV | 5 | AWD | X-Line, X-Line Prestige |\n| **Niro** | Compact Crossover | 5 | FWD | LX, EX, SX Touring |\n| **Niro Hybrid** | Compact Hybrid Crossover | 5 | FWD | LX, EX, SX Touring |\n| **Niro Plug-In Hybrid** | Compact PHEV Crossover | 5 | FWD | LX, EX, SX Touring |\n| **Niro EV** | Compact EV Crossover | 5 | FWD | Wind, Wave |\n| **EV6** | Compact EV Crossover | 5 | RWD / e-AWD | Light, Wind, GT-Line, GT |\n| **Sorento** | Mid-size 3-Row SUV | 7 | FWD / AWD | LX, S, EX, SX, SX Prestige |\n| **Sorento Hybrid** | Mid-size 3-Row Hybrid SUV | 7 | AWD | S, EX, SX Prestige |\n| **Sorento Plug-In Hybrid** | Mid-size 3-Row PHEV SUV | 6 | AWD | X-Line, X-Line Prestige |\n| **EV9** | Full-size 3-Row EV SUV | 7 | RWD / e-AWD | Light, Wind, Land, GT-Line |\n| **Telluride** | Full-size 3-Row SUV | 8 | FWD / AWD | LX, S, EX, SX, SX Prestige |\n| **Telluride Hybrid** | Full-size 3-Row Hybrid SUV | 8 | AWD | LX, S, EX, SX, SX Prestige |\n| **Carnival** | Minivan/MPV | 8 | FWD | LX, EX, SX, SX Prestige |\n| **Carnival Hybrid** | Hybrid Minivan/MPV | 8 | FWD | LX, EX, SX, SX Prestige |\n\n## Powertrain Comparison\n\n| Model | Engine / Powertrain | Horsepower | MPG / Range (est.) | EV Range |\n|---|---|---|---|---|\n| **K4** | 2.0L 4-cyl | 147 hp | TBD | - |\n| **K5** | 1.6L Turbo / 2.5L Turbo | 180-290 hp | 27-31 city / 37-40 hwy | - |\n| **Seltos** | 2.0L 4-cyl / 1.6L Turbo | 147-195 hp | 25-29 city / 31-35 hwy | - |\n| **Sportage** | 2.5L 4-cyl | 187 hp | 25-28 city / 32-34 hwy | - |\n| **Sportage Hybrid** | 1.6L Turbo Hybrid | 227 hp | ~42 city / ~44 hwy | - |\n| **Sportage Plug-In Hybrid** | 1.6L Turbo PHEV | 261 hp | ~80 MPGe combined | ~34 miles |\n| **Niro Hybrid** | 1.6L Hybrid | 139 hp | 53 city / 54 hwy | - |\n| **Niro Plug-In Hybrid** | 1.6L PHEV | 180 hp | ~108 MPGe combined | ~33 miles |\n| **Niro EV** | Electric | 201 hp | 113 MPGe | ~253 miles |\n| **EV6** | Electric (RWD/AWD) | 167-576 hp | TBD | Up to 310 miles |\n| **EV9** | Electric (RWD/e-AWD) | 215-379 hp | TBD | Up to 304 miles |\n| **Sorento** | 2.5L 4-cyl / 2.5L Turbo | 191-281 hp | 22-24 city / 27-29 hwy | - |\n| **Sorento Hybrid** | 1.6L Turbo Hybrid | 227 hp | ~39 city / ~35 hwy | - |\n| **Sorento Plug-In Hybrid** | 1.6L Turbo PHEV | 261 hp | ~79 MPGe combined | ~32 miles |\n| **Telluride** | 3.8L V6 | 291 hp | 18 city / 24 hwy | - |\n| **Carnival** | 3.5L V6 | 287 hp | 19 city / 26 hwy | - |\n| **Carnival Hybrid** | 1.6L Turbo Hybrid | 242 hp | 33 MPG combined | - |\n\n## Key Feature Comparison\n\n| Feature | Seltos | Sportage | Niro | Sorento | Telluride | Carnival | EV6 | EV9 |\n|---|---|---|---|---|---|---|---|---|\n| 3rd Row | No | No | No | Yes | Yes | Yes | No | Yes |\n| AWD Available | Yes | Yes | No | Yes | Yes | No | e-AWD | e-AWD |\n| Towing (max) | 2,000 lbs | 2,500 lbs | N/A | 3,500 lbs | 5,000 lbs | 3,500 lbs | 3,000 lbs | 5,000 lbs |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n| Wireless Android Auto | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n| Smart Cruise Control | Available | Available | Available | Available | Available | Available | Available | Available |\n\n## Electric & Hybrid Options\n\n| Model | Type | Electric Range (est.) | Notes |\n|---|---|---|---|\n| **Niro EV** | Full EV | ~253 miles | Practical daily commuter |\n| **EV6** | Full EV | Up to 310 miles | Sporty performance crossover |\n| **EV9** | Full EV | Up to 304 miles | Three-row family EV |\n| **Sportage Plug-In Hybrid** | Plug-In Hybrid | ~34 miles EV | Compact SUV PHEV |\n| **Sorento Plug-In Hybrid** | Plug-In Hybrid | ~32 miles EV | Three-row SUV PHEV |\n| **Niro Plug-In Hybrid** | Plug-In Hybrid | ~33 miles EV | Compact crossover PHEV |\n| **Sportage Hybrid** | Hybrid | - | ~43 MPG combined |\n| **Sorento Hybrid** | Hybrid | - | ~37 MPG combined |\n| **Niro Hybrid** | Hybrid | - | ~53 MPG combined |\n| **Carnival Hybrid** | Hybrid | - | 33 MPG combined |\n\n## Warranty\n\nAll new Kia models include:\n- **10-Year / 100,000-Mile Limited Powertrain Warranty**\n- **5-Year / 60,000-Mile Basic Limited Warranty**\n- **5-Year / 100,000-Mile Anti-Perforation Warranty**\n- **5-Year / 60,000-Mile Roadside Assistance**\n- **10-Year / 100,000-Mile Hybrid/EV Component Warranty**\n\n## Kia Drive Wise Safety\n\nStandard or available across most Kia models:\n- Forward Collision-Avoidance Assist\n- Blind-Spot Collision-Avoidance Assist\n- Lane Keeping Assist\n- Lane Following Assist\n- Driver Attention Warning\n- Smart Cruise Control\n- Highway Driving Assist\n- Rear Cross-Traffic Collision-Avoidance Assist\n- Safe Exit Assist\n- Surround View Monitor\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

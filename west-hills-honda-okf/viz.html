@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>west-hills-honda - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "west-hills-honda";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "West Hills Honda",
+        "type": "Entities",
+        "description": "Honda dealership in Bremerton, WA serving Kitsap County including Port Orchard, Silverdale, Poulsbo, Kingston, and Tacoma with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.westhillshonda.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - West Hills Honda",
+        "type": "Entities",
+        "description": "Common questions about West Hills Honda's inventory, financing, service, and dealership operations in Bremerton, WA.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-honda/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Honda Models - West Hills Honda",
+        "type": "Entities",
+        "description": "New Honda model lineup available at West Hills Honda in Bremerton, WA including Civic, Accord, CR-V, Pilot, Odyssey, HR-V, Passport, Ridgeline, Prologue, and hybrid/electric variants.",
+        "resource": "https://www.westhillshonda.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - West Hills Honda",
+        "type": "Entities",
+        "description": "Honda-certified service center in Bremerton, WA offering routine maintenance, diagnostics, major repairs, genuine Honda OEM parts, and Honda Express Service.",
+        "resource": "https://www.westhillshonda.com/service/center.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - West Hills Honda",
+        "type": "Entities",
+        "description": "Sales, service, and management staff directory for West Hills Honda in Bremerton, WA, compiled from customer reviews, the dealership website, and PromptGraph data.",
+        "resource": "https://www.westhillshonda.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles - West Hills Honda",
+        "type": "Entities",
+        "description": "Large pre-owned inventory at West Hills Honda in Bremerton, WA, spanning multiple makes and models with HondaTrue certification and competitive pricing.",
+        "resource": "https://www.westhillshonda.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - West Hills Honda",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for West Hills Honda, providing AI agents structured access to business info, inventory, site content, and recommended actions via PromptGraph.",
+        "resource": "https://www.westhillshonda.com/llms-content.htm",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - West Hills Honda",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for West Hills Honda.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-honda/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - West Hills Honda",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 29 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info for West Hills Honda.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-honda/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - West Hills Honda",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews collected via PromptGraph API for West Hills Honda in Bremerton, WA, with predominantly 5-star testimonials highlighting sales and service experiences.",
+        "resource": "https://api.promptgraph.ai/api/v1/west-hills-honda/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Honda Model Lineup Comparison - West Hills Honda",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Honda models available at West Hills Honda in Bremerton, WA, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.westhillshonda.com/showroom/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# West Hills Honda\n\nWest Hills Honda is a full-service Honda dealership located at **520 W Hills Blvd, Bremerton, WA 98312**, serving the greater Kitsap County area including Port Orchard, Silverdale, Poulsbo, Kingston, and the Olympic Peninsula. Part of the **Haselwood Auto Group** and the **West Hills Autoplex**.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Main | (360) 616-3274 |\n| Sales | 360-728-3071 |\n| Service | 360-728-3072 |\n| Parts | 360-728-3075 |\n\nEmail: gsjones.haselwood@gmail.com\n\n## Hours\n\n| Day | Sales | Service / Parts |\n|---|---|---|\n| Monday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM |\n| Tuesday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM |\n| Wednesday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM |\n| Thursday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM |\n| Friday | 9:00 AM - 8:00 PM | 7:30 AM - 7:00 PM |\n| Saturday | 9:00 AM - 8:00 PM | 8:00 AM - 4:00 PM |\n| Sunday | 10:00 AM - 7:00 PM | Closed |\n\n## Location\n\n- **Address:** 520 W Hills Blvd, Bremerton, WA 98312\n- **Geo:** 47.5567767, -122.6778507\n\n## New Vehicles\n\nHonda models available include:\n- **Civic** - Compact sedan and hatchback, available in LX, Sport, EX, Touring, Si, and Type R trims\n- **Civic Hybrid** - Hybrid compact sedan and hatchback\n- **Accord** - Mid-size sedan, available in LX, EX, EX-L, and Sport trims\n- **Accord Hybrid** - Hybrid mid-size sedan\n- **CR-V** - Compact SUV, Honda's best-selling SUV, available in LX, EX, EX-L, and Sport Touring trims\n- **CR-V Hybrid** - Hybrid compact SUV\n- **HR-V** - Subcompact crossover SUV, available in LX, Sport, and EX-L trims\n- **Pilot** - Mid-size 3-row SUV, available in LX, EX-L, Sport, TrailSport, Touring, and Elite trims\n- **Passport** - Mid-size 2-row SUV, available in EX-L, Sport, TrailSport, Black Edition trims\n- **Odyssey** - Minivan, available in EX, EX-L, Sport, Touring, and Elite trims\n- **Ridgeline** - Mid-size pickup truck, available in RT, RTL, and Black Edition trims\n- **Prologue** - All-electric crossover SUV, available in EX, Touring, and Elite trims\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, vehicle upgrade program\n- **Service Center** - Honda-certified technicians, routine maintenance, diagnostics, major repairs, genuine Honda parts, Honda Express Service\n- **Parts Department** - Genuine Honda components, accessories, tires\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned)\n- Online service scheduling\n- Online credit application and pre-approval\n- Car payment calculator\n- Click-N-Drive online purchasing\n- Test Drive at Home program\n- Video Walkaround service\n- Maintenance Pick-Up service\n- Trade-in appraisal (KBB Instant Cash Offer)\n\n## Staff\n\nSee [staff.md](staff.md) for full directory.\n\n## Reviews & Reputation\n\n- Aggregate rating: 4.6 / 5.0 (2,019 reviews) across major platforms\n- Google Business Profile: 4.6 stars (2,000+ reviews)\n- BBB Accredited since 2020, A+ rating\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **West Hills Advantage** - Lifetime Powertrain Warranty on new vehicle purchases\n- **West Hills Autoplex** - Multi-dealership campus with access to thousands of vehicles and multiple lenders\n- **The Haselwood Difference** - Values-based business prioritizing relationships over transactions\n- **Military Appreciation** - Dedicated incentives and streamlined car-buying for service members near Naval Base Kitsap\n- **Click-N-Drive** - Online purchasing with home delivery\n- **Test Drive at Home** - Convenient at-home test drives\n- **HondaTrue Certified Pre-Owned** - 7-year/100,000-mile powertrain warranty\n\n## Affiliations\n\n- Part of the **Haselwood Auto Group**\n- Part of the **West Hills Autoplex**\n- Website powered by **Dealer.com**\n- Connected via **PromptGraph** AI platform",
+    "datasets/faq": "# Frequently Asked Questions - West Hills Honda\n\n## Inventory\n\n**Q: What new Honda models are available at West Hills Honda?**\nA: The full Honda lineup including Civic, Civic Hybrid, Accord, Accord Hybrid, CR-V, CR-V Hybrid, HR-V, Pilot, Passport, Odyssey, Ridgeline, and Prologue (all-electric).\n\n**Q: What brands are available in the used vehicle inventory?**\nA: The pre-owned inventory spans multiple makes including Honda, Toyota, Ford, Chevrolet, Nissan, BMW, Lexus, Tesla, and others.\n\n**Q: Does West Hills Honda offer certified pre-owned vehicles?**\nA: Yes, HondaTrue Certified Pre-Owned vehicles are available with factory-backed inspections, 7-year/100,000-mile powertrain warranty, and 24/7 roadside assistance.\n\n**Q: Where can I quickly compare prices on used Honda HR-Vs close by?**\nA: Browse the online used inventory at West Hills Honda's website which offers detailed pricing and filtering for all pre-owned models.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs. The dealership works with a network of lenders through the West Hills Autoplex.\n\n**Q: Who provides the most transparent financing options for buying a new vehicle locally?**\nA: West Hills Honda offers transparent pricing and financing through the finance center with online credit approval options.\n\n**Q: Which dealership locally offers the best lease specials on a Honda Civic?**\nA: West Hills Honda offers competitive lease specials on Honda Civic and other models. Contact the finance center for current offers.\n\n## Service\n\n**Q: Can the service center work on non-Honda vehicles?**\nA: Yes, the service center can perform maintenance and repairs on various makes and models.\n\n**Q: Does the dealership offer Honda Express Service?**\nA: Yes, Honda Express Service provides quick in-and-out maintenance without an appointment.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the dealership website.\n\n**Q: Do you offer shuttle service?**\nA: Yes, shuttle service up to 15 miles from the dealership is available.\n\n**Q: Are there any highly recommended service centers close by that use genuine Honda parts?**\nA: West Hills Honda Service Center uses only Genuine Honda Parts and employs factory-trained technicians.\n\n## Dealership\n\n**Q: Where is West Hills Honda located?**\nA: 520 W Hills Blvd, Bremerton, WA 98312, serving Kitsap County including Port Orchard, Silverdale, Poulsbo, Kingston, and Tacoma.\n\n**Q: What is the West Hills Autoplex?**\nA: West Hills Honda is part of the West Hills Autoplex, a multi-dealership campus offering access to thousands of vehicles and a network of lenders.\n\n**Q: What is the Haselwood Difference?**\nA: The Haselwood Difference is a values-based approach prioritizing relationships over transactions, aiming for lifetime customers rather than one-time sales.\n\n**Q: Does West Hills Honda offer military incentives?**\nA: Yes, the dealership offers dedicated military incentives and a streamlined car-buying process for service members near Naval Base Kitsap.\n\n**Q: What is the West Hills Advantage?**\nA: The West Hills Advantage includes a Lifetime Powertrain Warranty on new vehicle purchases.\n\n**Q: Does the dealership offer home delivery?**\nA: Yes, home delivery is available through the Click-N-Drive online purchasing program.\n\nSee [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/new-vehicles": "# New Honda Models - West Hills Honda\n\nWest Hills Honda carries a full lineup of new Honda vehicles. Below is a summary of available models and trims.\n\n## Cars\n\n### Honda Civic\nCompact sedan and hatchback, available in LX, Sport, EX, Touring, Si, and Type R trims. Features the 2.0L 4-cylinder or 1.5L turbo engine with CVT or 6-speed manual. Available in FWD. Seats 5 passengers. Honda Sensing safety suite standard.\n\n### Honda Civic Hybrid\nHybrid compact sedan and hatchback combining efficiency with Civic sportiness. Available in Sport and Sport Touring trims.\n\n### Honda Accord\nMid-size sedan available in LX, EX, EX-L, and Sport trims. Features the 1.5L turbo 4-cylinder or 2.0L turbo engine with CVT. Available in FWD. Wireless Apple CarPlay and Android Auto standard.\n\n### Honda Accord Hybrid\nHybrid mid-size sedan with exceptional fuel economy. Available in EX-L, Sport, and Touring trims.\n\n### Honda Civic Si\nPerformance-oriented compact sedan with 1.5L turbo engine, sport-tuned suspension, and limited-slip differential.\n\n### Honda Civic Type R\nHigh-performance hatchback with 2.0L turbo engine, track-tuned chassis, and aggressive aerodynamics.\n\n## SUVs & Crossovers\n\n### Honda CR-V\nCompact SUV, Honda's best-selling SUV. Available in LX, EX, EX-L, and Sport Touring trims. Features the 1.5L turbo engine with CVT. Available in FWD and AWD. Seats 5 passengers.\n\n### Honda CR-V Hybrid\nHybrid compact SUV with exceptional fuel economy. Available in Sport and Sport Touring trims.\n\n### Honda HR-V\nSubcompact crossover SUV available in LX, Sport, and EX-L trims. Features the 2.0L 4-cylinder engine with CVT. Available in FWD and AWD.\n\n### Honda Pilot\nMid-size 3-row SUV seating up to 8 passengers. Available in LX, EX-L, Sport, TrailSport, Touring, and Elite trims. Powered by a 3.5L V6 engine with 10-speed automatic transmission. Available in FWD and AWD. Towing capacity up to 5,000 lbs.\n\n### Honda Passport\nMid-size 2-row SUV available in EX-L, Sport, TrailSport, and Black Edition trims. Powered by a 3.5L V6 engine with 10-speed automatic transmission. Available in AWD. Off-road capable TrailSport trim.\n\n### Honda Prologue\nAll-electric crossover SUV available in EX, Touring, and Elite trims. Powered by a 85 kWh battery with up to 296 miles estimated range. Available in FWD and AWD (dual motor). The first all-electric SUV from Honda.\n\n## Minivan\n\n### Honda Odyssey\nMinivan seating up to 8 passengers. Available in EX, EX-L, Sport, Touring, and Elite trims. Powered by a 3.5L V6 engine with 10-speed automatic transmission. Magic Slide second-row seats and Honda CabinWatch.\n\n## Trucks\n\n### Honda Ridgeline\nMid-size pickup truck with unibody construction. Available in RT, RTL, and Black Edition trims. Powered by a 3.5L V6 engine with 9-speed automatic transmission. Available in AWD. In-bed trunk and dual-action tailgate.\n\n## Hybrid & Electric Vehicles\n\n- **Civic Hybrid** - Compact hybrid sedan and hatchback\n- **Accord Hybrid** - Mid-size hybrid sedan\n- **CR-V Hybrid** - Compact hybrid SUV\n- **Prologue** - All-electric crossover SUV, up to 296 miles range\n\n## Special Editions & Performance\n\n- **TrailSport** - Off-road oriented trims available on Pilot and Passport\n- **Black Edition** - Premium appearance package on Passport and Ridgeline\n- **Type R** - High-performance Civic hatchback\n- **Si** - Sport-tuned Civic sedan\n\n## Promotions & Offers\n\nPromotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.\n\n## The West Hills Advantage\n\nNew vehicle purchases include the **Lifetime Powertrain Warranty**, setting the dealership apart from standard competitors.\n\nSee [dealership.md](dealership.md) for contact information and current programs.\nSee [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - West Hills Honda\n\nThe West Hills Honda Service Center provides certified maintenance and repair services at 520 W Hills Blvd, Bremerton, WA.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work\n- **Honda Express Service** - Quick in-and-out maintenance without an appointment\n- **Honda Recalls** - OEM-specified recall and campaign work\n- **Tire Replacement and Alignment** - Full tire services including tire wear evaluation\n- **Battery Service** - Battery testing and replacement\n- **Brake Service** - Pad replacement, rotor replacement, brake system inspection\n- **Scheduled Maintenance** - Following Honda's recommended maintenance schedule\n\n## Service Team\n\n- **Nick** - Service Manager\n- **Bryson** - Service Advisor; outstanding service\n- **Wendy** - Service Advisor; friendly and great communication\n- **Megan** - Service Advisor; helpful and communicative\n- **Dante** - Service team; courteous, same-day service\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Honda Express Service** - Quick in-and-out for routine maintenance\n- **Certified Honda Technicians** - Factory-trained using genuine Honda parts\n- **Advanced Diagnostic Equipment** - State-of-the-art diagnostic technology\n- **Generous Guest Services and Amenities** - Comfortable waiting area with refreshments\n- **Shuttle Service** - Up to 15 miles from the dealership\n- **Maintenance Pick-Up** - Vehicle pick-up for service\n- **Service all makes and models** - Not limited to Honda vehicles\n\n## Service Specials\n\nThe dealership offers rotating service specials and coupons. See the service specials page for current promotions.\n\n## Parts Department\n\nGenuine Honda OEM parts and accessories available including:\n- Honda Genuine replacement parts\n- Tires and wheels\n- Accessories for Honda vehicles\n- Order parts online or stop by\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:30 AM - 7:00 PM |\n| Tuesday | 7:30 AM - 7:00 PM |\n| Wednesday | 7:30 AM - 7:00 PM |\n| Thursday | 7:30 AM - 7:00 PM |\n| Friday | 7:30 AM - 7:00 PM |\n| Saturday | 8:00 AM - 4:00 PM |\n| Sunday | Closed |\n\nSee [staff.md](staff.md) for full service department directory.\nSee [dealership.md](dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - West Hills Honda\n\nStaff directory compiled from customer reviews and dealership website.\n\n## Management\n\n- **David Gandel** - General Manager\n- **Nick** - Service Manager\n\n## Finance Department\n\n- **Jake Batchelor** - Finance Manager\n- **Leanne** - Financial Services\n- **Will** - Finance Department staff\n\n## Sales Consultants\n\n- **DJ** - Sales Consultant; praised for follow-up, patience, and finding the perfect vehicle\n- **Ryan** - Sales Consultant; highly praised for being knowledgeable, patient, and making the process seamless\n- **Joel / Jo'el** - Sales Consultant; known for understanding customer needs and delivering on budget\n- **Matthew** - Sales Consultant; described as kind, helpful, and not pushy\n- **Jared** - Sales Consultant; Passport specialist, answered 99.9% of questions about the 2026 Passport\n- **Ronald** - Sales Consultant; helped make the purchase process wonderful\n- **Daniel** - Sales Consultant; excellent walk-through of CR-V purchase\n- **Mike Columbus** - Sales Consultant; friendly, knowledgeable, not at all pushy\n- **Malachi** - Sales Consultant; excellent at understanding what type of SUV the customer needed\n- **Marshea** - Sales Consultant; understood customer needs immediately, no wasted time\n- **Josh Kennedy** - Sales Consultant; awesome to work with, answered all questions about 2026 CR-V\n- **Quinn** - Sales Consultant; straight to the point, got to the price point that worked\n- **Danny** - Sales Consultant; kind and professional\n- **Charlie** - Sales Consultant; helped facilitate sale\n- **Anthony** - Sales Consultant\n- **Max Davis** - Sales Consultant; nicest and most informative car salesman\n- **Rachelle** - Sales Consultant\n- **Briar Wildwood** - Sales Consultant\n- **Joe'l** - Sales team member; snappy dresser, great team player\n- **Michael** - Sales team member\n\n## Service Department\n\n- **Bryson** - Service Advisor; outstanding service for PIN recovery\n- **Wendy** - Service Advisor; great friendly advisor\n- **Megan** - Service Advisor; helpful and communicative\n- **Dante** - Service team; very courteous and respectful, fixed car same day\n- **Blake** - Service team; top notch to work with\n- **Rob** - Service team; top notch to work with\n\n## Parts Department\n\nParts team members available on-site. Contact the parts department at 360-728-3075.\n\n## Staff Praised in Reviews (by frequency)\n\n- **DJ** - Most frequently praised for follow-up, patience, and deal-making\n- **Ryan** - Frequently praised for making the process seamless\n- **Jared** - Praised as the \"Passport Specialist\"\n- **Joel / Jo'el** - Praised for understanding needs\n- **Matthew** - Praised for being kind and unhurried\n\nSee [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Pre-Owned and Certified Pre-Owned Vehicles - West Hills Honda\n\nWest Hills Honda maintains a substantial pre-owned vehicle inventory in the Bremerton area with a wide selection spanning multiple makes and models.\n\n## Inventory Scope\n\n- **Total vehicles:** Extensive inventory across new and pre-owned (945+ vehicles in database)\n- **Multi-make selection** spanning Honda, Toyota, Ford, Chevrolet, Nissan, BMW, Lexus, Tesla, and more\n- **Price range:** Broad range from under $10,000 to premium vehicles\n- **Vehicle types:** Sedans, SUVs, trucks, vans, and coupes\n- **Daily fresh inventory** with regular turnover\n- **Vehicles Under $20k** - Dedicated selection of affordable pre-owned vehicles\n\n## Quality Assurance\n\n- **HondaTrue Certified Pre-Owned** - Factory-backed inspection with 7-year/100,000-mile powertrain warranty\n- **Multi-Point Inspection** - All pre-owned vehicles inspected by certified technicians\n- **Vehicle History Reports** - Transparent vehicle history available\n- **Extended Warranty Options** - Available for most vehicles\n\n## Certified Pre-Owned Program\n\nHondaTrue Certified Pre-Owned vehicles undergo rigorous inspection and include:\n- 7-year/100,000-mile powertrain warranty\n- 24/7 roadside assistance\n- Multi-point inspection by certified Honda technicians\n- Honda factory-backed quality standards\n- Competitive pricing with transparent value\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- KBB Instant Cash Offer (Sell or Trade)\n- Click-N-Drive online purchasing\n- Car payment calculator\n- Online credit application and pre-approval\n- Test Drive at Home program\n- Home delivery options\n\n## Trade-In\n\n- KBB Instant Cash Offer available online\n- Trade-in appraisal at the dealership\n- Competitive trade-in values\n- Cash offers for trade-ins (even without vehicle purchase)\n\n## Sell Your Vehicle\n\nWest Hills Honda will buy your vehicle whether you purchase from them or not. Fast, complimentary appraisal through KBB Instant Cash Offer.\n\nSee [dealership.md](dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Page - West Hills Honda\n\nWest Hills Honda is connected via the **PromptGraph** AI platform built on the **Dealer.com** platform. The site exposes structured, machine-readable knowledge surfaces for AI agents through PromptGraph API endpoints.\n\nNote: The standard AI Discovery Page (`/ai-discovery-page.htm`) is not available on this website. AI resources are accessible via the PromptGraph API and the `/llms-content.htm` page.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of all AI resources:\n\n- **Last updated:** 2026-07-01T12:28:54.572Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n- **Contact:** gsjones.haselwood@gmail.com\n\nThe AI Manifest is accessible via PromptGraph at the API endpoint.\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-honda` exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD, 945+ vehicles) |\n| `/prompts` | Q&A / FAQ prompts (29 prompts) |\n| `/testimonials` | Customer reviews |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Full sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n\n### Additional Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the entire site |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/west-hills-honda/business`:\n\n- **Name:** West Hills Honda\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Honda dealer, Car dealer, Truck dealer, Used car dealer, Used truck dealer, Car leasing service\n- **Address:** 520 West Hills Blvd., Bremerton, WA 98312\n- **Geo:** 47.5567767, -122.6778507\n- **Telephone:** (360) 616-3274\n- **Email:** gsjones.haselwood@gmail.com\n- **URL:** `https://www.westhillshonda.com/`\n- **Aggregate Rating:** 4.6 / 5.0 (2,019 reviews)\n- **Date Modified:** 2026-02-03T15:09:05.943Z\n- **Same As:** Facebook, Instagram, Google Maps\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wide selection of new Honda models and used multi-make vehicles (945+ vehicles in database) with detailed specifications, pricing, and availability.\n\n## Q&A Prompt Library (29 Prompts)\n\nThe `/prompts` endpoint exposes 29 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:\n\n- Vehicle shopping and model-specific inquiries\n- Financing, leasing, and trade-in questions\n- Service, parts, and warranty inquiries\n- Dealership information and customer support\n- HondaTrue Certified Pre-Owned program\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](testimonials.md) for details.\n\n## LLM-Accessible Actions (Prompts)\n\nThe PromptGraph library defines 29 structured prompts covering:\n1. **Your Trusted Honda Destination in Bremerton, WA** - Full-service Honda dealership positioning\n2. **Quality Cars & Exceptional Service at West Hills Honda** - Sales and service experience\n3. **Drive With Confidence: West Hills Honda Community Focus** - Community-oriented dealership\n4. **Award-Winning Honda Excellence with a Lifetime Advantage** - Lifetime Powertrain Warranty\n5. **Dedicated Service for Our Bremerton Military Heroes** - Military incentives near Naval Base Kitsap\n6. **The Gold Standard for Honda Certified Pre-Owned Vehicles** - CPO program\n7. **Local Service with Global Inventory Power** - West Hills Autoplex benefits\n8. **Factory-Certified Honda Service You Can Rely On** - Service department and Express Service\n9. **Professionalism and Integrity: The Haselwood Difference** - Values-based business approach\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/west-hills-honda/.well-known/ai-manifest.json` |\n| LLMs.txt | `/llms.txt` |\n| LLMs Content Page | `/llms-content.htm` |\n| Robots.txt | `/robots.txt` |\n| Sitemap XML | `/sitemap.xml` |\n\n## Purpose\n\nThis page exists to give AI agents direct access to structured knowledge about West Hills Honda without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.\nSee [testimonials.md](testimonials.md) for customer review data.",
+    "references/llms-txt": "# LLMs.txt - West Hills Honda\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with West Hills Honda's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [West Hills Honda Home](https://www.westhillshonda.com/) - Visit West Hills Honda for all of your Honda needs in Bremerton, WA. Shop cars for sale, browse lease deals, or schedule service.\n- [New Inventory](https://www.westhillshonda.com/new-inventory/index.htm) - Browse our selection of Honda cars for sale in Bremerton, WA.\n- [Used Inventory](https://www.westhillshonda.com/used-inventory/index.htm) - Used cars for sale in Bremerton, WA.\n- [Service Center](https://www.westhillshonda.com/service/center.htm) - Schedule an appointment for auto repair or regular maintenance.\n- [Parts Center](https://www.westhillshonda.com/parts/index.htm) - Genuine Honda parts and accessories.\n- [Schedule Service](https://www.westhillshonda.com/schedule-service.htm) - Online service scheduling.\n- [Finance Center](https://www.westhillshonda.com/financing/index.htm) - Explore financing and lease options.\n- [Online Credit Approval](https://www.westhillshonda.com/financing/application.htm) - Online credit application.\n- [Specials](https://www.westhillshonda.com/promotions/new/listing.htm) - Current Honda offers and incentives.\n- [Service Specials](https://www.westhillshonda.com/promotions/service/index.htm) - Current service coupons and offers.\n- [Contact Us](https://www.westhillshonda.com/contact.htm) - Contact information, hours, and directions.\n- [Showroom](https://www.westhillshonda.com/showroom/index.htm) - Research new Honda models.\n- [EV Hub](https://www.westhillshonda.com/ev-hub.htm) - Honda electric vehicle information including Prologue, Accord Hybrid, Civic Hybrid, CR-V Hybrid.\n\n### AI & LLM Resources\n\n- [LLMs Content Page](https://www.westhillshonda.com/llms-content.htm) - Machine-readable content for AI agents\n\n### Service Location Pages\n\n- [Honda Service Center in Bremerton WA](https://www.westhillshonda.com/honda-service-center-bremerton-wa.htm) - Vehicle service including oil changes, tire service, brake service, and more.\n- [Honda Oil Change in Bremerton WA](https://www.westhillshonda.com/honda-oil-change-bremerton-wa.htm) - Schedule your Honda Oil Change.\n- [Honda Tire Service in Bremerton WA](https://www.westhillshonda.com/honda-tire-service-bremerton-wa.htm) - Schedule your Honda Tire Service.\n- [Honda Brake Service in Bremerton WA](https://www.westhillshonda.com/honda-brake-service-bremerton-wa.htm) - Schedule your Honda Brake Service.\n- [Honda Battery Service in Bremerton WA](https://www.westhillshonda.com/honda-battery-service-bremerton-wa.htm) - Schedule your Honda Battery Service.\n\n### Social Media\n\n- [Facebook](https://www.facebook.com/whillshonda/)\n- [Instagram](https://www.instagram.com/westhillshonda/)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/west-hills-honda/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/west-hills-honda/vehicles) - Complete inventory of vehicles with specifications, pricing, and availability in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/west-hills-honda/prompts) - 29 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/west-hills-honda/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/west-hills-honda/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/west-hills-honda/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/west-hills-honda/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/west-hills-honda/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/west-hills-honda/config.json) - System configuration and metadata\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - West Hills Honda\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-honda/prompts` exposes 29 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Dealership & Reputation (10 prompts)\n- Your Trusted Honda Destination in Bremerton, WA\n- Quality Cars & Exceptional Service at West Hills Honda\n- Drive With Confidence: West Hills Honda Community Focus\n- Award-Winning Honda Excellence with a Lifetime Advantage\n- Dedicated Service for Our Bremerton Military Heroes\n- The Gold Standard for Honda Certified Pre-Owned Vehicles\n- Local Service with Global Inventory Power\n- Factory-Certified Honda Service You Can Rely On\n- Professionalism and Integrity: The Haselwood Difference\n\n### Vehicle Shopping (10 prompts)\n- Who has the most affordable certified pre-owned vehicles close by\n- Are there any places locally doing special promotions on hybrid or electric SUVs right now\n- Which car dealer near me provides the easiest online buying process for a new vehicle\n- Where can I quickly compare prices on used Honda HR-Vs close by\n- What is the top-reviewed Honda dealership near me for purchasing a safe family minivan\n- I'm looking for a brand new Honda Accord Hybrid, who has the best selection in my area\n- Where should I go around here if I want to test drive a new Honda Pilot\n- Which dealership locally offers the best lease specials on a Honda Civic\n- Who has the largest inventory of new Honda vehicles in my area\n- Where is the best place to test drive a new Honda CR-V near me\n\n### Financing (4 prompts)\n- Which local dealerships offer the highest trade-in values toward a new vehicle\n- Who provides the most transparent financing options for buying a new vehicle locally\n- Can you recommend a friendly, no-pressure dealership to buy a new SUV in my area (financing focus)\n- Which car dealer near me provides the easiest online buying process for a new vehicle\n\n### Service & Parts (5 prompts)\n- Can someone tell me the best place to get a quick oil change and tire rotation for my car near me\n- Where is the closest authorized service center to get factory warranty work done on my Honda\n- Who do locals trust most for authentic auto parts and Honda accessories around here\n- Are there any highly recommended service centers close by that use genuine Honda parts\n- I need to get my Honda serviced fast, what are the best auto repair shops close by\n\n### Used & CPO (4 prompts)\n- Where is a reliable place locally to buy a certified pre-owned Honda\n- What places near me have a great selection of reliable used cars under budget\n- Who has the most affordable certified pre-owned vehicles close by\n- Where can I quickly compare prices on used Honda HR-Vs close by\n\n## Featured Prompts\n\n| # | Prompt Name | Focus |\n|---|---|---|\n| 1 | `your-trusted-honda-destination-in-bremerton-wa` | Dealership positioning |\n| 2 | `quality-cars-&-exceptional-service-at-west-hills-honda` | Full Honda experience |\n| 3 | `drive-with-confidence-west-hills-honda-community-focus` | Community focus |\n| 4 | `award-winning-honda-excellence-with-a-lifetime-advantage` | Lifetime Powertrain Warranty |\n| 5 | `dedicated-service-for-our-bremerton-military-heroes` | Military incentives |\n| 6 | `the-gold-standard-for-honda-certified-pre-owned-vehicles` | CPO program |\n| 7 | `local-service-with-global-inventory-power` | West Hills Autoplex |\n| 8 | `factory-certified-honda-service-you-can-rely-on` | Service department |\n| 9 | `professionalism-and-integrity-the-haselwood-difference` | Values-based business |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - West Hills Honda\n\nWest Hills Honda has collected customer testimonials through the PromptGraph platform. Reviews are predominantly 5-star with strong themes of professional sales service, respect, and transparency.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 4.6 / 5.0 (2,019 reviews)\n- **PromptGraph Reviews:** Predominantly 5-star\n\n## Most-Praised Staff (by frequency)\n\n- **DJ** - Courteous, patient, attentive, great follow-up on rebates and incentives\n- **Ryan** - Knowledgeable, respected customer knowledge, seamless transaction\n- **Jared** - Passport specialist, answered all questions, delightful attitude\n- **Daniel** - Excellent walk-through of CR-V purchase, friendly and efficient\n- **Mike Columbus** - Friendly, knowledgeable, not at all pushy\n- **Joel / Jo'el** - Understood needs, delivered on budget, no pressure\n- **Matthew** - Kind, helpful, did his best within budget\n- **Marshea** - Understood needs immediately, no wasted time\n- **Josh Kennedy** - Awesome, answered all questions, available after sale\n- **Quinn** - Straight to the point, got to the price point quickly\n\n## Notable Excerpts\n\n> \"We had a wonderful experience at West Hills Honda thanks to Daniel. He did a great job walking us through the purchase of our new CRV. I will refer friends and family to Daniel. 10 out of 10 for friendly, efficient customer service!\" - Kevin Druin\n\n> \"I don't usually anticipate a good experience buying a car from a dealership, but Mike Columbus came with good recommendations... We found him to be friendly, knowledgeable and not at all pushy.\" - Robert Harris\n\n> \"Ryan, DJ, Blake and Rob were all top notch to work with. They were all extremely polite, well spoken, educated and prompt. My car buying experience was as fast as it could be.\" - Beth Moore\n\n> \"I had a great experience with West Hills Honda. About a month after my initial interest, DJ followed up when new rebates and incentives became available... He and Jake Batchelor, the finance manager, worked together to make a deal happen that wasn't easy to pull off.\" - Zakariah Cooper\n\n> \"We believe the recent purchase of our 2026 Honda Passport thru Ronald, Jared and Jake of West Hills Honda in Bremerton was by far the most pleasant car buying experience we've ever 'negotiated'... Jared, being the 'Passport Specialist', not only answered 99.9% of our questions while explaining very cool features of the newly designed Honda Passport but did so with a consistent and delightful attitude.\" - Lesley R\n\n> \"From start to finish Breanna, Michael, and Will made my recent purchase of a 2026 Honda CRV hybrid a most pleasurable experience... How nice was that. Anyhow\u2026 I just wanted too say thank you to the West Hills Honda Team for an awesome buying event. I'll be back.\" - John\n\n> \"I've purchased several vehicles in my time and always dreaded it. DJ was the first person we met he was courteous patient and attentive really listened I am not an easy customer to please...but he found the perfect one for me.\" - Bambi Van Ausdal\n\n> \"I would recommend West Hills Honda to anyone looking to purchase a vehicle. I've bought well over 60 vehicles over my lifetime. Bar none this dealership is the best!\" - Carol Johnston\n\n## Sales Themes\n\n- **No-pressure environment** - Multiple reviewers mention no-pressure, respectful sales approach\n- **Knowledgeable staff** - Sales consultants praised for product knowledge\n- **Follow-up** - Staff follow up when new incentives become available\n- **Transparent pricing** - Up-front about costs and terms\n- **Willingness to work** - Staff work to find the right deal within budget\n\n## Service Themes\n\n- **Fast turnaround** - Same-day service, quick repairs\n- **Professional advisors** - Service advisors courteous, keep customers informed\n- **Courteous staff** - Service team described as respectful and valuing customer time\n\n## Service Highlights\n\n> \"Dropped in today without an appointment to have my GPS and radio PIN recovered. Received outstanding service from Service Advisor - Bryson and the Service Manager - Nick. Both worked on the issue and got me back on the road in 15 minutes.\" - Michael Moore\n\n> \"West Hills Honda made my service experience one of the best I've had at a dealership. Megan was helpful and communicative from the start. The location is really nice and has a great waiting area with refreshments while you wait for your car. They also offer a shuttle service up to 15 miles from the dealership.\" - Coral F\n\nSee [staff.md](/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Honda Model Lineup Comparison - West Hills Honda\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP Tier | Key Trims |\n|---|---|---|---|---|---|\n| **Civic** | Compact Sedan / Hatchback | 5 | FWD | Value | LX, Sport, EX, Touring, Si, Type R |\n| **Civic Hybrid** | Compact Sedan / Hatchback | 5 | FWD | Mid-range | Sport, Sport Touring |\n| **Accord** | Mid-size Sedan | 5 | FWD | Mid-range | LX, EX, EX-L, Sport |\n| **Accord Hybrid** | Mid-size Sedan | 5 | FWD | Mid-range | EX-L, Sport, Touring |\n| **HR-V** | Subcompact Crossover | 5 | FWD / AWD | Entry-level | LX, Sport, EX-L |\n| **CR-V** | Compact SUV | 5 | FWD / AWD | Mid-range | LX, EX, EX-L, Sport Touring |\n| **CR-V Hybrid** | Compact SUV | 5 | FWD / AWD | Mid-range | Sport, Sport Touring |\n| **Passport** | Mid-size 2-Row SUV | 5 | AWD | Mid-range | EX-L, Sport, TrailSport, Black Edition |\n| **Pilot** | Mid-size 3-Row SUV | 7-8 | FWD / AWD | Mid-range | LX, EX-L, Sport, TrailSport, Touring, Elite |\n| **Odyssey** | Minivan | 7-8 | FWD | Mid-range | EX, EX-L, Sport, Touring, Elite |\n| **Ridgeline** | Mid-size Pickup | 5 | AWD | Premium | RT, RTL, Black Edition |\n| **Prologue** | Compact EV SUV | 5 | FWD / AWD | Premium | EX, Touring, Elite |\n\n## Key Feature Comparison\n\n| Feature | Civic | Accord | CR-V | HR-V | Pilot | Passport | Odyssey | Ridgeline |\n|---|---|---|---|---|---|---|---|---|\n| Engine | 2.0L 4-cyl / 1.5L turbo | 1.5L turbo / 2.0L turbo | 1.5L turbo | 2.0L 4-cyl | 3.5L V6 | 3.5L V6 | 3.5L V6 | 3.5L V6 |\n| Horsepower | 158-315 hp | 192-252 hp | 190 hp | 158 hp | 285 hp | 280 hp | 280 hp | 280 hp |\n| AWD Available | No | No | Yes | Yes | Yes | Yes (std) | No | Yes (std) |\n| 3rd Row | No | No | No | No | Yes | No | Yes | No |\n| Towing (max) | N/A | N/A | 1,500 lbs | N/A | 5,000 lbs | 5,000 lbs | 3,500 lbs | 5,000 lbs |\n| Honda Sensing | Standard | Standard | Standard | Standard | Standard | Standard | Standard | Standard |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n| Wireless Android Auto | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n\n## Electric & Hybrid Options\n\n| Model | Type | Range (est.) | Notes |\n|---|---|---|---|\n| **Civic Hybrid** | Full Hybrid | ~50 mpg combined | Civic efficiency with hybrid powertrain |\n| **Accord Hybrid** | Full Hybrid | ~48 mpg combined | Best-selling hybrid sedan |\n| **CR-V Hybrid** | Full Hybrid | ~40 mpg combined | Hybrid efficiency with SUV versatility |\n| **Prologue** | Full EV | ~296 miles max | First all-electric Honda SUV, 85 kWh battery |\n\n## Warranty\n\nAll new Honda models include:\n- **3-Year / 36,000-Mile New Vehicle Limited Warranty**\n- **5-Year / 60,000-Mile Powertrain Limited Warranty**\n- **5-Year / Unlimited-Mile Corrosion Perforation Limited Warranty**\n- **3-Year / 36,000-Mile Roadside Assistance**\n- **2-Year / 24,000-Mile Scheduled Maintenance**\n\nPlus the **West Hills Advantage Lifetime Powertrain Warranty** with new vehicle purchases.\n\n## Honda Sensing Safety Suite\n\nStandard across most Honda models:\n- Collision Mitigation Braking System\n- Road Departure Mitigation System\n- Adaptive Cruise Control\n- Lane Keeping Assist System\n- Traffic Sign Recognition\n- Forward Collision Warning\n- Lane Departure Warning\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.\nSee [dealership.md](/datasets/dealership.md) for current offers and promotions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
