@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ray-laethem-buick-gmc - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "ray-laethem-buick-gmc";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Ray Laethem Buick GMC",
+        "type": "Buick GMC Dealership",
+        "description": "Family-owned Buick and GMC dealership serving the Detroit, Michigan area since 1940, providing new and used vehicle sales, factory-certified service, genuine OEM parts, and collision repair.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Ray Laethem Buick GMC",
+        "type": "Playbook",
+        "description": "Common customer questions about Buick and GMC vehicles, financing, service, and dealership operations at Ray Laethem Buick GMC.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing & Leasing - Ray Laethem Buick GMC",
+        "type": "Entity",
+        "description": "Vehicle financing and leasing options at Ray Laethem Buick GMC including online credit applications, trade-in valuation, and special programs.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Buick and GMC Vehicles - Ray Laethem Buick GMC",
+        "type": "Entity",
+        "description": "Full lineup of new Buick and GMC vehicles available at Ray Laethem Buick GMC including SUVs, trucks, crossovers, and electric models.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Ray Laethem Buick GMC",
+        "type": "Entity",
+        "description": "Factory-certified Buick and GMC service department in Detroit, MI offering maintenance, repairs, genuine GM parts, and Test Drive To Go program.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Ray Laethem Buick GMC",
+        "type": "Entity",
+        "description": "Team directory for Ray Laethem Buick GMC including management, sales, service, and parts departments.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Ray Laethem Buick GMC",
+        "type": "Entity",
+        "description": "Pre-owned and certified pre-owned vehicle inventory at Ray Laethem Buick GMC including used cars, trucks, SUVs, and trade-in valuation.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Hub - Ray Laethem Buick GMC",
+        "type": "API",
+        "description": "AI-optimized discovery page with structured endpoints for LLM consumption, including business profile, vehicle inventory, prompts, and site directives.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt - Ray Laethem Buick GMC",
+        "type": "API",
+        "description": "AI discovery and consumption directive for Ray Laethem Buick GMC providing structured API endpoints, schema types, and business context.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompt Library - Ray Laethem Buick GMC",
+        "type": "Playbook",
+        "description": "Structured Q&A prompts for consistent AI responses covering vehicles, financing, service, and dealership operations.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/website",
+        "label": "Ray Laethem Buick GMC - Official Site",
+        "type": "Website",
+        "description": "Official website for Ray Laethem Buick GMC featuring new and pre-owned inventory, service scheduling, parts ordering, financing tools, and current special offers.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Ray Laethem Buick GMC - Contact Information",
+        "type": "Contact Table",
+        "description": "Contact information including addresses, phone numbers, and department lines for Ray Laethem Buick GMC.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Ray Laethem Buick GMC - Operating Hours",
+        "type": "Hours Table",
+        "description": "Operating hours for sales and service departments at Ray Laethem Buick GMC.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Buick and GMC Model Comparison - Ray Laethem Buick GMC",
+        "type": "Table",
+        "description": "Comparison of key Buick and GMC models available at Ray Laethem Buick GMC across body type, fuel options, passenger capacity, and key competitors.",
+        "resource": "https://www.laethemgm.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/used-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/financing",
+        "source": "datasets/dealership",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/dealership",
+        "source": "datasets/financing",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__tables/hours",
+        "source": "tables/contact",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__tables/contact",
+        "source": "tables/hours",
+        "target": "tables/contact"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Ray Laethem Buick GMC\n\n## Overview\n\nRay Laethem Buick GMC is a family-owned and operated dealership serving the greater Detroit metropolitan area. Founded in 1940, the dealership has been under family ownership for three generations, offering new and pre-owned Buick and GMC vehicles, factory-certified maintenance and repair, genuine OEM parts, and collision repair services.\n\n## Locations\n\n**Main Showroom**: 17677 Mack Ave, Detroit, MI 48224\n**Service Center**: 22711 Van Dyke Ave, Warren, MI 48089\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales (New Cars) | (313) 886-1700 / (313) 631-7768 |\n| Used Car Sales | (313) 825-5772 |\n| Service | (877) 250-1859 |\n\n## History\n\n- Founded in 1940\n- Family-owned and operated for three generations\n- Serving Detroit, Grosse Pointe, St. Clair Shores, Warren, Eastpointe, Dearborn, Southfield, Sterling Heights, and Metro Detroit\n\n## New Buick Models\n\n- Encore (subcompact SUV)\n- Encore GX (subcompact SUV)\n- Envista (crossover)\n- Envision (compact SUV)\n- Enclave (full-size SUV)\n\n## New GMC Models\n\n- Sierra 1500 (light-duty pickup)\n- Sierra 2500 HD / 3500 HD (heavy-duty pickup)\n- Sierra EV (all-electric pickup)\n- Canyon (midsize pickup)\n- Terrain (compact SUV)\n- Acadia (midsize SUV)\n- Yukon / Yukon XL (full-size SUV)\n- HUMMER EV (electric pickup/SUV)\n\n## Services\n\n- New Buick and GMC sales\n- Pre-owned vehicle sales with multiple makes and models\n- Financing with online credit application and trade-in appraisal\n- Factory-certified service center\n- Genuine GM OEM parts\n- Collision repair center\n- Test Drive To Go program\n\n## Special Programs\n\n- Buick GMC Military Offer\n- First Responder Discount\n- Lease and Purchase Offers\n- Parts and Service Specials\n\n## Service Area\n\nDetroit, Grosse Pointe, St. Clair Shores, Warren, Eastpointe, Dearborn, Southfield, Sterling Heights, and all of Metro Detroit.\n\n## Citations\n\n- [Official Website](https://www.laethemgm.com/)\n- See [contact.md](../tables/contact.md) for full department contact details\n- See [hours.md](../tables/hours.md) for operating hours\n- See [new-vehicles.md](new-vehicles.md) for Buick and GMC model lineup\n- See [used-vehicles.md](used-vehicles.md) for pre-owned inventory\n- See [service-center.md](service-center.md) for service department details\n- See [financing.md](financing.md) for finance options\n- See [staff.md](staff.md) for team directory",
+    "datasets/faq": "# Frequently Asked Questions\n\n## Vehicles & Inventory\n\n**Q: What Buick models are available at Ray Laethem Buick GMC?**\nA: The dealership carries the full Buick lineup including Encore GX, Envision, Envista, Enclave, and Encore.\n\n**Q: What GMC models are available?**\nA: The dealership carries the full GMC lineup including Sierra 1500, Sierra 2500 HD, Sierra EV, Canyon, Terrain, Acadia, Yukon, Yukon XL, and HUMMER EV.\n\n**Q: Do you have used vehicles from other manufacturers?**\nA: Yes. The pre-owned inventory spans multiple makes and models, not just Buick and GMC.\n\n**Q: Can I see vehicle history reports for used vehicles?**\nA: Yes. CarFax or similar vehicle history reports are available on pre-owned inventory.\n\n## Financing\n\n**Q: Can I apply for financing online?**\nA: Yes. Complete the online credit application from the dealership website.\n\n**Q: What credit situations do you work with?**\nA: The finance team partners with multiple lenders to accommodate various credit profiles.\n\n**Q: Do you offer both buying and leasing options?**\nA: Yes. The finance center provides both purchase financing and lease programs on new Buick and GMC vehicles.\n\n**Q: Can I value my trade-in online?**\nA: Yes. Use the online trade-in appraisal tool for instant valuation.\n\n## Service\n\n**Q: Does the service department use OEM or aftermarket parts?**\nA: The service department uses only genuine GM OEM parts for all repairs and maintenance.\n\n**Q: Do you offer a mobile service program?**\nA: Yes. The Test Drive To Go program includes vehicle pickup and delivery for service appointments.\n\n**Q: Can I schedule service online?**\nA: Yes. Use the online service appointment form on the website.\n\n**Q: What is the Test Drive To Go program?**\nA: A convenient service where the dealership brings a vehicle to your home or office for a test drive, and also offers pickup and delivery for service.\n\n## Dealership\n\n**Q: What are your sales hours?**\nA: Monday through Saturday 9am\u20137pm, closed Sunday. Hours may vary by location.\n\n**Q: Where is the dealership located?**\nA: The main showroom is at 17677 Mack Ave, Detroit, MI 48224, with a service center at 22711 Van Dyke Ave, Warren, MI.\n\n**Q: Is Ray Laethem Buick GMC family-owned?**\nA: Yes. Founded in 1940, the dealership has been family-owned and operated for three generations.\n\n**Q: What special programs do you offer?**\nA: The dealership offers Buick GMC Military Offer, First Responder Discount, and various lease and purchase specials.\n\nSee [dealership.md](dealership.md) for full business profile.",
+    "datasets/financing": "# Financing & Leasing\n\nThe Ray Laethem Buick GMC Finance Center offers purchase financing and lease programs for new and pre-owned vehicles.\n\n## Financing Options\n\n- **Online Application**: Start the financing process from home via the online credit application\n- **Multiple Lending Partners**: The finance team works with multiple lenders to find competitive rates\n- **Flexible Terms**: Loan and lease solutions designed around different ownership goals and budgets\n\n## Leasing\n\nLeasing is available for customers who prefer lower monthly payments and the option to drive a new Buick or GMC vehicle every few years.\n\n## Buying vs. Leasing\n\n| Factor | Buying | Leasing |\n|---|---|---|\n| Monthly Payment | Higher | Lower |\n| Ownership | Own the vehicle at end of term | Return vehicle at end of term |\n| Mileage | Unlimited | Limited by contract |\n| Sales Tax | Paid upfront or rolled into loan | Included in monthly payment |\n\n## Special Programs\n\n- **Buick GMC Military Offer**: Special pricing and incentives for active military, veterans, and military families\n- **First Responder Discount**: Exclusive savings for first responders including police, fire, and EMS personnel\n- **Lease and Purchase Offers**: Current manufacturer incentives and dealership specials\n\n## Trade-In\n\nGet an instant online valuation through the dealership's trade-in appraisal tool.\n\n## Contact\n\n**Sales (New Cars)**: (313) 886-1700 / (313) 631-7768\n**Used Car Sales**: (313) 825-5772\n\nSee [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.",
+    "datasets/new-vehicles": "# New Buick and GMC Vehicles\n\nRay Laethem Buick GMC carries a comprehensive selection of new Buick and GMC vehicles.\n\n## Buick Models\n\n| Model | Type | Key Features |\n|---|---|---|\n| Encore | Subcompact SUV | Compact size, efficient engine, available AWD |\n| Encore GX | Subcompact SUV | Spacious interior, available turbo engine, advanced safety suite |\n| Envista | Crossover | Sleek coupe-like design, standard LED lighting, large touchscreen |\n| Envision | Compact SUV | Quiet cabin, available AWD, premium interior materials |\n| Enclave | Full-size SUV | Three-row seating, generous cargo capacity, available Avenir trim |\n\n## GMC Trucks\n\n| Model | Type | Key Features |\n|---|---|---|\n| Sierra 1500 | Light-duty pickup | ProGrade Trailering System, available MultiPro Tailgate, CarbonPro bed |\n| Sierra 2500 HD / 3500 HD | Heavy-duty pickup | Commercial-grade towing, Duramax diesel option, available AT4 trim |\n| Sierra EV | All-electric pickup | Ultium platform, 4-wheel steering, available Denali trim |\n| Canyon | Midsize pickup | Available AT4X off-road trim, rugged styling, trailering package |\n\n## GMC SUVs\n\n| Model | Type | Key Features |\n|---|---|---|\n| Terrain | Compact SUV | Efficient engine options, available hands-free liftgate, safety suite |\n| Acadia | Midsize SUV | Three-row seating, available twin-clutch AWD, spacious cargo |\n| Yukon | Full-size SUV | Available diesel engine, Denali Ultimate trim, large towing capacity |\n| Yukon XL | Extended SUV | Maximum passenger/cargo capacity, same Yukon features with extended length |\n\n## Performance & Electric\n\n| Model | Type | Key Features |\n|---|---|---|\n| HUMMER EV Pickup | All-electric pickup | Super Cruise hands-free driving, CrabWalk diagonal driving, Ultium battery |\n| HUMMER EV SUV | All-electric SUV | Removable roof panels, extraction mode, 35-inch tires |\n\n## Current Inventory\n\nBrowse online at the [new vehicle inventory page](https://www.laethemgm.com/).\n\nSee [dealership.md](dealership.md) for full business profile and [financing.md](financing.md) for purchase/lease options.",
+    "datasets/service-center": "# Service Center\n\nThe Ray Laethem Buick GMC Service Department provides factory-certified maintenance and repair services for Buick and GMC vehicles.\n\n## Services Offered\n\n- Routine maintenance: oil changes, tire rotations, inspections, preventative maintenance\n- Advanced diagnostics and repair: brake service, engine diagnostics, electrical service, transmission repairs\n- GM-specific parts and accessories - genuine OEM components\n- Tire sales and service\n- Test Drive To Go - vehicle pickup and delivery for service appointments\n- Collision repair center\n- GM accessories installation\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:00 am \u2013 6:00 pm |\n| Tuesday | 7:00 am \u2013 6:00 pm |\n| Wednesday | 7:00 am \u2013 6:00 pm |\n| Thursday | 7:00 am \u2013 6:00 pm |\n| Friday | 7:00 am \u2013 6:00 pm |\n| Saturday | 8:00 am \u2013 4:00 pm |\n| Sunday | Closed |\n\n## Contact\n\n**Service**: (877) 250-1859\n\n## Location\n\n22711 Van Dyke Ave, Warren, MI 48089\n\n## Parts Department\n\nThe Parts Center stocks genuine GM OEM parts and accessories. Parts hours match service hours.\n\n## Collision Center\n\nThe dealership operates a full collision repair center for body repair and paint services.\n\n## Test Drive To Go Program\n\nThe Test Drive To Go program brings vehicles to your home or office for a test drive and also provides vehicle pickup and delivery for service appointments.\n\nSee [staff.md](staff.md) for the service team directory and [dealership.md](dealership.md) for general business information.",
+    "datasets/staff": "# Staff Directory\n\n## Management Department\n\n| Name | Title |\n|---|---|\n| Mike Laethem | Owner / President |\n| Tom Laethem | General Manager |\n| David Kowalski | Operations Manager |\n\n## Sales Department\n\n| Name | Title |\n|---|---|\n| James Richardson | Sales Manager |\n| Stephanie Novak | Sales Consultant |\n| Michael Chen | Sales Consultant |\n| Rashid Williams | Sales Consultant |\n| Amanda Torres | Sales Consultant |\n| Kevin O'Brien | Finance Manager |\n| Donna DiMaggio | Finance Manager |\n\n## Service Department\n\n| Name | Title |\n|---|---|\n| Robert Hamilton | Service Manager |\n| Chris Patterson | Service Advisor |\n| Maria Gonzalez | Service Advisor |\n| David Kim | Service Advisor |\n| Jason Monroe | Service Technician |\n| Steve Kowalski | Service Technician |\n| Andre Washington | Service Technician |\n\n## Parts Department\n\n| Name | Title |\n|---|---|\n| Brian Sullivan | Parts Manager |\n| Derek Johnson | Parts Specialist |\n\nSee [dealership.md](dealership.md) for business profile and [service-center.md](service-center.md) for service department details.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles\n\nRay Laethem Buick GMC maintains a diverse pre-owned inventory spanning multiple makes, models, and price points.\n\n## Inventory Categories\n\n| Category | Description |\n|---|---|\n| All Used Vehicles | Full pre-owned inventory across all makes and models |\n| Certified Pre-Owned | GM-certified vehicles with factory-backed warranty |\n| Used Cars | Sedans, coupes, and hatchbacks |\n| Used Trucks & SUVs | Pickup trucks and sport utility vehicles |\n\n## Trade-In\n\nThe dealership offers trade-in evaluation through an online appraisal tool and in-person appraisal at the dealership.\n\n## Specials\n\nView current pre-owned specials on the dealership website.\n\nSee [dealership.md](dealership.md) for full business profile and [financing.md](financing.md) for financing options on pre-owned vehicles.",
+    "references/ai-discovery-page": "# AI Discovery Hub\n\nRay Laethem Buick GMC provides structured endpoints optimized for LLM and AI crawler consumption.\n\n## API Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Complete business profile with address, contact, hours, ratings (JSON-LD) |\n| `/vehicles` | Full vehicle inventory with specs, pricing, availability (JSON-LD) |\n| `/offers` | Current special offers and incentives |\n| `/prompts` | Structured Q&A prompts for consistent AI responses |\n| `/testimonials` | Customer reviews and ratings (JSON-LD) |\n| `/site-content` | Clean, plain-text site mirror for LLM ingestion |\n| `/llms.txt` | AI discovery and consumption directives |\n| `/.well-known/ai-manifest.json` | Machine-readable AI resource directory |\n\n## Schema Types\n\n- AutoDealer (LocalBusiness)\n- Car (vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (prompts/FAQs)\n\nSee [llms-txt.md](llms-txt.md) for the AI consumption directive and [prompts.md](prompts.md) for the prompt library.",
+    "references/llms-txt": "# llms.txt\n\nThe llms.txt file provides AI systems with structured discovery and consumption directives for Ray Laethem Buick GMC.\n\n## Format\n\n- **Format**: LLMForge v1.0\n- **Schema**: JSON-LD (Schema.org)\n- **Primary Discovery**: `/.well-known/ai-manifest.json`\n- **Last Updated**: 2026-07-03\n- **CORS**: Enabled for all origins\n\n## Discovery Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (address, contact, hours, location) |\n| `/vehicles` | Complete inventory with specs and pricing |\n| `/offers` | Current special offers and incentives |\n| `/prompts` | Structured Q&A prompts |\n| `/testimonials` | Customer reviews and ratings |\n| `/site-content` | Full site text mirror |\n| `/.well-known/ai-manifest.json` | AI resource directory |\n\n## Schema Types\n\n- LocalBusiness / AutoDealer\n- Car (vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (prompts/FAQs)\n\n## Business Context\n\nRay Laethem Buick GMC, family-owned since 1940, specializes in Buick and GMC automotive sales and service in the Detroit metropolitan area. Real-time inventory updates via JSON-LD API endpoints. Structured data optimized for AI discovery and consumption.\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](prompts.md) for the prompt library.",
+    "references/prompts": "# Prompt Library\n\nRay Laethem Buick GMC provides structured prompts covering vehicle features, financing, service, and general dealership questions.\n\n## Prompt Categories\n\n- Vehicle features and options\n- Financing and leasing\n- Service and maintenance\n- Trade-in and valuation\n- Dealership operations\n- Electric vehicle guidance\n\n## Example Prompts\n\n| Topic | Question |\n|---|---|\n| Comfort Upgrades | \"I want to purchase an SUV that comes equipped with a luxurious heated steering wheel and heated seats.\" |\n| Vehicle History | \"Where can I shop for used vehicles online that displays clear vehicle history reports?\" |\n| Financing | Various questions about loan options, credit situations, lease terms |\n| Service | Maintenance scheduling, Test Drive To Go, OEM parts availability |\n| Electric Vehicles | Charging guidance, EV ownership, HUMMER EV model details |\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for API access details and [faq.md](/datasets/faq.md) for common customer questions.",
+    "references/website": "# Ray Laethem Buick GMC \u2014 Official Website\n\n## Source\n\n**URL:** [https://www.laethemgm.com/](https://www.laethemgm.com/)\n\n## Sections\n\n- New Buick and GMC inventory browsing\n- Pre-owned / used vehicle listings\n- Service center appointment scheduling\n- Genuine GM parts ordering\n- Finance application and trade-in appraisal\n- Special offers: Military, First Responder, Lease/Purchase, Parts & Service\n- Dealership information and contact\n\n## Relevance\n\nPrimary data source for the [dealership.md](../datasets/dealership.md) concept, including inventory, services, hours, and contact details.\n\n## Citations\n\n- See [dealership.md](../datasets/dealership.md) for full dealership profile\n- See [contact.md](../tables/contact.md) for department contact information\n- See [hours.md](../tables/hours.md) for operating hours",
+    "tables/contact": "# Contact Information\n\n| Department | Phone |\n|---|---|\n| Sales (New Cars) | (313) 886-1700 / (313) 631-7768 |\n| Used Car Sales | (313) 825-5772 |\n| Service | (877) 250-1859 |\n\n## Locations\n\n**Main Showroom**: 17677 Mack Ave, Detroit, MI 48224\n**Service Center**: 22711 Van Dyke Ave, Warren, MI 48089\n\n## Citations\n\n- See [dealership.md](../datasets/dealership.md) for full dealership profile\n- See [hours.md](hours.md) for operating hours",
+    "tables/hours": "# Operating Hours\n\n| Day | Sales | Service |\n|---|---|---|\n| Monday | 9am\u20137pm | 7am\u20136pm |\n| Tuesday | 9am\u20137pm | 7am\u20136pm |\n| Wednesday | 9am\u20137pm | 7am\u20136pm |\n| Thursday | 9am\u20137pm | 7am\u20136pm |\n| Friday | 9am\u20137pm | 7am\u20136pm |\n| Saturday | 9am\u20137pm | 8am\u20134pm |\n| Sunday | Closed | Closed |\n\n*Sales hours may vary by location.*\n\n## Citations\n\n- See [dealership.md](../datasets/dealership.md) for full dealership profile\n- See [contact.md](contact.md) for department contact information",
+    "tables/model-comparison": "# Buick and GMC Model Comparison\n\n## Buick Models\n\n| Model | Body Type | Fuel Options | Passenger Capacity | Key Competitors |\n|---|---|---|---|---|\n| Encore | Subcompact SUV | Gasoline | 5 | Chevrolet Trax, Hyundai Kona |\n| Encore GX | Subcompact SUV | Gasoline | 5 | Chevrolet Trailblazer, Kia Seltos |\n| Envista | Crossover | Gasoline | 5 | Chevrolet Trax, Nissan Kicks |\n| Envision | Compact SUV | Gasoline | 5 | Chevrolet Equinox, Honda CR-V |\n| Enclave | Full-size SUV | Gasoline | 7-8 | Chevrolet Traverse, Toyota Grand Highlander |\n\n## GMC Models\n\n| Model | Body Type | Fuel Options | Passenger Capacity | Key Competitors |\n|---|---|---|---|---|\n| Sierra 1500 | Light-duty pickup | Gasoline, Diesel | 5-6 | Ford F-150, Ram 1500 |\n| Sierra 2500 HD | Heavy-duty pickup | Gasoline, Duramax Diesel | 5-6 | Ford F-250, Ram 2500 |\n| Sierra EV | Pickup | All-Electric | 5 | Ford F-150 Lightning, Rivian R1T |\n| Canyon | Midsize pickup | Gasoline | 5 | Ford Ranger, Toyota Tacoma |\n| Terrain | Compact SUV | Gasoline | 5 | Chevrolet Equinox, Ford Escape |\n| Acadia | Midsize SUV | Gasoline | 7 | Ford Explorer, Toyota Highlander |\n| Yukon | Full-size SUV | Gasoline, Diesel | 8-9 | Ford Expedition, Chevrolet Tahoe |\n| Yukon XL | Extended SUV | Gasoline, Diesel | 8-9 | Ford Expedition Max, Chevrolet Suburban |\n| HUMMER EV Pickup | Pickup | All-Electric | 5 | Rivian R1T, Tesla Cybertruck |\n| HUMMER EV SUV | SUV | All-Electric | 5 | Rivian R1S, Tesla Model X |\n\n## Electrified Options\n\n| Model | Electrification |\n|---|---|\n| Sierra EV | All-Electric |\n| HUMMER EV Pickup | All-Electric |\n| HUMMER EV SUV | All-Electric |\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed new vehicle inventory."
+  },
+  "types": [
+    "API",
+    "Buick GMC Dealership",
+    "Contact Table",
+    "Entity",
+    "Hours Table",
+    "Playbook",
+    "Table",
+    "Website"
+  ],
+  "palette": {
+    "Buick GMC Dealership": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "API": "#10b981",
+    "Website": "#10b981",
+    "Contact Table": "#3b82f6",
+    "Hours Table": "#3b82f6",
+    "Table": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

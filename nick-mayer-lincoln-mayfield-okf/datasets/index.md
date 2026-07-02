@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Dealership staff and teams directory.
 - [service-center.md](service-center.md) - Lincoln service center with Priority Service and valet amenities.
 - [faq.md](faq.md) - Frequently asked questions about the dealership and Lincoln ownership.
+- [financing.md](financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.

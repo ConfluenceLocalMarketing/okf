@@ -12,6 +12,7 @@ okf_version: "0.1"
 - [staff.md](datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
 - [service-center.md](datasets/service-center.md) - Nissan-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Nissan parts department
 - [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
 
 ## References
 

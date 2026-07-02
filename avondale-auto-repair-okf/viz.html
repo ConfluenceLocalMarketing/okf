@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>avondale-auto-repair - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "avondale-auto-repair";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Avondale Auto Repair",
+        "type": "Organization",
+        "description": "Family-owned ASE Certified auto repair shop in Chicago's Avondale neighborhood, servicing domestic and foreign vehicles.",
+        "resource": "https://www.avondaleautorepair.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Avondale Auto Repair",
+        "type": "Playbook",
+        "description": "Common questions about services, pricing, appointments, warranty, and certifications at Avondale Auto Repair.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Avondale Auto Repair",
+        "type": "Entity",
+        "description": "Full-service auto repair facility in Chicago's Avondale neighborhood with ASE Certified technicians and NAPA AutoCare warranty.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/services",
+        "label": "Services - Avondale Auto Repair",
+        "type": "Entity",
+        "description": "Full-service auto repair and maintenance for domestic and foreign vehicles in Chicago's Avondale neighborhood.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Avondale Auto Repair",
+        "type": "Entity",
+        "description": "Meet the team at Avondale Auto Repair, including ownership, ASE Certified technicians, and service writers.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Avondale Auto Repair",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Avondale Auto Repair, providing AI agents structured access to business info, prompts, testimonials, and site content via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/avondale-auto-repair/.well-known/ai-manifest.json",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Avondale Auto Repair llms.txt",
+        "type": "Directive",
+        "description": "LLMForge v1.0 directive with API endpoints for business info, prompts, testimonials, and site content.",
+        "resource": "https://api.promptgraph.ai/api/v1/avondale-auto-repair/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Avondale Auto Repair PromptGraph Prompts",
+        "type": "Prompt Library",
+        "description": "Structured Q&A prompt/response pairs covering auto repair, maintenance, brake service, and vehicle-specific services.",
+        "resource": "https://api.promptgraph.ai/api/v1/avondale-auto-repair/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/services",
+        "source": "datasets/faq",
+        "target": "datasets/services"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/services__datasets/company",
+        "source": "datasets/services",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Avondale Auto Repair\n\nAvondale Auto Repair is a family-run, locally owned auto repair shop serving Chicago's Avondale neighborhood and surrounding areas. Same ownership as Logan Square Auto Repair. The shop is ASE Certified, AAA Approved, and a NAPA AutoCare Center.\n\n## Services\n\n- **Engine Repair and Diagnostics** \u2014 Full engine service for domestic and foreign vehicles\n- **Maintenance** \u2014 Routine preventive maintenance including oil changes and tune-ups\n- **Brake Repair** \u2014 Brake inspection, pad replacement, and rotor service\n- **Oil Change** \u2014 Professional oil and filter service\n- **Suspension and Steering** \u2014 Ride quality and handling repairs\n- **Tire Service and Repair** \u2014 Tire sales, rotation, balancing, and flat repair\n- **A/C and Heating** \u2014 Climate system diagnostics and repair\n- **Electrical Services** \u2014 Battery, alternator, and electrical system repair\n- **Emissions Repair** \u2014 Emissions testing and repair\n\n## Certifications\n\n- **ASE Certified Technicians**\n- **AAA Approved Auto Repair**\n- **NAPA AutoCare Center** \u2014 24-month / 24,000-mile nationwide warranty\n- **CARFAX Top-Rated Service Center**\n\n## Vehicles Serviced\n\nDomestic and foreign vehicles including Chevy, Ford, Toyota, Honda, Nissan, Lexus, and more.\n\n## Financing\n\n- **Synchrony Car Care Credit Card** accepted\n- **Snap Finance** available\n\n## Contact\n\n- **Address:** 3425 N Pulaski Rd., Chicago, IL 60641\n- **Phone:** (773) 267-5440\n- **Hours:** Mon\u2013Fri 8:00 am \u2013 6:00 pm, Sat 9:00 am \u2013 4:00 pm",
+    "datasets/faq": "# Frequently Asked Questions - Avondale Auto Repair\n\n## What services does Avondale Auto Repair offer?\n\nWe offer engine repair, routine maintenance, brake repair, oil changes, suspension and steering service, tire service, A/C and heating repair, electrical diagnostics, and emissions repair. See [services.md](services.md) for full details.\n\n## Are you ASE Certified?\n\nYes, our technicians are ASE Certified. We are also AAA Approved, a NAPA AutoCare Center, and a CARFAX Top-Rated Service Center. See [company.md](company.md) for all certifications.\n\n## Do you work on both domestic and foreign vehicles?\n\nYes. We service all makes and models including Chevy, Ford, Toyota, Honda, Nissan, Lexus, and more.\n\n## How do I schedule an appointment?\n\nCall us at (773) 267-5440. Walk-ins are welcome based on availability.\n\n## What are your hours of operation?\n\nMonday through Friday 8:00 am to 6:00 pm, Saturday 9:00 am to 4:00 pm. Closed Sunday.\n\n## Do you offer any warranty on repairs?\n\nYes. As a NAPA AutoCare Center, we offer a 24-month / 24,000-mile nationwide warranty honored at 14,000+ locations.\n\n## Do you provide financing options?\n\nYes. We accept the Synchrony Car Care Credit Card and Snap Finance. See [company.md](company.md) for details.\n\n## How much does an oil change cost?\n\nPricing varies by vehicle and oil type. Contact us at (773) 267-5440 for a quote.\n\n## What if my check engine light is on?\n\nWe provide full engine diagnostics to identify the issue. Bring your vehicle in and our ASE Certified technicians will diagnose and repair it.\n\n## Do you perform emissions testing and repair?\n\nYes. We offer emissions diagnostics and repair services to help your vehicle pass Illinois emissions testing.\n\n## Can you repair my brakes?\n\nYes. We provide complete brake inspection, pad replacement, and rotor service for all makes and models.\n\n## Do you sell tires?\n\nYes. We offer tire sales, rotation, balancing, and flat repair services.",
+    "datasets/service-center": "# Service Center - Avondale Auto Repair\n\nAvondale Auto Repair is a family-owned service center located at 3425 N Pulaski Rd., Chicago, IL 60641.\n\n## Hours\n\n| Day | Hours |\n|-----|-------|\n| Monday - Friday | 8:00 am - 6:00 pm |\n| Saturday | 9:00 am - 4:00 pm |\n| Sunday | Closed |\n\n## Contact\n\n- **Phone:** (773) 267-5440\n- **Location:** 3425 N Pulaski Rd., Chicago, IL 60641\n\n## Certifications\n\n- ASE Certified Technicians\n- AAA Approved Auto Repair\n- NAPA AutoCare Center\n- CARFAX Top-Rated Service Center\n\n## Warranty\n\n24-month / 24,000-mile nationwide NAPA Peace of Mind warranty honored at 14,000+ locations across the U.S. and Canada.\n\n## Financing\n\n- Synchrony Car Care Credit Card accepted\n- Snap Finance available\n\nSee [company.md](company.md) for more information about our shop, history, and vehicle coverage.",
+    "datasets/services": "# Services - Avondale Auto Repair\n\nAvondale Auto Repair provides comprehensive automotive services for domestic and foreign vehicles. All work is performed by ASE Certified technicians using quality parts and equipment.\n\n## Engine Repair and Diagnostics\n\nFull engine service including diagnostics, check engine light analysis, misfire diagnosis, and complete engine repair for all makes and models.\n\n## Maintenance\n\nRoutine preventive maintenance including oil changes, fluid checks, belt replacement, and multi-point inspections to keep your vehicle running reliably.\n\n## Brake Repair\n\nComplete brake system service including inspection, pad replacement, rotor resurfacing and replacement, caliper service, and brake fluid exchange.\n\n## Oil Change\n\nProfessional oil and filter service using quality oils. Conventional, synthetic blend, and full synthetic options available.\n\n## Suspension and Steering\n\nRide quality and handling repairs including shock and strut replacement, alignment, steering system service, and suspension component repair.\n\n## Tire Service and Repair\n\nTire sales, rotation, balancing, mounting, and flat repair. Proper tire maintenance to extend tread life and improve fuel economy.\n\n## A/C and Heating\n\nClimate system diagnostics and repair including A/C recharge, compressor replacement, heater core service, and ventilation system repair.\n\n## Electrical Services\n\nBattery testing and replacement, alternator repair, starter service, and electrical system diagnostics.\n\n## Emissions Repair\n\nEmissions testing, diagnostics, and repair to ensure compliance with Illinois environmental standards.\n\nSee [company.md](company.md) for our full certifications, financing options, and contact information.",
+    "datasets/staff": "# Staff Directory - Avondale Auto Repair\n\n## Tony Martino \u2014 Owner / General Manager\n\nTony has been in the auto repair industry for over 25 years. He owns both Avondale Auto Repair and Logan Square Auto Repair, bringing decades of experience serving Chicago drivers.\n\n## Carlos Reyes \u2014 Master Technician (ASE Certified)\n\nCarlos holds ASE certifications in engine repair, brakes, suspension, and electrical systems. Over 15 years of experience with domestic and foreign vehicles.\n\n## David Kim \u2014 Senior Technician (ASE Certified)\n\nDavid specializes in diagnostics, engine performance, and emissions repair. ASE Certified with 12 years of experience.\n\n## Maria Sanchez \u2014 Service Writer / Customer Relations\n\nMaria handles appointments, customer inquiries, and service coordination. Bilingual in English and Spanish.\n\n## James O'Brien \u2014 Technician\n\nJames performs general maintenance, oil changes, tire services, and brake repairs. Committed to quality work and customer satisfaction.\n\nSee [company.md](company.md) for shop information, certifications, and contact details.",
+    "references/ai-discovery-page": "# AI Discovery Page - Avondale Auto Repair\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, and LLM-friendly action definitions.\n\n## PromptGraph API Sitemap\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/avondale-auto-repair/sitemap.xml` exposes these machine-readable endpoints:\n\n| URL | Priority | Update Frequency |\n|---|---|---|\n| `/business` | 1.0 | Weekly |\n| `/prompts` | 0.9 | Weekly |\n| `/vehicles` | 0.9 | Daily |\n| `/.well-known/ai-manifest.json` | 0.6 | Monthly |\n| `/robots.txt` | 0.5 | Monthly |\n| `/sitemap-inventory.xml` | 0.8 | Daily |\n| 10+ individual prompt endpoints | 0.8 | Weekly |\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n\n### Registered Endpoints\n\n- `/api/v1/avondale-auto-repair/llms.txt` - LLMs.txt directive\n- `/api/v1/avondale-auto-repair/business` - Business profile (JSON-LD)\n- `/api/v1/avondale-auto-repair/prompts` - Q&A / FAQ prompts\n- `/api/v1/avondale-auto-repair/testimonials` - Customer reviews\n- `/api/v1/avondale-auto-repair/sitemap.xml` - Full sitemap\n- `/api/v1/avondale-auto-repair/robots.txt` - Robots rules\n- `/api/v1/avondale-auto-repair/config.json` - System configuration\n\n### Additional PromptGraph Endpoints\n\n- `/gbp-context` - Flattened Google Business Profile data for LLM ingestion\n- `/site-content` - Clean, plain-text mirror of the entire site\n- `/llms.txt` - LLMForge v1.0 directive file\n\n## Business Profile\n\n- **Name:** Avondale Auto Repair\n- **Phone:** (773) 267-5440\n- **Address:** 3425 N Pulaski Rd., Chicago, IL 60641\n- **Website:** https://www.avondaleautorepair.com/\n- **Same owners as** Logan Square Auto Repair\n\n## Q&A Prompt Library\n\nThe `/prompts` endpoint exposes structured Q&A pairs. See [prompts.md](prompts.md) for the full library.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.",
+    "references/llms-txt": "# Avondale Auto Repair llms.txt\n\n## Discovery\n\n- **Primary endpoint:** `http://api.promptgraph.ai/api/v1/avondale-auto-repair/.well-known/ai-manifest.json`\n- **Format:** JSON-LD following Schema.org standards\n- **API Base:** `http://api.promptgraph.ai/api/v1/avondale-auto-repair`\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/avondale-auto-repair/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/avondale-auto-repair/prompts) - Structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/avondale-auto-repair/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/avondale-auto-repair/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/avondale-auto-repair/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/avondale-auto-repair/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/avondale-auto-repair/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/avondale-auto-repair/config.json) - System configuration and metadata",
+    "references/prompts": "# Avondale Auto Repair Prompts\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/avondale-auto-repair/prompts` exposes structured Q&A prompt/response pairs covering auto repair and maintenance topics.\n\n## Service Areas\n\n- Auto Repair Chicago\n- Maintenance Services\n- Brake Repair Chicago\n- Oil Change Chicago\n- Suspension and Steering\n- Tire Service and Repair\n- A/C and Heating\n- Electrical Services\n- Emissions Repair\n- NAPA Autocare Nationwide Warranty\n\n## Vehicle Makes\n\n- Chevy Service Chicago\n- Ford Service Chicago\n- Toyota Service Chicago\n- Honda Service Chicago\n- Nissan Service Chicago\n- Lexus Service Chicago\n- Volvo Service Chicago\n- Jeep Service Chicago\n- Kia Service Chicago\n- Mitsubishi Service Chicago"
+  },
+  "types": [
+    "APIs",
+    "Directive",
+    "Entity",
+    "Organization",
+    "Playbook",
+    "Prompt Library"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "APIs": "#10b981",
+    "Directive": "#10b981",
+    "Prompt Library": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

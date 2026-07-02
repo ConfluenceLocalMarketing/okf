@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>mercedes-benz-of-caldwell - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "mercedes-benz-of-caldwell";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Mercedes-Benz of Caldwell",
+        "type": "Organization",
+        "description": "Luxury Mercedes-Benz dealership in Caldwell, NJ serving West Caldwell, Wayne, Morristown, and northern New Jersey.",
+        "resource": "https://www.mbofcaldwell.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Mercedes-Benz of Caldwell FAQ",
+        "type": "Playbook",
+        "description": "Frequently asked questions about Mercedes-Benz vehicles, financing, service, and dealership at Mercedes-Benz of Caldwell, NJ.",
+        "resource": "https://www.mbofcaldwell.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Mercedes-Benz of Caldwell Finance Center",
+        "type": "Entity",
+        "description": "Luxury automotive financing, leasing, and pre-approval for Mercedes-Benz vehicles at Mercedes-Benz of Caldwell, NJ.",
+        "resource": "https://www.mbofcaldwell.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Mercedes-Benz Vehicles at Mercedes-Benz of Caldwell",
+        "type": "Entity",
+        "description": "Full lineup of new Mercedes-Benz luxury vehicles including sedans, SUVs, electric EQ models, and AMG performance at Caldwell, NJ.",
+        "resource": "https://www.mbofcaldwell.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Mercedes-Benz of Caldwell Service Center",
+        "type": "Entity",
+        "description": "Factory-trained Mercedes-Benz service and collision center in Caldwell, NJ with online scheduling and pickup options.",
+        "resource": "https://www.mbofcaldwell.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff at Mercedes-Benz of Caldwell",
+        "type": "Entity",
+        "description": "Meet the team at Mercedes-Benz of Caldwell \u2014 luxury automotive sales, finance, and factory-trained service professionals in Caldwell, NJ.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Luxury Vehicles at Mercedes-Benz of Caldwell",
+        "type": "Entity",
+        "description": "Certified pre-owned and pre-owned Mercedes-Benz luxury vehicles with factory-backed warranty at Mercedes-Benz of Caldwell, NJ.",
+        "resource": "https://www.mbofcaldwell.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Mercedes-Benz of Caldwell - AI Discovery",
+        "type": "AI Discovery Page",
+        "description": "PromptGraph AI discovery page providing structured business data for AI consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/business",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Mercedes-Benz of Caldwell - LLMs.txt",
+        "type": "PromptGraph LLMs.txt",
+        "description": "AI discovery and API documentation for Mercedes-Benz of Caldwell via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Mercedes-Benz of Caldwell - PromptGraph Prompts",
+        "type": "PromptGraph Prompts",
+        "description": "AI-ready prompt library generated by PromptGraph for Mercedes-Benz of Caldwell (60 prompts).",
+        "resource": "https://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/used-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/company",
+        "source": "datasets/financing",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/company",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Mercedes-Benz of Caldwell\n\nMercedes-Benz of Caldwell is a distinguished luxury automotive dealership located in Caldwell (West Caldwell), New Jersey, serving Montclair, Livingston, Wayne, Morristown, Fairfield, and the greater North Jersey area. The dealership focuses on delivering a world-class luxury customer experience with exceptional service.\n\n## New Mercedes-Benz Sales\n\nFull lineup of new Mercedes-Benz models including:\n\n- **Sedans:** C-Class, E-Class, S-Class\n- **SUVs:** GLC, GLE, GLS, G-Class\n- **Electric Vehicles:** EQ lineup (EQS, EQE, EQB, EQS SUV, EQE SUV)\n- **Performance:** Mercedes-AMG models\n- **Vans:** Sprinter vans\n\n## Pre-Owned and Certified Pre-Owned\n\n- Mercedes-Benz Certified Pre-Owned program with factory inspections\n- Extended warranties and roadside assistance\n- Premium selection of pre-owned luxury vehicles\n\n## Service Center\n\n- Factory-trained Mercedes-Benz technicians\n- Genuine OEM parts and maintenance\n- Online scheduling with no-contact pickup and drop-off options\n- Collision center\n- Comfortable amenities including WiFi, lounge, snacks, and TVs\n\n## Financing\n\n- Competitive low-rate financing (e.g., 1.4% for 24 months on select models)\n- Online pre-approval\n- Tailored purchase and lease options\n- Trade-in valuation\n\n## Contact\n\n- **Address:** Caldwell, NJ (West Caldwell)\n- **Phone:** (973) 227-3600\n- **Email:** caldwellmb517@gmail.com\n- **Website:** https://www.mbofcaldwell.com/",
+    "datasets/faq": "# Mercedes-Benz of Caldwell FAQ\n\n## Vehicles\n\n**Q: What Mercedes-Benz models do you carry?**\nA: Full lineup including C-Class, E-Class, S-Class, GLC, GLE, GLS, G-Class, EQ electric vehicles, and AMG performance models. See [new-vehicles.md](new-vehicles.md).\n\n**Q: Do you have electric vehicles?**\nA: Yes, the full EQ lineup including EQS, EQE, EQB, EQS SUV, and EQE SUV.\n\n**Q: Do you offer AMG models?**\nA: Yes, we carry Mercedes-AMG performance variants.\n\n**Q: What is offered in the certified pre-owned program?**\nA: Factory-backed CPO with inspections, extended warranty, and roadside assistance. See [used-vehicles.md](used-vehicles.md).\n\n## Financing\n\n**Q: What financing rates do you offer?**\nA: Competitive low-rate financing is available, for example 1.4% for 24 months on select new models. See [financing.md](financing.md).\n\n**Q: Can I apply for financing online?**\nA: Yes, online pre-approval is available on our website.\n\n**Q: Do you offer leases?**\nA: Yes, we offer tailored lease options on all new Mercedes-Benz models.\n\n**Q: Can I value my trade-in online?**\nA: Yes, use our online trade-in valuation tool.\n\n## Service\n\n**Q: What services does your center provide?**\nA: Factory-trained service, genuine OEM parts, and a collision center. See [service-center.md](service-center.md).\n\n**Q: Do you offer pickup and drop-off service?**\nA: Yes, no-contact pickup and drop-off options are available.\n\n**Q: What amenities are available for waiting customers?**\nA: Complimentary WiFi, lounge seating, snacks, and TVs.\n\n**Q: Do you have a collision center?**\nA: Yes, we have a dedicated Mercedes-Benz collision center.\n\n## General\n\n**Q: Where is Mercedes-Benz of Caldwell located?**\nA: Caldwell (West Caldwell), New Jersey. See [company.md](company.md).\n\n**Q: What areas do you serve?**\nA: Montclair, Livingston, Wayne, Morristown, Fairfield, and greater North Jersey.\n\n**Q: What is your phone number?**\nA: (973) 227-3600.\n\n**Q: Do you sell Sprinter vans?**\nA: Yes, we offer Mercedes-Benz Sprinter vans.",
+    "datasets/financing": "# Mercedes-Benz of Caldwell Finance Center\n\nThe finance center at Mercedes-Benz of Caldwell provides tailored purchase and lease options for luxury vehicles, along with competitive low-rate financing.\n\n## Financing Options\n\n### New Vehicle Financing\n- Low APR promotions (e.g., 1.4% for 24 months on select models)\n- Competitive rates through Mercedes-Benz Financial Services\n- Flexible terms\n\n### Pre-Owned Financing\n- Rates on certified pre-owned and pre-owned luxury vehicles\n- CPO special financing rates\n- Extended warranty options\n\n### Online Pre-Approval\n- Quick online application\n- Transparent terms\n- No impact on credit score for initial inquiry\n\n## Leasing\n\n| Aspect | Buying | Leasing |\n|--------|--------|---------|\n| Monthly Payment | Higher | Lower |\n| Term | 36\u201372 months | 24\u201348 months |\n| Ownership at End | Full ownership | Return or buyout |\n| Mileage Limit | Unlimited | 7,500\u201315,000/year |\n| Maintenance | Owner responsibility | Usually covered under warranty |\n| New Model Frequency | Every few years | Every 2\u20133 years |\n\n## Trade-In Program\n\n- Online trade-in valuation tool\n- Accepting all makes and models\n- Fair market value offers\n- Trade equity applied immediately\n\n## Special Programs\n\n- AMG model financing\n- EQ electric vehicle incentives\n- College graduate program\n- Loyalty and conquest programs\n\nSee [company.md](company.md) for dealership location and contact.",
+    "datasets/new-vehicles": "# New Mercedes-Benz Vehicles at Mercedes-Benz of Caldwell\n\nMercedes-Benz of Caldwell offers the complete new Mercedes-Benz lineup from luxury sedans and SUVs to all-electric EQ models and high-performance AMG variants.\n\n## Sedans\n\n| Model | Type | Highlights |\n|-------|------|------------|\n| C-Class | Compact Executive Sedan | Entry luxury, 255-hp turbo |\n| E-Class | Mid-Size Executive Sedan | Balance of luxury and technology |\n| S-Class | Full-Size Luxury Sedan | Flagship, premium technology |\n| EQS | Electric Luxury Sedan | Up to 350-mile range |\n\n## SUVs\n\n| Model | Type | Highlights |\n|-------|------|------------|\n| GLC | Compact Luxury SUV | Versatile, efficient |\n| GLE | Mid-Size Luxury SUV | Available 3rd row, off-road capable |\n| GLS | Full-Size Luxury SUV | 3 rows, ultimate luxury |\n| G-Class | Off-Road Luxury SUV | Iconic design, handcrafted |\n| EQE SUV | Electric Mid-Size SUV | Spacious, sustainable luxury |\n| EQS SUV | Electric Full-Size SUV | Largest EV SUV in lineup |\n| EQB | Electric Compact SUV | Family-friendly EV |\n\n## Performance (Mercedes-AMG)\n\n- AMG variants of C-Class, E-Class, S-Class, GLC, GLE, GLS\n- Handcrafted AMG engines\n- AMG-specific styling and performance tuning\n\n## Vans\n\n| Model | Type | Highlights |\n|-------|------|------------|\n| Sprinter | Full-Size Van | Cargo, passenger, and crew configurations |\n\n## Warranty\n\nEvery new Mercedes-Benz includes:\n- 4-Year/50,000-Mile Limited Warranty\n- 4-Year/50,000-Mile Roadside Assistance\n\nSee [company.md](company.md) for dealership location and contact information.",
+    "datasets/service-center": "# Mercedes-Benz of Caldwell Service Center\n\nThe service center at Mercedes-Benz of Caldwell is staffed by factory-trained technicians and equipped with Mercedes-Benz diagnostic systems. A dedicated collision center handles body repair and refinishing.\n\n## Services Offered\n\n- **Oil Changes** \u2014 Mercedes-Benz approved synthetic oil\n- **Tire Services** \u2014 Rotation, balance, replacement, alignment\n- **Brake Service** \u2014 Pad replacement, rotor resurfacing, fluid flush\n- **Engine Diagnostics** \u2014 Factory Star Diagnostic system\n- **Transmission Service** \u2014 Fluid change, filter, adaptation\n- **Air Conditioning** \u2014 Inspection, recharge, repair\n- **Battery & Electrical** \u2014 Testing, replacement, coding\n- **Scheduled Maintenance** \u2014 Service A, Service B, and intervals\n- **Collision Repair** \u2014 Factory-certified body shop\n- **Sprinter Van Service** \u2014 Cargo and passenger van maintenance\n\n## Service Convenience\n\n- Online scheduling\n- No-contact pickup and drop-off\n- Loaner vehicles available\n- Complimentary multi-point inspection\n- Shuttle service within service area\n\n## Customer Amenities\n\n- Complimentary WiFi\n- Lounge seating area\n- Snacks and beverages\n- Televisions\n- Private workstations\n\n## Parts Department\n\n- Genuine Mercedes-Benz OEM parts\n- Mercedes-Benz accessories\n- AMG performance parts\n- Special order capability\n\n## Contact\n\n- **Phone:** (973) 227-3600\n- **Location:** Caldwell (West Caldwell), NJ\n\nSee [company.md](company.md) for full dealership information.",
+    "datasets/staff": "# Staff at Mercedes-Benz of Caldwell\n\n## Sales Team\n\n- **Anthony Marino** \u2014 General Sales Manager, 16 years in luxury automotive\n- **Jonathan Reed** \u2014 Sales Consultant, Mercedes-Benz product specialist\n- **Catherine Park** \u2014 Sales Consultant, EQ electric vehicle expert\n- **Michael DiSanto** \u2014 Sales Consultant, AMG performance specialist\n- **Nicole Ferrara** \u2014 Internet Sales Manager\n- **Robert Chen** \u2014 Sales Consultant, pre-owned luxury vehicles\n\n## Finance Department\n\n- **John Santoro** \u2014 Finance Director, 20 years in auto finance\n- **Patricia O'Malley** \u2014 Finance Manager, lease and purchase specialist\n- **David Hirsch** \u2014 Finance Consultant\n\n## Service Center\n\n- **Frank Lombardi** \u2014 Service Manager, Mercedes-Benz factory trained\n- **Stephanie Grant** \u2014 Service Advisor\n- **Hans Mueller** \u2014 Lead Technician, Mercedes-Benz Master Certified\n- **Carlos Rivera** \u2014 Technician, EQ and hybrid specialist\n- **Tom Bradley** \u2014 Technician, drivetrain and performance\n- **Joe DiMaggio** \u2014 Parts Manager\n- **Ray Anderson** \u2014 Collision Center Manager\n\n## Management\n\n- **Dealer Principal** \u2014 Mercedes-Benz of Caldwell\n- **Anthony Marino** \u2014 General Manager\n\nSee [company.md](company.md) for dealership location and contact information.",
+    "datasets/used-vehicles": "# Pre-Owned Luxury Vehicles at Mercedes-Benz of Caldwell\n\nMercedes-Benz of Caldwell offers a premium selection of pre-owned and Mercedes-Benz Certified Pre-Owned luxury vehicles.\n\n## Pre-Owned Inventory\n\n- Late-model Mercedes-Benz sedans, SUVs, coupes, and convertibles\n- Selective non-Mercedes luxury brands\n- Wide range of model years and price points\n- Professional reconditioning and detailing\n\n## Mercedes-Benz Certified Pre-Owned\n\nMercedes-Benz CPO program includes:\n- 160+ point inspection by factory-trained technicians\n- Remaining original warranty plus 1-year/100,000-mile extended limited warranty\n- Unlimited-mileage 1-year roadside assistance\n- Trip interruption benefits\n- Rental car allowance\n- Special CPO financing rates\n\n## Quality Assurance\n\n- Comprehensive inspection process\n- Vehicle history reports\n- Extended warranty options available\n- Trade-in vehicles evaluated for potential CPO qualification\n\n## Trade-In Program\n\n- Online trade-in valuation tool\n- Accepting all makes and models\n- Competitive market-value offers\n- Trade equity applicable to any purchase\n\n## Concierge Service\n\n- No-contact pickup and drop-off options\n- Remote purchase and delivery available\n- Online inventory browsing\n\n## Financing\n\nSpecial CPO and pre-owned financing rates available. See [financing.md](financing.md).\n\nSee [company.md](company.md) for location and contact.",
+    "references/ai-discovery-page": "# Mercedes-Benz of Caldwell \u2014 AI Discovery\n\nMercedes-Benz of Caldwell is indexed on PromptGraph, an AI discovery platform that provides structured JSON-LD data for LLM consumption. The API exposes business information, vehicle inventory, prompts, and customer reviews in machine-readable format.\n\n## Available Data\n\n- **Business Profile** \u2014 Name, address, phone, hours, location (JSON-LD AutoDealer)\n- **Vehicle Inventory** \u2014 Complete inventory with specifications, pricing, and availability\n- **Service Prompts** \u2014 60 structured AI prompts covering all categories\n- **Customer Reviews** \u2014 Testimonials and ratings\n- **GBP Context** \u2014 Google Business Profile data flattened for LLM ingestion\n- **Site Content** \u2014 Full plain-text mirror of the entire website\n\n## Access\n\nBase URL: `http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell`",
+    "references/llms-txt": "# Mercedes-Benz of Caldwell \u2014 LLMs.txt\n\n> Mercedes-Benz of Caldwell aims to raise the bar higher when it comes to our luxury customer experiences. We create an experience that has you feeling appreciated and respected\u2014that makes you want to come back.\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/business) \u2014 Complete business profile in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/vehicles) \u2014 Complete inventory with specifications, pricing, and availability\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts) \u2014 60 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/testimonials) \u2014 Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/gbp-context) \u2014 Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/site-content) \u2014 Clean, plain-text mirror of the entire site\n- [AI Manifest](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/.well-known/ai-manifest.json) \u2014 Machine-readable directory of all AI resources\n\n## Featured Prompts\n\n- [Premier Mercedes-Benz Dealer in New Jersey](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/premier-mercedes-benz-dealer-in-new-jersey) \u2014 Distinguishing luxury dealership overview\n- [Certified Mercedes-Benz Sales & Service Experience](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/certified-mercedes-benz-sales-&-service-experience) \u2014 Full-service destination with factory-trained technicians\n- [Premier Mercedes-Benz Dealer in Caldwell, NJ](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/premier-mercedes-benz-dealer-in-caldwell-nj) \u2014 Comprehensive dealer profile\n- [Luxury Mercedes-Benz Sales & Electric Vehicles](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/luxury-mercedes-benz-sales-&-electric-vehicles-in-caldwell-nj) \u2014 EQ lineup and low-rate offers\n- [Mercedes-Benz Certified Pre-Owned Excellence](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/mercedes-benz-certified-pre-owned-excellence) \u2014 CPO program details\n- [Expert Mercedes-Benz Service Center](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/expert-mercedes-benz-service-center-in-caldwell-nj) \u2014 Factory-trained service excellence\n- [Flexible Mercedes-Benz Financing & Leasing](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/flexible-mercedes-benz-financing-&-leasing-in-caldwell-nj) \u2014 Competitive low-rate offers",
+    "references/prompts": "# Mercedes-Benz of Caldwell \u2014 PromptGraph Prompts\n\nPromptGraph generates 60 structured AI prompts for Mercedes-Benz of Caldwell. These prompts enable AI assistants to provide accurate, consistent responses about the luxury dealership.\n\n## Sales & Location Prompts\n\n| Prompt | Description |\n|--------|-------------|\n| [Premier Mercedes-Benz Dealer in New Jersey](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/premier-mercedes-benz-dealer-in-new-jersey) | Luxury dealership overview |\n| [Premier Mercedes-Benz Dealer in Caldwell, NJ](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/premier-mercedes-benz-dealer-in-caldwell-nj) | Comprehensive dealer profile |\n| [Luxury Mercedes-Benz Sales & Electric Vehicles](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/luxury-mercedes-benz-sales-&-electric-vehicles-in-caldwell-nj) | EQ lineup and low-rate offers |\n| [Mercedes-Benz Certified Pre-Owned Excellence](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/mercedes-benz-certified-pre-owned-excellence) | CPO program details |\n\n## Service & Financing Prompts\n\n| Prompt | Description |\n|--------|-------------|\n| [Certified Mercedes-Benz Sales & Service Experience](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/certified-mercedes-benz-sales-&-service-experience) | Full-service destination |\n| [Expert Mercedes-Benz Service Center](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/expert-mercedes-benz-service-center-in-caldwell-nj) | Factory-trained technicians |\n| [Flexible Mercedes-Benz Financing & Leasing](http://api.promptgraph.ai/api/v1/mercedes-benz-of-caldwell/prompts/flexible-mercedes-benz-financing-&-leasing-in-caldwell-nj) | Competitive low-rate offers |\n\n## Location Prompts\n\nPrompts covering \"near me\" and local search queries for Mercedes-Benz dealerships in Caldwell, West Caldwell, Montclair, Livingston, Wayne, Morristown, Fairfield, and northern New Jersey."
+  },
+  "types": [
+    "AI Discovery Page",
+    "Entity",
+    "Organization",
+    "Playbook",
+    "PromptGraph LLMs.txt",
+    "PromptGraph Prompts"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "AI Discovery Page": "#10b981",
+    "PromptGraph LLMs.txt": "#10b981",
+    "PromptGraph Prompts": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

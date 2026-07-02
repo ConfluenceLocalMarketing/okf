@@ -12,6 +12,7 @@ okf_version: "0.1"
 - [staff.md](datasets/staff.md) - Staff directory including sales consultants, service advisors, and finance team compiled from customer reviews
 - [service-center.md](datasets/service-center.md) - Service center details, routine maintenance, diagnostics, major repairs, and parts department
 - [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators
 
 ## References
 

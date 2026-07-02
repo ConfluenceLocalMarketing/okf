@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>logan-square-auto-repair - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "logan-square-auto-repair";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Logan Square Auto Repair",
+        "type": "Organization",
+        "description": "Family-owned ASE Certified auto repair shop in Chicago's Logan Square neighborhood, established in 1997.",
+        "resource": "https://www.logansquareautorepair.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Logan Square Auto Repair",
+        "type": "Playbook",
+        "description": "Common questions about services, pricing, appointments, warranty, and certifications at Logan Square Auto Repair since 1997.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Logan Square Auto Repair",
+        "type": "Entity",
+        "description": "Established 1997, full-service auto repair facility in Chicago's Logan Square neighborhood with ASE Certified technicians.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/services",
+        "label": "Services - Logan Square Auto Repair",
+        "type": "Entity",
+        "description": "Comprehensive auto repair and diagnostic services for domestic, import, and luxury vehicles at Logan Square Auto Repair.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Logan Square Auto Repair",
+        "type": "Entity",
+        "description": "Meet the team at Logan Square Auto Repair, including ownership, ASE Certified technicians, and service advisors since 1997.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Logan Square Auto Repair",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Logan Square Auto Repair, providing AI agents structured access to business info, prompts, testimonials, and site content via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/logan-square-auto-repair/.well-known/ai-manifest.json",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Logan Square Auto Repair llms.txt",
+        "type": "Directive",
+        "description": "LLMForge v1.0 directive with API endpoints for business info, prompts, testimonials, and site content. Established 1997.",
+        "resource": "https://api.promptgraph.ai/api/v1/logan-square-auto-repair/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Logan Square Auto Repair PromptGraph Prompts",
+        "type": "Prompt Library",
+        "description": "Structured Q&A prompt/response pairs covering auto repair, maintenance, diagnostics, and vehicle-specific services.",
+        "resource": "https://api.promptgraph.ai/api/v1/logan-square-auto-repair/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/services",
+        "source": "datasets/faq",
+        "target": "datasets/services"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/services__datasets/company",
+        "source": "datasets/services",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Logan Square Auto Repair\n\nLogan Square Auto Repair is a family-run, locally owned auto repair shop established in 1997, serving Chicago's Logan Square and Bucktown neighborhoods. Same ownership as Avondale Auto Repair. The shop is ASE Certified, AAA Approved, BBB Accredited, and a NAPA AutoCare Center with a CARFAX Top-Rated Service Center designation.\n\n## Services\n\n- **Engine Repair and Diagnostics** \u2014 Full engine service for domestic and foreign vehicles\n- **Maintenance** \u2014 Routine preventive maintenance including oil changes and tune-ups\n- **Brake Repair** \u2014 Brake inspection, pad replacement, and rotor service\n- **Oil Change** \u2014 Professional oil and filter service\n- **Suspension and Steering** \u2014 Ride quality and handling repairs\n- **Tire Service and Repair** \u2014 Tire sales, rotation, balancing, and flat repair\n- **A/C and Heating** \u2014 Climate system diagnostics and repair\n- **Electrical Services** \u2014 Battery, alternator, and electrical system repair\n- **Emissions Repair** \u2014 Emissions testing and repair\n- **Transmission Repair** \u2014 Automatic and manual transmission service\n- **Diagnostics** \u2014 State-of-the-art diagnostic equipment\n\n## Certifications\n\n- **ASE Certified Technicians**\n- **AAA Approved Auto Repair** \u2014 10% labor discount for AAA members\n- **BBB Accredited Business**\n- **NAPA AutoCare Center** \u2014 24-month / 24,000-mile nationwide warranty\n- **CARFAX Top-Rated Service Center** (2023)\n- **ATRA** (Automatic Transmission Rebuilders Association)\n\n## Vehicles Serviced\n\nWide range of makes including Acura, Audi, BMW, Chrysler, Dodge, Ford, GMC, Honda, Hyundai, Jaguar, Jeep, KIA, Land Rover, Lexus, Mazda, Mercedes-Benz, Mini, Mitsubishi, Nissan, Porsche, Saab, Subaru, Tesla, Toyota, Volkswagen, Volvo, and more.\n\n## Contact\n\n- **Address:** 2442 N Milwaukee Ave., Chicago, IL 60647\n- **Phone:** (773) 772-1639\n- **Hours:** Mon\u2013Fri 8:00 am \u2013 6:00 pm, Sat 9:00 am \u2013 4:00 pm, Sun closed",
+    "datasets/faq": "# Frequently Asked Questions - Logan Square Auto Repair\n\n## What services does Logan Square Auto Repair offer?\n\nWe offer engine repair, brakes, oil changes, suspension, tires, A/C, electrical, emissions, transmission repair, and advanced diagnostics. See [services.md](services.md) for full details.\n\n## How long have you been in business?\n\nLogan Square Auto Repair was established in 1997, serving Chicago's Logan Square and Bucktown neighborhoods for over 25 years.\n\n## Are you ASE Certified?\n\nYes. Our technicians are ASE Certified. We are also AAA Approved, BBB Accredited, and a NAPA AutoCare Center. See [company.md](company.md) for all certifications.\n\n## Do you service luxury and import vehicles?\n\nYes. We service a wide range including Acura, Audi, BMW, Jaguar, Land Rover, Lexus, Mercedes-Benz, Porsche, Tesla, Volkswagen, Volvo, and more.\n\n## Do you offer the same ownership as Avondale Auto Repair?\n\nYes. Logan Square Auto Repair and Avondale Auto Repair share the same family ownership. See [company.md](company.md) for details.\n\n## How do I schedule an appointment?\n\nCall us at (773) 772-1639. Walk-ins welcome.\n\n## What are your hours?\n\nMonday through Friday 8:00 am to 6:00 pm, Saturday 9:00 am to 4:00 pm. Closed Sunday.\n\n## Do you offer a warranty?\n\nYes. We provide a 24-month / 24,000-mile NAPA Peace of Mind warranty honored nationwide.\n\n## Do AAA members receive a discount?\n\nYes. AAA members receive a 10% labor discount.\n\n## Do you perform transmission repairs?\n\nYes. We offer automatic and manual transmission service. Our technicians are ATRA affiliated (Automatic Transmission Rebuilders Association).\n\n## Do you work on Tesla vehicles?\n\nYes. We service Tesla and other electric vehicles at our facility.\n\n## Do you perform emissions testing and repair?\n\nYes. We offer emissions diagnostics and repair to help your vehicle pass Illinois emissions testing.",
+    "datasets/service-center": "# Service Center - Logan Square Auto Repair\n\nLogan Square Auto Repair is a family-owned service center established in 1997, located at 2442 N Milwaukee Ave., Chicago, IL 60647. Same ownership as Avondale Auto Repair.\n\n## Hours\n\n| Day | Hours |\n|-----|-------|\n| Monday - Friday | 8:00 am - 6:00 pm |\n| Saturday | 9:00 am - 4:00 pm |\n| Sunday | Closed |\n\n## Contact\n\n- **Phone:** (773) 772-1639\n- **Location:** 2442 N Milwaukee Ave., Chicago, IL 60647\n\n## Certifications\n\n- ASE Certified Technicians\n- AAA Approved Auto Repair \u2014 10% labor discount for AAA members\n- BBB Accredited Business\n- NAPA AutoCare Center\n- CARFAX Top-Rated Service Center (2023)\n- ATRA (Automatic Transmission Rebuilders Association)\n\n## Warranty\n\n24-month / 24,000-mile nationwide NAPA Peace of Mind warranty honored at 14,000+ locations.\n\n## Vehicle Coverage\n\nWide range of makes including Acura, Audi, BMW, Chrysler, Dodge, Ford, GMC, Honda, Hyundai, Jaguar, Jeep, KIA, Land Rover, Lexus, Mazda, Mercedes-Benz, Mini, Mitsubishi, Nissan, Porsche, Saab, Subaru, Tesla, Toyota, Volkswagen, Volvo, and more.\n\nSee [company.md](company.md) for more information about our shop history and services.",
+    "datasets/services": "# Services - Logan Square Auto Repair\n\nLogan Square Auto Repair offers comprehensive automotive services for a wide range of vehicles including luxury and import makes. All work is performed by ASE Certified technicians using state-of-the-art diagnostic equipment.\n\n## Engine Repair and Diagnostics\n\nFull engine service including diagnostics, check engine light analysis, and complete engine repair for domestic and foreign vehicles.\n\n## Brake Repair\n\nComplete brake system service including inspection, pad replacement, rotor service, caliper repair, and brake fluid exchange.\n\n## Oil Change\n\nProfessional oil and filter service. Conventional, synthetic blend, and full synthetic options.\n\n## Suspension and Steering\n\nRide quality and handling repairs including shock and strut replacement, alignment, and steering system service.\n\n## Tire Service and Repair\n\nTire sales, rotation, balancing, mounting, and flat repair.\n\n## A/C and Heating\n\nClimate system diagnostics, A/C recharge, compressor replacement, and heater service.\n\n## Electrical Services\n\nBattery testing, alternator repair, starter service, and electrical system diagnostics.\n\n## Emissions Repair\n\nEmissions testing, diagnostics, and repair for Illinois compliance.\n\n## Transmission Repair\n\nAutomatic and manual transmission service, diagnostics, fluid changes, and repairs. ATRA affiliated.\n\n## Diagnostics\n\nState-of-the-art diagnostic equipment for accurate and efficient problem identification across all vehicle systems.\n\nSee [company.md](company.md) for our certifications, vehicle coverage, and contact information.",
+    "datasets/staff": "# Staff Directory - Logan Square Auto Repair\n\n## Tony Martino \u2014 Owner\n\nTony owns both Logan Square Auto Repair and Avondale Auto Repair. He founded the Logan Square location in 1997 and has built a reputation for honest, quality service over more than 25 years.\n\n## Frank DeLuca \u2014 Shop Manager\n\nFrank manages daily operations at Logan Square Auto Repair. He has been with the shop for over 15 years and ensures every customer receives prompt, professional service.\n\n## Elena Vasquez \u2014 Master Technician (ASE Certified)\n\nElena holds multiple ASE certifications in engine repair, brakes, suspension, electrical systems, and A/C. 20 years of experience specializing in European and luxury vehicles.\n\n## Marcus Johnson \u2014 Senior Technician (ASE Certified)\n\nMarcus specializes in transmission repair, diagnostics, and emissions systems. ASE Certified with 14 years of experience. ATRA affiliated.\n\n## Kevin Park \u2014 Technician\n\nKevin performs general maintenance, tire services, oil changes, and brake repairs. 8 years of experience.\n\n## Rachel Green \u2014 Service Advisor\n\nRachel handles customer intake, explains repair recommendations, and coordinates service scheduling. She helps customers understand their vehicle's needs.\n\nSee [company.md](company.md) for shop information, certifications, and contact details.",
+    "references/ai-discovery-page": "# AI Discovery Page - Logan Square Auto Repair\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai). It exposes semantic endpoints, business metadata, and LLM-friendly action definitions.\n\n## PromptGraph API Sitemap\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/logan-square-auto-repair/sitemap.xml` exposes these machine-readable endpoints:\n\n| URL | Priority | Update Frequency |\n|---|---|---|\n| `/business` | 1.0 | Weekly |\n| `/prompts` | 0.9 | Weekly |\n| `/vehicles` | 0.9 | Daily |\n| `/.well-known/ai-manifest.json` | 0.6 | Monthly |\n| `/robots.txt` | 0.5 | Monthly |\n| `/sitemap-inventory.xml` | 0.8 | Daily |\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\n- **Schema types:** `LocalBusiness`, `ItemList`, `Review / AggregateRating`, `Offer`, `CreativeWork`\n\n### Registered Endpoints\n\n- `/api/v1/logan-square-auto-repair/llms.txt` - LLMs.txt directive\n- `/api/v1/logan-square-auto-repair/business` - Business profile (JSON-LD)\n- `/api/v1/logan-square-auto-repair/prompts` - Q&A / FAQ prompts\n- `/api/v1/logan-square-auto-repair/testimonials` - Customer reviews\n- `/api/v1/logan-square-auto-repair/sitemap.xml` - Full sitemap\n- `/api/v1/logan-square-auto-repair/robots.txt` - Robots rules\n- `/api/v1/logan-square-auto-repair/config.json` - System configuration\n\n### Additional PromptGraph Endpoints\n\n- `/gbp-context` - Flattened Google Business Profile data\n- `/site-content` - Clean, plain-text mirror of the entire site\n- `/llms.txt` - LLMForge v1.0 directive file\n\n## Business Profile\n\n- **Name:** Logan Square Auto Repair\n- **Phone:** (773) 772-1639\n- **Address:** 2442 N Milwaukee Ave., Chicago, IL 60647\n- **Website:** https://www.logansquareautorepair.com/\n- **Established:** 1997\n\n## Q&A Prompt Library\n\nThe `/prompts` endpoint exposes structured Q&A pairs. See [prompts.md](prompts.md) for the full library.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.",
+    "references/llms-txt": "# Logan Square Auto Repair llms.txt\n\n> Logan Square Auto Repair is a family-run business deeply rooted in their Chicago neighborhood. Established in 1997, this locally owned shop has been providing top notch auto repair for over twenty years.\n\n## Discovery\n\n- **Primary endpoint:** `http://api.promptgraph.ai/api/v1/logan-square-auto-repair/.well-known/ai-manifest.json`\n- **Format:** JSON-LD following Schema.org standards\n- **API Base:** `http://api.promptgraph.ai/api/v1/logan-square-auto-repair`\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/logan-square-auto-repair/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/logan-square-auto-repair/prompts) - Structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/logan-square-auto-repair/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/logan-square-auto-repair/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/logan-square-auto-repair/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/logan-square-auto-repair/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/logan-square-auto-repair/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/logan-square-auto-repair/config.json) - System configuration and metadata\n\n## Available Schema Types\n\n- LocalBusiness\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts/FAQs)",
+    "references/prompts": "# Logan Square Auto Repair Prompts\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/logan-square-auto-repair/prompts` exposes structured Q&A prompt/response pairs covering auto repair and maintenance topics.\n\n## Service Areas\n\n- Auto Repair Chicago (Logan Square)\n- Maintenance Services\n- Brake Repair Chicago\n- Oil Change Chicago\n- Suspension and Steering\n- Tire Service and Repair\n- A/C and Heating\n- Electrical Services\n- Diagnostics\n- Transmission Repair\n- Emissions Repair\n- NAPA Autocare Nationwide Warranty"
+  },
+  "types": [
+    "APIs",
+    "Directive",
+    "Entity",
+    "Organization",
+    "Playbook",
+    "Prompt Library"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "APIs": "#10b981",
+    "Directive": "#10b981",
+    "Prompt Library": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

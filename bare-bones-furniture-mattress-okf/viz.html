@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>bare-bones-furniture-mattress - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "bare-bones-furniture-mattress";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Bare Bones Furniture & Mattress",
+        "type": "Furniture Retailer",
+        "description": "Locally owned and family-operated furniture and mattress retailer offering living room, bedroom, dining room, home office, outdoor furniture, and bedding with unbeatable prices and immediate delivery in Glens Falls, New York.",
+        "resource": "https://www.barebonesfurn.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Bare Bones Furniture & Mattress AI Discovery",
+        "type": "AI Discovery Page",
+        "description": "Structured knowledge page for automated AI discovery and retrieval about Bare Bones Furniture & Mattress.",
+        "resource": "https://www.barebonesfurn.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Bare Bones Furniture & Mattress - LLM Summary",
+        "type": "LLMs.txt",
+        "description": "Concise markdown summary of Bare Bones Furniture & Mattress for LLM context ingestion.",
+        "resource": "https://www.barebonesfurn.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Bare Bones Furniture & Mattress - AI Prompt Templates",
+        "type": "Prompts",
+        "description": "Curated prompt templates for AI interactions with Bare Bones Furniture & Mattress business data.",
+        "resource": "https://www.barebonesfurn.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/brands",
+        "label": "Bare Bones Furniture & Mattress - Brand Partners",
+        "type": "Table",
+        "description": "Brand partners and their product categories carried by Bare Bones Furniture & Mattress.",
+        "resource": "https://www.barebonesfurn.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 18
+      }
+    },
+    {
+      "data": {
+        "id": "tables/departments",
+        "label": "Bare Bones Furniture & Mattress - Departments",
+        "type": "Table",
+        "description": "Complete list of product departments and their subcategories.",
+        "resource": "https://www.barebonesfurn.com/collections/furniture",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 23
+      }
+    },
+    {
+      "data": {
+        "id": "tables/services",
+        "label": "Bare Bones Furniture & Mattress - Services",
+        "type": "Table",
+        "description": "Complete list of customer services offered by Bare Bones Furniture & Mattress.",
+        "resource": "https://www.barebonesfurn.com/pages/about-us",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 20
+      }
+    }
+  ],
+  "edges": [],
+  "bodies": {
+    "datasets/company": "# Bare Bones Furniture & Mattress\n\n## Overview\n\nBare Bones Furniture & Mattress is a locally owned and family-operated furniture retailer based in Glens Falls, New York. Now run by the second generation of the Quirion family, the business focuses on selling quality brand-name home furniture and mattresses at competitive prices with a strong emphasis on in-stock availability and immediate delivery or pickup. The company operates a large free-standing showroom and an off-site warehouse.\n\n## Location\n\n- **Address:** 10 Sagamore St, Glens Falls, NY 12801\n- **Phone:** (518) 745-0207\n- **Website:** https://www.barebonesfurn.com/\n\n## Hours\n\n| Day | Hours |\n|-----|-------|\n| Monday - Friday | 10:00 AM - 6:00 PM |\n| Saturday | 10:00 AM - 5:00 PM |\n| Sunday | 10:00 AM - 4:00 PM |\n\n## Product Departments\n\nBare Bones Furniture carries a wide range of product categories:\n\n| Department | Categories |\n|------------|-----------|\n| Living Room | Sofas, sectionals, recliners, chairs, tables |\n| Bedroom | Sets, beds, chests, dressers, headboards, nightstands |\n| Kids & Teens | Furniture sized and styled for younger occupants |\n| Sleep & Bedding | Mattresses, bases, pillows, bedding, protectors |\n| Dining Room | Sets, tables, chairs, cabinets |\n| Entertainment | Centers, TV stands |\n| Home Office | Desks, chairs, bookcases |\n| Outdoor | Sets, chairs, sectionals, fire pits |\n| Accents | Rugs, lighting, wall art, mirrors, clocks, pillows |\n\n## Brand Partners\n\n- Signature Design by Ashley\n- Benchcraft\n- Dreamwell\n- Beautyrest Black\n- Sierra Sleep by Ashley\n- Dreamcloud\n- Mega Motion\n- Serta\n\n## Customer Services\n\n- Layaway & Return Policy\n- Interior Design consultation\n- Home Staging services\n- Furniture Repair\n- Delivery & Shipping\n- Commercial Sales (FF&E)\n- Montage Protection plans\n- Financing (Synchrony Home, Koalafi, Shop Pay Installments, Affirm)\n- Fully staffed service department for warranty and manufacturer issues\n\n## Business Philosophy\n\nThe company operates on a pressure-free sales approach, maintaining a large in-stock inventory that allows customers to take purchases home the same day or schedule professional delivery. Their stated commitment is to offer the lowest prices on quality brand-name furniture and mattresses in the region.\n\n## Citations\n\n- Bare Bones Furniture official website: https://www.barebonesfurn.com/\n- About Us page: https://www.barebonesfurn.com/pages/about-us\n- Financing page: https://www.barebonesfurn.com/pages/financing",
+    "references/ai-discovery-page": "# Bare Bones Furniture & Mattress AI Discovery\n\n## Entity Identification\n\n- **Business Name:** Bare Bones Furniture & Mattress\n- **Type:** Furniture Retailer\n- **Location:** 10 Sagamore St, Glens Falls, NY 12801\n- **Phone:** (518) 745-0207\n- **Website:** https://www.barebonesfurn.com/\n- **Hours:** Mon-Fri 10am-6pm, Sat 10am-5pm, Sun 10am-4pm\n- **Ownership:** Family-owned and operated (Quirion family, second generation)\n\n## Categories\n\n- Furniture retail\n- Mattress retail\n- Home furnishings\n- Interior design services\n- Home staging\n\n## Product Taxonomy\n\n| Department | Subcategories |\n|------------|--------------|\n| Living Room | Sofas, sectionals, recliners, chairs, tables |\n| Bedroom | Sets, beds, chests, dressers, headboards, nightstands |\n| Kids & Teens | Youth bedroom furniture |\n| Sleep & Bedding | Mattresses, bases, pillows, bedding, protectors |\n| Dining Room | Sets, tables, chairs, cabinets |\n| Entertainment | Centers, TV stands |\n| Home Office | Desks, chairs, bookcases |\n| Outdoor | Sets, chairs, sectionals, fire pits |\n| Accents | Rugs, lighting, wall art, mirrors, clocks, pillows |\n\n## Brand Portfolio\n\n- Signature Design by Ashley\n- Benchcraft\n- Dreamwell\n- Beautyrest Black\n- Sierra Sleep by Ashley\n- Dreamcloud\n- Mega Motion\n- Serta\n\n## Service Offerings\n\n- Layaway & Return Policy\n- Interior Design consultation\n- Home Staging\n- Furniture Repair\n- Delivery & Shipping\n- Commercial Sales (FF&E)\n- Montage Protection\n- Financing (Synchrony Home, Koalafi, Shop Pay Installments, Affirm)\n- Warranty service department\n\n## Related Concepts\n\nSee [company.md](../datasets/company.md) for full business profile.\nSee [departments.md](../tables/departments.md) for detailed department breakdown.\nSee [services.md](../tables/services.md) for service descriptions.\nSee [brands.md](../tables/brands.md) for brand partner details.",
+    "references/llms-txt": "# Bare Bones Furniture & Mattress\n\n**Type:** Furniture Retailer\n**Location:** 10 Sagamore St, Glens Falls, NY 12801\n**Phone:** (518) 745-0207\n**Website:** https://www.barebonesfurn.com/\n**Hours:** Mon-Fri 10am-6pm, Sat 10am-5pm, Sun 10am-4pm\n\n## Summary\n\nFamily-operated furniture and mattress retailer serving the Glens Falls region since the first generation of the Quirion family. Second-generation owned and operated. Carries a full range of home furnishings with a focus on in-stock availability and immediate delivery.\n\n## Departments\n\nLiving Room (sofas, sectionals, recliners, chairs, tables), Bedroom (sets, beds, chests, dressers, headboards, nightstands), Kids & Teens, Sleep & Bedding (mattresses, bases, pillows, bedding, protectors), Dining Room (sets, tables, chairs, cabinets), Entertainment (centers, TV stands), Home Office (desks, chairs, bookcases), Outdoor (sets, chairs, sectionals, fire pits), Accents (rugs, lighting, wall art, mirrors, clocks, pillows).\n\n## Brands\n\nSignature Design by Ashley, Benchcraft, Dreamwell, Beautyrest Black, Sierra Sleep by Ashley, Dreamcloud, Mega Motion, Serta.\n\n## Services\n\nLayaway & Return Policy, Interior Design, Home Staging, Furniture Repair, Delivery & Shipping, Commercial Sales FF&E, Montage Protection, Financing (Synchrony Home, Koalafi, Shop Pay Installments, Affirm).\n\n## Key Differentiators\n\n- Pressure-free sales environment\n- Large in-stock inventory for immediate delivery or pickup\n- Fully staffed service department for warranty and manufacturer issues\n- Second-generation family ownership\n- Claims lowest price guarantee on brand-name furniture and mattresses",
+    "references/prompts": "# Bare Bones Furniture & Mattress \u2014 AI Prompt Templates\n\n## Prompt 1: Product Recommendation\n\n```\nYou are a sales consultant for Bare Bones Furniture & Mattress, a family-owned furniture\nretailer in Glens Falls, NY. You carry these departments: living room (sofas, sectionals,\nrecliners), bedroom (sets, beds, dressers), dining room (sets, tables, chairs), home office\n(desks, chairs, bookcases), outdoor (sets, chairs, sectionals, fire pits), sleep & bedding\n(mattresses, bases, pillows), kids & teens, entertainment (centers, TV stands), and accents\n(rugs, lighting, wall art, mirrors, clocks, pillows).\n\nYour brand partners include Signature Design by Ashley, Benchcraft, Dreamwell, Beautyrest\nBlack, Sierra Sleep by Ashley, Dreamcloud, and Mega Motion. You offer financing through\nSynchrony Home, Koalafi, Shop Pay Installments, and Affirm. Store hours: Mon-Fri 10-6,\nSat 10-5, Sun 10-4. Location: 10 Sagamore St, Glens Falls, NY 12801.\n\nA customer says: \"[CUSTOMER REQUEST]\"\n\nRecommend products in stock that fit their needs, mention relevant brands, and suggest\nadd-on services (delivery, interior design consultation, Montage Protection) when appropriate.\n```\n\n## Prompt 2: Customer Service Inquiries\n\n```\nYou are the customer service team for Bare Bones Furniture & Mattress in Glens Falls, NY.\nYour services include: layaway & return policy, interior design, home staging, furniture\nrepair, delivery & shipping, commercial sales FF&E, Montage Protection, and financing.\n\nThe store is located at 10 Sagamore St, Glens Falls, NY 12801. Phone: (518) 745-0207.\nHours: Mon-Fri 10-6, Sat 10-5, Sun 10-4.\n\nA customer asks: \"[CUSTOMER QUESTION]\"\n\nRespond helpfully with relevant policy information, service details, or next steps. If\nthe query requires in-store follow-up (warranty issues, manufacturer claims), direct them\nto call the service department (518-745-0207) for scheduling.\n```\n\n## Prompt 3: Mattress Selection Guide\n\n```\nYou are a mattress specialist at Bare Bones Furniture & Mattress. Your mattress lineup\nincludes: Sierra Sleep by Ashley, Dreamwell, Beautyrest Black, Dreamcloud, and Serta.\nYou carry hybrid, memory foam, innerspring, and adjustable base models across all comfort\nlevels (plush, medium, firm, extra-firm).\n\nKey brands and their positioning:\n- Beautyrest Black: premium line with advanced pressure-relief technology\n- Sierra Sleep by Ashley: mid-range with wide comfort selection\n- Dreamcloud: luxury hybrid memory foam (online brand available in-store)\n- Dreamwell: value-oriented with multiple firmness options\n- Serta: trusted national brand\n\nA customer says: \"[CUSTOMER SLEEP NEEDS]\"\n\nHelp them choose the right mattress type and brand. Consider their sleep position,\nfirmness preference, budget, and whether they need a base or adjustable foundation.\nOffer information about your financing options and delivery services.\n```",
+    "tables/brands": "# Brand Partners\n\n| Brand | Category | Description |\n|-------|----------|-------------|\n| Signature Design by Ashley | Living Room, Bedroom, Dining Room, Home Office | Full-line furniture from Ashley's premium design label |\n| Benchcraft | Living Room, Bedroom | Value-oriented Ashley sub-brand |\n| Dreamwell | Mattresses | Broad lineup from plush to extra-firm; hybrid and memory foam |\n| Beautyrest Black | Mattresses | Premium pressure-relief technology; multiple comfort levels |\n| Sierra Sleep by Ashley | Mattresses | Mid-range mattress line with wide comfort selection |\n| Dreamcloud | Mattresses | Luxury hybrid memory foam available in-store |\n| Mega Motion | Living Room | Power recliners, lift chairs, adjustable bases |\n| Serta | Mattresses | Trusted national brand; iComfort and traditional lines |",
+    "tables/departments": "# Departments\n\n| Department | Subcategories | Notes |\n|------------|--------------|-------|\n| Living Room | Sofas, sectionals, recliners, chairs, tables | Largest selection; styles from modern to traditional |\n| Bedroom | Sets, beds, chests, dressers, headboards, nightstands | Panel beds, storage beds, lighted bookcase beds |\n| Kids & Teens | Beds, dressers, desks | Scaled furniture for younger occupants |\n| Sleep & Bedding | Mattresses, bases, pillows, bedding, protectors | Over 80 mattress models in stock |\n| Dining Room | Sets, tables, chairs, cabinets, servers | Formal and casual options |\n| Entertainment | Centers, TV stands | Media storage solutions |\n| Home Office | Desks, chairs, bookcases | Ergonomic and traditional styles |\n| Outdoor | Sets, chairs, sectionals, fire pits | Seasonal inventory |\n| Accents | Rugs, lighting, wall art, mirrors, clocks, pillows | Decorative accessories |",
+    "tables/services": "# Services\n\n| Service | Description |\n|---------|-------------|\n| Layaway & Return Policy | Flexible layaway program with clear return terms |\n| Interior Design | Professional design consultation for room planning |\n| Home Staging | Furniture staging for real estate listings |\n| Furniture Repair | In-house repair service for warranty and damage |\n| Delivery & Shipping | Professional delivery; immediate pickup available for in-stock items |\n| Commercial Sales FF&E | Furniture, fixtures, and equipment for business clients |\n| Montage Protection | Extended protection plans on furniture purchases |\n| Financing | Synchrony Home, Koalafi, Shop Pay Installments, Affirm |\n| Warranty Service | Fully staffed service department; on-site visits available |"
+  },
+  "types": [
+    "AI Discovery Page",
+    "Furniture Retailer",
+    "LLMs.txt",
+    "Prompts",
+    "Table"
+  ],
+  "palette": {
+    "Furniture Retailer": "#8b5cf6",
+    "AI Discovery Page": "#10b981",
+    "LLMs.txt": "#10b981",
+    "Prompts": "#10b981",
+    "Table": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

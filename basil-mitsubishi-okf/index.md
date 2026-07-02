@@ -6,6 +6,7 @@
 - [new-vehicles.md](datasets/new-vehicles.md) - New Mitsubishi model lineup, features, trims, promotions
 - [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory, trade-in, quality assurance
 - [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](datasets/financing.md) - Vehicle financing, leasing, trade-in, and payment calculator information at Basil Mitsubishi
 - [staff.md](datasets/staff.md) - Full staff directory including management, sales, service, and parts teams
 - [service-center.md](datasets/service-center.md) - Service center details, routine maintenance, diagnostics, collision repair, parts department
 
@@ -30,3 +31,4 @@
 - **model-comparison** provides structured specification data for all **new-vehicles** models
 - **testimonials** reflect customer experiences with **dealership** services, **staff**, and both vehicle lines
 - **prompts** provides AI-consumable Q&A covering all **datasets** concepts
+- **financing** details loan and lease options available through the **dealership**'s finance center

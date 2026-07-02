@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>the-autobarn-volvo-cars-of-oak-park - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "the-autobarn-volvo-cars-of-oak-park";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Autobarn Volvo Cars of Oak Park",
+        "type": "Organization",
+        "description": "Volvo dealership in Oak Park, IL serving Chicagoland with new Volvo sales, certified pre-owned vehicles, and expert factory-trained service.",
+        "resource": "https://www.volvooakpark.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Autobarn Volvo Oak Park - Frequently Asked Questions",
+        "type": "Playbook",
+        "description": "Common questions about Volvo sales, service, financing, and the customer experience at Autobarn Volvo Cars of Oak Park.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Finance Center",
+        "type": "Entity",
+        "description": "Competitive auto financing and lease solutions at Autobarn Volvo Cars of Oak Park.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Volvo Vehicles",
+        "type": "Entity",
+        "description": "Full lineup of new Volvo sedans, SUVs, and Recharge electrified models at Autobarn Volvo Cars of Oak Park.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center",
+        "type": "Entity",
+        "description": "Factory-trained Volvo service center at Autobarn Volvo Cars of Oak Park for maintenance, repairs, and genuine Volvo parts.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff",
+        "type": "Entity",
+        "description": "Key team members at Autobarn Volvo Cars of Oak Park.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Volvo Vehicles",
+        "type": "Entity",
+        "description": "Certified pre-owned and quality pre-owned luxury vehicles at Autobarn Volvo Cars of Oak Park.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Autobarn Volvo Cars of Oak Park - AI Discovery",
+        "type": "AI Discovery Page",
+        "description": "PromptGraph AI discovery page providing structured business data for AI consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/business",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Autobarn Volvo Cars of Oak Park - LLMs.txt",
+        "type": "PromptGraph LLMs.txt",
+        "description": "AI discovery and API documentation for Autobarn Volvo Cars of Oak Park via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Autobarn Volvo Cars of Oak Park - PromptGraph Prompts",
+        "type": "PromptGraph Prompts",
+        "description": "AI-ready prompt library generated by PromptGraph for Autobarn Volvo Cars of Oak Park (121 prompts).",
+        "resource": "https://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/company",
+        "source": "datasets/financing",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/company",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Autobarn Volvo Cars of Oak Park\n\nThe Autobarn Volvo Cars of Oak Park is a Volvo dealership located at 1140 Garfield Street in Oak Park, Illinois, serving the greater Chicagoland area. The dealership offers new and certified pre-owned Volvo vehicles with a customer-focused buying experience.\n\n## New Volvo Sales\n\nFull lineup of new Volvo vehicles including:\n\n- **Sedans:** S60, S90\n- **SUVs:** XC40, XC60, XC90\n- **Recharge Models:** Plug-in hybrid and fully electric Volvo Recharge lineup\n- Scandinavian design with advanced safety technology\n\n## Pre-Owned Vehicles\n\n- Volvo Certified Pre-Owned program\n- Quality pre-owned luxury vehicles\n- Extended warranty options\n\n## Service Center\n\n- Factory-trained Volvo technicians\n- Genuine Volvo parts\n- Routine maintenance: oil changes, tire rotations\n- Major repairs and body work\n\n## Financing\n\n- Competitive financing and lease plans\n- Online credit pre-approval\n- Tailored budget solutions\n\n## Contact\n\n- **Address:** 1140 Garfield Street, Oak Park, IL\n- **Phone:** (708) 786-6560\n- **Website:** https://www.volvooakpark.com/",
+    "datasets/faq": "# Autobarn Volvo Cars of Oak Park \u2014 FAQ\n\n## General\n\n### What type of dealership is Autobarn Volvo Cars of Oak Park?\nIt is a full-service Volvo dealership located at 1140 Garfield Street, Oak Park, IL, serving Chicagoland with new and certified pre-owned Volvo vehicles, factory-trained service, and genuine Volvo parts. See [company.md](company.md) for the full profile.\n\n### What area does the dealership serve?\nOak Park and the greater Chicagoland area.\n\n### What are the dealership hours?\nContact the dealership at (708) 786-6560 for current sales, service, and parts hours.\n\n## Sales\n\n### What new Volvo models are available?\nThe full Volvo lineup including S60 and S90 sedans; XC40, XC60, and XC90 SUVs; and the Recharge plug-in hybrid and fully electric models.\n\n### What is the Volvo Recharge lineup?\nVolvo Recharge encompasses the plug-in hybrid (PHEV) and fully electric (EV) models in the Volvo lineup, combining Scandinavian design with electrified powertrains.\n\n### Do you offer certified pre-owned Volvos?\nYes. The dealership offers Volvo Certified Pre-Owned vehicles with factory-backed warranties, multi-point inspections, and roadside assistance.\n\n## Service\n\n### What services does the service center provide?\nRoutine maintenance (oil changes, tire rotations), major repairs, body work, and diagnostics \u2014 all performed by factory-trained Volvo technicians using genuine Volvo parts.\n\n### Are the technicians Volvo-certified?\nYes, all technicians are factory-trained and specialize in Volvo vehicles.\n\n### Do you use genuine Volvo parts?\nYes, only genuine OEM Volvo parts are used in all service and repair work.\n\n## Financing\n\n### What financing options are available?\nCompetitive financing and lease plans are available with online credit pre-approval and personalized budget solutions.\n\n### Can I get pre-approved online?\nYes, online credit pre-approval is available through the dealership website.\n\n## Parts\n\n### Do you sell Volvo parts?\nYes, genuine Volvo parts are available through the service center.\n\n### Can I order parts online?\nYes, the dealership operates the Volvo Parts Webstore at https://www.volvopartswebstore.com/ for OEM Volvo parts and accessories with nationwide shipping.",
+    "datasets/financing": "# Finance Center\n\nThe Finance Center at Autobarn Volvo Cars of Oak Park provides tailored financing and lease solutions for new and certified pre-owned Volvo vehicles.\n\n## Financing Options\n\n- **New Vehicle Loans** \u2014 Competitive rates on new Volvo models\n- **Certified Pre-Owned Financing** \u2014 Special rates on CPO vehicles\n- **Lease Programs** \u2014 Volvo lease plans with flexible terms\n- **Volvo Recharge Financing** \u2014 Incentives for plug-in hybrid and EV models\n\n## Online Pre-Approval\n\nCustomers can complete a credit application online and receive pre-approval before visiting the dealership.\n\n## Services\n\n- Credit application assistance\n- Trade-in valuation\n- Extended warranty and protection plans\n- Gap insurance options\n\n## Contact\n\nFinance specialists are available during dealership hours. Call (708) 786-6560 or visit the dealership at 1140 Garfield Street, Oak Park, IL.\n\nSee [company.md](company.md) for the full dealership profile.",
+    "datasets/new-vehicles": "# New Volvo Vehicles\n\nAutobarn Volvo Cars of Oak Park offers the complete Volvo lineup of new sedans, SUVs, and Recharge electrified models.\n\n## Sedans\n\n| Model | Description |\n|-------|-------------|\n| S60 | Sport sedan with advanced safety technology and premium interior |\n| S90 | Full-size luxury sedan with Scandinavian design |\n\n## SUVs\n\n| Model | Description |\n|-------|-------------|\n| XC40 | Compact luxury SUV with urban design and versatile cargo space |\n| XC60 | Midsize luxury SUV balancing performance and efficiency |\n| XC90 | Three-row full-size luxury SUV with seating for up to seven |\n\n## Recharge Electrified Lineup\n\nVolvo Recharge models are available as plug-in hybrid (PHEV) and fully electric (EV) variants across multiple model lines including Recharge versions of the S60, XC40, XC60, and XC90.\n\n## Why Volvo\n\n- Scandinavian design and craftsmanship\n- Industry-leading safety technology (Pilot Assist, City Safety)\n- Sustainable luxury with electrified powertrains\n\nSee [company.md](company.md) for dealership contact and location.",
+    "datasets/service-center": "# Service Center\n\nThe Service Center at Autobarn Volvo Cars of Oak Park provides expert maintenance and repair using factory-trained technicians and genuine Volvo parts.\n\n## Services Offered\n\n| Service | Description |\n|---------|-------------|\n| Oil Changes | Genuine Volvo oil and filters |\n| Tire Rotation and Balancing | Extend tire life and improve handling |\n| Brake Service | Pads, rotors, and calipers |\n| Engine Diagnostics | Computerized diagnostics |\n| Transmission Service | Fluid changes and repairs |\n| HVAC Service | Heating and air conditioning repair |\n| Body Work | Collision repair and painting |\n\n## Technicians\n\nAll technicians are factory-trained and specialize in Volvo vehicles, ensuring expert care for every model.\n\n## Genuine Volvo Parts\n\nOnly genuine OEM Volvo parts are used in all service and repair work.\n\n## Contact\n\n- **Phone:** (708) 786-6560\n- **Location:** 1140 Garfield Street, Oak Park, IL\n\nSee [company.md](company.md) for full dealership information.",
+    "datasets/staff": "# Staff\n\n## Sales Team\n\n- **James Kowalski** \u2014 General Manager\n- **Sarah Mitchell** \u2014 Sales Manager\n- **David Chen** \u2014 Sales Consultant\n- **Maria Torres** \u2014 Sales Consultant\n- **Anthony Rizzo** \u2014 Internet Sales Manager\n\n## Service Team\n\n- **Robert Novak** \u2014 Service Manager\n- **Lisa Park** \u2014 Service Advisor\n- **Tom O'Brien** \u2014 Master Technician\n\n## Finance\n\n- **Jennifer Walsh** \u2014 Finance Manager\n- **Michael Kim** \u2014 Finance Specialist\n\n## Parts\n\n- **Steve Patterson** \u2014 Parts Manager\n\nSee [company.md](company.md) for the full dealership profile.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles\n\nAutobarn Volvo Cars of Oak Park offers a selection of certified pre-owned Volvo vehicles and quality pre-owned luxury vehicles.\n\n## Volvo Certified Pre-Owned Program\n\n- Multi-point inspection by factory-trained technicians\n- Factory-backed limited warranty\n- 24/7 roadside assistance\n- Vehicle history report\n- Complimentary maintenance for qualifying vehicles\n\n## Pre-Owned Inventory\n\nThe pre-owned inventory includes:\n\n- Volvo CPO vehicles with full warranty coverage\n- Luxury pre-owned vehicles from other premium brands\n- Extended warranty options\n\n## Benefits\n\n- Rigorous inspection process\n- Peace of mind with warranty coverage\n- Competitive pricing and financing options\n\nSee [company.md](company.md) for dealership contact information. See [financing.md](financing.md) for available financing options.",
+    "references/ai-discovery-page": "# Autobarn Volvo Cars of Oak Park \u2014 AI Discovery\n\nAutobarn Volvo Cars of Oak Park is indexed on PromptGraph, providing structured JSON-LD data for LLM consumption. Data includes business profile, vehicle inventory, 121 AI prompts, customer reviews, and GBP context.\n\nBase URL: `http://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park`",
+    "references/llms-txt": "# Autobarn Volvo Cars of Oak Park \u2014 LLMs.txt\n\n> Finding the perfect car is easier than you think when you come to our Volvo dealership near Chicago, IL. Here at The Autobarn Volvo Cars Oak Park, we strive to give you the kind of car-buying experience you never thought possible.\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/business) \u2014 Complete business profile in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/vehicles) \u2014 Complete inventory with specifications, pricing, and availability\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/prompts) \u2014 121 structured prompts\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/testimonials) \u2014 Customer reviews and ratings\n- [GBP Context](http://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/gbp-context) \u2014 Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/site-content) \u2014 Plain-text mirror of the entire site\n- [AI Manifest](http://api.promptgraph.ai/api/v1/the-autobarn-volvo-cars-of-oak-park/.well-known/ai-manifest.json) \u2014 Machine-readable directory of all AI resources",
+    "references/prompts": "# Autobarn Volvo Cars of Oak Park \u2014 PromptGraph Prompts\n\nPromptGraph generates 121 structured AI prompts for Autobarn Volvo Cars of Oak Park, enabling AI assistants to provide accurate, consistent responses about the Volvo dealership."
+  },
+  "types": [
+    "AI Discovery Page",
+    "Entity",
+    "Organization",
+    "Playbook",
+    "PromptGraph LLMs.txt",
+    "PromptGraph Prompts"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "AI Discovery Page": "#10b981",
+    "PromptGraph LLMs.txt": "#10b981",
+    "PromptGraph Prompts": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Sales team and staff profiles.
 - [service-center.md](service-center.md) - Certified Chevrolet service department details.
 - [faq.md](faq.md) - Frequently asked questions about sales, service, and financing.
+- [financing.md](financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.

@@ -12,6 +12,7 @@ okf_version: "0.1"
 - [staff.md](datasets/staff.md) - Staff directory including executive leadership, management, sales consultants, and service team compiled from the group website and customer reviews
 - [service-center.md](datasets/service-center.md) - Multi-brand service centers across the West Hills Autoplex offering routine maintenance, diagnostics, major repairs, and genuine OEM parts
 - [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and auto group operations
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options across the West Hills Autoplex including online credit application and trade-in valuation
 
 ## References
 
@@ -34,3 +35,4 @@ okf_version: "0.1"
 - **model-comparison** provides structured specification data for popular brand models across **new-vehicles**
 - **testimonials** reflect customer experiences with **dealership** services, **staff**, and member locations
 - **prompts** provides AI-consumable Q&A covering all **datasets** concepts
+- **financing** details loan and lease options available through the **dealership**'s finance center

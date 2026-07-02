@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Sales and service staff directory for Nick Mayer GMC Lewisburg.
 - [service-center.md](service-center.md) - GMC factory-trained service center offering maintenance, repairs, and genuine OEM parts.
 - [faq.md](faq.md) - Common questions about GMC inventory, CarBravo, financing, and service at Nick Mayer GMC Lewisburg.
+- [financing.md](financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.

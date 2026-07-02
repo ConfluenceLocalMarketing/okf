@@ -11,6 +11,8 @@ okf_version: "0.1"
 - [staff.md](datasets/staff.md) - Staff directory including sales consultants, service advisors, and finance team compiled from customer reviews
 - [service-center.md](datasets/service-center.md) - Service center details, routine maintenance, diagnostics, major repairs, and parts department
 - [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [new-vehicles.md](datasets/new-vehicles.md) - New vehicle access through the Jake Sweeney Automotive group of dealerships
+- [financing.md](datasets/financing.md) - Vehicle financing options including online applications, buy-here-pay-here programs, and trade-in valuation
 
 ## References
 

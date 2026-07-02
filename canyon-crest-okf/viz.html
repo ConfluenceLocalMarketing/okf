@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>canyon-crest - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "canyon-crest";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Canyon Crest Event Center",
+        "type": "Wedding Venue",
+        "description": "Premier wedding venue and event center in Twin Falls, Idaho located on the Snake River Canyon rim, offering indoor and outdoor event spaces, banquet catering, and off-site catering since 2008.",
+        "resource": "https://canyoncrestevents.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Canyon Crest Event Center",
+        "type": "APIs",
+        "description": "Machine-readable knowledge surface providing AI agents structured access to venue information, event services, menus, and business metadata for Canyon Crest Event Center.",
+        "resource": "https://canyoncrestevents.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Canyon Crest Event Center llms.txt",
+        "type": "Directive",
+        "description": "LLMForge v1.0 directive with API endpoints for venue info, event services, and site content.",
+        "resource": "https://canyoncrestevents.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Canyon Crest Event Center Prompts",
+        "type": "Prompt Library",
+        "description": "3 structured Q&A prompt/response pairs covering wedding venue, corporate events, and catering services at Canyon Crest Event Center.",
+        "resource": "https://canyoncrestevents.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Canyon Crest Event Center\n\nCanyon Crest Event Center is the Magic Valley's most versatile convention facility, located on the Snake River Canyon rim in Twin Falls, Idaho. Since 2008, the venue has delivered service, atmosphere, and location for weddings, corporate events, conventions, and social gatherings.\n\n## Location\n\n- **Address:** 330 Canyon Crest Drive, Twin Falls, ID 83301\n- **Setting:** Snake River Canyon rim with views of the Perrine Bridge\n- **Region:** Magic Valley / Southern Idaho\n\n## Facility\n\nSpanning 21,000 square feet, Canyon Crest features multiple event spaces:\n\n- **Main Event Center** \u2014 divisible into five separate meeting rooms for flexible configurations\n- **The Pointe** \u2014 outdoor ceremony site overlooking the Snake River Canyon\n- **Private Boardroom** \u2014 exclusive dining room with private balcony for groups up to 20\n- **Trail-side Room** \u2014 seating up to 20 with canyon views\n- **Outdoor Canyon Rim Areas** \u2014 ceremony and reception spaces with natural scenery\n- **Meeting Rooms** \u2014 multiple rooms accommodating various group sizes\n- **Redhawk Gastropub** \u2014 on-site restaurant and bar within the same facility\n\n### Capacity\n\n- Up to 350 seated guests\n- Multiple room configurations for 30\u2013350 guests\n- Intimate spaces for smaller gatherings (Twin Falls room capacity: 60)\n\n## Services\n\n### Weddings\n- Ceremony and reception spaces (indoor and outdoor)\n- Setup and teardown by venue staff\n- Tables, chairs, chair covers, and linens included\n- State-of-the-art audiovisual system\n- In-house catering with customizable menus\n- Off-site catering available\n\n### Corporate Events\n- Meetings, conferences, trade shows, and special events\n- Advanced telecommunications connectivity\n- Audio/visual support\n- Breakout sessions on private deck overlooking canyon\n\n### Catering\n- Banquet catering with extensive menu options\n- Off-site catering services\n- Customized menu planning\n- Plated meals, buffet-style service, and hors d'oeuvres\n\n### Special Events\n- Custom event planning and theme coordination\n- On-site and off-site event management\n- Full staffing for event execution\n\n## Features\n\n- Breathtaking Snake River Canyon views\n- Professional staff for setup and teardown\n- Hassle-free booking experience\n- On-site Redhawk Gastropub\n- Ample parking\n- Convenient Twin Falls location near Shoshone Falls, golf courses, and outdoor attractions\n\n## Nearby Attractions\n\n- Shoshone Falls\n- Snake River Canyon\n- Perrine Bridge\n- Twelve golf courses in Southern Idaho\n- Sun Valley ski resort\n- College of Southern Idaho\n\n## Contact\n\n- **Phone:** (208) 733-9392\n- **Website:** https://canyoncrestevents.com/\n- **Social Media:** Facebook @TheCanyonExperience",
+    "references/ai-discovery-page": "# AI Discovery Page - Canyon Crest Event Center\n\nThe AI Discovery Page provides structured, machine-readable venue information for AI agents, covering the full event center profile, services, and capabilities.\n\n## Venue Profile\n\n- **Name:** Canyon Crest Event Center\n- **Type:** LocalBusiness (Wedding Venue / Event Center)\n- **URL:** `https://canyoncrestevents.com/`\n- **Address:** 330 Canyon Crest Drive, Twin Falls, ID 83301\n- **Phone:** (208) 733-9392\n- **Since:** 2008\n- **Capacity:** Up to 350 seated guests\n- **Facility Size:** 21,000 square feet\n\n## Event Spaces\n\n| Space | Capacity | Features |\n|---|---|---|\n| Main Event Center | Up to 350 seated | 5 configurable rooms, A/V system |\n| The Pointe | Varies | Outdoor canyon rim ceremony site |\n| Private Boardroom | Up to 20 | Exclusive dining, private balcony |\n| Trail-side Room | Up to 20 | Canyon views |\n| Redhawk Gastropub | Varies | On-site dining and bar |\n\n## Services\n\n1. **Weddings** \u2014 Full-service wedding venue with indoor/outdoor spaces, catering, and staff support\n2. **Corporate Events** \u2014 Meetings, conferences, trade shows with A/V and telecom support\n3. **Catering** \u2014 Banquet and off-site catering with customizable menus\n4. **Special Events** \u2014 Custom event planning and theme coordination\n\n## Available Resources\n\n- Floor plans (web page)\n- Banquet menu (PDF)\n- Off-site catering menu (PDF)\n- Event gallery (web page)\n- Event calendar (web page)\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.",
+    "references/llms-txt": "# Canyon Crest Event Center llms.txt\n\n> Searching for a wedding venue or event center in Twin Falls, Idaho? Canyon Crest Event Center has been hosting weddings, corporate events, and social gatherings on the Snake River Canyon rim since 2008, offering indoor and outdoor event spaces, banquet catering, and off-site catering.\n\n## Discovery\n\n- **Primary endpoint:** `https://canyoncrestevents.com/`\n- **Format:** HTML with structured data\n- **Available resources:**\n  - Floor plans\n  - Banquet menus (PDF)\n  - Off-site catering menus (PDF)\n  - Event gallery\n  - Event calendar\n\n## Venue Details\n\n- **Facility size:** 21,000 square feet\n- **Capacity:** Up to 350 seated guests\n- **Event spaces:** Main event center (5 configurable rooms), The Pointe outdoor ceremony site, private boardroom, trail-side room, meeting areas\n- **On-site dining:** Redhawk Gastropub\n\n## Available Schema Types\n\n- LocalBusiness\n- Event\n- Menu\n- FoodEstablishment",
+    "references/prompts": "# Canyon Crest Event Center Prompts\n\n## Wedding Venue\n\n- **Canyon Crest Event Center Wedding Venue** \u2014 Premier wedding venue on the Snake River Canyon in Twin Falls, Idaho. Indoor and outdoor ceremony and reception spaces for up to 350 guests, with full catering, staff-assisted setup and teardown, state-of-the-art audiovisual system, and breathtaking canyon views. The Pointe outdoor ceremony site overlooks the Perrine Bridge and Snake River Canyon.\n\n## Corporate Events & Conferences\n\n- **Canyon Crest Event Center Corporate Events** \u2014 Versatile convention facility with 21,000 square feet divisible into five meeting rooms. Advanced telecommunications connectivity, A/V support, private boardroom with balcony for groups up to 20, trail-side room with canyon views, and on-site Redhawk Gastropub. Ideal for meetings, conferences, trade shows, and breakout sessions.\n\n## Catering Services\n\n- **Canyon Crest Event Center Catering** \u2014 Full-service banquet and off-site catering in Twin Falls, Idaho. Customizable menus ranging from elegantly plated meals to buffet-style service. Experienced team for menu customization, theme coordination, and event planning. On-site and off-site event catering available."
+  },
+  "types": [
+    "APIs",
+    "Directive",
+    "Prompt Library",
+    "Wedding Venue"
+  ],
+  "palette": {
+    "Wedding Venue": "#8b5cf6",
+    "APIs": "#10b981",
+    "Directive": "#10b981",
+    "Prompt Library": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

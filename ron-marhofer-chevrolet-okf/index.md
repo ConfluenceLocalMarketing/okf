@@ -14,6 +14,7 @@ Ron Marhofer Chevrolet is a Chevrolet dealership located at 3423 Darrow Rd, Stow
 - [staff.md](datasets/staff.md) - Sales team and staff profiles.
 - [service-center.md](datasets/service-center.md) - Certified Chevrolet service department details.
 - [faq.md](datasets/faq.md) - Frequently asked questions about sales, service, and financing.
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
 
 ## References
 

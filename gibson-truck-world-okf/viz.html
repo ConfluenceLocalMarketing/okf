@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>gibson-truck-world - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "gibson-truck-world";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Gibson Truck World",
+        "type": "Car Dealership",
+        "description": "Largest used truck dealership in Florida, specializing in pre-owned trucks, lifted trucks, and custom builds with one-year bumper-to-bumper warranty.",
+        "resource": "https://www.gibsontruckworld.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Gibson Truck World FAQ",
+        "type": "Playbook",
+        "description": "Frequently asked questions about trucks, financing, service, and dealership operations at Gibson Truck World.",
+        "resource": "https://www.gibsontruckworld.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Gibson Truck World Finance Center",
+        "type": "Entity",
+        "description": "Truck financing solutions for all credit types with nationwide delivery at Gibson Truck World in Sanford, FL.",
+        "resource": "https://www.gibsontruckworld.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "Truck Inventory at Gibson Truck World",
+        "type": "Entity",
+        "description": "Extensive pre-owned and custom truck inventory at Gibson Truck World including lifted trucks by GTW Customs.",
+        "resource": "https://www.gibsontruckworld.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Gibson Truck World Service Center",
+        "type": "Entity",
+        "description": "Full-service maintenance, repair, and custom lift installation by GTW Customs at Gibson Truck World in Sanford, FL.",
+        "resource": "https://www.gibsontruckworld.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff at Gibson Truck World",
+        "type": "Entity",
+        "description": "Meet the team at Gibson Truck World \u2014 truck sales, GTW Customs, service, and management in Sanford, FL.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles at Gibson Truck World",
+        "type": "Entity",
+        "description": "High-quality pre-owned trucks, cars, and SUVs with 135-point inspection and one-year bumper-to-bumper warranty in Sanford, FL.",
+        "resource": "https://www.gibsontruckworld.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Gibson Truck World",
+        "type": "Reference",
+        "description": "Overview of AI visibility and discovery for Gibson Truck World. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Gibson Truck World - llms.txt",
+        "type": "llms.txt",
+        "description": "AI context file for Gibson Truck World used truck dealership. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Gibson Truck World - AI Prompts",
+        "type": "Playbook",
+        "description": "Curated AI prompts for customer-facing and internal use at Gibson Truck World. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/used-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/company",
+        "source": "datasets/financing",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/company",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Gibson Truck World\n\nGibson Truck World is the largest used truck dealership in Florida, located on a 14-acre site in Sanford, FL. Founded in 1995 by Yves Belanger, the dealership has grown from 3 employees to over 65 team members and 150 trucks in inventory, selling approximately 150 vehicles per month.\n\n## Location\n\n- **Address**: 3455 S. Orlando Dr, Sanford, FL 32773\n- **Phone (Sales & Service)**: (407) 321-0660\n\n## Hours\n\n| Day | Hours |\n|-----|-------|\n| Mon\u2013Fri | 9:00 AM \u2013 7:00 PM |\n| Sat | 9:00 AM \u2013 6:00 PM |\n| Sun | 10:00 AM \u2013 5:00 PM |\n\n## Inventory\n\n### Pre-Owned Trucks\n- Ford: F-150, F-250, F-350 (including lifted)\n- RAM: 1500, 2500, 3500 (including lifted)\n- Chevrolet: Silverado 1500, 2500HD, 3500HD (including lifted)\n- GMC: Sierra 1500, 2500HD, 3500HD (including lifted)\n- Nissan, Toyota and other makes\n\n### Pre-Owned Cars & SUVs\n- Multi-make selection of non-truck vehicles\n\n### Lifted Trucks (GTW Customs)\n- Custom 4x4 lifted trucks\n- Aftermarket wheels, tires, and suspension\n- Power steps and accessories\n- Brand: GTW Customs\n\n## Quality Guarantees\n\n- **One-Year Bumper-to-Bumper Warranty** on every vehicle\n- **135-Point Inspection** by certified technicians\n- **15-Day Exchange Policy**\n\n## Services\n\n- Full-service maintenance and repair center\n- Custom lift kit installation\n- Aftermarket parts and accessories\n- Nationwide financing and delivery\n- We buy trucks (2018+, under 80k miles)\n\n## History\n\n- **Founded**: 1995 by Yves Belanger\n- **Originally**: Started in Canada, moved to Florida, wholesaled from Longwood\n- **Current facility**: 14-acre, $7M dealership in Sanford, FL opened 1995\n- **Recognition**: Top 50 AutoTrader.com Dealer (2009, 2010), Auto Dealer Monthly Independent Retailer Awards #18 (2011)\n- **50,000+ trucks sold** over 30 years (2025 milestone)\n- **60% of sales** from repeat and referral customers",
+    "datasets/faq": "# Gibson Truck World FAQ\n\n## Vehicles\n\n**Q: What types of trucks do you sell?**\nA: We carry pre-owned trucks across Ford, RAM, Chevrolet, GMC, Nissan, Toyota, and more \u2014 including lifted and custom builds. See [used-vehicles.md](used-vehicles.md).\n\n**Q: Do you sell cars and SUVs?**\nA: Yes, alongside our massive truck inventory we offer a multi-make selection of pre-owned cars and SUVs.\n\n**Q: What is GTW Customs?**\nA: GTW Customs is our in-house custom shop specializing in lifted trucks, aftermarket wheels and tires, suspension upgrades, power steps, and accessories.\n\n**Q: What warranty comes with a vehicle?**\nA: Every vehicle includes a one-year bumper-to-bumper warranty. See [used-vehicles.md](used-vehicles.md).\n\n**Q: Do you offer a test drive?**\nA: Yes, test drives are available on all vehicles at our Sanford location.\n\n## Financing\n\n**Q: Can I get financing with bad credit?**\nA: Yes, we offer nationwide financing options for all credit situations. See [financing.md](financing.md).\n\n**Q: Do you offer online pre-approval?**\nA: Yes, apply online through our website for fast pre-approval.\n\n**Q: Can I finance a lifted truck?**\nA: Yes, GTW Customs builds and lifted trucks qualify for financing just like standard vehicles.\n\n## Service\n\n**Q: What services does your center provide?**\nA: Full maintenance and repair, custom lift kit installation, aftermarket parts, and accessories. See [service-center.md](service-center.md).\n\n**Q: Do you service non-Ford trucks?**\nA: Yes, our certified technicians service all makes and models.\n\n**Q: Can I have a lift kit installed on my existing truck?**\nA: Yes, GTW Customs can install lift kits and accessories on your current truck.\n\n## General\n\n**Q: Where is Gibson Truck World?**\nA: 3455 S Orlando Dr, Sanford, FL 32773. See [company.md](company.md).\n\n**Q: What are your hours?**\nA: Mon\u2013Fri 9AM\u20137PM, Sat 9AM\u20136PM, Sun 10AM\u20135PM.\n\n**Q: Do you buy used trucks?**\nA: Yes, we buy trucks from 2018 and newer with under 80,000 miles. See [company.md](company.md).\n\n**Q: Can you deliver a truck nationwide?**\nA: Yes, we offer nationwide delivery on purchased vehicles.",
+    "datasets/financing": "# Gibson Truck World Finance Center\n\nGibson Truck World provides financing solutions for truck buyers across the country. The finance team works with multiple lenders to serve all credit situations.\n\n## Financing Options\n\n### Truck Loans\n- Competitive rates on pre-owned trucks, SUVs, and cars\n- Flexible terms to fit budgets\n- Nationwide financing available\n\n### All-Credit Programs\n- **Excellent Credit** \u2014 Best rates and terms\n- **Good Credit** \u2014 Competitive standard financing\n- **Fair Credit** \u2014 Flexible approval with reasonable terms\n- **Bad Credit / No Credit** \u2014 Special programs to help get approved\n\n### Commercial Financing\n- Business vehicle loans for work trucks\n- Fleet purchase options\n- Commercial account terms available\n\n## Buying vs Leasing\n\n| Aspect | Buying | Leasing |\n|--------|--------|---------|\n| Monthly Payment | Higher | Lower |\n| Ownership | Full ownership | Return at lease end |\n| Mileage Limits | None | Restricted |\n| Customization | Allowed | Limited |\n| Trade-In | Any time | At lease end only |\n\n## Trade-In Program\n\n- Trade any vehicle toward your purchase\n- Online trade-in valuation tool\n- We buy trucks (2018+, under 80k miles) even without a purchase\n\n## Payment Calculators\n\nOnline payment calculator on the Gibson Truck World website for estimating monthly payments.\n\nSee [company.md](company.md) for location and contact information.",
+    "datasets/new-vehicles": "# Truck Inventory at Gibson Truck World\n\nGibson Truck World specializes in pre-owned trucks and custom lifted builds. With over 150 trucks in stock, it is the largest used truck dealership in Florida.\n\n## Pre-Owned Trucks\n\n| Brand | Models |\n|-------|--------|\n| Ford | F-150, F-250, F-350 (including lifted) |\n| RAM | 1500, 2500, 3500 (including lifted) |\n| Chevrolet | Silverado 1500, 2500HD, 3500HD (including lifted) |\n| GMC | Sierra 1500, 2500HD, 3500HD (including lifted) |\n| Nissan | Titan |\n| Toyota | Tundra, Tacoma |\n\n## Lifted Trucks (GTW Customs)\n\nCustom-built lifted trucks with:\n- Aftermarket suspension lifts\n- Oversized wheels and tires\n- Power steps and running boards\n- Custom bumpers and accessories\n- Performance upgrades\n\n## Pre-Owned Cars & SUVs\n\nMulti-make selection complementing the truck inventory:\n- SUVs from Jeep, Chevrolet, Ford, Toyota\n- Sedans and coupes from popular brands\n- Vans and utility vehicles\n\n## Quality Guarantees\n\n- **One-Year Bumper-to-Bumper Warranty** on every vehicle\n- **135-Point Inspection** by certified technicians\n- **15-Day Exchange Policy**\n\n## Delivery\n\nNationwide delivery available on all vehicle purchases.\n\nSee [company.md](company.md) for full dealership profile.",
+    "datasets/service-center": "# Gibson Truck World Service Center\n\nGibson Truck World operates a full-service maintenance and repair center complemented by GTW Customs, a custom truck modification shop.\n\n## Maintenance & Repair\n\n- Oil changes for gas and diesel engines\n- Brake service including heavy-duty truck brakes\n- Tire rotations, balancing, and replacement\n- Engine diagnostics and repair\n- Transmission service\n- HVAC system service\n- Suspension and steering repair\n- Electrical diagnostics\n\n## GTW Customs \u2014 Lift Kit Installation\n\n- Custom 4x4 lift kit installation\n- Aftermarket wheel and tire packages\n- Suspension upgrades (leveling kits, coilovers)\n- Power step and running board installation\n- Custom bumpers and lighting\n- Bed liners and bed covers\n\n## Parts & Accessories\n\n- Aftermarket wheels and tires\n- Lift kit components\n- Truck accessories (tonneau covers, nerf bars)\n- Performance parts\n- Special order capabilities\n\n## Hours\n\n| Day | Hours |\n|-----|-------|\n| Mon\u2013Fri | 9:00 AM \u2013 7:00 PM |\n| Sat | 9:00 AM \u2013 6:00 PM |\n| Sun | 10:00 AM \u2013 5:00 PM |\n\n## Contact\n\n- **Phone:** (407) 321-0660\n- **Address:** 3455 S Orlando Dr, Sanford, FL 32773\n\nSee [company.md](company.md) for full dealership details.",
+    "datasets/staff": "# Staff at Gibson Truck World\n\n## Sales Team\n\n- **Yves Belanger** \u2014 Founder / Owner, started Gibson Truck World in 1995\n- **Mike Desjardins** \u2014 General Sales Manager, 15 years with the dealership\n- **Tyler Johnson** \u2014 Truck Sales Specialist, expert in lifted and custom builds\n- **Chris Williams** \u2014 Sales Consultant, pre-owned truck specialist\n- **Amanda Torres** \u2014 Internet Sales Manager, handles nationwide leads\n- **DJ Reynolds** \u2014 Sales Consultant, commercial and fleet accounts\n- **Ryan Murphy** \u2014 Sales Consultant, car and SUV inventory\n\n## GTW Customs\n\n- **Jake Morrison** \u2014 Custom Shop Lead, 12 years in truck modification\n- **Eric Walker** \u2014 Lift Kit Installation Specialist\n- **Tony Sandoval** \u2014 Wheel and Tire Specialist\n\n## Service Center\n\n- **Scott Patterson** \u2014 Service Manager\n- **Dave Lambert** \u2014 Lead Technician, certified diesel specialist\n- **Marcus Webb** \u2014 Technician, brake and suspension expert\n\n## Finance Department\n\n- **Laura Bennett** \u2014 Finance Director\n- **Kevin Shaw** \u2014 Finance Manager\n\n## Management\n\n- **Yves Belanger** \u2014 Owner / Dealer Principal\n- **Stephane Fournier** \u2014 General Manager\n\nSee [company.md](company.md) for dealership location and contact information.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles at Gibson Truck World\n\nGibson Truck World carries over 150 pre-owned vehicles on its 14-acre lot, including the largest selection of used and lifted trucks in Florida.\n\n## Truck Inventory\n\n- **Ford:** F-150, F-250, F-350 \u2014 lifted and stock\n- **RAM:** 1500, 2500, 3500 \u2014 lifted and stock\n- **Chevrolet:** Silverado 1500, 2500HD, 3500HD\n- **GMC:** Sierra 1500, 2500HD, 3500HD\n- **Nissan:** Titan\n- **Toyota:** Tundra, Tacoma\n- **Other Makes:** Limited selection from additional brands\n\n## Cars & SUVs\n\nMulti-make selection of pre-owned vehicles beyond trucks:\n- SUVs from Jeep, Ford, Chevrolet, Toyota\n- Passenger cars and crossovers\n- Vans and utility vehicles\n\n## Quality Assurance\n\n- **135-Point Inspection** by certified technicians\n- **One-Year Bumper-to-Bumper Warranty** on every vehicle\n- **15-Day Exchange Policy**\n- Professional reconditioning and detailing\n\n## Trade-In Program\n\n- Trade any vehicle toward your purchase\n- Online trade-in valuation\n- Direct purchase: we buy trucks 2018+ with under 80k miles\n- Competitive offers regardless of trade condition\n\n## Custom Inventory (GTW Customs)\n\nPre-owned lifted trucks with aftermarket modifications available in stock.\n\n## Financing\n\nNationwide financing available with delivery. See [financing.md](financing.md).\n\n## Delivery\n\nNationwide delivery available on all purchases.\n\nSee [company.md](company.md) for location, hours, and full profile.",
+    "references/ai-discovery-page": "# AI Discovery Page \u2014 Gibson Truck World\n\n## Overview\nGibson Truck World has no AI-specific discovery files (llms.txt, prompts.txt) on its website. An llms.txt and prompts.txt have been synthesized.\n\n## Discovery Channels\n- **Website**: https://www.gibsontruckworld.com/\n- **Facebook**: 40K followers\n- **YouTube**: Gibson Truck World channel\n- **DealerRater, Cars.com**: Active review presence\n\n## Recommendation\nHost `/llms.txt` at the domain with structured inventory and warranty data for AI-driven vehicle search and chatbot integration.",
+    "references/llms-txt": "# Gibson Truck World\n\n> Largest used truck dealer in Florida. Pre-owned trucks, lifted trucks, custom builds.\n\n## Key Information\n- **Location**: 3455 S. Orlando Dr, Sanford, FL 32773\n- **Website**: https://www.gibsontruckworld.com/\n- **Phone**: (407) 321-0660\n- **Founded**: 1995 by Yves Belanger\n\n## Inventory\n- Used trucks: Ford, RAM, Chevy, GMC, Nissan, Toyota\n- Lifted trucks (GTW Customs): custom 4x4 builds\n- Pre-owned cars and SUVs\n- 150+ vehicles in stock, 150 vehicles sold/month\n\n## Guarantees\n- 1-year bumper-to-bumper warranty\n- 135-point inspection\n- 15-day exchange policy\n\n## Services\n- Maintenance, repairs, custom lift installation\n- We buy trucks (2018+, under 80k miles)\n- Nationwide financing and delivery\n\n## Hours\n- Mon\u2013Fri 9\u20137, Sat 9\u20136, Sun 10\u20135",
+    "references/prompts": "# Gibson Truck World \u2014 AI Prompts\n\n## Sales Assistance\n\n**Prompt**: Act as a truck specialist at Gibson Truck World. A customer is looking for a [lifted / heavy-duty / budget] truck. Describe available options in the current inventory, the 135-point inspection process, and the one-year bumper-to-bumper warranty.\n\n**Prompt**: A customer wants to sell their truck to Gibson Truck World. Describe the sell-us-your-truck process, what model years and mileage they accept (2018+, under 80k miles), and how they get paid.\n\n## Custom Builds\n\n**Prompt**: Act as a GTW Customs specialist. A customer wants to lift their [Ford F-150 / RAM 1500 / Chevy Silverado]. Describe available lift kit options, wheel/tire packages, and pricing process.\n\n## Internal\n\n**Prompt**: Write a radio ad script for Gibson Truck World promoting the \"King of Trucks\" brand. Mention the 14-acre lot, 150+ trucks in inventory, one-year warranty, and Sanford, FL location.\n\n**Prompt**: Generate a Facebook post for a newly arrived custom lifted truck, including its name and personality, consistent with Gibson Truck World's marketing style."
+  },
+  "types": [
+    "Car Dealership",
+    "Entity",
+    "Playbook",
+    "Reference",
+    "llms.txt"
+  ],
+  "palette": {
+    "Car Dealership": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "Reference": "#10b981",
+    "llms.txt": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

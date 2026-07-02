@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Staff directory for Nick Mayer Chevrolet of Dickson.
 - [service-center.md](service-center.md) - Full-service automotive center with factory-trained technicians and genuine OEM parts.
 - [faq.md](faq.md) - Frequently asked questions about the dealership, inventory, financing, and service.
+- [financing.md](financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.

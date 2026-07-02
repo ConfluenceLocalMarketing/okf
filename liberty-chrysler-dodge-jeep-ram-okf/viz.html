@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>liberty-chrysler-dodge-jeep-ram - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "liberty-chrysler-dodge-jeep-ram";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Liberty Chrysler Dodge Jeep Ram",
+        "type": "Organization",
+        "description": "CDJR dealership in Libertyville, IL serving Chicagoland with new and pre-owned vehicles, Mopar service, and financing for all credit types.",
+        "resource": "https://www.drivelibertycdjr.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Liberty Chrysler Dodge Jeep Ram FAQ",
+        "type": "Playbook",
+        "description": "Frequently asked questions about CDJR vehicles, financing, service, and dealership at Liberty Chrysler Dodge Jeep Ram.",
+        "resource": "https://www.drivelibertycdjr.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Liberty Chrysler Dodge Jeep Ram Finance Center",
+        "type": "Entity",
+        "description": "Competitive financing, leasing, and all-credit programs at Liberty CDJR in Libertyville, IL.",
+        "resource": "https://www.drivelibertycdjr.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New CDJR Vehicles at Liberty Chrysler Dodge Jeep Ram",
+        "type": "Entity",
+        "description": "Full lineup of new Chrysler, Dodge, Jeep, and RAM vehicles at Liberty CDJR in Libertyville, IL.",
+        "resource": "https://www.drivelibertycdjr.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Liberty Chrysler Dodge Jeep Ram Service Center",
+        "type": "Entity",
+        "description": "Mopar-certified auto service and repair at Liberty CDJR in Libertyville, IL serving all makes and models.",
+        "resource": "https://www.drivelibertycdjr.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff at Liberty Chrysler Dodge Jeep Ram",
+        "type": "Entity",
+        "description": "Meet the team at Liberty CDJR \u2014 sales, finance, and service professionals in Libertyville, IL.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles at Liberty Chrysler Dodge Jeep Ram",
+        "type": "Entity",
+        "description": "Quality used and certified pre-owned CDJR vehicles with competitive pricing at Liberty CDJR in Libertyville, IL.",
+        "resource": "https://www.drivelibertycdjr.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Liberty Chrysler Dodge Jeep Ram - AI Discovery",
+        "type": "AI Discovery Page",
+        "description": "PromptGraph AI discovery page providing structured business data for AI consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/business",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Liberty Chrysler Dodge Jeep Ram - LLMs.txt",
+        "type": "PromptGraph LLMs.txt",
+        "description": "AI discovery and API documentation for Liberty Chrysler Dodge Jeep Ram via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Liberty Chrysler Dodge Jeep Ram - PromptGraph Prompts",
+        "type": "PromptGraph Prompts",
+        "description": "AI-ready prompt library generated by PromptGraph for Liberty Chrysler Dodge Jeep Ram (141 prompts).",
+        "resource": "https://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/used-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/company",
+        "source": "datasets/financing",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/company",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Liberty Chrysler Dodge Jeep Ram\n\nLiberty Chrysler Dodge Jeep Ram is a full-line CDJR dealership in Libertyville, Illinois, serving Libertyville, Gurnee, and the greater Chicago suburbs. Part of the Liberty Automotive group, the dealership offers hassle-free shopping with upfront pricing and a no-haggle experience.\n\n## New CDJR Sales\n\n- **Jeep:** Wrangler, Wrangler 4xe, Grand Cherokee, Grand Cherokee L, Gladiator, Compass, Cherokee\n- **Ram:** 1500, heavy-duty trucks, ProMaster\n- **Dodge:** Charger, Challenger, Durango, Hornet\n- **Chrysler:** Pacifica, Pacifica Hybrid\n\n## Pre-Owned Vehicles\n\n- Quality used and certified pre-owned CDJR vehicles\n- Thorough inspections and warranties\n- Wide selection at competitive prices\n\n## Service Center\n\n- Mopar-certified technicians\n- Genuine Mopar parts\n- Full-service maintenance and repairs\n\n## Financing\n\n- Competitive rates and lease deals\n- Bad credit and all-credit programs\n- Online pre-approvals and payment calculators\n\n## Special Promotions\n\n- New vehicle specials with low APR financing\n- Cash rebates and lease offers\n- Model-specific incentives\n\n## Contact\n\n- **Phone:** (224) 424-3318\n- **Website:** https://www.drivelibertycdjr.com/",
+    "datasets/faq": "# Liberty Chrysler Dodge Jeep Ram FAQ\n\n## Vehicles\n\n**Q: What new CDJR models do you carry?**\nA: We carry the full lineup: Jeep Wrangler, Grand Cherokee, Gladiator; RAM 1500 and heavy-duty trucks; Dodge Durango, Hornet; Chrysler Pacifica. See [new-vehicles.md](new-vehicles.md).\n\n**Q: Do you offer test drives?**\nA: Yes, test drives are available for all new and pre-owned vehicles at our Libertyville location.\n\n**Q: What pre-owned vehicles do you have?**\nA: We offer a wide selection of quality used and certified pre-owned CDJR vehicles. See [used-vehicles.md](used-vehicles.md).\n\n**Q: Do you have the Jeep Wrangler 4xe?**\nA: Yes, we carry the Jeep Wrangler 4xe plug-in hybrid model.\n\n## Financing\n\n**Q: Do you offer no-haggle pricing?**\nA: Yes, we have upfront, no-haggle pricing on all vehicles.\n\n**Q: Can I get financing with bad credit?**\nA: Yes, we offer all-credit programs with competitive rates and online pre-approval. See [financing.md](financing.md).\n\n**Q: What lease deals do you have?**\nA: We offer competitive lease specials on most new CDJR models. Check our website for current offers.\n\n**Q: Can I apply for financing online?**\nA: Yes, online pre-approval is available directly on our website.\n\n## Service\n\n**Q: What services does your service center provide?**\nA: Full-service maintenance and repairs by Mopar-certified technicians using genuine Mopar parts. See [service-center.md](service-center.md).\n\n**Q: Do you service non-CDJR vehicles?**\nA: Yes, our technicians service all makes and models.\n\n**Q: Do you use genuine Mopar parts?**\nA: Yes, we use only genuine Mopar parts for all CDJR repairs and maintenance.\n\n## General\n\n**Q: Where are you located?**\nA: Libertyville, Illinois, serving Libertyville, Gurnee, and the greater Chicago suburbs. See [company.md](company.md).\n\n**Q: What is your phone number?**\nA: (224) 424-3318.\n\n**Q: Is Liberty CDJR part of a larger group?**\nA: Yes, it is part of the Liberty Automotive group.",
+    "datasets/financing": "# Liberty Chrysler Dodge Jeep Ram Finance Center\n\nThe finance team at Liberty CDJR provides competitive rates, lease programs, and financing solutions for all credit types. The dealership uses a no-haggle pricing model for a transparent experience.\n\n## Financing Options\n\n### New Vehicle Financing\n- Low APR promotions on select CDJR models\n- Competitive rates through multiple lenders\n- Flexible term lengths\n\n### Used Vehicle Financing\n- Rates on quality pre-owned CDJR vehicles\n- Certified pre-owned financing benefits\n- Wide range of loan programs\n\n### All-Credit Programs\n- **Excellent Credit** \u2014 Best available rates\n- **Good Credit** \u2014 Standard competitive financing\n- **Fair Credit** \u2014 Flexible approval options\n- **Bad Credit / No Credit** \u2014 Special programs available\n\n## Leasing\n\n| Aspect | Buying | Leasing |\n|--------|--------|---------|\n| Monthly Payment | Higher | Lower |\n| Term | 36\u201384 months | 24\u201348 months |\n| Ownership | Full ownership | Return or buyout |\n| Mileage | Unlimited | Fixed allowance |\n| Customization | Allowed | Not permitted |\n| Trade-In Option | Any time | At lease end |\n\n## Online Tools\n\n- Online pre-approval application\n- Payment calculator\n- Trade-in valuation\n- Current specials and incentives\n\n## Special Promotions\n\n- New vehicle specials with low APR\n- Cash rebates and lease offers\n- Model-specific incentives\n- Seasonal sales events\n\nSee [company.md](company.md) for dealership contact information.",
+    "datasets/new-vehicles": "# New CDJR Vehicles at Liberty Chrysler Dodge Jeep Ram\n\nLiberty CDJR offers the complete lineup of new Chrysler, Dodge, Jeep, and RAM vehicles with no-haggle upfront pricing.\n\n## Jeep\n\n| Model | Type | Highlights |\n|-------|------|------------|\n| Wrangler | Off-Road SUV | Iconic 4x4, removable doors |\n| Wrangler 4xe | Plug-In Hybrid SUV | 4x4 with electric range |\n| Grand Cherokee | Mid-Size SUV | Luxury and capability |\n| Grand Cherokee L | Three-Row SUV | Seating for 7 |\n| Gladiator | Midsize Pickup Truck | Convertible truck |\n| Compass | Compact SUV | Affordable city SUV |\n| Cherokee | Compact SUV | Comfortable daily driver |\n\n## RAM\n\n| Model | Type | Highlights |\n|-------|------|------------|\n| 1500 | Light-Duty Truck | Best-in-class towing |\n| 2500 | Heavy-Duty Truck | Diesel available |\n| 3500 | Heavy-Duty Truck | Max towing capability |\n| ProMaster | Commercial Van | Cargo and passenger |\n\n## Dodge\n\n| Model | Type | Highlights |\n|-------|------|------------|\n| Durango | Three-Row SUV | HEMI V8 available |\n| Hornet | Compact SUV | Performance hybrid option |\n\n## Chrysler\n\n| Model | Type | Highlights |\n|-------|------|------------|\n| Pacifica | Minivan | Stow 'n Go seating |\n| Pacifica Hybrid | Plug-In Hybrid Minivan | 32-mile EV range |\n\nSee [company.md](company.md) for dealership location and hours.",
+    "datasets/service-center": "# Liberty Chrysler Dodge Jeep Ram Service Center\n\nThe service center at Liberty CDJR is staffed by Mopar-certified technicians using genuine Mopar parts for Chrysler, Dodge, Jeep, and RAM vehicles.\n\n## Services Offered\n\n- **Oil Changes** \u2014 Conventional and synthetic oil\n- **Tire Services** \u2014 Rotation, balance, replacement, alignment\n- **Brake Service** \u2014 Pads, rotors, calipers, fluid flush\n- **Engine Diagnostics** \u2014 Check engine light, performance issues\n- **Transmission Service** \u2014 Fluid change, filter, repair\n- **Heating & Air Conditioning** \u2014 System inspection, recharge, repair\n- **Battery & Electrical** \u2014 Testing, replacement, alternator\n- **Scheduled Maintenance** \u2014 Factory-recommended service intervals\n- **4x4 / AWD Service** \u2014 Transfer case, differential service\n- **Jeep Wrangler Service** \u2014 Specialized off-road vehicle maintenance\n\n## Mopar Parts\n\n- Genuine OEM Mopar parts and accessories\n- Performance parts for Jeep and Dodge\n- Maintenance parts (filters, belts, wipers)\n- Special order capabilities\n\n## Service Benefits\n\n- Mopar-certified technicians\n- Factory diagnostic equipment\n- Online scheduling\n- Competitive rates\n\n## Contact\n\n- **Phone:** (224) 424-3318\n\nSee [company.md](company.md) for full location details.",
+    "datasets/staff": "# Staff at Liberty Chrysler Dodge Jeep Ram\n\n## Sales Team\n\n- **Tom Grady** \u2014 Sales Manager, 14 years with Liberty Automotive\n- **Katie Novak** \u2014 Sales Consultant, Jeep and 4x4 specialist\n- **Marcus Allen** \u2014 Sales Consultant, RAM truck expert\n- **Emily Zhao** \u2014 Internet Sales Manager\n- **Jose Ramirez** \u2014 Sales Consultant, bilingual (English/Spanish)\n- **Pat O'Brien** \u2014 Sales Consultant, Dodge and Chrysler specialist\n\n## Finance Department\n\n- **Steve Patterson** \u2014 Finance Director\n- **Rachel Kim** \u2014 Finance Manager, leasing specialist\n- **Dan Waters** \u2014 Finance Consultant, credit-challenged programs\n\n## Service Center\n\n- **Brian Crawford** \u2014 Service Manager, ASE certified\n- **Amy Henderson** \u2014 Service Advisor\n- **Mike Russo** \u2014 Lead Technician, Mopar Master Certified\n- **Chris Nguyen** \u2014 Technician, drivetrain specialist\n- **Tyler Moore** \u2014 Technician, diesel and heavy-duty\n\n## Management\n\n- **Liberty Automotive Group** \u2014 Dealer Group\n- **Scott Reynolds** \u2014 General Manager\n\nSee [company.md](company.md) for dealership location and contact information.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles at Liberty Chrysler Dodge Jeep Ram\n\nLiberty CDJR offers a selection of quality pre-owned and certified pre-owned vehicles at competitive prices with all-credit financing.\n\n## Pre-Owned Inventory\n\n- Chrysler, Dodge, Jeep, and RAM used vehicles\n- Multi-make selection beyond CDJR brands\n- Wide range of model years and price points\n- Thoroughly inspected for quality and reliability\n\n## Certified Pre-Owned\n\nCDJR certified pre-owned vehicles come with:\n- Factory-backed warranty\n- Multi-point inspection\n- Roadside assistance\n- Special CPO financing rates\n\n## Quality Assurance\n\n- Thorough multi-point inspections\n- Vehicle history reports available\n- Professional reconditioning\n\n## Trade-In Program\n\n- Appraise your vehicle online or in person\n- Competitive trade-in values\n- Apply trade equity toward any purchase\n\n## Financing for Pre-Owned\n\n- Competitive rates for used vehicles\n- All-credit programs available\n- Online pre-approval\n- No-haggle pricing on used inventory too\n\nSee [company.md](company.md) for dealership location and contact information.",
+    "references/ai-discovery-page": "# Liberty Chrysler Dodge Jeep Ram \u2014 AI Discovery\n\nLiberty Chrysler Dodge Jeep Ram is indexed on PromptGraph, providing structured JSON-LD data for LLM consumption. Data includes business profile, vehicle inventory, 141 AI prompts, customer reviews, and GBP context.\n\nBase URL: `http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram`",
+    "references/llms-txt": "# Liberty Chrysler Dodge Jeep Ram \u2014 LLMs.txt\n\n> The team at Liberty Automotive welcomes you to our dealership in Libertyville, where we're confident you'll find the vehicles you're looking for at a price you can afford.\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/business) \u2014 Complete business profile in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/vehicles) \u2014 Complete inventory with specifications, pricing, and availability\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts) \u2014 141 structured prompts\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/testimonials) \u2014 Customer reviews and ratings\n- [GBP Context](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/gbp-context) \u2014 Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/site-content) \u2014 Plain-text mirror of the entire site\n- [AI Manifest](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/.well-known/ai-manifest.json) \u2014 Machine-readable directory of all AI resources\n\n## Featured Prompts\n\n- [CDJR Dealer Libertyville IL](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/chrysler-dodge-jeep-ram-dealer-libertyville-il) \u2014 Full-line CDJR dealership\n- [New Jeep Wrangler](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/new-jeep-wrangler-for-sale-libertyville-il) \u2014 Wrangler Rubicon and Sahara\n- [New Ram 1500 Truck Deals](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/new-ram-1500-truck-deals-libertyville-il) \u2014 Ram 1500 specials\n- [Used and CPO CDJR](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/used-and-certified-pre-owned-cdjr-libertyville-il) \u2014 Pre-owned inventory\n- [Financing and Bad Credit Options](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/cdjr-financing-and-bad-credit-options-libertyville-il) \u2014 All credit types\n- [Jeep Grand Cherokee](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/jeep-grand-cherokee-and-l-libertyville-il) \u2014 Grand Cherokee lineup\n- [Dodge Charger and Challenger](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/dodge-charger-and-challenger-libertyville-il) \u2014 Muscle car performance",
+    "references/prompts": "# Liberty Chrysler Dodge Jeep Ram \u2014 PromptGraph Prompts\n\nPromptGraph generates 141 structured AI prompts for Liberty Chrysler Dodge Jeep Ram.\n\n## Sales & Model Prompts\n\n- [CDJR Dealer Libertyville IL](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/chrysler-dodge-jeep-ram-dealer-libertyville-il) \u2014 Full-line dealership\n- [New Jeep Wrangler](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/new-jeep-wrangler-for-sale-libertyville-il) \u2014 Wrangler Rubicon and Sahara\n- [New Ram 1500 Truck Deals](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/new-ram-1500-truck-deals-libertyville-il) \u2014 Ram 1500 specials\n- [Used and CPO CDJR](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/used-and-certified-pre-owned-cdjr-libertyville-il) \u2014 Pre-owned inventory\n- [Financing and Bad Credit Options](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/cdjr-financing-and-bad-credit-options-libertyville-il) \u2014 All credit types\n- [Jeep Grand Cherokee](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/jeep-grand-cherokee-and-l-libertyville-il) \u2014 Grand Cherokee lineup\n- [Dodge Charger and Challenger](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/dodge-charger-and-challenger-libertyville-il) \u2014 Muscle car performance\n- [Chrysler Pacifica Minivan](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/chrysler-pacifica-minivan-dealer-libertyville-il) \u2014 Family minivan\n- [New Vehicle Specials](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/new-vehicle-specials-and-incentives-libertyville-il) \u2014 Promotional leader\n- [Jeep Gladiator Truck](http://api.promptgraph.ai/api/v1/liberty-chrysler-dodge-jeep-ram/prompts/jeep-gladiator-truck-for-sale-libertyville-il) \u2014 Midsize truck"
+  },
+  "types": [
+    "AI Discovery Page",
+    "Entity",
+    "Organization",
+    "Playbook",
+    "PromptGraph LLMs.txt",
+    "PromptGraph Prompts"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "AI Discovery Page": "#10b981",
+    "PromptGraph LLMs.txt": "#10b981",
+    "PromptGraph Prompts": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

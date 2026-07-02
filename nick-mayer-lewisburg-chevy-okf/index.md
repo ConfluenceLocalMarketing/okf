@@ -14,6 +14,7 @@ This bundle documents **Nick Mayer Chevrolet Lewisburg**, a Chevrolet dealership
 - [staff.md](datasets/staff.md) - Sales and service staff directory for Nick Mayer Chevrolet Lewisburg.
 - [service-center.md](datasets/service-center.md) - Chevrolet factory-trained service center offering maintenance, repairs, and genuine OEM parts.
 - [faq.md](datasets/faq.md) - Common questions about Chevrolet inventory, CarBravo, financing, and service at Nick Mayer Chevrolet Lewisburg.
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
 
 ## References
 

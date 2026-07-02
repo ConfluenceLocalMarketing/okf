@@ -7,6 +7,7 @@ okf_version: "0.1"
 ## Datasets
 
 - [dealership.md](datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Haselwood Volkswagen of Bremerton in Bremerton, WA
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options at Haselwood Volkswagen of Bremerton including online applications, trade-in valuation, and payment calculators
 - [new-vehicles.md](datasets/new-vehicles.md) - New Volkswagen model lineup including Atlas, Taos, Tiguan, ID.4, Jetta, Golf GTI, Golf R, ID. Buzz, and Arteon
 - [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
 - [staff.md](datasets/staff.md) - Staff directory including management, sales consultants, service advisors, and finance team

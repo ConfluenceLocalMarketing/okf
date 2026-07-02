@@ -7,6 +7,7 @@ okf_version: "0.1"
 ## Datasets
 
 - [dealership.md](datasets/dealership.md) - Business profile, hours, contact, services, location, special programs, and staff overview
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options at Jake Sweeney Chevrolet including online applications, trade-in valuation, and payment calculators
 - [new-vehicles.md](datasets/new-vehicles.md) - New Chevrolet model lineup including Silverado, Equinox, Trax, Trailblazer, Traverse, Blazer, Colorado, Tahoe, Corvette, and EV models
 - [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory of over 4,000 vehicles with multi-make selection and Jake Sweeney Express online purchasing
 - [staff.md](datasets/staff.md) - Staff directory including sales consultants, service advisors, and finance team compiled from customer reviews

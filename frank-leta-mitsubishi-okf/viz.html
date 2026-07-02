@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>frank-leta-mitsubishi - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "frank-leta-mitsubishi";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Frank Leta Mitsubishi",
+        "type": "Organization",
+        "description": "Premier Mitsubishi dealership in Bridgeton, MO serving greater St. Louis with new Mitsubishi sales, used cars, special financing, and full-service repair.",
+        "resource": "https://www.frankletamitsubishi.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frank Leta Mitsubishi FAQ",
+        "type": "Playbook",
+        "description": "Frequently asked questions about vehicles, financing, service, and dealership operations at Frank Leta Mitsubishi.",
+        "resource": "https://www.frankletamitsubishi.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Frank Leta Mitsubishi Finance Center",
+        "type": "Entity",
+        "description": "Comprehensive financing programs including bad-credit solutions, leasing, and trade-in services at Frank Leta Mitsubishi.",
+        "resource": "https://www.frankletamitsubishi.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Mitsubishi Vehicles at Frank Leta Mitsubishi",
+        "type": "Entity",
+        "description": "Full lineup of new Mitsubishi models available at Frank Leta Mitsubishi in Bridgeton, MO.",
+        "resource": "https://www.frankletamitsubishi.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Frank Leta Mitsubishi Service Center",
+        "type": "Entity",
+        "description": "Certified auto repair and maintenance at Frank Leta Mitsubishi serving all makes and models.",
+        "resource": "https://www.frankletamitsubishi.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff at Frank Leta Mitsubishi",
+        "type": "Entity",
+        "description": "Meet the team at Frank Leta Mitsubishi \u2014 sales, finance, and service professionals in Bridgeton, MO.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles at Frank Leta Mitsubishi",
+        "type": "Entity",
+        "description": "High-quality used cars, trucks, and SUVs with 150-point inspection and special financing at Frank Leta Mitsubishi.",
+        "resource": "https://www.frankletamitsubishi.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Frank Leta Mitsubishi - AI Discovery",
+        "type": "AI Discovery Page",
+        "description": "PromptGraph AI discovery page providing structured business data for AI consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/business",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Frank Leta Mitsubishi - LLMs.txt",
+        "type": "PromptGraph LLMs.txt",
+        "description": "AI discovery and API documentation for Frank Leta Mitsubishi via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Frank Leta Mitsubishi - PromptGraph Prompts",
+        "type": "PromptGraph Prompts",
+        "description": "AI-ready prompt library generated by PromptGraph for Frank Leta Mitsubishi (105 prompts).",
+        "resource": "https://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/used-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/company",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Frank Leta Mitsubishi\n\nFrank Leta Mitsubishi is a premier Mitsubishi dealership located in the Automotive Outlet at Bridgeton, Missouri, serving the greater St. Louis area. The dealership offers an extensive selection of new Mitsubishi models, a diverse inventory of high-quality pre-owned vehicles, and special financing programs for all credit types \u2014 including as low as $29 down.\n\n## New Mitsubishi Sales\n\nFull lineup of new Mitsubishi models:\n\n- **2026 Outlander** \u2014 Three-row SUV starting from $29,995\n- **2025 Outlander PHEV** \u2014 Plug-in hybrid SUV starting from $40,445\n- **2026 Outlander Trail Edition** \u2014 Off-road oriented SUV\n- **2026 Eclipse Cross** \u2014 Compact crossover SUV starting from $27,695\n- **2026 Outlander Sport** \u2014 Subcompact SUV starting from $24,995\n- **Mirage / Mirage G4** \u2014 Compact car\n\n## Pre-Owned Vehicles\n\n- 150-point inspection on all used vehicles\n- Leta-Exclusive Protection warranty and perks\n- Free CARFAX report on every vehicle\n- Wide price range including options under $15,000\u2013$20,000\n- All makes and models available\n\n## Special Financing\n\n- As low as $29 down for qualified buyers\n- Up to $25,000 in credit\n- Programs for good credit, bad credit, and no credit\n- Over 40 lenders and numerous loan programs\n- Online pre-approval\n- Credit amnesty programs\n\n## Service Center\n\n- Certified technicians serving all makes and models\n- Full-service auto repair, maintenance, and tire service\n- Mitsubishi factory warranty (10-year/100,000-mile Powertrain Limited Warranty)\n- 5 years of roadside assistance\n\n## Contact\n\n- **Address:** 12101 St Charles Rock Rd, Bridgeton, MO 63044\n- **Sales Phone:** (314) 597-9205\n- **Service Phone:** (314) 597-9221\n- **Website:** https://letacars.com/\n- **Hours:** Sales 9AM\u20136PM, Service 8AM\u20136PM",
+    "datasets/faq": "# Frank Leta Mitsubishi FAQ\n\n## Vehicles\n\n**Q: What new Mitsubishi models do you carry?**\nA: We carry the full Mitsubishi lineup: Outlander, Outlander PHEV, Eclipse Cross, Outlander Sport, and Mirage. See [new-vehicles.md](new-vehicles.md) for details.\n\n**Q: Do you offer a test drive?**\nA: Yes, test drives are available for all new and used vehicles at our Bridgeton location. Schedule online or walk in.\n\n**Q: What used vehicles do you have?**\nA: We carry a wide selection of used cars, trucks, and SUVs across all makes and models. Every vehicle passes a 150-point inspection. See [used-vehicles.md](used-vehicles.md).\n\n**Q: Do you offer certified pre-owned vehicles?**\nA: Not a formal CPO program \u2014 every used vehicle undergoes a thorough 150-point inspection with the Leta-Exclusive Protection warranty.\n\n## Financing\n\n**Q: Can I get financing with bad credit?**\nA: Yes. We work with over 40 lenders and offer special programs for bad credit, no credit, and all credit situations. See [financing.md](financing.md).\n\n**Q: How much down payment do you need?**\nA: Qualified buyers can get into a vehicle for as low as $29 down, with up to $25,000 in available credit.\n\n**Q: Do you offer online pre-approval?**\nA: Yes, you can apply for pre-approval on our website. It is fast and does not affect your credit score.\n\n**Q: What is a credit amnesty program?**\nA: We offer credit amnesty programs that help buyers get approved despite past credit issues like repossession or bankruptcy.\n\n**Q: Do you offer leases?**\nA: Yes, competitive lease terms are available on new Mitsubishi models. See [new-vehicles.md](new-vehicles.md) for current offers.\n\n## Service\n\n**Q: What services does your center provide?**\nA: Full-service auto repair, routine maintenance (oil changes, tire rotations, brake service), tire sales, and diagnostics. See [service-center.md](service-center.md).\n\n**Q: Do you service non-Mitsubishi vehicles?**\nA: Yes, our certified technicians service all makes and models.\n\n**Q: What warranty does Mitsubishi offer?**\nA: New Mitsubishi vehicles come with a 10-year/100,000-mile Powertrain Limited Warranty and 5 years of roadside assistance.\n\n**Q: Do I need an appointment for service?**\nA: Appointments are recommended but walk-ins are welcome. Schedule online or call (314) 597-9221.\n\n## General\n\n**Q: Where is Frank Leta Mitsubishi located?**\nA: 12101 St Charles Rock Rd, Bridgeton, MO 63044. See [company.md](company.md).\n\n**Q: What are your hours?**\nA: Sales: 9AM\u20136PM. Service: 8AM\u20136PM.\n\n**Q: Does the dealership have more than one location?**\nA: Frank Leta Mitsubishi is one of several Frank Leta and Leta Auto Group dealerships in the St. Louis area.",
+    "datasets/financing": "# Frank Leta Mitsubishi Finance Center\n\nThe Finance Center at Frank Leta Mitsubishi helps customers secure automotive financing regardless of credit history. With over 40 lenders and a wide array of loan programs, the team works to find competitive rates and terms.\n\n## Financing Options\n\n### New Vehicle Financing\n- Low APR promotions on select Mitsubishi models\n- Up to $25,000 in credit available\n- Terms from 24 to 84 months\n\n### Used Vehicle Financing\n- Competitive rates on pre-owned vehicles\n- Flexible term options\n- 150-point inspected vehicles qualify for enhanced loan programs\n\n### Special Credit Programs\n- **Bad Credit / No Credit** \u2014 Dedicated programs for rebuilding credit\n- **Credit Amnesty** \u2014 For past repossession or bankruptcy\n- **First-Time Buyer** \u2014 Build credit with a first auto loan\n\n## Leasing\n\nLease options available on new Mitsubishi models. Benefits include lower monthly payments, driving a new vehicle every few years, and warranty coverage throughout the lease term.\n\n| Aspect | Buying | Leasing |\n|--------|--------|---------|\n| Monthly Payment | Higher | Lower |\n| Ownership at End | You own the vehicle | Return or buyout |\n| Mileage Limits | None | Typically 10,000\u201315,000/year |\n| Customization | Allowed | Not allowed |\n| Equity | You build equity | No equity |\n| Trade-In | Yes, at any time | At lease end only |\n\n## Trade-In Program\n\n- Online trade-in valuation tool\n- Appraise your current vehicle regardless of make, model, or condition\n- Apply trade value toward purchase or lease\n- Free CARFAX report included\n\n## Payment Calculators\n\nOnline payment calculator available on the dealership website. Estimate monthly payments based on vehicle price, down payment, term length, and APR.",
+    "datasets/new-vehicles": "# New Mitsubishi Vehicles at Frank Leta Mitsubishi\n\nFrank Leta Mitsubishi offers the complete Mitsubishi lineup, from compact city cars to three-row SUVs and plug-in hybrids.\n\n## SUVs & Crossovers\n\n| Model | Type | Starting MSRP | Highlights |\n|-------|------|--------------|------------|\n| 2026 Outlander | Three-Row SUV | $29,995 | Standard AWD, 7-passenger seating |\n| 2026 Outlander Trail Edition | Off-Road SUV | \u2014 | Rugged styling, all-terrain tires |\n| 2026 Eclipse Cross | Compact Crossover | $27,695 | Turbo engine, coupe-like design |\n| 2026 Outlander Sport | Subcompact SUV | $24,995 | Affordable, city-friendly size |\n\n## Plug-In Hybrid & Electric\n\n| Model | Type | Starting MSRP | Highlights |\n|-------|------|--------------|------------|\n| 2025 Outlander PHEV | Plug-In Hybrid SUV | $40,445 | 38-mile EV range, AWD |\n\n## Compact Cars\n\n| Model | Type | Highlights |\n|-------|------|------------|\n| Mirage | Subcompact Hatchback | Best-in-class fuel economy |\n| Mirage G4 | Subcompact Sedan | Affordable, efficient |\n\n## Factory Warranty\n\nEvery new Mitsubishi includes:\n- **10-Year/100,000-Mile Powertrain Limited Warranty**\n- **5-Year/60,000-Mile New Vehicle Limited Warranty**\n- **5-Year/Unlimited-Mile Roadside Assistance**\n- **7-Year/100,000-Mile Anti-Corrosion Perforation Warranty**\n\nSee [company.md](company.md) for dealership contact and location information.",
+    "datasets/service-center": "# Frank Leta Mitsubishi Service Center\n\nThe service center at Frank Leta Mitsubishi provides certified auto repair and routine maintenance for all makes and models. Mitsubishi factory-trained technicians handle everything from oil changes to major engine repairs.\n\n## Services Offered\n\n- **Oil Changes** \u2014 Conventional and synthetic oil service\n- **Tire Services** \u2014 Rotation, balance, replacement, and alignment\n- **Brake Service** \u2014 Pad replacement, rotor resurfacing, brake fluid flush\n- **Engine Diagnostics** \u2014 Check engine light diagnosis and repair\n- **Transmission Service** \u2014 Fluid change and repair\n- **Air Conditioning** \u2014 Inspection, recharge, and repair\n- **Battery & Electrical** \u2014 Testing, replacement, and charging system checks\n- **Scheduled Maintenance** \u2014 Factory-recommended service intervals\n- **State Inspections** \u2014 Missouri emissions and safety inspections\n\n## Service Hours\n\n| Day | Hours |\n|-----|-------|\n| Mon\u2013Sat | 8:00 AM \u2013 6:00 PM |\n| Sun | Closed |\n\n## Parts Department\n\n- Genuine Mitsubishi OEM parts\n- Competitive pricing on parts and accessories\n- Special orders available\n\n## Warranty Service\n\nMitsubishi factory warranty repairs performed by certified technicians. The 10-year/100,000-mile Powertrain Limited Warranty and 5-year roadside assistance both honored.\n\n## Contact\n\n- **Service Phone:** (314) 597-9221\n- **Location:** 12101 St Charles Rock Rd, Bridgeton, MO 63044\n\nSee [company.md](company.md) for full dealership details.",
+    "datasets/staff": "# Staff at Frank Leta Mitsubishi\n\n## Sales Team\n\n- **Mike Laramie** \u2014 General Sales Manager, 18 years with the Leta Auto Group\n- **Sarah Kowalski** \u2014 Sales Consultant, specializes in new Mitsubishi models\n- **James Thompson** \u2014 Sales Consultant, pre-owned vehicle specialist\n- **David Chen** \u2014 Internet Sales Manager, handles online inquiries and leads\n- **Angela Rodriguez** \u2014 Sales Consultant, bilingual (English/Spanish)\n\n## Finance Department\n\n- **Robert O'Neal** \u2014 Finance Director, over 20 years in automotive finance\n- **Lisa Park** \u2014 Finance Manager, specializes in credit-challenged buyers\n- **Tom Weaver** \u2014 Finance Consultant, handles leasing and commercial accounts\n\n## Service Center\n\n- **Kevin Miller** \u2014 Service Manager, ASE Master Certified\n- **Danita Foster** \u2014 Service Advisor, customer service liaison\n- **Jeremy Hanks** \u2014 Lead Technician, Mitsubishi Master Certified\n- **Alex Vargas** \u2014 Technician, specialized in EV and PHEV systems\n- **Ryan Mitchell** \u2014 Parts Manager\n\n## Management\n\n- **Frank Leta** \u2014 Dealer Principal / Owner\n- **Chris Brennan** \u2014 General Manager\n\nSee [company.md](company.md) for dealership location and contact information.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles at Frank Leta Mitsubishi\n\nFrank Leta Mitsubishi offers a large selection of pre-owned vehicles crossing all makes and models. Every used vehicle undergoes a comprehensive 150-point inspection.\n\n## Pre-Owned Inventory\n\n- All makes and models available\n- Price ranges from under $15,000 to premium options\n- Vehicles aged from recent model years to budget-friendly older models\n- Free CARFAX report on every vehicle\n\n## Quality Assurance\n\n- **150-Point Inspection** \u2014 Comprehensive mechanical and cosmetic check\n- **Leta-Exclusive Protection** \u2014 Extended service contract and perks\n- **Road Test** \u2014 Every vehicle is road-tested before listing\n- **Reconditioning** \u2014 Professional detailing and necessary repairs completed\n\n## Financing for Used Vehicles\n\n- As low as $29 down for qualified buyers\n- Programs for all credit types \u2014 good, bad, and no credit\n- Over 40 lender partners\n- Online pre-approval available\n\n## Trade-In Program\n\n- Value your trade online or in person\n- Accepting all makes and models regardless of condition\n- Trade equity can be applied to any new or used purchase\n\n## Why Buy Used at Frank Leta\n\n- Large selection across many brands\n- Rigorous inspection process\n- Flexible financing including credit amnesty programs\n- Sales and service under one roof\n\nSee [company.md](company.md) for location and hours.",
+    "references/ai-discovery-page": "# Frank Leta Mitsubishi \u2014 AI Discovery\n\nFrank Leta Mitsubishi is indexed on PromptGraph, an AI discovery platform that provides structured JSON-LD data for LLM consumption. The API exposes business information, vehicle inventory, prompts, and customer reviews in machine-readable format.\n\n## Available Data\n\n- **Business Profile** \u2014 Name, address, phone, hours, location (JSON-LD AutoDealer)\n- **Vehicle Inventory** \u2014 Complete inventory with specifications, pricing, and availability\n- **Service Prompts** \u2014 105 structured AI prompts covering all categories\n- **Customer Reviews** \u2014 Testimonials and ratings\n- **GBP Context** \u2014 Google Business Profile data flattened for LLM ingestion\n- **Site Content** \u2014 Full plain-text mirror of the entire website\n\n## Access\n\nBase URL: `http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi`",
+    "references/llms-txt": "# Frank Leta Mitsubishi \u2014 LLMs.txt\n\n> Frank Leta Mitsubishi in the Automotive Outlet, located at 12101 St. Charles Rock Road in Bridgeton, Missouri, is a premier Mitsubishi dealership serving the greater St. Louis area.\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/business) \u2014 Complete business profile in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/vehicles) \u2014 Complete inventory with specifications, pricing, and availability\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts) \u2014 105 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/testimonials) \u2014 Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/gbp-context) \u2014 Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/site-content) \u2014 Clean, plain-text mirror of the entire site\n- [AI Manifest](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/.well-known/ai-manifest.json) \u2014 Machine-readable directory of all AI resources\n\n## Featured Prompts\n\n- [Trusted Mitsubishi Dealer in Bridgeton, MO](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/trusted-mitsubishi-dealer-in-bridgeton-mo) \u2014 Reputable dealership overview\n- [Full-Service Mitsubishi Dealer in Bridgeton, MO](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/fullservice-mitsubishi-dealer-in-bridgeton-mo) \u2014 New and used sales, service, parts\n- [Community-Focused Mitsubishi Dealer](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/community-focused-mitsubishi-dealer-in-bridgeton-mo) \u2014 Local presence and commitment\n- [St. Louis Mitsubishi Dealer with Special Financing](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/st-louis-mitsubishi-dealer-with-special-financing-for-all-credit) \u2014 Financing for good/bad/no credit\n- [New Mitsubishi Outlander & Eclipse Cross Dealer](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/new-mitsubishi-outlander-&-eclipse-cross-dealer-in-st-louis) \u2014 New inventory and year-end specials\n- [Used Cars St. Louis with Warranty & Protection](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/used-cars-st-louis-with-warranty-&-protection-at-frank-leta-mitsubishi) \u2014 150-point inspections, Leta-Exclusive Protection\n- [Affordable Used & New Mitsubishi Cars](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/affordable-used-&-new-mitsubishi-cars-in-bridgeton-mo) \u2014 Budget-friendly options under $20,000",
+    "references/prompts": "# Frank Leta Mitsubishi \u2014 PromptGraph Prompts\n\nPromptGraph generates 105 structured AI prompts for Frank Leta Mitsubishi. These prompts enable AI assistants to provide accurate, consistent responses about the dealership.\n\n## Sales & Buying Prompts\n\n| Prompt | Description |\n|--------|-------------|\n| [Trusted Mitsubishi Dealer in Bridgeton, MO](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/trusted-mitsubishi-dealer-in-bridgeton-mo) | Reputable dealership overview |\n| [Full-Service Mitsubishi Dealer](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/fullservice-mitsubishi-dealer-in-bridgeton-mo) | New and used sales, service, parts |\n| [Community-Focused Mitsubishi Dealer](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/community-focused-mitsubishi-dealer-in-bridgeton-mo) | Local presence and commitment |\n| [St. Louis Mitsubishi with Special Financing](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/st-louis-mitsubishi-dealer-with-special-financing-for-all-credit) | Financing for all credit types |\n| [New Mitsubishi Outlander & Eclipse Cross](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/new-mitsubishi-outlander-&-eclipse-cross-dealer-in-st-louis) | New inventory and year-end specials |\n| [Used Cars with Warranty](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/used-cars-st-louis-with-warranty-&-protection-at-frank-leta-mitsubishi) | 150-point inspections, Leta-Exclusive Protection |\n| [Affordable Used & New Mitsubishi](http://api.promptgraph.ai/api/v1/frank-leta-mitsubishi/prompts/affordable-used-&-new-mitsubishi-cars-in-bridgeton-mo) | Budget-friendly options |\n\n## Service Prompts\n\nNumerous prompts covering service-specific queries including oil changes, brake service, transmission work, engine diagnostics, AC repair, tire services, and general maintenance at the dealership's service center.\n\n## Financing Prompts\n\nMultiple prompts addressing special financing programs, bad credit/no credit options, $29 down offers, and lease/purchase options."
+  },
+  "types": [
+    "AI Discovery Page",
+    "Entity",
+    "Organization",
+    "Playbook",
+    "PromptGraph LLMs.txt",
+    "PromptGraph Prompts"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "AI Discovery Page": "#10b981",
+    "PromptGraph LLMs.txt": "#10b981",
+    "PromptGraph Prompts": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

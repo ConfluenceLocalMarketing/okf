@@ -12,6 +12,7 @@ okf_version: "0.1"
 - [staff.md](datasets/staff.md) - Staff directory including sales consultants, service advisors, and BMW M Certified specialists
 - [service-center.md](datasets/service-center.md) - BMW-certified service center details, routine maintenance, diagnostics, major repairs, and OEM parts
 - [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](datasets/financing.md) - BMW Financial Services financing, leasing, trade-in, and special programs at BMW of Cincinnati North
 
 ## References
 
@@ -34,3 +35,4 @@ okf_version: "0.1"
 - **model-comparison** provides structured specification data for all **new-vehicles** models
 - **testimonials** reflect customer experiences with **dealership** services, **staff**, and both vehicle lines
 - **prompts** provides AI-consumable Q&A covering all **datasets** concepts
+- **financing** details BMW Financial Services loan and lease options available through the **dealership**'s finance center

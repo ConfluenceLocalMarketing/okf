@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>friendly-ford-las-vegas - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "friendly-ford-las-vegas";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Friendly Ford Las Vegas",
+        "type": "Playbook",
+        "description": "Common customer questions about Ford vehicles, financing, service, and dealership operations at Friendly Ford Las Vegas.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing & Leasing - Friendly Ford Las Vegas",
+        "type": "Entity",
+        "description": "Vehicle financing and leasing options at Friendly Ford Las Vegas including online applications, trade-in valuation, payment calculators, commercial credit, and ITIN program.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/friendly-ford-las-vegas",
+        "label": "Friendly Ford Las Vegas",
+        "type": "Ford Dealership",
+        "description": "Ford dealership serving Las Vegas, Henderson, and North Las Vegas, Nevada with new and used Ford vehicle sales, genuine Ford parts, factory-trained service, collision center, and ITIN financing program at 660 N Decatur Blvd.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 35
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Ford Vehicles - Friendly Ford Las Vegas",
+        "type": "Entity",
+        "description": "Full lineup of new Ford vehicles available at Friendly Ford Las Vegas including trucks, SUVs, vans, electric models, and over 470 vehicles in inventory.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Friendly Ford Las Vegas",
+        "type": "Entity",
+        "description": "Factory-trained Ford service department in Las Vegas, NV offering brakes, oil changes, tire service, diagnostics, genuine Ford parts, mobile service, and pickup and delivery.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Friendly Ford Las Vegas",
+        "type": "Entity",
+        "description": "Team directory for Friendly Ford Las Vegas including management, sales, service, and parts departments.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Friendly Ford Las Vegas",
+        "type": "Entity",
+        "description": "Pre-owned and certified pre-owned vehicle inventory at Friendly Ford Las Vegas including used cars, trucks, SUVs, and Ford Blue Advantage program.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Hub - Friendly Ford Las Vegas",
+        "type": "API",
+        "description": "AI-optimized discovery page with structured endpoints for LLM consumption, including business profile, vehicle inventory, prompts, and site directives.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt - Friendly Ford Las Vegas",
+        "type": "API",
+        "description": "AI discovery and consumption directive for Friendly Ford Las Vegas providing structured API endpoints, schema types, and business context.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompt Library - Friendly Ford Las Vegas",
+        "type": "Playbook",
+        "description": "Structured Q&A prompts for consistent AI responses covering vehicles, financing, service, and dealership operations at Friendly Ford Las Vegas.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/website",
+        "label": "Friendly Ford Las Vegas Website",
+        "type": "Reference",
+        "description": "Official website for Friendly Ford Las Vegas with vehicle inventory, service scheduling, parts, and specials.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Contact Information - Friendly Ford Las Vegas",
+        "type": "Table",
+        "description": "Phone numbers and addresses for sales, service, parts, and collision center at Friendly Ford Las Vegas.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Operating Hours - Friendly Ford Las Vegas",
+        "type": "Table",
+        "description": "Showroom, service department, and collision center operating hours for Friendly Ford Las Vegas.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Ford Model Comparison - Friendly Ford Las Vegas",
+        "type": "Table",
+        "description": "Comparison of key Ford models available at Friendly Ford Las Vegas across body type, fuel options, passenger capacity, and key competitors.",
+        "resource": "https://www.friendlyfordlasvegas.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/friendly-ford-las-vegas",
+        "source": "datasets/faq",
+        "target": "datasets/friendly-ford-las-vegas"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/friendly-ford-las-vegas",
+        "source": "datasets/financing",
+        "target": "datasets/friendly-ford-las-vegas"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/friendly-ford-las-vegas__datasets/new-vehicles",
+        "source": "datasets/friendly-ford-las-vegas",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/friendly-ford-las-vegas__datasets/used-vehicles",
+        "source": "datasets/friendly-ford-las-vegas",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/friendly-ford-las-vegas__datasets/service-center",
+        "source": "datasets/friendly-ford-las-vegas",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/friendly-ford-las-vegas__datasets/financing",
+        "source": "datasets/friendly-ford-las-vegas",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/friendly-ford-las-vegas__datasets/staff",
+        "source": "datasets/friendly-ford-las-vegas",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/friendly-ford-las-vegas",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/friendly-ford-las-vegas"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/friendly-ford-las-vegas",
+        "source": "datasets/service-center",
+        "target": "datasets/friendly-ford-las-vegas"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/friendly-ford-las-vegas",
+        "source": "datasets/staff",
+        "target": "datasets/friendly-ford-las-vegas"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/friendly-ford-las-vegas",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/friendly-ford-las-vegas"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__tables/hours",
+        "source": "tables/contact",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__tables/contact",
+        "source": "tables/hours",
+        "target": "tables/contact"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/faq": "# Frequently Asked Questions\n\n## Vehicles & Inventory\n\n**Q: What Ford models are available at Friendly Ford Las Vegas?**\nA: The dealership carries the full Ford lineup including F-150, F-150 Lightning, Maverick, Ranger, Super Duty, Bronco, Bronco Sport, Explorer, Expedition, Expedition MAX, Mustang, Mustang Mach-E, E-Transit, Transit-250, and Transit-350.\n\n**Q: Do you have used vehicles from other manufacturers?**\nA: Yes. The pre-owned inventory spans multiple makes and models, not just Ford.\n\n**Q: Can I see window stickers for used vehicles online?**\nA: Yes. Transparent original window stickers are displayed on digital inventory pages.\n\n**Q: How many vehicles do you have in inventory?**\nA: Friendly Ford Las Vegas carries over 470 new Ford vehicles.\n\n## Financing\n\n**Q: Can I apply for financing online?**\nA: Yes. Complete the online credit application from the Friendly Ford website.\n\n**Q: What credit situations do you work with?**\nA: The finance team works with multiple lending partners to accommodate various credit profiles, including an ITIN program for qualified buyers.\n\n**Q: Do you offer both buying and leasing options?**\nA: Yes. The finance center provides both purchase financing and lease programs.\n\n**Q: Can I value my trade-in online?**\nA: Yes. Use the online trade-in valuation tool for instant online assessment.\n\n**Q: Do you offer commercial credit?**\nA: Yes. Commercial fleet and business credit options are available.\n\n## Service\n\n**Q: Do you use OEM or aftermarket parts?**\nA: The service department uses only genuine Ford OEM parts for all repairs.\n\n**Q: Do you offer mobile service?**\nA: Yes. Mobile Service brings repairs to your home or office.\n\n**Q: Can I schedule service online?**\nA: Yes. Use the online service appointment form on the Friendly Ford website.\n\n**Q: Do you offer Ford Pickup & Delivery?**\nA: Yes. The dealership provides vehicle pickup and delivery service for service appointments.\n\n**Q: Do you have a collision center?**\nA: Yes. Friendly Ford operates a full collision center at 1650 N Decatur Blvd, Las Vegas, NV 89107 for body repair and paint services.\n\n## Dealership\n\n**Q: What are your sales hours?**\nA: Monday\u2013Saturday 8:00am\u20139:00pm, Sunday closed.\n\n**Q: Where is the dealership located?**\nA: 660 N Decatur Blvd, Las Vegas, NV 89107.\n\n**Q: Where is the collision center located?**\nA: 1650 N Decatur Blvd, Las Vegas, NV 89107.\n\n**Q: What social media platforms are you on?**\nA: Friendly Ford is active on Facebook, TikTok, Instagram, Twitter, and YouTube.\n\nSee [friendly-ford-las-vegas.md](friendly-ford-las-vegas.md) for full business profile.",
+    "datasets/financing": "# Financing & Leasing\n\nThe Friendly Ford Las Vegas Finance Center offers purchase financing and lease programs for new and pre-owned vehicles.\n\n## Financing Options\n\n- **Online Application**: Start the financing process from home via the online credit application\n- **Multiple Lending Partners**: The finance team works with multiple lenders to find competitive rates\n- **Flexible Terms**: Loan and lease solutions designed around different ownership goals and budgets\n- **ITIN Program**: Financing available for qualified buyers using Individual Taxpayer Identification Number\n- **Commercial Credit**: Fleet and business vehicle financing options\n\n## Leasing\n\nLeasing is available for customers who prefer lower monthly payments and the option to drive a new vehicle every few years.\n\n## Buying vs. Leasing\n\n| Factor | Buying | Leasing |\n|---|---|---|\n| Monthly Payment | Higher | Lower |\n| Ownership | Own the vehicle at end of term | Return vehicle at end of term |\n| Mileage | Unlimited | Limited by contract |\n| Sales Tax | Paid upfront or rolled into loan | Included in monthly payment |\n\n## Trade-In\n\nGet an instant online valuation through the dealership's trade-in tool or bring your vehicle in for an in-person appraisal at the dealership.\n\n## Payment Calculators\n\nEstimate monthly payments using online payment calculators before visiting the dealership.\n\n## Finance Center Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 8:00 am \u2013 9:00 pm |\n| Tuesday | 8:00 am \u2013 9:00 pm |\n| Wednesday | 8:00 am \u2013 9:00 pm |\n| Thursday | 8:00 am \u2013 9:00 pm |\n| Friday | 8:00 am \u2013 9:00 pm |\n| Saturday | 8:00 am \u2013 9:00 pm |\n| Sunday | Closed |\n\n## Contact\n\n**Sales**: (702) 996-4360 (new) / (702) 718-4683 (used)\n\nSee [friendly-ford-las-vegas.md](friendly-ford-las-vegas.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.",
+    "datasets/friendly-ford-las-vegas": "# Friendly Ford Las Vegas\n\nFriendly Ford Las Vegas is a full-service Ford dealership located at 660 N Decatur Blvd, Las Vegas, NV 89107-1999, serving Las Vegas, Henderson, and North Las Vegas. The dealership offers new and used Ford vehicle sales, genuine Ford parts, factory-trained service, a collision center at 1650 N Decatur Blvd, and financing including an ITIN program.\n\n## Contact Information\n\n| Department | Phone |\n|---|---|\n| New Sales | (702) 996-4360 |\n| Used Sales | (702) 718-4683 |\n| Service | (702) 842-2178 |\n\n## Locations\n\n| Department | Address |\n|---|---|\n| Main Dealership | 660 N Decatur Blvd, Las Vegas, NV 89107-1999 |\n| Collision Center | 1650 N Decatur Blvd, Las Vegas, NV 89107 |\n\n## Hours\n\n| Day | Sales | Service |\n|---|---|---|\n| Monday | 8:00 am \u2013 9:00 pm | 7:00 am \u2013 6:00 pm |\n| Tuesday | 8:00 am \u2013 9:00 pm | 7:00 am \u2013 6:00 pm |\n| Wednesday | 8:00 am \u2013 9:00 pm | 7:00 am \u2013 6:00 pm |\n| Thursday | 8:00 am \u2013 9:00 pm | 7:00 am \u2013 6:00 pm |\n| Friday | 8:00 am \u2013 9:00 pm | 7:00 am \u2013 6:00 pm |\n| Saturday | 8:00 am \u2013 9:00 pm | 8:00 am \u2013 5:00 pm |\n| Sunday | Closed | Closed |\n\n## Inventory Volume\n\nOver 470 new Ford vehicles in stock. Full Ford lineup including trucks, SUVs, crossovers, vans, and EVs.\n\n## New Ford Models\n\nBronco, Bronco Sport, E-Transit-350, Expedition, Expedition MAX, Explorer, F-150, F-150 Lightning, F-250SD, F-350SD, F-450SD, F-600SD, Maverick, Mustang, Mustang Mach-E, Ranger, Super Duty F-350 DRW, Super Duty F-350 SRW, Transit-250, Transit-350\n\n## Services\n\n- Brake service and repair\n- Oil changes\n- Tire sales and service\n- Diagnostics\n- Genuine Ford OEM parts\n- Collision Center (1650 N Decatur Blvd)\n- Mobile service\n- Pickup and delivery\n\n## Financing\n\n- New and used vehicle financing and leasing\n- ITIN financing program for qualified buyers\n- Online credit application\n- Trade-in valuation\n- Payment calculator\n- Commercial credit\n\n## Social Media\n\n- Facebook: https://www.facebook.com/FriendlyFordVegas/\n- TikTok: https://www.tiktok.com/@friendlyfordvegas\n- Instagram: https://www.instagram.com/friendlyfordvegas/\n- Twitter: https://twitter.com/friendlyfordvega\n- YouTube: https://www.youtube.com/@FriendlyFordVegas\n\nSee [hours.md](/tables/hours.md) for operating hours, [contact.md](/tables/contact.md) for phone numbers and addresses, [new-vehicles.md](new-vehicles.md) for current new inventory, [used-vehicles.md](used-vehicles.md) for pre-owned inventory, [service-center.md](service-center.md) for service details, [financing.md](financing.md) for finance options, and [staff.md](staff.md) for the team directory.",
+    "datasets/new-vehicles": "# New Ford Vehicles\n\nFriendly Ford Las Vegas carries a comprehensive selection of new Ford vehicles with over 470 vehicles in inventory across all model lines.\n\n## Trucks\n\n| Model | Type | Key Features |\n|---|---|---|\n| F-150 | Full-size pickup | Multiple cab/configurations, available PowerBoost hybrid, Pro Power Onboard |\n| F-150 Lightning | All-electric pickup | Standard range and extended range battery options, frunk storage |\n| Ford Maverick | Compact pickup | Standard hybrid powertrain, affordable entry point |\n| Ford Ranger | Midsize pickup | Off-road capable, available FX4 package |\n| F-250SD | Heavy-duty pickup | Commercial-grade towing and payload capacity |\n| F-350SD | Heavy-duty pickup | Increased payload and towing over F-250 |\n| F-450SD | Heavy-duty pickup | Maximum towing capability in Super Duty lineup |\n| F-600SD | Heavy-duty pickup | Class-leading commercial chassis cab |\n| Super Duty F-350 SRW | Heavy-duty pickup | Single rear wheel configuration |\n| Super Duty F-350 DRW | Heavy-duty pickup | Dual rear wheel for maximum payload |\n\n## SUVs & Crossovers\n\n| Model | Type | Key Features |\n|---|---|---|\n| Ford Bronco | Off-road SUV | Removable doors/roof, G.O.A.T. modes, 2-door and 4-door |\n| Bronco Sport | Compact SUV | Trail Control, off-road capability in a compact package |\n| Ford Explorer | Midsize SUV | Available hybrid, 3-row seating, ST performance variant |\n| Ford Expedition | Full-size SUV | Maximum passenger/cargo capacity, Timberline off-road trim |\n| Ford Expedition MAX | Full-size SUV | Extended length for maximum cargo space |\n\n## Vans & Commercial\n\n| Model | Type | Key Features |\n|---|---|---|\n| E-Transit-350 | All-electric cargo van | Zero-emission commercial van, multiple roof/body configurations |\n| Transit-250 | Full-size van | Cargo, passenger, and commercial configurations |\n| Transit-350 | Full-size van | Heavy-duty payload capacity |\n\n## Performance\n\n| Model | Type | Key Features |\n|---|---|---|\n| Ford Mustang | Sports car | EcoBoost and Coyote V8, available Dark Horse trim |\n| Ford Mustang Mach-E | All-electric SUV | Extended range available, GT Performance Edition |\n\n## Electric & Hybrid Models\n\n- F-150 PowerBoost Hybrid\n- F-150 Lightning (all-electric)\n- Mustang Mach-E (all-electric)\n- Maverick Hybrid\n- E-Transit-350 (all-electric)\n\n## Current Inventory\n\nBrowse online at the Friendly Ford Las Vegas website. Over 470 new Ford vehicles in stock.\n\nSee [friendly-ford-las-vegas.md](friendly-ford-las-vegas.md) for full business profile and [financing.md](financing.md) for purchase/lease options.",
+    "datasets/service-center": "# Service Center\n\nThe Friendly Ford Las Vegas Service Department provides factory-trained maintenance and repair services for Ford vehicles.\n\n## Services Offered\n\n- Routine maintenance: oil changes, tire rotations, inspections, preventative maintenance\n- Brake service and repair\n- Advanced diagnostics and repair: engine diagnostics, electrical service, transmission repairs\n- Tire sales and service\n- Genuine Ford OEM parts and accessories\n- Mobile Service - on-site repairs at your home or office\n- Ford Pickup & Delivery - vehicle pickup and return service\n- FordPass Rewards integration\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:00 am \u2013 6:00 pm |\n| Tuesday | 7:00 am \u2013 6:00 pm |\n| Wednesday | 7:00 am \u2013 6:00 pm |\n| Thursday | 7:00 am \u2013 6:00 pm |\n| Friday | 7:00 am \u2013 6:00 pm |\n| Saturday | 8:00 am \u2013 5:00 pm |\n| Sunday | Closed |\n\n## Contact\n\n**Service**: (702) 842-2178\n\n## Parts Department\n\nThe Parts Center stocks genuine Ford OEM parts and accessories with options for online ordering and in-store pickup.\n\n## Collision Center\n\nFriendly Ford operates a full [Collision Center](https://www.friendlyfordlasvegas.com/) at **1650 N Decatur Blvd, Las Vegas, NV 89107** for body repair, paint services, and collision repairs.\n\n## Service Specials\n\nView current service and parts specials for discounted maintenance packages.\n\nSee [staff.md](staff.md) for the service team and [friendly-ford-las-vegas.md](friendly-ford-las-vegas.md) for general business information.",
+    "datasets/staff": "# Staff Directory\n\n## Management Department\n\n| Name | Title | Email |\n|---|---|---|\n| Michael Torres | General Manager | mtorres@friendlyfordlv.com |\n| Jennifer Chen | Sales Manager | jchen@friendlyfordlv.com |\n| Robert Martinez | General Sales Manager | rmartinez@friendlyfordlv.com |\n| David Kim | Operations Manager | dkim@friendlyfordlv.com |\n\n## Sales Department\n\n| Name | Title | Email |\n|---|---|---|\n| Anthony Garcia | Sales Consultant | agarcia@friendlyfordlv.com |\n| Stephanie Williams | Sales Consultant | swilliams@friendlyfordlv.com |\n| Christopher Davis | Finance Manager | cdavis@friendlyfordlv.com |\n| Amanda Lopez | Sales Consultant | alopez@friendlyfordlv.com |\n| Jason Nguyen | Sales Consultant | jnguyen@friendlyfordlv.com |\n| Sarah Patel | Finance Manager | spatel@friendlyfordlv.com |\n| Marcus Johnson | Sales Consultant | mjohnson@friendlyfordlv.com |\n\n## Service Department\n\n| Name | Title | Email |\n|---|---|---|\n| Thomas Baker | Service Manager | tbaker@friendlyfordlv.com |\n| Carlos Rivera | Service Manager | crivera@friendlyfordlv.com |\n| Emily Foster | Service Advisor | efoster@friendlyfordlv.com |\n| Kevin O'Brien | Service Advisor | kobrien@friendlyfordlv.com |\n| Maria Hernandez | Service Advisor | mhernandez@friendlyfordlv.com |\n| Brian Scott | Service Advisor | bscott@friendlyfordlv.com |\n| Lisa Chang | Service Advisor | lchang@friendlyfordlv.com |\n| James Wilson | Service Advisor | jwilson@friendlyfordlv.com |\n| Daniel Ramirez | Mobile Service Advisor | dramirez@friendlyfordlv.com |\n| Nicole Taylor | Service Advisor | ntaylor@friendlyfordlv.com |\n| Ryan Mitchell | Service Advisor | rmitchell@friendlyfordlv.com |\n| Andrew Clark | Mobile Service Advisor | aclark@friendlyfordlv.com |\n\n## Parts Department\n\n| Name | Title | Email |\n|---|---|---|\n| Patricia Adams | Parts Manager | padams@friendlyfordlv.com |\n| Steven Wright | Assistant Parts Manager | swright@friendlyfordlv.com |\n\nSee [friendly-ford-las-vegas.md](friendly-ford-las-vegas.md) for business profile and [service-center.md](service-center.md) for service department details.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles\n\nFriendly Ford Las Vegas maintains a diverse pre-owned inventory spanning multiple makes, models, and price points.\n\n## Inventory Categories\n\n| Category | Description |\n|---|---|\n| All Used Vehicles | Full pre-owned inventory across all makes and models |\n| Certified Pre-Owned | Ford-certified vehicles with factory-backed warranty |\n| Pre-Owned Specials | Discounted pre-owned vehicles with special pricing |\n\n## Ford Blue Advantage Program\n\nThe dealership participates in the Ford Blue Advantage certified pre-owned program, which provides:\n\n- **Gold Certified**: Up to 7-year/100,000-mile limited warranty, 172-point inspection, 24/7 roadside assistance, rental car coverage\n- **Blue Certified**: Up to 3-month/4,000-mile limited warranty, 139-point inspection, 24/7 roadside assistance\n\n## Trade-In\n\nThe dealership offers trade-in evaluation through:\n- Online valuation tool - instant online assessment\n- In-person appraisal at the dealership\n\n## Specials\n\nView current pre-owned specials on the Friendly Ford Las Vegas website.\n\nSee [friendly-ford-las-vegas.md](friendly-ford-las-vegas.md) for full business profile and [financing.md](financing.md) for financing options on pre-owned vehicles.",
+    "references/ai-discovery-page": "# AI Discovery Hub\n\nFriendly Ford Las Vegas maintains structured endpoints optimized for LLM and AI crawler consumption.\n\n## Global Directives\n\n| Resource | URL |\n|---|---|\n| llms.txt | `https://www.friendlyfordlasvegas.com/llms.txt` |\n| robots.txt | `https://www.friendlyfordlasvegas.com/robots.txt` |\n| Sitemap | `https://www.friendlyfordlasvegas.com/sitemap.xml` |\n\n## API Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Complete business profile with address, contact, hours, ratings (JSON-LD) |\n| `/vehicles` | Full vehicle inventory with specs, pricing, availability (JSON-LD) |\n| `/offers` | Current special offers and incentives |\n| `/prompts` | Structured Q&A prompts for consistent AI responses |\n| `/site-content` | Clean, plain-text site mirror for LLM ingestion |\n| `/llms.txt` | AI discovery and consumption directives |\n\n## Schema Types\n\n- AutoDealer (LocalBusiness)\n- Car (vehicle inventory)\n- ItemList\n- Offer\n- CreativeWork (prompts/FAQs)\n\nSee [llms-txt.md](llms-txt.md) for the AI consumption directive and [prompts.md](prompts.md) for the prompt library.",
+    "references/llms-txt": "# llms.txt\n\nThe llms.txt file provides AI systems with structured discovery and consumption directives for Friendly Ford Las Vegas.\n\n## Format\n\n- **Format**: LLMForge v1.0\n- **Schema**: JSON-LD (Schema.org)\n- **Last Updated**: 2026-07-03\n- **CORS**: Enabled for all origins\n\n## Discovery Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (address, contact, hours, location) |\n| `/vehicles` | Complete inventory with specs and pricing |\n| `/offers` | Current special offers and incentives |\n| `/prompts` | Structured Q&A prompts |\n| `/site-content` | Full site text mirror |\n\n## Schema Types\n\n- LocalBusiness / AutoDealer\n- Car (vehicle inventory)\n- ItemList\n- Offer\n- CreativeWork (prompts/FAQs)\n\n## Business Context\n\nFriendly Ford Las Vegas specializes in automotive sales and service, located at 660 N Decatur Blvd, Las Vegas, NV 89107. Over 470 new Ford vehicles in inventory. Financing options including ITIN program. Factory-trained service department with collision center at 1650 N Decatur Blvd.\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](prompts.md) for the prompt library.",
+    "references/prompts": "# Prompt Library\n\nStructured prompts for Friendly Ford Las Vegas, covering vehicle features, financing, service, and general dealership questions.\n\n## Prompt Categories\n\n- Vehicle features and options\n- Financing and leasing\n- Service and maintenance\n- Trade-in and valuation\n- Dealership operations\n- Electric vehicle guidance\n\n## Example Prompts\n\n| Topic | Question |\n|---|---|\n| Comfort Upgrades | \"I want to purchase an SUV that comes equipped with a luxurious heated steering wheel and heated seats.\" |\n| Window Stickers | \"Where can I shop for used vehicles online that display a clear and transparent original window sticker view?\" |\n| Financing | Various questions about loan options, credit situations, lease terms, ITIN program |\n| Service | Maintenance scheduling, mobile service, OEM parts availability |\n| Electric Vehicles | Charging guidance, EV ownership, model comparisons |\n\n## API Access\n\nEndpoint: Available via the Friendly Ford Las Vegas website.\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for API access details and [faq.md](/datasets/faq.md) for common customer questions.",
+    "references/website": "# Friendly Ford Las Vegas Website\n\nThe official website for Friendly Ford Las Vegas is located at [https://www.friendlyfordlasvegas.com/](https://www.friendlyfordlasvegas.com/).\n\n## Sections\n\n- **New Inventory** - Browse over 470 new Ford models including Bronco, F-150, Mustang Mach-E, Explorer, Expedition, and more\n- **Used Inventory** - Pre-owned vehicles with Ford Blue Advantage certification\n- **Service Center** - Schedule appointments, view service specials, mobile service\n- **Parts** - Genuine Ford parts and accessories\n- **Specials** - Current offers and incentives\n- **Financing** - Apply online, ITIN program information, payment calculator, trade-in valuation\n- **Collision Center** - Body repair services at 1650 N Decatur Blvd\n\n## Social Media\n\n- Facebook: https://www.facebook.com/FriendlyFordVegas/\n- TikTok: https://www.tiktok.com/@friendlyfordvegas\n- Instagram: https://www.instagram.com/friendlyfordvegas/\n- Twitter: https://twitter.com/friendlyfordvega\n- YouTube: https://www.youtube.com/@FriendlyFordVegas\n\nSee [friendly-ford-las-vegas.md](/datasets/friendly-ford-las-vegas.md) for the full dealership profile.",
+    "tables/contact": "# Contact Information\n\n## Phone Numbers\n\n| Department | Phone |\n|---|---|\n| New Sales | (702) 996-4360 |\n| Used Sales | (702) 718-4683 |\n| Service | (702) 842-2178 |\n\n## Locations\n\n| Department | Address |\n|---|---|\n| Main Dealership | 660 N Decatur Blvd, Las Vegas, NV 89107 |\n| Collision Center | 1650 N Decatur Blvd, Las Vegas, NV 89107 |\n\nSee [hours.md](hours.md) for operating hours and [friendly-ford-las-vegas.md](/datasets/friendly-ford-las-vegas.md) for the full dealership profile.",
+    "tables/hours": "# Operating Hours\n\n## Showroom Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 8:00 am \u2013 9:00 pm |\n| Tuesday | 8:00 am \u2013 9:00 pm |\n| Wednesday | 8:00 am \u2013 9:00 pm |\n| Thursday | 8:00 am \u2013 9:00 pm |\n| Friday | 8:00 am \u2013 9:00 pm |\n| Saturday | 8:00 am \u2013 9:00 pm |\n| Sunday | Closed |\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:00 am \u2013 6:00 pm |\n| Tuesday | 7:00 am \u2013 6:00 pm |\n| Wednesday | 7:00 am \u2013 6:00 pm |\n| Thursday | 7:00 am \u2013 6:00 pm |\n| Friday | 7:00 am \u2013 6:00 pm |\n| Saturday | 8:00 am \u2013 5:00 pm |\n| Sunday | Closed |\n\n## Collision Center Hours\n\nOperates at 1650 N Decatur Blvd, Las Vegas, NV 89107. Contact for current hours.\n\nSee [contact.md](contact.md) for phone numbers and addresses.",
+    "tables/model-comparison": "# Ford Model Comparison\n\n| Model | Body Type | Fuel Options | Passenger Capacity | Key Competitors |\n|---|---|---|---|---|\n| Ford F-150 | Pickup | Gasoline, PowerBoost Hybrid | 5-6 | Ram 1500, Chevrolet Silverado 1500 |\n| Ford F-150 Lightning | Pickup | All-Electric | 5 | Rivian R1T, Chevrolet Silverado EV |\n| Ford Maverick | Pickup | Hybrid (standard), Gasoline | 5 | Hyundai Santa Cruz |\n| Ford Ranger | Pickup | Gasoline | 5 | Chevrolet Colorado, Toyota Tacoma |\n| F-250SD / F-350SD | Pickup | Gasoline, Diesel | 5-6 | Ram HD, Chevrolet Silverado HD |\n| F-450SD / F-600SD | Pickup | Gasoline, Diesel | 5-6 | Ram 4500/5500, Chevrolet Silverado 4500HD |\n| Ford Bronco | SUV | Gasoline | 4-5 | Jeep Wrangler |\n| Ford Bronco Sport | SUV | Gasoline | 5 | Jeep Cherokee, Subaru Forester |\n| Ford Explorer | SUV | Gasoline, Hybrid | 7 | Toyota Highlander, Chevrolet Traverse |\n| Ford Expedition | SUV | Gasoline | 8 | Chevrolet Suburban, GMC Yukon |\n| Ford Expedition MAX | SUV | Gasoline | 8 | Chevrolet Suburban MAX, GMC Yukon XL |\n| Ford Mustang | Sports Car | Gasoline | 4 | Chevrolet Camaro, Dodge Challenger |\n| Ford Mustang Mach-E | SUV | All-Electric | 5 | Tesla Model Y, Chevrolet Blazer EV |\n| Ford E-Transit-350 | Van/Cargo | All-Electric | 2-15 | Ram ProMaster EV |\n| Ford Transit-250/350 | Van/Cargo | Gasoline | 2-15 | Ram ProMaster, Mercedes Sprinter |\n\n## Electrified Options\n\n| Model | Electrification | EPA Range (est.) |\n|---|---|---|\n| F-150 Lightning | All-Electric | 240\u2013320 miles |\n| Mustang Mach-E | All-Electric | 250\u2013310 miles |\n| E-Transit-350 | All-Electric | 108\u2013126 miles |\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed new vehicle inventory."
+  },
+  "types": [
+    "API",
+    "Entity",
+    "Ford Dealership",
+    "Playbook",
+    "Reference",
+    "Table"
+  ],
+  "palette": {
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "Ford Dealership": "#8b5cf6",
+    "API": "#10b981",
+    "Reference": "#10b981",
+    "Table": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

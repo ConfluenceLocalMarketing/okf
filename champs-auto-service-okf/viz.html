@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>champs-auto-service - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "champs-auto-service";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Champs Auto Service (Champ Auto Repairs)",
+        "type": "Organization",
+        "description": "Family-oriented auto repair shop in Chicago serving all makes and models since 2010 with ASE Master Certified technicians.",
+        "resource": "https://www.champautorepairs.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Champs Auto Service",
+        "type": "Playbook",
+        "description": "Common questions about services, pricing, fleet maintenance, appointments, and certifications at Champs Auto Service.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Champs Auto Service",
+        "type": "Entity",
+        "description": "Full-service auto repair facility in Chicago with ASE Master Certified technicians, serving all makes since 2010.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/services",
+        "label": "Services - Champs Auto Service",
+        "type": "Entity",
+        "description": "Full list of auto repair and maintenance services at Champs Auto Service in Chicago, including fleet and diesel service.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Champs Auto Service",
+        "type": "Entity",
+        "description": "Meet the team at Champs Auto Service, including ASE Master Certified technicians and service professionals.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Champs Auto Service - AI Discovery",
+        "type": "AI Discovery Page",
+        "description": "PromptGraph AI discovery page providing structured business data for AI consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/champs-auto-service/business",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Champs Auto Service - LLMs.txt",
+        "type": "PromptGraph LLMs.txt",
+        "description": "AI discovery and API documentation for Champs Auto Service via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/champs-auto-service/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Champs Auto Service - PromptGraph Prompts",
+        "type": "PromptGraph Prompts",
+        "description": "AI-ready prompt library generated by PromptGraph for Champs Auto Service (71 prompts).",
+        "resource": "https://api.promptgraph.ai/api/v1/champs-auto-service/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/services",
+        "source": "datasets/faq",
+        "target": "datasets/services"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/services__datasets/company",
+        "source": "datasets/services",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Champs Auto Service (Champ Auto Repairs)\n\nChamps Auto Service (doing business as Champ Auto Repairs) is a family-oriented auto repair shop in Chicago, Illinois, serving the community since 2010. The shop employs ASE Master Certified technicians and provides full-service repairs for all makes and models including foreign cars and diesel engines.\n\n## Services\n\n- **Oil Changes** \u2014 Conventional, synthetic, and full synthetic options with Mobil 1 oil\n- **Brake Repair** \u2014 Inspections, pads, rotors, calipers, and full brake system service\n- **Transmission Service** \u2014 Repairs, diagnostics, fluid changes, and rebuilds\n- **Engine Diagnostics and Repair** \u2014 Check engine light diagnosis, misfires, emissions issues\n- **Tune-Ups** \u2014 Comprehensive performance optimization\n- **Exhaust System Repair** \u2014 Muffler and exhaust system service\n- **Power Steering Service** \u2014 Steering system maintenance and repair\n- **Fleet Services** \u2014 Preventive maintenance, repairs, and priority scheduling for businesses\n- **Pre-Purchase Inspections** \u2014 Thorough vehicle condition evaluation for used car buyers\n- **Tire Services** \u2014 Winter tire services, TPMS, and tire maintenance\n- **Suspension Services** \u2014 Suspension system repair and maintenance\n\n## Certifications\n\n- **ASE Master Certified Technicians**\n- **NAPA AutoCare Center** \u2014 Nationwide warranty honored at 14,000+ locations\n\n## Specials and Discounts\n\n- 10% off brake service\n- Oil change coupons and specials\n- Seasonal promotions\n\n## Contact\n\n- **Phone:** (773) 625-5000\n- **Website:** http://www.champautorepairs.com/",
+    "datasets/faq": "# Frequently Asked Questions - Champs Auto Service\n\n## What services does Champs Auto Service offer?\n\nWe offer oil changes, brake repair, transmission service, engine diagnostics, tune-ups, exhaust repair, power steering service, fleet services, pre-purchase inspections, tire services, and suspension work. See [services.md](services.md) for details.\n\n## Are you ASE Certified?\n\nYes. Our technicians are ASE Master Certified and we are a NAPA AutoCare Center. See [company.md](company.md) for all certifications.\n\n## Do you service all makes and models?\n\nYes. We work on all makes and models including foreign cars and diesel engines.\n\n## How do I schedule an appointment?\n\nCall us at (773) 625-5000. We also offer priority scheduling for fleet customers.\n\n## Do you offer any specials or discounts?\n\nYes. We offer 10% off brake service, oil change coupons, and seasonal promotions. Ask about our current specials when you call.\n\n## Do you provide fleet services?\n\nYes. We offer preventive maintenance, repairs, and priority scheduling for business fleets. See [services.md](services.md) for fleet program details.\n\n## Do you perform pre-purchase inspections?\n\nAbsolutely. We provide thorough vehicle condition evaluations for used car buyers.\n\n## Do you offer a warranty on repairs?\n\nYes. As a NAPA AutoCare Center, our repairs are backed by a nationwide warranty honored at 14,000+ locations.\n\n## How long have you been in business?\n\nWe have been serving the Chicago community since 2010.\n\n## Do you work on diesel engines?\n\nYes. Our ASE Master Certified technicians are experienced with diesel engine diagnostics and repair.\n\n## What type of oil do you use?\n\nWe use Mobil 1 oil and offer conventional, synthetic blend, and full synthetic options.\n\n## Do you perform transmission repairs?\n\nYes. We offer transmission diagnostics, fluid changes, repairs, and rebuilds.",
+    "datasets/service-center": "# Service Center - Champs Auto Service\n\nChamps Auto Service (doing business as Champ Auto Repairs) is a family-oriented auto repair shop serving the Chicago community since 2010.\n\n## Contact\n\n- **Phone:** (773) 625-5000\n- **Website:** http://www.champautorepairs.com/\n- **Location:** Chicago, IL\n\n## Certifications\n\n- ASE Master Certified Technicians\n- NAPA AutoCare Center \u2014 Nationwide warranty honored at 14,000+ locations\n\n## Fleet Services\n\nCustomized preventive maintenance and repair programs for commercial fleets with priority scheduling.\n\n## Specials\n\n- 10% off brake service\n- Oil change coupons and specials\n- Seasonal promotions\n\nSee [company.md](company.md) for more information about our shop, history, and full service offerings.",
+    "datasets/services": "# Services - Champs Auto Service\n\nChamps Auto Service (Champ Auto Repairs) provides comprehensive automotive care for all makes and models, including diesel engines. All work performed by ASE Master Certified technicians.\n\n## Oil Changes\n\nConventional, synthetic blend, and full synthetic oil changes using Mobil 1 oil. Includes filter replacement and fluid level check.\n\n## Brake Repair\n\nComplete brake system service including inspections, pad and rotor replacement, caliper service, and brake fluid exchange.\n\n## Transmission Service\n\nDiagnostics, fluid changes, repairs, and rebuilds for automatic and manual transmissions.\n\n## Engine Diagnostics and Repair\n\nCheck engine light diagnosis, misfire troubleshooting, emissions issue resolution, and complete engine repair.\n\n## Tune-Ups\n\nComprehensive performance optimization including spark plug replacement, fuel system cleaning, and ignition system service.\n\n## Exhaust System Repair\n\nMuffler replacement, exhaust pipe repair, catalytic converter service, and exhaust system diagnostics.\n\n## Power Steering Service\n\nSteering system maintenance and repair including fluid flush, pump replacement, and rack service.\n\n## Fleet Services\n\nPreventive maintenance programs, repairs, and priority scheduling for commercial fleets. Customized maintenance plans to minimize downtime.\n\n## Pre-Purchase Inspections\n\nThorough vehicle condition evaluation for used car buyers, covering engine, transmission, brakes, suspension, and overall vehicle health.\n\n## Tire Services\n\nWinter tire installation and removal, TPMS service, tire rotation, balancing, and tire pressure maintenance.\n\n## Suspension Services\n\nSuspension system repair and maintenance including shock and strut replacement, alignment, and steering component service.\n\nSee [company.md](company.md) for our certifications, specials, and contact information.",
+    "datasets/staff": "# Staff Directory - Champs Auto Service\n\n## Mike Kowalski \u2014 Owner / Operator\n\nMike founded Champs Auto Service in 2010 with a mission to provide honest, quality auto repair for Chicago drivers. Over 20 years in the automotive industry.\n\n## Andre Williams \u2014 ASE Master Technician\n\nAndre holds ASE Master Technician certification with expertise in engine repair, transmission service, brakes, suspension, and electrical systems. 18 years of experience.\n\n## Jose Hernandez \u2014 ASE Certified Technician\n\nJose specializes in diagnostics, exhaust systems, and diesel engine repair. ASE Certified with 10 years of experience.\n\n## Patricia Nguyen \u2014 Service Writer\n\nPatricia manages customer relations, scheduling, and service coordination. She helps customers understand their vehicle needs and repair options.\n\n## Tom Grady \u2014 Fleet Services Coordinator\n\nTom handles commercial fleet accounts, preventive maintenance scheduling, and priority service coordination for business customers.\n\nSee [company.md](company.md) for shop information, certifications, and contact details.",
+    "references/ai-discovery-page": "# Champs Auto Service \u2014 AI Discovery\n\nChamps Auto Service is indexed on PromptGraph, an AI discovery platform that provides structured JSON-LD data for LLM consumption. The API exposes business information, services, prompts, and customer reviews in machine-readable format.\n\n## Available Data\n\n- **Business Profile** \u2014 Name, address, phone, hours, location (JSON-LD LocalBusiness)\n- **Service Prompts** \u2014 71 structured AI prompts covering all service categories\n- **Customer Reviews** \u2014 Testimonials and ratings\n- **GBP Context** \u2014 Google Business Profile data flattened for LLM ingestion\n- **Site Content** \u2014 Full plain-text mirror of the entire website\n\n## Access\n\nBase URL: `http://api.promptgraph.ai/api/v1/champs-auto-service`",
+    "references/llms-txt": "# Champs Auto Service \u2014 LLMs.txt\n\n> Business providing quality products and services.\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/champs-auto-service/business) \u2014 Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts) \u2014 71 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/champs-auto-service/testimonials) \u2014 Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/champs-auto-service/gbp-context) \u2014 Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/champs-auto-service/site-content) \u2014 Clean, plain-text mirror of the entire site\n- [AI Manifest](http://api.promptgraph.ai/api/v1/champs-auto-service/.well-known/ai-manifest.json) \u2014 Machine-readable directory of all available AI resources\n\n## Featured Prompts\n\n- [Service Overview & Value Statement](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/champ-auto-repairs-service-overview) \u2014 Core auto services, certifications, warranty offerings\n- [Trusted Auto Repair in Chicago IL](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/trusted-auto-repair-in-chicago-il) \u2014 Family-oriented shop since 2010, ASE certified\n- [ASE Certified Mechanics Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/ase-certified-mechanics-chicago) \u2014 ASE Master Certified technicians\n- [Full Service Auto Repair Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/full-service-auto-repair-chicago) \u2014 Brakes, oil changes, tune-ups, transmission, exhaust\n- [Oil Change Special Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/oil-change-special-chicago) \u2014 Conventional, synthetic, full synthetic options\n- [Brake Repair Chicago IL](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/brake-repair-chicago-il) \u2014 10% off specials, pads, rotors, calipers\n- [Transmission Service Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/transmission-service-chicago) \u2014 Repairs, diagnostics, fluid changes, rebuilds\n- [Pre-Purchase Inspection Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/pre-purchase-inspection-chicago) \u2014 Thorough vehicle condition evaluation\n- [Fleet Service Chicago IL](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/fleet-service-chicago-il) \u2014 Preventive maintenance and priority scheduling\n- [Auto Repair Coupons Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/auto-repair-coupons-chicago) \u2014 Oil changes, brakes, suspension, TPMS specials",
+    "references/prompts": "# Champs Auto Service \u2014 PromptGraph Prompts\n\nPromptGraph generates 71 structured AI prompts for Champs Auto Service (Champ Auto Repairs). These prompts enable AI assistants to provide accurate, consistent responses about the business.\n\n## Service & Value Prompts\n\n| Prompt | Description |\n|--------|-------------|\n| [Service Overview & Value Statement](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/champ-auto-repairs-service-overview) | Core auto services, certifications, warranty offerings |\n| [Trusted Auto Repair in Chicago IL](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/trusted-auto-repair-in-chicago-il) | Family-oriented shop since 2010, ASE certified |\n| [ASE Certified Mechanics Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/ase-certified-mechanics-chicago) | ASE Master Certified technicians focus |\n| [Full Service Auto Repair Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/full-service-auto-repair-chicago) | All services overview |\n| [Why Choose Champ Auto Repairs](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/why-choose-champ-auto-repairs) | Customer satisfaction and value proposition |\n\n## Service-Specific Prompts\n\n| Prompt | Description |\n|--------|-------------|\n| [Oil Change Special Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/oil-change-special-chicago) | Oil change services and specials |\n| [Brake Repair Chicago IL](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/brake-repair-chicago-il) | Brake repair specialists |\n| [Transmission Service Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/transmission-service-chicago) | Transmission services |\n| [Pre-Purchase Inspection Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/pre-purchase-inspection-chicago) | Pre-purchase vehicle inspections |\n| [Fleet Service Chicago IL](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/fleet-service-chicago-il) | Fleet service provider for businesses |\n| [Auto Repair Coupons Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/auto-repair-coupons-chicago) | Coupons and specials |\n| [Suspension Service Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/suspension-service-chicago) | Suspension system repair |\n| [Tire Services Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/tire-services-chicago) | Winter tire services and TPMS |\n| [Engine Diagnostics Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/engine-diagnostics-chicago) | Check engine light and diagnostics |\n| [Tune-Up Service Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/tune-up-service-chicago) | Performance optimization |\n| [Exhaust System Repair Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/exhaust-system-repair-chicago) | Muffler and exhaust service |\n| [Power Steering Service Chicago](http://api.promptgraph.ai/api/v1/champs-auto-service/prompts/power-steering-service-chicago) | Steering system maintenance |\n\n## Location & Convenience Prompts\n\nPrompts covering \"near me\" and local search queries about auto shops in the Chicago area, including family-oriented service, all-makes/all-models capability, diesel and foreign car expertise, and NAPA AutoCare nationwide warranty."
+  },
+  "types": [
+    "AI Discovery Page",
+    "Entity",
+    "Organization",
+    "Playbook",
+    "PromptGraph LLMs.txt",
+    "PromptGraph Prompts"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "AI Discovery Page": "#10b981",
+    "PromptGraph LLMs.txt": "#10b981",
+    "PromptGraph Prompts": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

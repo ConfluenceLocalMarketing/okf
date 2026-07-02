@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Staff directory including executive leadership, management, sales consultants, and service team compiled from the group website and customer reviews
 - [service-center.md](service-center.md) - Multi-brand service centers across the West Hills Autoplex offering routine maintenance, diagnostics, major repairs, and genuine OEM parts
 - [faq.md](faq.md) - Frequently asked questions about inventory, financing, service, and auto group operations
+- [financing.md](financing.md) - Vehicle financing and leasing options across the West Hills Autoplex including online credit application and trade-in valuation

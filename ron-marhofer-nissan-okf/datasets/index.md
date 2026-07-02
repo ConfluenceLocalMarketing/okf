@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
 - [service-center.md](service-center.md) - Nissan-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Nissan parts department
 - [faq.md](faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.

@@ -6,3 +6,4 @@
 - [service-center.md](service-center.md) - Factory-authorized Hyundai service department offering maintenance, repairs, genuine parts, and complimentary services.
 - [staff.md](staff.md) - Team directory across sales, service, parts, and management departments.
 - [faq.md](faq.md) - Common customer questions about Hyundai vehicles, financing, service, and dealership operations.
+- [financing.md](financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.

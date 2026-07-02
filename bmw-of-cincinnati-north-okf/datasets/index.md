@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Staff directory including sales consultants, service advisors, and BMW M Certified specialists
 - [service-center.md](service-center.md) - BMW-certified service center details, routine maintenance, diagnostics, major repairs, and OEM parts
 - [faq.md](faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](financing.md) - BMW Financial Services financing, leasing, trade-in, and special programs at BMW of Cincinnati North

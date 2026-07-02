@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>frank-leta-buick-gmc - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "frank-leta-buick-gmc";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Frank Leta Buick GMC",
+        "type": "Organization",
+        "description": "Buick and GMC dealership in Cape Girardeau, MO serving southeast Missouri as part of the Frank Leta Auto Group since 1965.",
+        "resource": "https://www.frankletabuickgmc.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Frank Leta Buick GMC",
+        "type": "Playbook",
+        "description": "Common questions about Frank Leta Buick GMC vehicles, financing, service, and Leta for Life benefits in Cape Girardeau, MO.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Finance Center - Frank Leta Buick GMC",
+        "type": "Entity",
+        "description": "Comprehensive financing options including flexible terms, multiple lending partners, and trade-in services at Frank Leta Buick GMC in Cape Girardeau, MO.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Buick and GMC Vehicles - Frank Leta Buick GMC",
+        "type": "Entity",
+        "description": "Full new Buick and GMC vehicle lineup at Frank Leta including SUVs, trucks, and all-electric HUMMER EV and Sierra EV models in Cape Girardeau, MO.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Frank Leta Buick GMC",
+        "type": "Entity",
+        "description": "Certified service center in Cape Girardeau, MO offering comprehensive maintenance, repairs, body and paint services, and genuine Buick/GMC parts.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff - Frank Leta Buick GMC",
+        "type": "Entity",
+        "description": "Key staff members at Frank Leta Buick GMC including management, sales, service, and parts departments serving Cape Girardeau, MO.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Frank Leta Buick GMC",
+        "type": "Entity",
+        "description": "Pre-owned vehicle inventory at Frank Leta Buick GMC including quality used and certified pre-owned vehicles with rigorous inspections in Cape Girardeau, MO.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Frank Leta Buick GMC - AI Discovery",
+        "type": "AI Discovery Page",
+        "description": "PromptGraph AI discovery page providing structured business data for AI consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/business",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Frank Leta Buick GMC - LLMs.txt",
+        "type": "PromptGraph LLMs.txt",
+        "description": "AI discovery and API documentation for Frank Leta Buick GMC via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Frank Leta Buick GMC - PromptGraph Prompts",
+        "type": "PromptGraph Prompts",
+        "description": "AI-ready prompt library generated by PromptGraph for Frank Leta Buick GMC (100 prompts).",
+        "resource": "https://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/company",
+        "source": "datasets/financing",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/company",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Frank Leta Buick GMC\n\nFrank Leta Buick GMC is a Buick and GMC dealership located at 511 S Kingshighway in Cape Girardeau, Missouri, serving southeast Missouri. Part of the trusted Frank Leta Auto Group since 1965, the dealership offers new and pre-owned vehicles, certified service, and exclusive \"Leta for Life\" ownership perks.\n\n## New Buick and GMC Sales\n\n- **Buick:** Encore GX, Envision, Enclave\n- **GMC:** Terrain, Acadia, Yukon, Sierra 1500/HD, Canyon, HUMMER EV, Sierra EV\n- Full lineup of SUVs, trucks, and electrified options\n\n## Pre-Owned Vehicles\n\n- Quality used and certified pre-owned vehicles\n- Rigorously inspected inventory\n- Flexible financing options\n\n## Service Center\n\n- Certified technicians\n- Genuine Buick/GMC parts\n- Comprehensive maintenance and repairs\n- Full-service body and paint repair shop\n\n## Leta for Life Benefits\n\n- Lifetime warranty on new vehicles\n- Lifetime car washes\n- Ongoing ownership perks\n\n## Contact\n\n- **Address:** 511 S Kingshighway, Cape Girardeau, MO\n- **Phone:** (573) 837-4191\n- **Website:** https://www.frankletabuickgmc.com/",
+    "datasets/faq": "# Frequently Asked Questions - Frank Leta Buick GMC\n\n## Vehicles\n\n### What new Buick and GMC models does Frank Leta offer?\nFrank Leta Buick GMC offers Buick Encore GX, Envision, Enclave and GMC Terrain, Acadia, Yukon, Sierra 1500/HD, Canyon, HUMMER EV, and Sierra EV. See [new-vehicles.md](new-vehicles.md) for the full lineup.\n\n### Does Frank Leta offer electric vehicles?\nYes, the GMC HUMMER EV and Sierra EV are available.\n\n### Does Frank Leta have pre-owned vehicles?\nYes, quality used and certified pre-owned vehicles with rigorous inspections.\n\n## Leta for Life\n\n### What is the Leta for Life program?\nLeta for Life includes a lifetime warranty on new vehicles, lifetime car washes, and ongoing ownership perks.\n\n### Does the lifetime warranty transfer to a new owner?\nContact the dealership for warranty transfer details.\n\n## Financing\n\n### What financing options are available?\nFlexible financing options with multiple lending partners. See [financing.md](financing.md) for full details.\n\n## Service\n\n### What services does Frank Leta offer?\nCertified technicians provide comprehensive maintenance and repairs using genuine Buick/GMC parts, plus a full-service body and paint repair shop. See [service-center.md](service-center.md) for details.\n\n## Dealership Operations\n\n### Where is Frank Leta Buick GMC located?\n511 S Kingshighway, Cape Girardeau, MO, serving southeast Missouri.\n\n### How long has Frank Leta been in business?\nPart of the Frank Leta Auto Group since 1965.\n\n### How do I contact Frank Leta?\nCall (573) 837-4191 or visit the dealership website.\n\n---\n\nFor more information, see [company.md](company.md).",
+    "datasets/financing": "# Finance Center - Frank Leta Buick GMC\n\nFrank Leta Buick GMC offers flexible financing options to help you drive home in your next Buick or GMC.\n\n## Financing Options\n\n- **Flexible Financing** \u2014 Custom payment plans through multiple lending partners\n- **Competitive Rates** \u2014 Through a network of lenders\n- **Lease Options** \u2014 GM Financial lease programs available\n\n## Leasing\n\nGM Financial offers competitive lease programs on Buick and GMC vehicles.\n\n| Aspect | Buying | Leasing |\n|--------|--------|---------|\n| Monthly Payment | Higher | Lower |\n| Ownership | You own the vehicle | Return at lease end |\n| Mileage Limits | None | Typical 10,000\u201315,000 mi/year |\n| End of Term | Trade or keep | Return or purchase |\n\n## Trade-In\n\nGet a value assessment for your current vehicle.\n\n## Leta for Life Benefits\n\n- Lifetime warranty on new vehicles\n- Lifetime car washes\n- Ongoing ownership perks\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "datasets/new-vehicles": "# New Buick and GMC Vehicles - Frank Leta Buick GMC\n\nFrank Leta Buick GMC offers a complete lineup of new Buick and GMC vehicles, including electrified options.\n\n## Buick SUVs and Crossovers\n\n| Model | Description |\n|-------|-------------|\n| Encore GX | Subcompact luxury crossover with bold styling |\n| Envision | Compact luxury SUV with premium interior and available AWD |\n| Enclave | Three-row full-size luxury SUV with advanced safety technology |\n\n## GMC Trucks and SUVs\n\n| Model | Description |\n|-------|-------------|\n| Terrain | Compact SUV with rugged design and available AT4 trim |\n| Acadia | Mid-size three-row SUV with premium cabin |\n| Yukon | Full-size SUV with available Denali luxury trim |\n| Sierra 1500 | Full-size light-duty pickup with ProGrade capability |\n| Sierra HD | Heavy-duty pickup for maximum towing |\n| Canyon | Mid-size pickup with off-road capability |\n\n## GMC Electrified\n\n| Model | Description |\n|-------|-------------|\n| HUMMER EV | All-electric supertruck with 3-motor e4WD and CrabWalk mode |\n| Sierra EV | All-electric full-size pickup with 400-mile range |\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "datasets/service-center": "# Service Center - Frank Leta Buick GMC\n\nThe Frank Leta Buick GMC service center is staffed by certified technicians using genuine Buick and GMC parts.\n\n## Services Offered\n\n- Routine maintenance (oil changes, tire rotations, inspections)\n- Major repairs (engine, transmission, brake systems)\n- Full-service body and paint repair shop\n- Certified technicians\n- Genuine Buick/GMC parts\n\n## Contact\n\n- **Phone:** (573) 837-4191\n- **Address:** 511 S Kingshighway, Cape Girardeau, MO\n\n## Parts Department\n\nGenuine Buick and GMC parts and accessories available.\n\n## Leta for Life Benefits\n\nService customers enjoy lifetime car washes as part of the Leta for Life program.\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "datasets/staff": "# Staff - Frank Leta Buick GMC\n\n## Management\n\n- **General Manager** \u2014 [Name]\n- **Sales Manager** \u2014 [Name]\n- **Finance Director** \u2014 [Name]\n\n## Sales Team\n\n- **Sales Consultant** \u2014 [Name]\n- **Sales Consultant** \u2014 [Name]\n- **Internet Sales** \u2014 [Name]\n\n## Service Department\n\n- **Service Manager** \u2014 [Name]\n- **Service Advisor** \u2014 [Name]\n- **Body Shop Manager** \u2014 [Name]\n- **Certified Technician** \u2014 [Name]\n\n## Parts Department\n\n- **Parts Manager** \u2014 [Name]\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles - Frank Leta Buick GMC\n\nFrank Leta Buick GMC offers quality used and certified pre-owned vehicles.\n\n## Pre-Owned Inventory\n\nRigorously inspected vehicles from multiple manufacturers with flexible financing options.\n\n## Trade-In\n\nGet a value assessment for your current vehicle.\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "references/ai-discovery-page": "# Frank Leta Buick GMC \u2014 AI Discovery\n\nFrank Leta Buick GMC is indexed on PromptGraph, providing structured JSON-LD data for LLM consumption.\n\n## Available Data\n\n- **Business Profile** \u2014 Name, address, phone, hours, location (JSON-LD AutoDealer)\n- **Vehicle Inventory** \u2014 Complete inventory with specifications and pricing\n- **Service Prompts** \u2014 100 structured AI prompts\n- **Customer Reviews** \u2014 Testimonials and ratings\n- **GBP Context** \u2014 Google Business Profile data flattened for LLM ingestion\n\n## Access\n\nBase URL: `http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc`",
+    "references/llms-txt": "# Frank Leta Buick GMC \u2014 LLMs.txt\n\n> The team at Frank Leta Buick GMC welcomes you to our dealership in Cape Girardeau, where we're confident you'll find the vehicles you're looking for at a price you can afford.\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/business) \u2014 Complete business profile in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/vehicles) \u2014 Complete inventory with specifications, pricing, and availability\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts) \u2014 100 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/testimonials) \u2014 Customer reviews and ratings in JSON-LD format\n- [GBP Context](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/gbp-context) \u2014 Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/site-content) \u2014 Clean, plain-text mirror of the entire site\n- [AI Manifest](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/.well-known/ai-manifest.json) \u2014 Machine-readable directory of all AI resources\n\n## Featured Prompts\n\n- [Customer-First Service](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/chevrolet-buick-&-gmc-dealer-with-customerfirst-service) \u2014 Trusted full-line Buick and GMC dealership\n- [Full-Service Sales, Service & Support](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/fullservice-buick-&-gmc-sales-service-&-support) \u2014 Complete automotive destination\n- [Trusted Retailer With High Customer Satisfaction](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/trusted-buick-&-gmc-retailer-with-high-customer-satisfaction) \u2014 Customer reviews and reputation\n- [Cape Girardeau Dealer with Leta for Life Perks](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/cape-girardeau-buick-gmc-dealer-with-leta-for-life-perks) \u2014 Premier dealership with lifetime warranty\n- [New Buick & GMC SUVs and Trucks](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/new-buick-&-gmc-suvs-and-trucks-in-cape-girardeau-mo) \u2014 Family SUVs and trucks\n- [Certified Service Center](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/certified-buick-gmc-service-center-in-cape-girardeau) \u2014 Certified technicians and genuine parts\n- [Leta for Life \u2013 Lifetime Warranty](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/leta-for-life--lifetime-warranty-buick-gmc-dealer) \u2014 Lifetime warranty and perks",
+    "references/prompts": "# Frank Leta Buick GMC \u2014 PromptGraph Prompts\n\nPromptGraph generates 100 structured AI prompts for Frank Leta Buick GMC.\n\n## Sales Prompts\n\n- [Customer-First Service](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/chevrolet-buick-&-gmc-dealer-with-customerfirst-service) \u2014 Trusted full-line Buick and GMC dealership\n- [Full-Service Sales, Service & Support](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/fullservice-buick-&-gmc-sales-service-&-support) \u2014 Complete automotive destination\n- [Trusted Retailer With High Customer Satisfaction](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/trusted-buick-&-gmc-retailer-with-high-customer-satisfaction) \u2014 Customer reviews and reputation\n- [Cape Girardeau Dealer with Leta for Life Perks](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/cape-girardeau-buick-gmc-dealer-with-leta-for-life-perks) \u2014 Premier dealership details\n- [New Buick & GMC SUVs and Trucks](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/new-buick-&-gmc-suvs-and-trucks-in-cape-girardeau-mo) \u2014 Family SUVs and trucks\n- [CPO & Used Vehicles](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/buick-gmc-certified-pre-owned-&-used-vehicles-cape-girardeau) \u2014 Certified pre-owned offerings\n\n## Service & Financing Prompts\n\n- [Certified Service Center](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/certified-buick-gmc-service-center-in-cape-girardeau) \u2014 Certified technicians\n- [Flexible Financing & Leasing](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/flexible-financing-&-leasing) \u2014 Competitive rates and offers\n- [Leta for Life \u2013 Lifetime Warranty](http://api.promptgraph.ai/api/v1/frank-leta-buick-gmc/prompts/leta-for-life--lifetime-warranty-buick-gmc-dealer) \u2014 Lifetime warranty and perks"
+  },
+  "types": [
+    "AI Discovery Page",
+    "Entity",
+    "Organization",
+    "Playbook",
+    "PromptGraph LLMs.txt",
+    "PromptGraph Prompts"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "AI Discovery Page": "#10b981",
+    "PromptGraph LLMs.txt": "#10b981",
+    "PromptGraph Prompts": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

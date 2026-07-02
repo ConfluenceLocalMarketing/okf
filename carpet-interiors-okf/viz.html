@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>carpet-interiors - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "carpet-interiors";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Carpet Interiors Floor & Home",
+        "type": "Organization",
+        "description": "Family-owned flooring and home improvement retailer serving Chicagoland since 1979, a Carpet One Floor & Home member.",
+        "resource": "https://www.flooringorlandpark.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Carpet Interiors Floor & Home",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Carpet Interiors, providing AI agents structured access to business info, prompts, testimonials, and site content via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/carpet-interiors/.well-known/ai-manifest.json",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Carpet Interiors llms.txt",
+        "type": "Directive",
+        "description": "LLMForge v1.0 directive with API endpoints for business info, prompts, testimonials, and site content.",
+        "resource": "https://api.promptgraph.ai/api/v1/carpet-interiors/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Carpet Interiors PromptGraph Prompts",
+        "type": "Prompt Library",
+        "description": "10 structured Q&A prompt/response pairs from the PromptGraph API covering flooring products, installation, and services.",
+        "resource": "https://api.promptgraph.ai/api/v1/carpet-interiors/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Carpet Interiors Floor & Home\n\nCarpet Interiors is a family-owned flooring and home improvement retailer in Orland Park, Illinois, serving the Chicagoland area for over 45 years. As a member of the Carpet One Floor & Home cooperative, they offer a wide selection of flooring products from leading brands.\n\n## Products\n\n- **Carpet** \u2014 Broad selection of styles, colors, and fibers with professional installation\n- **Luxury Vinyl** \u2014 LVT (Luxury Vinyl Tile) and LVP (Luxury Vinyl Plank)\n- **Hardwood** \u2014 Solid and engineered hardwood flooring\n- **Tile** \u2014 Ceramic, porcelain, and stone tile\n- **Laminate** \u2014 Durable laminate flooring options\n- **Area Rugs** \u2014 Ready-made and custom area rugs\n- **Window Treatments** \u2014 Custom blinds and shades\n\n## Services\n\n- Free in-home and in-office estimates\n- Professional installation by experienced crews\n- Healthier Living Installation System\n- Free measure service\n- Shop from Home consultations\n\n## Brands\n\nCarries major flooring brands through the Carpet One Floor & Home network.\n\n## Contact\n\n- **Address:** 50 Orland Square, Orland Park, IL 60462\n- **Phone:** (708) 364-6100\n- **Hours:** Mon\u2013Thu 9:30 am \u2013 7:00 pm, Fri 9:30 am \u2013 5:30 pm, Sat 9:30 am \u2013 5:30 pm, Sun closed",
+    "references/ai-discovery-page": "# AI Discovery Page - Carpet Interiors Floor & Home\n\nThe AI Discovery Page is a structured, machine-readable knowledge surface for AI agents, powered by [PromptGraph](https://promptgraph.ai).\n\n## PromptGraph API Sitemap\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/carpet-interiors/sitemap.xml` exposes these machine-readable endpoints:\n\n| URL | Priority | Update Frequency |\n|---|---|---|\n| `/business` | 1.0 | Weekly |\n| `/prompts` | 0.9 | Weekly |\n| `/vehicles` | 0.9 | Daily |\n| `/.well-known/ai-manifest.json` | 0.6 | Monthly |\n| `/robots.txt` | 0.5 | Monthly |\n| `/sitemap-inventory.xml` | 0.8 | Daily |\n| 10+ individual prompt endpoints | 0.8 | Weekly |\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\n- **Schema types:** `LocalBusiness`, `ItemList`, `Review / AggregateRating`, `Offer`, `CreativeWork`\n\n### Registered Endpoints\n\n- `/api/v1/carpet-interiors/llms.txt` - LLMs.txt directive\n- `/api/v1/carpet-interiors/business` - Business profile (JSON-LD)\n- `/api/v1/carpet-interiors/prompts` - Q&A / FAQ prompts\n- `/api/v1/carpet-interiors/testimonials` - Customer reviews\n- `/api/v1/carpet-interiors/sitemap.xml` - Full sitemap\n- `/api/v1/carpet-interiors/robots.txt` - Robots rules\n- `/api/v1/carpet-interiors/config.json` - System configuration\n\n### Additional PromptGraph Endpoints\n\n- `/gbp-context` - Flattened Google Business Profile data\n- `/site-content` - Clean, plain-text mirror of the entire site\n\n## Business Profile\n\n- **Name:** Carpet Interiors\n- **Phone:** (708) 441-3429\n- **Address:** 50 Orland Square, Orland Park, IL 60462\n- **Website:** https://www.flooringorlandpark.com/\n\n## Q&A Prompt Library\n\nThe `/prompts` endpoint exposes 10 structured Q&A pairs. See [prompts.md](prompts.md) for the full library. Topics include flooring store overview, carpet installation, luxury vinyl plank, hardwood, ceramic tile, laminate, area rugs, professional installation, free estimates, and Healthier Living installation.\n\nSee [llms-txt.md](llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](prompts.md) for the complete Q&A prompt library.",
+    "references/llms-txt": "# Carpet Interiors llms.txt\n\n> Carpet Interiors Floor & Home is your Orland Park, IL flooring store for great service and quality carpets, wood flooring, floor tiles, vinyl and more.\n\n## Discovery\n\n- **Primary endpoint:** `http://api.promptgraph.ai/api/v1/carpet-interiors/.well-known/ai-manifest.json`\n- **Format:** JSON-LD following Schema.org standards\n- **API Base:** `http://api.promptgraph.ai/api/v1/carpet-interiors`\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/carpet-interiors/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/carpet-interiors/prompts) - 10 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/carpet-interiors/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/carpet-interiors/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/carpet-interiors/site-content) - Clean, plain-text mirror of the entire site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/carpet-interiors/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/carpet-interiors/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/carpet-interiors/config.json) - System configuration and metadata\n\n## Available Schema Types\n\n- LocalBusiness\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts/FAQs)",
+    "references/prompts": "# Carpet Interiors Prompts\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/carpet-interiors/prompts` exposes 10 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Store Overview\n\n- **Flooring Store Orland Park IL** \u2014 Trusted local flooring store serving Chicagoland for over 45 years.\n- **Free Flooring Estimate Orland Park** \u2014 Free in-home or in-showroom estimates with no-obligation consultations.\n\n## Products\n\n- **Carpet Installation Orland Park** \u2014 Carpet types including plush, frieze, textured, nylon, polyester, wool.\n- **Luxury Vinyl Plank Flooring Orland Park** \u2014 Waterproof, durable LVP/LVT with realistic wood and stone looks.\n- **Hardwood Flooring Orland Park IL** \u2014 Natural wood options, refinishing, installation.\n- **Ceramic Tile Flooring Orland Park** \u2014 Ceramic and porcelain tile for kitchens, bathrooms, entryways.\n- **Laminate Flooring Orland Park** \u2014 Affordable, durable laminate with realistic wood/stone looks.\n- **Area Rugs Orland Park IL** \u2014 Various styles, sizes, materials, and patterns.\n\n## Services\n\n- **Professional Flooring Installation Orland Park** \u2014 In-house professionals with Healthier Living system.\n- **Healthier Living Flooring Installation** \u2014 Exclusive antimicrobial process with HEPA vacuuming."
+  },
+  "types": [
+    "APIs",
+    "Directive",
+    "Organization",
+    "Prompt Library"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "APIs": "#10b981",
+    "Directive": "#10b981",
+    "Prompt Library": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

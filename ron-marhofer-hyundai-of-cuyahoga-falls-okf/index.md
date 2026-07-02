@@ -14,6 +14,7 @@ OKF v0.1 bundle for Ron Marhofer Hyundai of Cuyahoga Falls, a full-service Hyund
 - [service-center.md](datasets/service-center.md) - Factory-authorized Hyundai service department with genuine parts and certified technicians.
 - [staff.md](datasets/staff.md) - Team across sales, service, parts, and management departments.
 - [faq.md](datasets/faq.md) - Common customer questions about vehicles, financing, service, and dealership operations.
+- [financing.md](datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
 
 ## References
 

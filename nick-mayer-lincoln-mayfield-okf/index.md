@@ -14,6 +14,7 @@ Lincoln dealership in Mayfield Heights, OH serving Cleveland, Beachwood, Mentor,
 - [staff.md](datasets/staff.md) - Dealership staff and teams directory.
 - [service-center.md](datasets/service-center.md) - Lincoln service center with Priority Service and valet amenities.
 - [faq.md](datasets/faq.md) - Frequently asked questions about the dealership and Lincoln ownership.
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
 
 ## References
 

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>car-x-chicago - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "car-x-chicago";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/car-x-tire-auto",
+        "label": "Car-X Tire & Auto",
+        "type": "Auto Repair Franchise",
+        "description": "Locally owned and operated auto repair franchise with 23 locations across Chicago, Illinois providing tire sales, brake repair, oil changes, exhaust systems, routine maintenance, and auto safety inspections backed by the Car-X Guarantee with flexible financing and courtesy cars.",
+        "resource": "https://www.carx.com/chicago/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 27
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/chicago-locations",
+        "label": "Chicago-Area Car-X Locations",
+        "type": "Location List",
+        "description": "Directory of Car-X Tire & Auto locations serving Chicago and surrounding suburbs with addresses, phone numbers, and service hours.",
+        "resource": "https://www.carx.com/chicago/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/car-x-guarantee",
+        "label": "Car-X Guarantee",
+        "type": "Warranty Policy",
+        "description": "The Car-X Guarantee covers all parts and labor on qualifying repairs and services performed at any Car-X location.",
+        "resource": "https://www.carx.com/guarantee/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 27
+      }
+    },
+    {
+      "data": {
+        "id": "tables/services-pricing",
+        "label": "Car-X Chicago Service Categories and Pricing",
+        "type": "Pricing Table",
+        "description": "Overview of common service categories offered at Car-X Tire & Auto Chicago locations with typical service scope.",
+        "resource": "https://www.carx.com/chicago/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/car-x-tire-auto__datasets/chicago-locations",
+        "source": "datasets/car-x-tire-auto",
+        "target": "datasets/chicago-locations"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/chicago-locations__datasets/car-x-tire-auto",
+        "source": "datasets/chicago-locations",
+        "target": "datasets/car-x-tire-auto"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/car-x-tire-auto": "# Car-X Tire & Auto\n\nCar-X Tire & Auto is a locally owned and operated auto repair franchise serving the Chicago metropolitan area with 23 convenient locations. As part of the broader Car-X network of 145+ locations across the United States, the Chicago franchise brings national brand reliability to local neighborhoods.\n\n## Services\n\n- **Brake inspection & replacement** \u2014 Pad, rotor, caliper, and full brake system service\n- **Tire inspection & new tires** \u2014 Sales, mounting, balancing, and alignment\n- **Exhaust repair & replacement** \u2014 Mufflers, catalytic converters, and full exhaust systems\n- **Oil change & filter replacement** \u2014 Conventional and synthetic oil changes\n- **Auto safety inspection & maintenance** \u2014 State safety and emissions testing\n- **Routine vehicle maintenance** \u2014 Belts, hoses, wipers, fluids, batteries, and more\n\n## Amenities\n\n- WiFi\n- Courtesy car\n- Flexible financing\n- Towing\n- Diagnostic scanning\n\n## Hours\n\nHours vary by location. Typical operating hours:\n\n| Day | Hours |\n|-----|-------|\n| Mon\u2013Fri | 7:30 AM \u2013 7:00 PM |\n| Saturday | 7:30 AM \u2013 6:00 PM |\n| Sunday | Varies by location |\n\n## The Car-X Guarantee\n\nEvery repair and service is backed by the Car-X Guarantee. See [car-x-guarantee.md](/references/car-x-guarantee.md) for details.\n\n## Parent\n\nCar-X Tire & Auto (145+ locations across the US).\n\nSee [chicago-locations.md](chicago-locations.md) for individual Chicago-area location details.",
+    "datasets/chicago-locations": "# Chicago-Area Car-X Locations\n\n## Chicago Locations\n\n| Location | Address | Phone |\n|----------|---------|-------|\n| Lincoln Park | 2509 N Ashland Ave, Chicago, IL 60614 | 773-348-7912 |\n| Irving Park | 3244 W Irving Pk, Chicago, IL 60618 | 773-463-4169 |\n| Pulaski | 5418 S Pulaski Rd, Chicago, IL 60632 | 773-581-7191 |\n| South Shore | 7424 S Stony Island Av, Chicago, IL 60649 | 773-493-6500 |\n| Lincoln Square | 5150 N Western Ave, Chicago, IL 60625 | 773-275-0616 |\n| Beverly | 10157 S Western Ave, Chicago, IL 60643 | 773-233-3178 |\n\n## Suburban Locations\n\nCar-X also serves the following Chicago suburbs and nearby communities:\n\n- Crystal Lake\n- Des Plaines\n- Long Grove\n- Niles\n- Oak Lawn\n- Other surrounding suburbs\n\n## Hours\n\nHours vary by location. Contact individual stores or visit [carx.com/chicago/](https://www.carx.com/chicago/) for specific location hours.\n\nSee [car-x-tire-auto.md](car-x-tire-auto.md) for the full franchise profile and service menu.",
+    "references/car-x-guarantee": "# Car-X Guarantee\n\nEvery repair and service performed at Car-X Tire & Auto is backed by the Car-X Guarantee, providing peace of mind for all customers.\n\n## Coverage\n\n- **Parts warranty** \u2014 Qualifying parts are covered against defects\n- **Labor warranty** \u2014 Labor on covered services is guaranteed\n- **Transferable** \u2014 Coverage transfers with the vehicle\n- **National network** \u2014 Honored at any Car-X location across the US\n\n## Service Amenities\n\n- Free courtesy cars and WiFi at participating locations\n- Flexible financing options available\n- Towing and diagnostic scanning services\n\nSee [car-x-tire-auto.md](/datasets/car-x-tire-auto.md) for the full list of services covered under this guarantee.",
+    "tables/services-pricing": "# Car-X Chicago Service Categories\n\n| Service | Typical Scope | Notes |\n|---------|--------------|-------|\n| Brake Inspection & Repair | Pad replacement, rotor resurfacing/replacement, caliper service | Free brake check |\n| Tire Sales & Service | New tire sales, mounting, balancing, alignment | All major brands |\n| Oil Change | Conventional and synthetic oil + filter replacement | Includes fluid top-off |\n| Exhaust System | Muffler, catalytic converter, pipe repair/replacement | Full system inspection |\n| Auto Safety Inspection | State-required safety and emissions inspection | Varies by state |\n| Routine Maintenance | Belts, hoses, wipers, batteries, cooling system | Scheduled maintenance |\n| Diagnostic Scanning | Electronic system diagnostics, check engine light | Computerized scanning |\n| Heating & Cooling | A/C recharge, heater repair, cooling system service | Seasonal specials |\n\nSee [car-x-tire-auto.md](/datasets/car-x-tire-auto.md) for detailed service descriptions."
+  },
+  "types": [
+    "Auto Repair Franchise",
+    "Location List",
+    "Pricing Table",
+    "Warranty Policy"
+  ],
+  "palette": {
+    "Auto Repair Franchise": "#8b5cf6",
+    "Location List": "#8b5cf6",
+    "Warranty Policy": "#10b981",
+    "Pricing Table": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Sales and service staff directory.
 - [service-center.md](service-center.md) - Service department with factory-trained technicians and genuine parts.
 - [faq.md](faq.md) - Frequently asked questions about dealership services, financing, and policies.
+- [financing.md](financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.

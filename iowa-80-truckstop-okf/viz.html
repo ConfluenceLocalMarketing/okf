@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>iowa-80-truckstop - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "iowa-80-truckstop";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/iowa-80-truckstop",
+        "label": "Iowa 80 Truckstop",
+        "type": "Truck Stop",
+        "description": "World's largest truckstop located in Walcott, Iowa since 1964, featuring 900 truck parking spaces, 7 restaurant options, and a full-service travel center with museum.",
+        "resource": "https://iowa80truckstop.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/website",
+        "label": "Iowa 80 Truckstop Official Website",
+        "type": "Website",
+        "description": "Official website for the Iowa 80 Truckstop, the world's largest truckstop in Walcott, Iowa.",
+        "resource": "https://iowa80truckstop.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/amenities",
+        "label": "Iowa 80 Truckstop Amenities and Services",
+        "type": "Amenities Table",
+        "description": "Complete inventory of amenities, dining, services, and facilities at the Iowa 80 Truckstop with descriptions and categories.",
+        "resource": "https://iowa80truckstop.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 21
+      }
+    }
+  ],
+  "edges": [],
+  "bodies": {
+    "datasets/iowa-80-truckstop": "# Iowa 80 Truckstop\n\n## Overview\n\nIowa 80 Truckstop is the world's largest truckstop, located in Walcott, Iowa at I-80 Exit 284. Established in 1964 by Bill Moon, it has never closed \u2014 operating 24 hours a day, 365 days a year. The facility spans 220 acres and serves over 5,000 customers daily. It is the flagship property of the Iowa 80 Group.\n\n## Location\n\n- **Address:** 755 W. Iowa 80 Road, I-80 Exit 284, Walcott, IA 52773\n- **Phone:** (563) 284-6961\n- **Hours:** 24 hours a day, 365 days a year (never closed since 1964)\n\n## History\n\nFounded in 1964 by Bill Moon at the intersection of Interstate 80 and Highway 6 in Walcott, Iowa. What began as a modest fuel stop has grown over six decades into the world's largest truckstop, expanding continuously to meet the needs of America's truck drivers and travelers. The Iowa 80 Trucking Museum preserves the history of trucking and complements the truckstop experience.\n\n## Iowa 80 Group\n\nIowa 80 Truckstop is part of the Iowa 80 Group, which also owns:\n\n- **CAT Scale Company** \u2014 Weighing services for trucks\n- **Joplin 44 Petro** \u2014 Truckstop in Joplin, Missouri\n- **Kenly 95 Petro** \u2014 Truckstop in Kenly, North Carolina\n- **Effingham Chrome Shop** \u2014 Custom chrome accessories\n- **IOWA80.com** \u2014 Mail-order trucking supply catalog\n\n## Parking\n\n| Type | Spaces |\n|---|---|\n| Truck parking | 900 |\n| Car parking | 250 |\n| Bus parking | 20 |\n| RV and trailer parking | Available |\n\n## Dining\n\nThe truckstop offers seven dining options:\n\n- **Iowa 80 Kitchen** \u2014 300-seat full-service restaurant\n- **Wendy's** \u2014 Fast food\n- **Pizza Hut** \u2014 Pizza by the slice or whole\n- **Taco Bell** \u2014 Mexican fast food\n- **Dairy Queen / Orange Julius** \u2014 Ice cream and beverages\n- **Blimpie** \u2014 Sandwiches and subs\n- **Convenience Store** \u2014 Grab-and-go items and snacks\n\n## Amenities\n\n- **Super Truck Showroom** \u2014 Custom truck and accessory showcase\n- **Gift Store** \u2014 Massive retail selection\n- **Barber Shop** \u2014 Haircuts for drivers and travelers\n- **Interstate Dental** \u2014 On-site dental services\n- **Chiropractor** \u2014 On-site chiropractic care\n- **Movie Theatre** \u2014 In-house cinema\n- **Workout Room** \u2014 Fitness facilities\n- **Private Showers** \u2014 24 private shower units\n- **Laundry Center** \u2014 Washer and dryer facilities\n- **Library** \u2014 Reading materials for drivers\n- **Driver Den** \u2014 Lounge area\n- **Dogomat Pet Wash** \u2014 Self-service pet washing station\n- **Dog Stop Dog Park** \u2014 Outdoor pet area\n- **Truckomat Truck Wash** \u2014 Automated truck washing\n- **EV Charging** \u2014 Electric vehicle charging stations\n- **Custom Embroidery Shop** \u2014 Personalized apparel and accessories\n\n## Fleet Services\n\n- **CAT Scale** \u2014 Certified truck weighing\n- **Fuel Center** \u2014 Diesel and fuel services\n- **Truck Service Center** \u2014 ASE-certified, 24-hour roadside repair\n- **Fleet Fuel Program** \u2014 Discounted fuel for fleet operators\n- **Fleet Wash Program** \u2014 Regular washing plans for fleets\n- **Truck Parking** \u2014 Secured 900-space lot with security patrol\n\n## Annual Events\n\n### Walcott Truckers Jamboree\n\nA three-day event held annually in July celebrating America's truckers. Established in 1979, the Jamboree features:\n\n- Super Trucks Beauty Contest\n- Antique truck displays\n- Exhibitor booths\n- Live entertainment\n- Food vendors\n- Family-friendly activities\n\nThe 2026 Walcott Truckers Jamboree is scheduled for July 9\u201311, 2026.\n\n## Iowa 80 Trucking Museum\n\nLocated on the property, the Iowa 80 Trucking Museum showcases the history of trucking with a collection of antique trucks, memorabilia, and interactive exhibits.\n\nSee [website.md](../references/website.md) for the official website.",
+    "references/website": "# Iowa 80 Truckstop Official Website\n\n**URL:** [https://iowa80truckstop.com/](https://iowa80truckstop.com/)\n\nThe official website for Iowa 80 Truckstop provides comprehensive information about the world's largest truckstop, including:\n\n- History and background of the facility\n- Dining menus and restaurant information\n- Amenity descriptions and locations\n- Fleet services and fuel programs\n- Walcott Truckers Jamboree event details and registration\n- Interactive property map\n- Image galleries\n- Career opportunities\n- Frequently asked questions\n- Contact information\n\n## Sections\n\n| Section | Description |\n|---|---|\n| [About](https://iowa80truckstop.com/about-iowa-80/) | History, fun facts, interactive map, image galleries |\n| [Eat](https://iowa80truckstop.com/eat/) | Dining options including Iowa 80 Kitchen, Wendy's, Pizza Hut, Taco Bell, Dairy Queen, Blimpie |\n| [Experience](https://iowa80truckstop.com/experience/) | Amenities: Super Truck Showroom, gift store, barber, dental, chiropractor, movie theater, showers, laundry, workout room, Dogomat, Dog Stop Dog Park, EV charging |\n| [Fleet Services](https://iowa80truckstop.com/fleet-services/) | CAT Scale, fuel, truck wash, parking, service center, fleet programs |\n| [Truckers Jamboree](https://iowa80truckstop.com/trucker-jamboree/) | Annual July event details, registration, schedules |\n\n## Related Sites\n\n- [Iowa 80 Group](https://www.iowa80group.com/) \u2014 Parent company\n- [IOWA80.com](https://www.iowa80.com/) \u2014 Mail-order trucking supplies\n- [Iowa 80 Trucking Museum](https://iowa80truckingmuseum.com/) \u2014 On-site museum\n- [CAT Scale](https://catscale.com/) \u2014 Weighing services\n\n## Citations\n\nData for this bundle sourced from the official website and related Iowa 80 Group properties. See [iowa-80-truckstop.md](../datasets/iowa-80-truckstop.md) for the full concept profile.",
+    "tables/amenities": "# Iowa 80 Truckstop Amenities and Services\n\n## Dining\n\n| Venue | Type | Seating | Description |\n|---|---|---|---|\n| Iowa 80 Kitchen | Full-service restaurant | 300 seats | American cuisine, breakfast all day, daily specials |\n| Wendy's | Fast food | Standard | Burgers, chicken sandwiches, salads, frosty desserts |\n| Pizza Hut | Pizza | Counter service | Whole pies and by-the-slice pizza |\n| Taco Bell | Fast food | Counter service | Mexican-inspired fast food |\n| Dairy Queen / Orange Julius | Ice cream / beverages | Counter service | Soft-serve ice cream, smoothies, fruit drinks |\n| Blimpie | Deli / subs | Counter service | Made-to-order submarine sandwiches |\n| Convenience Store | Grab-and-go | Retail | Snacks, beverages, ready-to-eat meals |\n\n## Parking\n\n| Type | Capacity | Details |\n|---|---|---|\n| Truck parking | 900 spaces | Secured lot, security patrol |\n| Car parking | 250 spaces | Designated customer parking |\n| Bus parking | 20 spaces | Motorcoach and bus parking |\n| RV / Trailer parking | Available | Dedicated area for recreational vehicles |\n\n## Driver Services\n\n| Service | Description |\n|---|---|\n| Private Showers | 24 private shower units, cleaned after each use |\n| Laundry Center | Commercial washers and dryers |\n| Workout Room | Exercise equipment for driver fitness |\n| Library | Reading materials and quiet space |\n| Driver Den | Lounge area for relaxation |\n| Movie Theatre | In-house cinema showing movies |\n| Dogomat Pet Wash | Self-service pet washing and blow-drying station |\n| Dog Stop Dog Park | Fenced outdoor area for pets |\n\n## Personal Care\n\n| Service | Description |\n|---|---|\n| Barber Shop | Professional haircuts for men and women |\n| Interstate Dental | On-site dental services |\n| Chiropractor | On-site chiropractic care |\n\n## Fleet Services\n\n| Service | Description |\n|---|---|\n| CAT Scale | Certified truck weighing scale |\n| Fuel Center | Diesel fuel, DEF, gasoline |\n| Truck Service Center | ASE-certified mechanics, 24-hour roadside repair |\n| Truckomat Truck Wash | Automated drive-through truck washing |\n| Fleet Fuel Program | Discounted fuel pricing for fleet operators |\n| Fleet Wash Program | Regular truck washing plans for fleets |\n\n## Retail and Attractions\n\n| Feature | Description |\n|---|---|\n| Super Truck Showroom | Showcasing custom trucks and accessories |\n| Gift Store | Large retail store with apparel, souvenirs, gifts, trucking accessories |\n| Custom Embroidery Shop | Personalized apparel and custom embroidery |\n| EV Charging | Electric vehicle charging stations |\n\n## Facility Details\n\n| Detail | Value |\n|---|---|\n| Total area | 220 acres |\n| Founded | 1964 by Bill Moon |\n| Hours | 24 hours / 365 days (never closed since 1964) |\n| Daily customers | 5,000+ |\n| Parent company | Iowa 80 Group |\n| Annual event | Walcott Truckers Jamboree (July 9\u201311, 2026) |\n\n## Citations\n\nData sourced from the official Iowa 80 Truckstop website ([iowa80truckstop.com](https://iowa80truckstop.com/)). See [iowa-80-truckstop.md](../datasets/iowa-80-truckstop.md) for the full concept profile."
+  },
+  "types": [
+    "Amenities Table",
+    "Truck Stop",
+    "Website"
+  ],
+  "palette": {
+    "Truck Stop": "#8b5cf6",
+    "Website": "#10b981",
+    "Amenities Table": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

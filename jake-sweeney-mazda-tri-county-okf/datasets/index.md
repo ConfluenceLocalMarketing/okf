@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Staff directory including sales consultants, service advisors, and finance team compiled from customer reviews
 - [service-center.md](service-center.md) - Service center details, routine maintenance, diagnostics, major repairs, and parts department
 - [faq.md](faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators

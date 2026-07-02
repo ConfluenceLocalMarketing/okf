@@ -7,6 +7,7 @@ okf_version: "0.1"
 ## Datasets
 
 - [dealership.md](datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Heartland Toyota in Bremerton, WA
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options at Heartland Toyota including online applications, trade-in valuation, and payment calculators
 - [new-vehicles.md](datasets/new-vehicles.md) - New Toyota model lineup including Camry, Corolla, RAV4, Tacoma, Tundra, Highlander, 4Runner, and more
 - [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
 - [staff.md](datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team

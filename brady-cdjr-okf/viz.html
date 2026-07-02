@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>brady-cdjr - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "brady-cdjr";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Brady Chrysler Dodge Jeep Ram",
+        "type": "Car Dealership",
+        "description": "Chrysler, Dodge, Jeep, and RAM dealership serving Bessemer and Birmingham, Alabama with new and pre-owned vehicles, service, and parts.",
+        "resource": "https://www.bradycdjr.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Brady Chrysler Dodge Jeep Ram",
+        "type": "Playbook",
+        "description": "Common questions about Brady CDJR vehicles, financing, Mopar service, and dealership operations in Bessemer, AL.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Finance Center - Brady Chrysler Dodge Jeep Ram",
+        "type": "Entity",
+        "description": "Comprehensive financing options including online credit application, loan and lease options, trade-in appraisal, and payment calculator at Brady CDJR in Bessemer, AL.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New CDJR Vehicles - Brady Chrysler Dodge Jeep Ram",
+        "type": "Entity",
+        "description": "Full new vehicle lineup at Brady CDJR featuring Chrysler, Dodge, Jeep, and RAM models including SUVs, trucks, sedans, and electrified options.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Brady Chrysler Dodge Jeep Ram",
+        "type": "Entity",
+        "description": "Mopar-certified service center in Bessemer, AL offering factory-trained technicians, genuine Mopar parts, and comprehensive maintenance and repair for CDJR vehicles.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff - Brady Chrysler Dodge Jeep Ram",
+        "type": "Entity",
+        "description": "Key staff members at Brady CDJR including management, sales, service, and parts departments serving Bessemer and Birmingham, AL.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Brady Chrysler Dodge Jeep Ram",
+        "type": "Entity",
+        "description": "Pre-owned vehicle inventory at Brady CDJR including multi-make selection and CDJR Certified Pre-Owned options in Bessemer, AL.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Brady Chrysler Dodge Jeep Ram",
+        "type": "Reference",
+        "description": "Overview of AI visibility for Brady CDJR. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Brady Chrysler Dodge Jeep Ram - llms.txt",
+        "type": "llms.txt",
+        "description": "AI context file for Brady CDJR dealership. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Brady Chrysler Dodge Jeep Ram - AI Prompts",
+        "type": "Playbook",
+        "description": "Curated AI prompts for customer-facing and internal use at Brady CDJR. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/company",
+        "source": "datasets/financing",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/company",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Brady Chrysler Dodge Jeep Ram\n\nBrady Chrysler Dodge Jeep Ram is a full-service automotive dealership located in Bessemer, AL, serving the Birmingham, Tuscaloosa, Hoover, and McCalla areas. The dealership offers new and pre-owned Chrysler, Dodge, Jeep, and RAM vehicles along with factory-trained service, genuine Mopar parts, and financing options.\n\n## Location\n\n- **Address**: 5080 Academy Ln, Bessemer, AL 35022\n- **Service Area**: Bessemer, Birmingham, Tuscaloosa, Hoover, McCalla, AL\n\n## Contact\n\n- **Main**: (205) 923-6343\n- **Sales**: (205) 922-6782\n- **Service**: (205) 584-4191\n- **Parts**: (205) 584-3820\n- **Commercial**: (205) 941-6214\n\n## Hours\n\n| Department | Mon\u2013Fri | Sat | Sun |\n|------------|---------|-----|-----|\n| Sales | 9:00 AM \u2013 7:00 PM | 9:00 AM \u2013 6:00 PM | Closed |\n| Service | 7:00 AM \u2013 6:00 PM | 8:00 AM \u2013 2:00 PM | Closed |\n| Parts | 7:00 AM \u2013 6:00 PM | 8:00 AM \u2013 2:00 PM | Closed |\n\n## Inventory\n\n### New Vehicles\n- Chrysler: Pacifica, Pacifica Plug-In Hybrid\n- Dodge: Durango, Charger, Hornet\n- Jeep: Grand Cherokee, Wrangler, Wagoneer, Compass\n- RAM: 1500, 2500, 3500, ProMaster\n\n### Pre-Owned Vehicles\n- Multi-make selection including GMC, Ford, Honda, Toyota, Chevrolet\n- Certified Pre-Owned CDJR options\n\n## Services\n\n- Factory-trained Mopar service technicians\n- Genuine Mopar parts and accessories\n- Comprehensive auto maintenance and repair\n- Commercial vehicle service\n\n## Financing\n- Online credit application\n- Trade-in appraisal\n- Loan and lease options\n- Vehicle payment calculator\n- New and pre-owned vehicle specials",
+    "datasets/faq": "# Frequently Asked Questions - Brady Chrysler Dodge Jeep Ram\n\n## Vehicles\n\n### What new vehicle brands does Brady CDJR offer?\nBrady CDJR offers Chrysler, Dodge, Jeep, and RAM vehicles including the Pacifica, Durango, Charger, Grand Cherokee, Wrangler, Wagoneer, and RAM 1500/2500/3500. See [new-vehicles.md](new-vehicles.md) for the full lineup.\n\n### Does Brady CDJR have pre-owned vehicles?\nYes, a multi-make pre-owned selection including GMC, Ford, Honda, Toyota, and Chevrolet, plus CDJR Certified Pre-Owned options.\n\n### Can I schedule a test drive?\nYes, contact sales at (205) 922-6782 or visit 5080 Academy Ln, Bessemer, AL 35022.\n\n## Financing\n\n### What financing options are available?\nBrady CDJR offers loan and lease options, an online credit application, and a vehicle payment calculator. See [financing.md](financing.md) for full details.\n\n### Can I apply for credit online?\nYes, an online credit application is available on the dealership website.\n\n### Do you offer trade-in appraisals?\nYes, trade-in appraisals are available.\n\n## Service\n\n### What services does Brady CDJR offer?\nFactory-trained Mopar service technicians provide comprehensive auto maintenance and repair using genuine Mopar parts. See [service-center.md](service-center.md) for details.\n\n### What are the service hours?\nService is open Monday\u2013Friday 7:00 AM \u2013 6:00 PM and Saturday 8:00 AM \u2013 2:00 PM.\n\n### Do you have a parts department?\nYes, the parts department offers genuine Mopar parts and accessories, open Monday\u2013Friday 7:00 AM \u2013 6:00 PM and Saturday 8:00 AM \u2013 2:00 PM. Call (205) 584-3820.\n\n## Dealership Operations\n\n### Where is Brady CDJR located?\n5080 Academy Ln, Bessemer, AL 35022, serving Birmingham, Tuscaloosa, Hoover, and McCalla.\n\n### What are the sales hours?\nSales is open Monday\u2013Friday 9:00 AM \u2013 7:00 PM and Saturday 9:00 AM \u2013 6:00 PM, closed Sunday.\n\n### Do you offer commercial vehicle service?\nYes, commercial vehicle service is available. Call (205) 941-6214.\n\n---\n\nFor more information, see [company.md](company.md).",
+    "datasets/financing": "# Finance Center - Brady Chrysler Dodge Jeep Ram\n\nBrady CDJR offers flexible financing solutions to help you drive home in your next vehicle. The finance center works with multiple lending partners to secure competitive rates.\n\n## Financing Options\n\n- **Online Credit Application** \u2014 Apply from home for fast pre-approval\n- **Loan and Lease Options** \u2014 Purchase or lease to fit your lifestyle\n- **New and Pre-Owned Specials** \u2014 Current incentives and manufacturer offers\n\n## Leasing\n\nChrysler Capital and Stellantis Financial offer competitive lease programs on CDJR vehicles.\n\n| Aspect | Buying | Leasing |\n|--------|--------|---------|\n| Monthly Payment | Higher | Lower |\n| Ownership | You own the vehicle | Return at lease end |\n| Mileage Limits | None | Typical 10,000\u201315,000 mi/year |\n| End of Term | Trade or keep | Return or purchase |\n\n## Trade-In Appraisal\n\nGet a value assessment for your current vehicle and apply it toward your purchase or lease.\n\n## Payment Calculator\n\nUse online payment calculators to estimate monthly payments based on down payment, term length, and interest rate.\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "datasets/new-vehicles": "# New CDJR Vehicles - Brady Chrysler Dodge Jeep Ram\n\nBrady CDJR offers a complete lineup of new Chrysler, Dodge, Jeep, and RAM vehicles.\n\n## Chrysler\n\n| Model | Description |\n|-------|-------------|\n| Pacifica | Award-winning minivan with available plug-in hybrid option |\n| Pacifica Plug-In Hybrid | Electrified minivan with 32-mile all-electric range |\n\n## Dodge\n\n| Model | Description |\n|-------|-------------|\n| Durango | Three-row SUV with available HEMI V8 power |\n| Charger | Iconic four-door muscle sedan |\n| Hornet | All-new compact performance crossover |\n\n## Jeep\n\n| Model | Description |\n|-------|-------------|\n| Grand Cherokee | Legendary mid-size SUV with premium interior |\n| Wrangler | Iconic off-road SUV with available 4xe plug-in hybrid |\n| Wagoneer | Full-size luxury SUV |\n| Compass | Compact SUV with go-anywhere capability |\n\n## RAM\n\n| Model | Description |\n|-------|-------------|\n| 1500 | Best-in-class full-size light-duty pickup |\n| 2500 | Heavy-duty pickup with class-leading towing |\n| 3500 | Maximum-capacity heavy-duty pickup |\n| ProMaster | Full-size commercial van |\n\n## Current Inventory\n\nVisit the dealership at 5080 Academy Ln, Bessemer, AL 35022, or call (205) 922-6782 for current inventory availability.\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "datasets/service-center": "# Service Center - Brady Chrysler Dodge Jeep Ram\n\nThe Brady CDJR service center is staffed by factory-trained Mopar service technicians using genuine Mopar parts to keep your vehicle performing at its best.\n\n## Services Offered\n\n- Routine maintenance (oil changes, tire rotations, inspections)\n- Major repairs (engine, transmission, brake systems)\n- Genuine Mopar parts and accessories\n- Factory-trained service technicians\n- Commercial vehicle service\n\n## Service Hours\n\n| Day | Hours |\n|-----|-------|\n| Monday \u2013 Friday | 7:00 AM \u2013 6:00 PM |\n| Saturday | 8:00 AM \u2013 2:00 PM |\n| Sunday | Closed |\n\n## Contact\n\n- **Service Phone:** (205) 584-4191\n- **Parts Phone:** (205) 584-3820\n- **Commercial:** (205) 941-6214\n- **Address:** 5080 Academy Ln, Bessemer, AL 35022\n\n## Parts Department\n\nGenuine Mopar parts, accessories, and merchandise available.\n\n| Day | Hours |\n|-----|-------|\n| Monday \u2013 Friday | 7:00 AM \u2013 6:00 PM |\n| Saturday | 8:00 AM \u2013 2:00 PM |\n| Sunday | Closed |\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "datasets/staff": "# Staff - Brady Chrysler Dodge Jeep Ram\n\n## Management\n\n- **General Manager** \u2014 [Name]\n- **Sales Manager** \u2014 [Name]\n- **Finance Director** \u2014 [Name]\n\n## Sales Team\n\n- **Sales Consultant** \u2014 [Name]\n- **Sales Consultant** \u2014 [Name]\n- **Commercial Sales** \u2014 [Name]\n\n## Service Department\n\n- **Service Manager** \u2014 [Name]\n- **Service Advisor** \u2014 [Name]\n- **Service Advisor** \u2014 [Name]\n- **Certified Technician** \u2014 [Name]\n\n## Parts Department\n\n- **Parts Manager** \u2014 [Name]\n- **Parts Specialist** \u2014 [Name]\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles - Brady Chrysler Dodge Jeep Ram\n\nBrady CDJR offers a diverse selection of pre-owned vehicles from multiple manufacturers.\n\n## Pre-Owned Inventory\n\nMulti-make selection including GMC, Ford, Honda, Toyota, Chevrolet, and more.\n\n## CDJR Certified Pre-Owned\n\n- Comprehensive multi-point inspection\n- Remaining factory warranty\n- 24/7 roadside assistance\n- Genuine Mopar parts and service records\n\n## Trade-In Appraisal\n\nGet a value assessment for your current vehicle and apply it toward a pre-owned purchase.\n\n---\n\nFor complete dealership information, see [company.md](company.md).",
+    "references/ai-discovery-page": "# AI Discovery Page \u2014 Brady Chrysler Dodge Jeep Ram\n\n## Overview\nBrady CDJR has no AI-specific discovery files. An llms.txt and prompts.txt have been synthesized for this bundle.\n\n## Discovery Channels\n- **Website**: https://www.bradycdjr.com/\n- **Social**: Facebook (@BradyCDJR)\n- **Listings**: Cars.com, CarGurus, DealerRater\n\n## Recommendation\nHost `/llms.txt` at the dealership domain for improved AI-driven discovery.",
+    "references/llms-txt": "# Brady Chrysler Dodge Jeep Ram\n\n> Chrysler, Dodge, Jeep, and RAM dealership in Bessemer, AL serving Birmingham metro.\n\n## Key Information\n- **Location**: 5080 Academy Ln, Bessemer, AL 35022\n- **Website**: https://www.bradycdjr.com/\n- **Main**: (205) 923-6343 | **Sales**: (205) 922-6782 | **Service**: (205) 584-4191 | **Parts**: (205) 584-3820\n- **Brands**: Chrysler, Dodge, Jeep, RAM\n\n## Inventory\n- New: Chrysler Pacifica, Dodge Durango/Charger/Hornet, Jeep Grand Cherokee/Wrangler/Wagoneer/Compass, RAM 1500/2500/3500/ProMaster\n- Used: Multi-make, CPO available\n- Commercial vehicles available\n\n## Services\n- Factory-trained technicians, Mopar parts, commercial service\n- Online financing, trade-in, payment calculator\n\n## Hours\n- Sales: Mon\u2013Fri 9\u20137, Sat 9\u20136, Sun closed\n- Service/Parts: Mon\u2013Fri 7\u20136, Sat 8\u20132, Sun closed",
+    "references/prompts": "# Brady Chrysler Dodge Jeep Ram \u2014 AI Prompts\n\n## Customer Assistance\n\n**Prompt**: Act as a sales consultant at Brady Chrysler Dodge Jeep Ram. A customer is interested in a [Jeep Wrangler / RAM 1500 / Chrysler Pacifica]. Describe the key features, available trims, and current specials.\n\n**Prompt**: A customer wants to schedule service for their vehicle at Brady CDJR. Explain available services and how to book an appointment.\n\n## Internal\n\n**Prompt**: Write a Facebook post promoting a sales event at Brady CDJR. Highlight a specific model and special financing offer."
+  },
+  "types": [
+    "Car Dealership",
+    "Entity",
+    "Playbook",
+    "Reference",
+    "llms.txt"
+  ],
+  "palette": {
+    "Car Dealership": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "Reference": "#10b981",
+    "llms.txt": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

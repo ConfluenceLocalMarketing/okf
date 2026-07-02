@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>west-yellowstone - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "west-yellowstone";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/west-yellowstone",
+        "label": "West Yellowstone",
+        "type": "Tourist Town",
+        "description": "Mountain gateway town in southwestern Montana at the west entrance to Yellowstone National Park, offering lodging, dining, shopping, outdoor recreation, and year-round tourism activities including snowmobiling, cross-country skiing, fishing, hiking, and wildlife viewing.",
+        "resource": "https://www.yellowstone.net/gateways/west-yellowstone",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "references/yellowstone-net",
+        "label": "West Yellowstone Gateway",
+        "type": "Gateway Page",
+        "description": "Official gateway page for West Yellowstone on Yellowstone.net, providing visitor information.",
+        "resource": "https://www.yellowstone.net/gateways/west-yellowstone",
+        "tags": [],
+        "color": "#10b981",
+        "size": 27
+      }
+    },
+    {
+      "data": {
+        "id": "tables/lodging-accommodations",
+        "label": "West Yellowstone Lodging Accommodations",
+        "type": "Comparison Matrix",
+        "description": "Hotel and lodging properties in West Yellowstone with room counts and property types.",
+        "resource": "",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 34
+      }
+    },
+    {
+      "data": {
+        "id": "tables/seasonal-activities",
+        "label": "West Yellowstone Seasonal Activities",
+        "type": "Activity Matrix",
+        "description": "Year-round recreational activities available in and around West Yellowstone.",
+        "resource": "",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 31
+      }
+    }
+  ],
+  "edges": [],
+  "bodies": {
+    "datasets/west-yellowstone": "# West Yellowstone\n\n## Overview\n\nWest Yellowstone is a small mountain town in **Gallatin County, Montana**, situated immediately adjacent to the **west entrance of Yellowstone National Park**. Founded in the early 1900s as a railroad gateway community, it has grown into the park's busiest entry point, hosting over half of all Yellowstone visitors annually.\n\n- **Population:** ~1,300\n- **Elevation:** 6,666 ft\n- **County:** Gallatin County, Montana\n- **Season:** Year-round (peak summer); winter access via snowcoach and snowmobile\n- **Airport:** Yellowstone Airport (WYS)\n\n## Lodging\n\nWest Yellowstone offers over 2,000 hotel rooms across a range of property types:\n\n- **Hotels & Motels** \u2014 Kelly Inn, Holiday Inn, WorldMark West Yellowstone\n- **Cabins & Lodges** \u2014 Explorer Cabins at Yellowstone, Three Bear Lodge\n- **RV Parks & Campgrounds** \u2014 Grizzly RV Park, Yellowstone Grizzly RV Park\n\nSee [lodging-accommodations.md](../tables/lodging-accommodations.md) for a full comparison table.\n\n## Attractions\n\n- **Yellowstone National Park** \u2014 Old Faithful, Grand Prismatic Spring, Hayden Valley, Madison River, Firehole River\n- **Grizzly & Wolf Discovery Center** \u2014 Wildlife conservation and education center\n- **Museum of the Yellowstone** \u2014 Housed in the historic Union Pacific Depot\n- **IMAX Theatre** \u2014 Large-format adventure films\n- **Earthquake Lake** \u2014 Site of the 1959 Hebgen Lake earthquake\n- **Hebgen Lake** \u2014 Fishing, boating, and camping\n- **Henry's Lake State Park** \u2014 Trout fishing and camping\n- **Harriman State Park** \u2014 Wildlife refuge and hiking trails\n\n## Activities\n\nSee [seasonal-activities.md](../tables/seasonal-activities.md) for a comprehensive breakdown by season.\n\n### Summer\n- Wildlife viewing (bison, bears, elk, wolves, eagles)\n- Geyser gazing and thermal feature hikes\n- Fly fishing on the Madison, Firehole, and Gibbon Rivers\n- Hiking and backpacking in Yellowstone backcountry\n- Biking and mountain biking\n- Horseback riding and trail rides\n- Photography and scenic driving\n\n### Winter\n- Snowmobiling on groomed trails\n- Cross-country skiing and snowshoeing\n- Snowcoach tours into Yellowstone\n- Wildlife viewing in winter habitats\n\n## Dining\n\n- Firehole BBQ\n- Beartooth Barbecue\n- Buffalo Bar\n- Mountain Mama's Coffee House\n\n## Nearby Communities\n\n- [dealership.md](datasets/dealership.md) \u2014 Big Sky Resort corridor, Bozeman\n\n## Schema\n\n| Field | Type | Description |\n|---|---|---|\n| name | string | Place name |\n| type | string | Tourist Town |\n| population | integer | Census population |\n| elevation | integer | Feet above sea level |\n| entrance | string | Yellowstone National Park west entrance |\n| season | string | Year-round tourism |\n\n## Citations\n\n- Yellowstone.net \u2014 West Yellowstone Gateway: https://www.yellowstone.net/gateways/west-yellowstone\n- Yellowstone National Park \u2014 NPS: https://www.nps.gov/yell\n- Visit Montana \u2014 West Yellowstone: https://www.visitmt.com",
+    "references/yellowstone-net": "# West Yellowstone Gateway Page\n\n## Source\n\nhttps://www.yellowstone.net/gateways/west-yellowstone\n\n## Summary\n\nYellowstone.net provides a comprehensive visitor guide for West Yellowstone, covering lodging options, dining, activities, and practical travel information for the town that serves as the primary west entrance to Yellowstone National Park.\n\n## Content Coverage\n\n- Gateway town overview and history\n- Lodging directory with property types and pricing\n- Dining and nightlife recommendations\n- Seasonal activity guides\n- Transportation and airport information\n- Nearby attractions (Grizzly & Wolf Discovery Center, Earthquake Lake, Hebgen Lake)\n\n## Related Concepts\n\n- See [west-yellowstone.md](../datasets/west-yellowstone.md) for the complete town profile.\n- See [lodging-accommodations.md](../tables/lodging-accommodations.md) for a structured comparison of lodging properties.\n- See [seasonal-activities.md](../tables/seasonal-activities.md) for a seasonal activity matrix.",
+    "tables/lodging-accommodations": "# West Yellowstone Lodging Accommodations\n\n| Property | Type | Rooms | Summer | Winter | Notes |\n|---|---|---|---|---|---|\n| Kelly Inn | Hotel | 97 | Yes | Limited | Indoor pool, hot tub, pet-friendly |\n| Explorer Cabins at Yellowstone | Cabins | 78 | Yes | Yes | Kitchenettes, gas fireplaces, ADA accessible |\n| Three Bear Lodge | Lodge | 45 | Yes | Yes | Restaurant on-site, hot tub, sauna |\n| Holiday Inn West Yellowstone | Hotel | 125 | Yes | Yes | Full-service, convention center, pool |\n| WorldMark West Yellowstone | Condos | 88 | Yes | No | Timeshare, full kitchens, fireplace |\n| Yellowstone Grizzly RV Park | RV Park | 200+ sites | Yes | No | Full hookups, cabins for rent |\n| Brandin' Iron Inn | Motel | 72 | Yes | Limited | Budget-friendly, walking distance to park |\n| Yellowstone Lodge | Lodge | 88 | Yes | Yes | Hot tub, complimentary breakfast |\n| Dude & Roundup (CrossRanch) | Motel | 79 | Yes | Limited | Heated pool, close to airport |\n| Days Inn by Wyndham | Hotel | 65 | Yes | Yes | Pool, hot tub, continental breakfast |\n\n## Schema\n\n| Column | Type | Description |\n|---|---|---|\n| Property | string | Lodging business name |\n| Type | string | Hotel, Motel, Lodge, Cabins, Condos, RV Park |\n| Rooms | integer | Unit or room count |\n| Summer | string | Open during summer season |\n| Winter | string | Open during winter season |\n| Notes | string | Key amenities and features |\n\n## Citations\n\n- Yellowstone.net \u2014 West Yellowstone Lodging: https://www.yellowstone.net/gateways/west-yellowstone",
+    "tables/seasonal-activities": "# West Yellowstone Seasonal Activities\n\n| Activity | Summer | Winter | Equipment Needed | Skill Level | Notes |\n|---|---|---|---|---|---|\n| Wildlife viewing | Yes | Yes | Binoculars, camera | All | Bison, bears, elk, wolves, eagles |\n| Geyser gazing | Yes | Limited (snowcoach) | None | All | Old Faithful, Grand Prismatic |\n| Fly fishing | Yes | Ice fishing | Rod, waders, flies | Intermediate | Madison, Firehole, Gibbon Rivers |\n| Hiking | Yes | Snowshoeing | Boots, poles | Beginner to Advanced | Yellowstone backcountry trails |\n| Biking / mountain biking | Yes | Fat biking | Bicycle, helmet | All | Park roads and area trails |\n| Horseback riding | Yes | No | Guided | All | Trail rides from local outfitters |\n| Photography | Yes | Yes | Camera | All | Scenic, wildlife, night sky |\n| Snowmobiling | No | Yes | Snowmobile, gear | Intermediate | Groomed trails, park tours |\n| Cross-country skiing | No | Yes | Skis, poles, boots | Beginner to Advanced | Groomed and backcountry trails |\n| Snowcoach tours | No | Yes | None (guided) | All | Heated coaches into Yellowstone |\n| Scenic driving | Yes | Limited | Vehicle | All | Park roads, Beartooth Highway |\n\n## Schema\n\n| Column | Type | Description |\n|---|---|---|\n| Activity | string | Recreational activity name |\n| Summer | string | Available in summer season |\n| Winter | string | Available in winter season |\n| Equipment Needed | string | Required gear or rentals |\n| Skill Level | string | Beginner, Intermediate, Advanced, All |\n| Notes | string | Primary locations and details |\n\n## Citations\n\n- Yellowstone.net \u2014 West Yellowstone Activities: https://www.yellowstone.net/gateways/west-yellowstone\n- Yellowstone National Park \u2014 NPS: https://www.nps.gov/yell"
+  },
+  "types": [
+    "Activity Matrix",
+    "Comparison Matrix",
+    "Gateway Page",
+    "Tourist Town"
+  ],
+  "palette": {
+    "Tourist Town": "#8b5cf6",
+    "Gateway Page": "#10b981",
+    "Comparison Matrix": "#3b82f6",
+    "Activity Matrix": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

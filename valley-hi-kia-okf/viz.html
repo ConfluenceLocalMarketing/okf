@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>valley-hi-kia - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "valley-hi-kia";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Valley Hi Kia",
+        "type": "Organization",
+        "description": "Premier Kia dealership in Victorville, CA serving the High Desert and Inland Empire with new Kia sales, pre-owned vehicles, and expert service.",
+        "resource": "https://www.valleyhikia.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Valley Hi Kia - Frequently Asked Questions",
+        "type": "Playbook",
+        "description": "Common questions about Kia sales, service, financing, and the customer experience at Valley Hi Kia in Victorville, CA.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Finance Center",
+        "type": "Entity",
+        "description": "Flexible auto financing solutions at Valley Hi Kia serving the High Desert and Inland Empire.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Kia Vehicles",
+        "type": "Entity",
+        "description": "Full lineup of new Kia sedans, SUVs, and minivans at Valley Hi Kia in Victorville, CA.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center",
+        "type": "Entity",
+        "description": "Certified Kia service center at Valley Hi Kia in Victorville, CA for maintenance and repair.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff",
+        "type": "Entity",
+        "description": "Key team members at Valley Hi Kia in Victorville, CA.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Kia Vehicles",
+        "type": "Entity",
+        "description": "Certified pre-owned and multi-make used vehicle inventory at Valley Hi Kia.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Valley Hi Kia - AI Discovery",
+        "type": "AI Discovery Page",
+        "description": "PromptGraph AI discovery page providing structured business data for AI consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/valley-hi-kia/business",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Valley Hi Kia - LLMs.txt",
+        "type": "PromptGraph LLMs.txt",
+        "description": "AI discovery and API documentation for Valley Hi Kia via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/valley-hi-kia/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Valley Hi Kia - PromptGraph Prompts",
+        "type": "PromptGraph Prompts",
+        "description": "AI-ready prompt library generated by PromptGraph for Valley Hi Kia (69 prompts).",
+        "resource": "https://api.promptgraph.ai/api/v1/valley-hi-kia/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/company",
+        "source": "datasets/financing",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/company",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Valley Hi Kia\n\nValley Hi Kia, located at 14644 Valley Center Drive in Victorville, California, is a premier Kia dealership serving the High Desert and Inland Empire communities including Apple Valley, Hesperia, Adelanto, and Barstow.\n\n## New Kia Sales\n\n- **Sedans:** K4, K5, Forte\n- **SUVs:** Soul, Sportage, Sorento, Telluride\n- **Minivan:** Carnival\n- 2026 models available including K4 and the family-friendly Telluride\n\n## Pre-Owned Vehicles\n\n- Fully stocked pre-owned inventory\n- Certified pre-owned options\n- Diverse selection including non-Kia brands (Honda, Toyota, etc.)\n\n## Service Center\n\n- State-of-the-art facilities\n- Certified technicians\n- Comprehensive maintenance and repair\n- Transmission work, oil changes, and general service\n\n## Financing\n\n- Flexible financing options\n- First-time buyer programs\n- Online financing application\n\n## Contact\n\n- **Address:** 14644 Valley Center Drive, Victorville, CA 92395\n- **Sales Phone:** (760) 983-7146\n- **Email:** valleyhikia1@gmail.com\n- **Website:** https://www.valleyhikia.com/",
+    "datasets/faq": "# Valley Hi Kia \u2014 FAQ\n\n## General\n\n### What type of dealership is Valley Hi Kia?\nIt is a premier Kia dealership located at 14644 Valley Center Drive, Victorville, CA, serving the High Desert and Inland Empire with new Kia sales, pre-owned vehicles, and expert service. See [company.md](company.md) for the full profile.\n\n### What area does the dealership serve?\nVictorville, Apple Valley, Hesperia, Adelanto, Barstow, and the greater High Desert and Inland Empire communities.\n\n### How can I contact the dealership?\nCall (760) 983-7146 or email valleyhikia1@gmail.com.\n\n## Sales\n\n### What new Kia models are available?\nThe full Kia lineup including K4 and K5 sedans, Soul and Sportage compact SUVs, Sorento midsize SUV, Telluride three-row SUV, and Carnival minivan.\n\n### What is the K4?\nThe K4 is Kia's newest sedan, featuring a bold design and available in multiple trims including GT-Line Turbo.\n\n### Is the Telluride available?\nYes, the Telluride three-row SUV is available, offering seating for up to eight with family-friendly features and capability.\n\n## Service\n\n### What services does the service center offer?\nComprehensive maintenance and repair including transmission work, oil changes, general service, and diagnostics.\n\n### Are the technicians certified?\nYes, certified technicians operate in state-of-the-art facilities.\n\n## Financing\n\n### What financing options are available?\nFlexible financing options including first-time buyer programs and an online financing application.\n\n### Do you offer first-time buyer programs?\nYes, special programs are available for first-time car buyers.\n\n## Pre-Owned\n\n### What pre-owned inventory do you carry?\nA fully stocked pre-owned inventory including certified pre-owned Kia vehicles and diverse selection including non-Kia brands such as Honda and Toyota.\n\n### Do you offer certified pre-owned Kias?\nYes, certified pre-owned options are available with factory-backed warranty coverage.",
+    "datasets/financing": "# Finance Center\n\nThe Finance Center at Valley Hi Kia provides flexible financing solutions for new and pre-owned Kia vehicles, including first-time buyer programs.\n\n## Financing Options\n\n- **New Vehicle Loans** \u2014 Competitive rates on new Kia models\n- **Certified Pre-Owned Financing** \u2014 Special rates on CPO vehicles\n- **Lease Programs** \u2014 Kia lease plans with flexible terms\n- **First-Time Buyer Programs** \u2014 Designed for buyers with limited credit history\n\n## Online Services\n\n- Online credit application\n- Trade-in valuation\n\n## Contact\n\nFinance specialists are available during dealership hours. Call (760) 983-7146 or visit the dealership at 14644 Valley Center Drive, Victorville, CA.\n\nSee [company.md](company.md) for the full dealership profile.",
+    "datasets/new-vehicles": "# New Kia Vehicles\n\nValley Hi Kia offers the complete Kia lineup of sedans, SUVs, and the Carnival minivan.\n\n## Sedans\n\n| Model | Description |\n|-------|-------------|\n| K4 | Compact sedan with bold design and GT-Line Turbo trim |\n| K5 | Midsize sport sedan with available all-wheel drive |\n\n## Hatchbacks and Crossovers\n\n| Model | Description |\n|-------|-------------|\n| Soul | Iconic compact hatchbox with distinctive styling |\n| Sportage | Compact SUV with available hybrid and X-Pro trims |\n\n## SUVs\n\n| Model | Description |\n|-------|-------------|\n| Sorento | Midsize SUV with three-row seating and available hybrid |\n| Telluride | Three-row full-size SUV with upscale interior and seating for eight |\n\n## Minivans\n\n| Model | Description |\n|-------|-------------|\n| Carnival | Minivan reimagined with SUV-inspired design, seating for up to eight |\n\nSee [company.md](company.md) for dealership contact and location.",
+    "datasets/service-center": "# Service Center\n\nThe Service Center at Valley Hi Kia provides comprehensive maintenance and repair using certified technicians in state-of-the-art facilities.\n\n## Services Offered\n\n| Service | Description |\n|---------|-------------|\n| Oil Changes | Kia-recommended oil and filters |\n| Tire Service | Rotation, balancing, and replacement |\n| Brake Service | Pads, rotors, and calipers |\n| Transmission Service | Fluid changes and major repairs |\n| Engine Diagnostics | Computerized diagnostics |\n| General Service | Scheduled maintenance and inspections |\n\n## Contact\n\n- **Phone:** (760) 983-7146\n- **Location:** 14644 Valley Center Drive, Victorville, CA\n\nSee [company.md](company.md) for full dealership information.",
+    "datasets/staff": "# Staff\n\n## Sales Team\n\n- **Carlos Mendez** \u2014 General Manager\n- **Amanda Foster** \u2014 Sales Manager\n- **Ryan Kim** \u2014 Sales Consultant\n- **Stephanie Walker** \u2014 Sales Consultant\n- **Jose Hernandez** \u2014 Internet Sales Manager\n\n## Service Team\n\n- **Mike Torres** \u2014 Service Manager\n- **Diana Reyes** \u2014 Service Advisor\n- **Eric Larson** \u2014 Senior Technician\n\n## Finance\n\n- **Nicole Chen** \u2014 Finance Manager\n- **Tyler Brooks** \u2014 Finance Specialist\n\n## Parts\n\n- **Frank Delgado** \u2014 Parts Manager\n\nSee [company.md](company.md) for the full dealership profile.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles\n\nValley Hi Kia offers a fully stocked selection of certified pre-owned Kia vehicles and multi-make used vehicles.\n\n## Kia Certified Pre-Owned Program\n\n- Comprehensive inspection by certified technicians\n- Factory-backed limited warranty\n- 24/7 roadside assistance\n- Vehicle history report\n\n## Pre-Owned Inventory\n\n- Kia CPO vehicles with full warranty coverage\n- Diverse selection including Honda, Toyota, and other popular brands\n- Vehicles at various price points\n\n## Benefits\n\n- Quality assured through inspection\n- Financing options available\n- Trade-in accepted\n\nSee [company.md](company.md) for dealership contact information. See [financing.md](financing.md) for available financing options.",
+    "references/ai-discovery-page": "# Valley Hi Kia \u2014 AI Discovery\n\nValley Hi Kia is indexed on PromptGraph, providing structured JSON-LD data for LLM consumption.\n\n## Available Data\n\n- **Business Profile** \u2014 Name, address, phone, hours, location (JSON-LD AutoDealer)\n- **Vehicle Inventory** \u2014 Complete inventory with specifications and pricing\n- **Service Prompts** \u2014 69 structured AI prompts\n- **Customer Reviews** \u2014 Testimonials and ratings\n- **GBP Context** \u2014 Google Business Profile data flattened for LLM ingestion\n\n## Access\n\nBase URL: `http://api.promptgraph.ai/api/v1/valley-hi-kia`",
+    "references/llms-txt": "# Valley Hi Kia \u2014 LLMs.txt\n\n> Valley Hi Kia, located in sunny Victorville, California, offers an exceptional automotive experience with a vast selection of new Kia cars and SUVs and a fully stocked pre-owned inventory.\n\n## API Endpoints\n\n- [Business Information](http://api.promptgraph.ai/api/v1/valley-hi-kia/business) \u2014 Complete business profile in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/valley-hi-kia/vehicles) \u2014 Complete inventory with specifications, pricing, and availability\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts) \u2014 69 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/valley-hi-kia/testimonials) \u2014 Customer reviews and ratings\n- [GBP Context](http://api.promptgraph.ai/api/v1/valley-hi-kia/gbp-context) \u2014 Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/valley-hi-kia/site-content) \u2014 Plain-text mirror of the entire site\n- [AI Manifest](http://api.promptgraph.ai/api/v1/valley-hi-kia/.well-known/ai-manifest.json) \u2014 Machine-readable directory of all AI resources\n\n## Featured Prompts\n\n- [Your Trusted Kia Dealership](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/your-trusted-kia-dealership) \u2014 Full-service Kia dealership overview\n- [What Makes Your Dealership Stand Out?](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/what-makes-your-dealership-stand-out) \u2014 Unique strengths and differentiators\n- [Valley Hi Kia Brand Overview](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/valley-hi-kia-brand-overview) \u2014 SEO-friendly brand description\n- [Premier Kia Destination with Huge Inventory](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/victorvilles-premier-kia-destination-with-huge-inventory) \u2014 Victorville's leading Kia dealer\n- [Smooth Buying & Expert Service](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/valley-hi-kia-smooth-buying-&-expert-service) \u2014 Hassle-free Kia hub\n- [High Desert Kia Excellence](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/high-desert-kia-excellence-at-valley-hi) \u2014 Victorville go-to for new Kias\n- [Unmatched Kia Service](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/unmatched-kia-service-in-victorville) \u2014 Victorville's trusted Kia partner",
+    "references/prompts": "# Valley Hi Kia \u2014 PromptGraph Prompts\n\nPromptGraph generates 69 structured AI prompts for Valley Hi Kia.\n\n## Sales & Brand Prompts\n\n- [Your Trusted Kia Dealership](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/your-trusted-kia-dealership) \u2014 Full-service Kia dealership overview\n- [What Makes Your Dealership Stand Out?](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/what-makes-your-dealership-stand-out) \u2014 Unique strengths and differentiators\n- [Valley Hi Kia Brand Overview](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/valley-hi-kia-brand-overview) \u2014 SEO-friendly brand description\n- [Premier Kia Destination with Huge Inventory](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/victorvilles-premier-kia-destination-with-huge-inventory) \u2014 Victorville's leading Kia dealer\n- [Smooth Buying & Expert Service](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/valley-hi-kia-smooth-buying-&-expert-service) \u2014 Hassle-free Kia hub\n\n## Service & Blog Content\n\n- [High Desert Kia Excellence](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/high-desert-kia-excellence-at-valley-hi) \u2014 New Kia standouts\n- [New Kias to Certified Repairs](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/valley-hi-kia-new-kias-to-certified-repairs) \u2014 2026 Kia models\n- [Unmatched Kia Service](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/unmatched-kia-service-in-victorville) \u2014 Trusted service partner\n- [From Dream Kia to Road-Ready](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/valley-hi-kia-from-dream-kia-to-road-ready) \u2014 Victorville powerhouse\n- [Sales to Stellar Service](http://api.promptgraph.ai/api/v1/valley-hi-kia/prompts/victorville-kia-haven-sales-to-stellar-service) \u2014 All-in-one Kia dealership"
+  },
+  "types": [
+    "AI Discovery Page",
+    "Entity",
+    "Organization",
+    "Playbook",
+    "PromptGraph LLMs.txt",
+    "PromptGraph Prompts"
+  ],
+  "palette": {
+    "Organization": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "AI Discovery Page": "#10b981",
+    "PromptGraph LLMs.txt": "#10b981",
+    "PromptGraph Prompts": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>montana-fence - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "montana-fence";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/locations",
+        "label": "Montana Fence Locations",
+        "type": "Business Locations",
+        "description": "Physical locations and service area for Montana Fence covering Belgrade, Great Falls, Billings, and Kalispell.",
+        "resource": "https://www.montanafence.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/montana-fence",
+        "label": "Montana Fence",
+        "type": "Fence Contractor",
+        "description": "Locally owned and operated fence contractor serving Montana since 1977, providing professional fence installation, repair, and retail with locations in Belgrade, Great Falls, Billings, and Kalispell.",
+        "resource": "https://www.montanafence.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/website",
+        "label": "Montana Fence Website",
+        "type": "Website Reference",
+        "description": "Source data extracted from the Montana Fence website at https://www.montanafence.com/",
+        "resource": "https://www.montanafence.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/services",
+        "label": "Montana Fence Services and Fence Types",
+        "type": "Service Table",
+        "description": "Comparison table of fence types and services offered by Montana Fence.",
+        "resource": "https://www.montanafence.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 20
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/montana-fence__datasets/locations",
+        "source": "datasets/montana-fence",
+        "target": "datasets/locations"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/locations": "# Montana Fence Locations\n\n## Locations\n\n### Kalispell\n- **Phone**: 406-755-7650\n- **Hours**: Mon-Fri 8-5, Sat 8-2, Sun closed\n\n### Belgrade\n- **Phone**: 406-924-4802\n- **Hours**: Mon-Fri 8-5, Sat 8-2, Sun closed\n\n### Great Falls\n- **Phone**: 406-727-3661\n- **Hours**: Mon-Fri 8-5, Sat 8-2, Sun closed\n\n### Billings\n- **Address**: 7403 Entryway Dr\n- **Phone**: 406-259-6511\n- **Hours**: Mon-Fri 8-5, Sat 8-2, Sun closed\n\n## Service Area\n\nMontana Fence provides services across Montana with physical locations in the four largest population centers. Hours may vary by location \u2014 customers are advised to call ahead to confirm Saturday availability and seasonal hours.",
+    "datasets/montana-fence": "# Montana Fence\n\nMontana Fence is a locally owned and operated fence contractor serving the state of Montana since 1977. The company provides professional fence installation, repair, and retail services across four locations.\n\n> \"Built by Montanans for Montanans\"\n\n## History\n\nFounded in 1977, Montana Fence has served Montana homeowners and businesses for over four decades. The company has grown from a single location to four branches covering the major population centers of the state.\n\n## Services\n\nMontana Fence offers a full range of fencing solutions:\n\n- **Commercial fencing** - Security fencing, industrial enclosures, and property perimeter systems for businesses and institutions.\n- **Residential fencing** - Custom privacy fencing, yard enclosures, and decorative fencing for homes.\n- **Fence repair** - Repair and restoration services for existing fences of all types.\n- **Retail fencing** - Direct-to-consumer fencing materials and supplies for DIY projects.\n- **Free estimates** - On-site consultations and no-obligation quotes for all projects.\n\n## Fence Types\n\nSee [services.md](../tables/services.md) for a complete comparison of fence types and materials.\n\n## Locations\n\nSee [locations.md](locations.md) for full location details including addresses and hours.",
+    "references/website": "# Montana Fence Website\n\n**URL**: https://www.montanafence.com/\n\n## Extracted Data\n\nThe following data was extracted from the Montana Fence website:\n\n- **Business Name**: Montana Fence\n- **Type**: Fence Contractor\n- **Founded**: 1977\n- **Tagline**: \"Built by Montanans for Montanans\"\n- **Service Categories**: Commercial fencing, residential fencing, fence repair, retail fencing, free estimates\n- **Fence Types**: Chain link, wood, vinyl, ornamental steel/iron, farm fencing, aluminum\n\n### Locations\n\n| Location | Phone | Address | Hours |\n|---|---|---|---|\n| Kalispell | 406-755-7650 | \u2014 | Mon-Fri 8-5, Sat 8-2 |\n| Belgrade | 406-924-4802 | \u2014 | Mon-Fri 8-5, Sat 8-2 |\n| Great Falls | 406-727-3661 | \u2014 | Mon-Fri 8-5, Sat 8-2 |\n| Billings | 406-259-6511 | 7403 Entryway Dr | Mon-Fri 8-5, Sat 8-2 |\n\nAll locations closed Sunday. Hours vary by location \u2014 confirm with local branch.\n\n## Citations\n\n- [Montana Fence Official Website](https://www.montanafence.com/)",
+    "tables/services": "# Montana Fence Services and Fence Types\n\n## Fence Types\n\n| Material | Typical Uses | Durability | Maintenance |\n|---|---|---|---|\n| Chain Link | Security, commercial, pet enclosures | High | Low |\n| Wood | Privacy fencing, residential | Medium | Moderate \u2014 requires staining/sealing |\n| Vinyl | Residential privacy, decorative | High | Low |\n| Ornamental Steel/Iron | Decorative, commercial, residential | Very High | Low |\n| Aluminum | Decorative, pool enclosures | High | Low |\n| Farm Fencing | Agricultural, livestock, acreage | High | Moderate |\n\n## Services\n\n| Service | Description |\n|---|---|\n| Commercial Fencing | Security fencing, industrial enclosures, and property perimeter systems |\n| Residential Fencing | Custom privacy fencing, yard enclosures, and decorative fencing |\n| Fence Repair | Repair and restoration for existing fences of all types |\n| Retail Fencing | Direct-to-consumer fencing materials and supplies |\n| Free Estimates | On-site consultation and no-obligation project quotes |"
+  },
+  "types": [
+    "Business Locations",
+    "Fence Contractor",
+    "Service Table",
+    "Website Reference"
+  ],
+  "palette": {
+    "Business Locations": "#8b5cf6",
+    "Fence Contractor": "#8b5cf6",
+    "Website Reference": "#10b981",
+    "Service Table": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

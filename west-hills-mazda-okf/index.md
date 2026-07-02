@@ -12,6 +12,7 @@ okf_version: "0.1"
 - [staff.md](datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
 - [service-center.md](datasets/service-center.md) - Mazda-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Mazda parts department
 - [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators
 
 ## References
 
@@ -34,3 +35,4 @@ okf_version: "0.1"
 - **model-comparison** provides structured specification data for all **new-vehicles** models
 - **testimonials** reflect customer experiences with **dealership** services, **staff**, and both vehicle lines
 - **prompts** provides AI-consumable Q&A covering all **datasets** concepts
+- **financing** details loan and lease options available through the **dealership**'s finance center

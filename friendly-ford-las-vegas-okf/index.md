@@ -1,0 +1,30 @@
+---
+okf_version: "0.1"
+---
+
+# Friendly Ford Las Vegas - OKF Bundle
+
+OKF v0.1 bundle for Friendly Ford Las Vegas, a full-service Ford dealership serving Las Vegas, Henderson, and North Las Vegas, Nevada with new and used Ford vehicle sales, genuine Ford parts, factory-trained service, collision center, and ITIN financing program at 660 N Decatur Blvd.
+
+## Datasets
+
+- [friendly-ford-las-vegas.md](datasets/friendly-ford-las-vegas.md) - Ford dealership in Las Vegas, NV with new and pre-owned vehicles, financing, service, and collision repair.
+- [new-vehicles.md](datasets/new-vehicles.md) - Full lineup of new Ford vehicles including trucks, SUVs, vans, and electric models with over 470 vehicles in inventory.
+- [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned vehicle inventory including Ford Blue Advantage program.
+- [service-center.md](datasets/service-center.md) - Factory-trained Ford service department offering brakes, oil changes, tire service, diagnostics, OEM parts, and mobile service.
+- [staff.md](datasets/staff.md) - Team directory across management, sales, service, and parts departments.
+- [faq.md](datasets/faq.md) - Common customer questions about Ford vehicles, financing, service, and dealership operations.
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, payment calculators, and ITIN program.
+
+## References
+
+- [website.md](references/website.md) - Official website for Friendly Ford Las Vegas with vehicle inventory, service scheduling, parts ordering, and current specials.
+- [ai-discovery-page.md](references/ai-discovery-page.md) - AI-optimized discovery hub with structured endpoints for LLM consumption including business profile, vehicle inventory, and prompts.
+- [llms-txt.md](references/llms-txt.md) - AI discovery and consumption directive providing structured API endpoints, schema types, and business context.
+- [prompts.md](references/prompts.md) - Structured Q&A prompts for consistent AI responses covering vehicles, financing, service, and dealership operations.
+
+## Tables
+
+- [hours.md](tables/hours.md) - Showroom, service, and collision center operating hours for Friendly Ford Las Vegas.
+- [contact.md](tables/contact.md) - Sales, service, parts, and collision center phone numbers and addresses.
+- [model-comparison.md](tables/model-comparison.md) - Comparison of key Ford models across body type, fuel options, passenger capacity, and key competitors.

@@ -6,3 +6,4 @@
 - [staff.md](staff.md) - Sales and service staff at Nick Mayer Ford West in Avon Lake, OH including management, sales consultants, service technicians, and finance team.
 - [service-center.md](service-center.md) - Ford-certified service center in Avon Lake, OH offering routine maintenance, diagnostics, major repairs, and genuine Ford OEM parts.
 - [faq.md](faq.md) - Common questions about Nick Mayer Ford West's inventory, financing, service, and dealership operations in Avon Lake, OH.
+- [financing.md](financing.md) - Vehicle financing and leasing options including online applications, second-chance financing, and trade-in valuation.

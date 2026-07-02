@@ -14,6 +14,7 @@ OKF v0.1 knowledge bundle for Ron Marhofer Hyundai of Green, a Hyundai dealershi
 - [staff.md](datasets/staff.md) - Sales and service staff directory.
 - [service-center.md](datasets/service-center.md) - Service department with factory-trained technicians and genuine parts.
 - [faq.md](datasets/faq.md) - Frequently asked questions about dealership services, financing, and policies.
+- [financing.md](datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
 
 ## References
 

@@ -14,6 +14,7 @@ This bundle documents **Nick Mayer GMC Lewisburg**, a GMC dealership at 861 N El
 - [staff.md](datasets/staff.md) - Sales and service staff directory for Nick Mayer GMC Lewisburg.
 - [service-center.md](datasets/service-center.md) - GMC factory-trained service center offering maintenance, repairs, and genuine OEM parts.
 - [faq.md](datasets/faq.md) - Common questions about GMC inventory, CarBravo, financing, and service at Nick Mayer GMC Lewisburg.
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
 
 ## References
 

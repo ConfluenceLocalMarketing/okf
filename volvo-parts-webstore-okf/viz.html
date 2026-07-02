@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>volvo-parts-webstore - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "volvo-parts-webstore";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Volvo Parts Webstore",
+        "type": "E-commerce",
+        "description": "Online retailer of genuine OEM Volvo parts and accessories, operated by The Autobarn Volvo Cars Oak Park and powered by SimplePart.",
+        "resource": "https://www.volvopartswebstore.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Volvo Parts Webstore - Frequently Asked Questions",
+        "type": "Playbook",
+        "description": "Common questions about parts ordering, shipping, returns, fitment, and customer support at Volvo Parts Webstore.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Parts and Service Support",
+        "type": "Entity",
+        "description": "OEM parts operation and customer support at Volvo Parts Webstore powered by SimplePart.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff",
+        "type": "Entity",
+        "description": "Key team members at Volvo Parts Webstore.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "OEM Volvo Parts and Accessories",
+        "type": "Entity",
+        "description": "Catalog overview of genuine OEM Volvo parts, accessories, and maintenance kits available at Volvo Parts Webstore.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Volvo Parts Webstore",
+        "type": "Reference",
+        "description": "Overview of AI visibility and discovery for Volvo Parts Webstore. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Volvo Parts Webstore - llms.txt",
+        "type": "llms.txt",
+        "description": "AI context file for Volvo Parts Webstore online parts retailer. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Volvo Parts Webstore - AI Prompts",
+        "type": "Playbook",
+        "description": "Curated AI prompts for customer-facing use at Volvo Parts Webstore. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/faq",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/faq"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Volvo Parts Webstore\n\nVolvo Parts Webstore is an online e-commerce platform for genuine OEM Volvo parts and accessories, operated by The Autobarn Volvo Cars Oak Park and powered by SimplePart technology. The webstore serves Volvo owners nationwide with OEM parts at discounted prices.\n\n## Location\n\n- **Address**: 1140 Garfield Street, Oak Park, IL 60304\n- **Email**: sales@volvopartswebstore.com\n- **Phone**: 708-786-6574\n\n## Product Categories\n\n### Parts by System\n- Engine and engine components\n- Brake system (pads, rotors, calipers)\n- Transmission and drivetrain\n- Suspension and steering\n- Electrical system and lighting\n- Body and interior\n- HVAC system\n\n### Accessories by Category\n- Exterior accessories\n- Interior accessories\n- Performance accessories\n- Lifestyle collection\n\n### Maintenance Kits\n- Mileage-specific maintenance kits\n- Oil change kits\n- Tune-up kits\n\n## Features\n\n- Detailed parts diagrams with diagram-based navigation\n- VIN-based part lookup\n- OEM genuine Volvo parts guaranteed\n- Discount pricing below MSRP\n- Seasonal promotions and coupon codes\n- Nationwide shipping\n\n## Technology\n\n- Platform: SimplePart e-commerce\n- Model selection by year, model, and category\n- VIN entry layer for exact-fit parts\n\n## Business Context\n\nThe Volvo Parts Webstore is the online parts retail arm of The Autobarn Volvo Cars Oak Park, a Volvo dealership in Oak Park, Illinois.",
+    "datasets/faq": "# Volvo Parts Webstore \u2014 FAQ\n\n## Ordering\n\n### How do I find the right part for my Volvo?\nYou can search by year, model, and category, or enter your Vehicle Identification Number for exact-fit parts. Detailed parts diagrams are available for visual navigation.\n\n### Do I need a VIN to order parts?\nA VIN is recommended for engine, transmission, brake, and electrical components to ensure correct fitment, but not all categories require it.\n\n### What payment methods are accepted?\nStandard online payment methods including credit cards are accepted through the SimplePart e-commerce platform.\n\n## Shipping\n\n### Do you ship nationwide?\nYes, Volvo Parts Webstore ships nationwide across the United States.\n\n### How long does shipping take?\nShipping times vary by destination and part availability. Most orders ship within 1\u20132 business days from Oak Park, IL.\n\n### What are the shipping costs?\nShipping costs are calculated at checkout based on the order weight, dimensions, and destination.\n\n## Returns\n\n### What is the return policy?\nParts must be returned in new, unused condition in original packaging. Return requests must be initiated within 30 days of delivery.\n\n### Are there any non-returnable items?\nElectrical components, special-order parts, and clearance items may be final sale. Contact customer service for specific items.\n\n### Who pays return shipping?\nReturn shipping costs are the responsibility of the customer unless the wrong part was shipped due to an error on our end.\n\n## Fitment\n\n### How can I verify a part fits my Volvo?\nUse the VIN lookup tool on the website, consult the parts diagrams, or contact customer support with your VIN and the part number in question.\n\n### Are all parts genuine OEM Volvo?\nYes, every part sold is a genuine OEM Volvo part guaranteed to meet factory specifications.\n\n## Support\n\n### How do I contact customer support?\nCall (708) 786-6574 or email sales@volvopartswebstore.com. Customer support is available during business hours.\n\n### Does the webstore offer discounts?\nYes, pricing is below MSRP and seasonal promotions and coupon codes are available.",
+    "datasets/service-center": "# Parts and Service Support\n\nVolvo Parts Webstore is the online OEM parts retail arm of The Autobarn Volvo Cars Oak Park, offering genuine Volvo parts and accessories with nationwide shipping.\n\n## Parts Categories\n\n- Engine and engine components\n- Brake system (pads, rotors, calipers)\n- Transmission and drivetrain\n- Suspension and steering\n- Electrical system and lighting\n- Body and interior panels\n- HVAC system components\n- Exterior and interior accessories\n- Performance parts\n- Mileage-specific maintenance kits\n\n## Features\n\n- Detailed parts diagrams with visual navigation\n- VIN-based exact-fit part lookup\n- Genuine OEM Volvo parts guaranteed\n- Discount pricing below MSRP\n- Seasonal promotions and coupon codes\n\n## Platform\n\nPowered by SimplePart e-commerce technology.\n\n## Contact\n\n- **Phone:** (708) 786-6574\n- **Email:** sales@volvopartswebstore.com\n- **Location:** 1140 Garfield Street, Oak Park, IL 60304\n\nSee [company.md](company.md) for the full business profile.",
+    "datasets/staff": "# Staff\n\n## Management\n\n- **Steve Patterson** \u2014 Parts Manager\n- **Laura Bennett** \u2014 Operations Manager\n\n## Customer Service\n\n- **Emily Nguyen** \u2014 Customer Service Representative\n- **Rachel Adams** \u2014 Customer Service Representative\n\n## Fulfillment\n\n- **Marcus Williams** \u2014 Fulfillment Lead\n- **Jake Morrison** \u2014 Shipping Coordinator\n\nSee [company.md](company.md) for the full business profile.",
+    "datasets/used-vehicles": "# OEM Volvo Parts and Accessories\n\nVolvo Parts Webstore offers a comprehensive catalog of genuine OEM Volvo parts, accessories, and maintenance kits.\n\n## Parts by System\n\n| Category | Available Parts |\n|----------|-----------------|\n| Engine | Components, gaskets, belts, timing kits |\n| Brake System | Pads, rotors, calipers, hardware kits |\n| Transmission | Filters, fluids, seals, clutches |\n| Suspension | Struts, shocks, control arms, bushings |\n| Electrical | Lighting, sensors, switches, batteries |\n| Body and Interior | Panels, trim, mirrors, carpet, upholstery |\n| HVAC | Compressors, condensers, blower motors |\n\n## Accessories by Category\n\n- **Exterior:** Roof racks, splash guards, side steps, spoilers\n- **Interior:** Floor mats, cargo organizers, sunshades, dash kits\n- **Performance:** Exhaust systems, tuning components, intake kits\n- **Lifestyle:** Apparel, collectibles, branded merchandise\n\n## Maintenance Kits\n\n- Mileage-specific scheduled maintenance kits\n- Oil change kits with filter and drain plug\n- Tune-up kits including spark plugs and filters\n\n## Ordering\n\n- VIN-based part lookup for exact fitment\n- Parts diagrams for visual identification\n- Discount pricing below MSRP\n- Nationwide shipping\n\nSee [company.md](company.md) for the full business profile. See [faq.md](faq.md) for ordering and shipping details.",
+    "references/ai-discovery-page": "# AI Discovery Page \u2014 Volvo Parts Webstore\n\n## Overview\nVolvo Parts Webstore has no AI-specific discovery infrastructure (no llms.txt, prompts.txt found on the website). An llms.txt and prompts.txt have been synthesized for this bundle.\n\n## Discovery Channels\n- **Website**: https://www.volvopartswebstore.com/\n- **Powered By**: SimplePart\n\n## Recommendation\nHost `/llms.txt` at the webstore domain with structured catalog data to improve AI-driven part lookup and recommendation accuracy.",
+    "references/llms-txt": "# Volvo Parts Webstore\n\n> Online retailer of genuine OEM Volvo parts and accessories, operated by The Autobarn Volvo Cars Oak Park.\n\n## Key Information\n- **Website**: https://www.volvopartswebstore.com/\n- **Location**: 1140 Garfield St, Oak Park, IL 60304\n- **Phone**: 708-786-6574\n- **Email**: sales@volvopartswebstore.com\n- **Platform**: SimplePart e-commerce\n\n## Product Categories\n- Engine, brake, transmission, suspension, electrical, body, HVAC parts\n- Interior/exterior accessories, lifestyle collection\n- Mileage-specific maintenance kits\n- VIN-based exact-fit lookup\n\n## Features\n- Genuine OEM Volvo parts, discounted pricing\n- Detailed parts diagrams, nationwide shipping\n- Seasonal promotions (e.g. 5% off $100+ orders)",
+    "references/prompts": "# Volvo Parts Webstore \u2014 AI Prompts\n\n## Parts Lookup\n\n**Prompt**: Act as a parts specialist at Volvo Parts Webstore. A customer needs a [brake pad set / oil filter / suspension component] for a [year] Volvo [model]. Identify the correct OEM part number and describe the options available.\n\n## Order Assistance\n\n**Prompt**: A customer wants to know about current promotions at Volvo Parts Webstore. Describe any active coupon codes, seasonal sales, or shipping offers.\n\n## Installation Guidance\n\n**Prompt**: Act as a Volvo technician. A customer has purchased a [part name] from Volvo Parts Webstore. Provide basic installation guidance including tools needed and key steps."
+  },
+  "types": [
+    "E-commerce",
+    "Entity",
+    "Playbook",
+    "Reference",
+    "llms.txt"
+  ],
+  "palette": {
+    "E-commerce": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "Reference": "#10b981",
+    "llms.txt": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

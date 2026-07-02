@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>wyhy-federal-credit-union - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "wyhy-federal-credit-union";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "WyHy Federal Credit Union",
+        "type": "Credit Union",
+        "description": "Member-owned credit union founded in 1953 serving Wyoming residents with personal and business banking, loans, mortgages, online banking, and community-focused financial services from branches in Cheyenne, Casper, Green River, Lyman, and Rock Springs.",
+        "resource": "https://www.wyhy.org/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page for WyHy Federal Credit Union",
+        "type": "AI Reference",
+        "description": "Structured knowledge page designed for AI crawlers and language model ingestion, providing a complete overview of WyHy Federal Credit Union's products, services, and operations.",
+        "resource": "https://www.wyhy.org/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "WyHy Federal Credit Union llms.txt",
+        "type": "AI Reference",
+        "description": "Machine-readable llms.txt entry providing structured credit union information and product details for AI agents and language models.",
+        "resource": "https://www.wyhy.org/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "WyHy Federal Credit Union AI Prompts",
+        "type": "Playbook",
+        "description": "Curated prompts for AI agents and chatbots handling member inquiries about WyHy Federal Credit Union products, services, and operations.",
+        "resource": "https://www.wyhy.org/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# WyHy Federal Credit Union\n\n## Overview\n\nWyHy Federal Credit Union is a not-for-profit, member-owned financial cooperative headquartered in Cheyenne, Wyoming. Founded in December 1953, the credit union serves approximately 28,378 members across Wyoming with a full range of personal and business financial products. WyHy is federally insured by the National Credit Union Administration (NCUA) and participates in the CO-OP Shared Branch and ATM network.\n\nWyHy Digital is the credit union's online banking platform, providing account aggregation for non-WyHy accounts, free credit score access, card controls, budgeting tools, and savings goal tracking.\n\n## Contact\n\n| Detail | Information |\n|---|---|\n| **Address** | 1715 Stillwater Avenue, Cheyenne, WY 82009 |\n| **Mailing** | P.O. Box 20050, Cheyenne, WY 82003 |\n| **Phone** | (800) 442-2392 |\n| **Routing Number** | 307086691 |\n| **Website** | https://www.wyhy.org/ |\n\n## Branch Locations\n\n- **Cheyenne (Main)** \u2014 1715 Stillwater Avenue, Cheyenne, WY 82009\n- **Casper** \u2014 5070 CY Avenue, Casper, WY 82604\n- **Green River** \u2014 120 Commerce Drive, Green River, WY 82935\n- **Lyman** \u2014 100 E. Sage Street, Lyman, WY 82937\n- **Rock Springs** \u2014 300 Stanley Avenue, Rock Springs, WY 82901\n\n## Products\n\n### Checking Accounts\n\n| Product | Details |\n|---|---|\n| **Smart Returns Checking** | 3.00% APY, requires monthly direct deposit and eStatements |\n| **Basic Checking** | Low-balance checking with no monthly fee options |\n\n### Savings Accounts\n\n| Product | Details |\n|---|---|\n| **Regular Savings** | Standard share savings account |\n| **Money Market Account** | Tiered-rate savings with check-writing privileges |\n| **Share Certificates (CDs)** | Fixed-term deposit accounts with competitive dividends |\n| **FastTrac Savings** | Youth savings account for younger members |\n\n### Credit Cards\n\n| Product | Details |\n|---|---|\n| **Visa Platinum Rewards** | Rewards points on every purchase; SmartPoints program |\n| **Visa Platinum** | Non-reward card with competitive rates |\n\n### Lending\n\n| Product | Details |\n|---|---|\n| **Auto Loans** | New and used vehicle financing |\n| **Recreational Vehicle Loans** | RVs, boats, motorcycles, and other recreational vehicles |\n| **Personal Loans** | Unsecured and secured personal lending |\n| **First Mortgages** | 30-year and 15-year fixed-rate mortgages |\n| **Home Equity Line of Credit (HELOC)** | Variable-rate revolving home equity |\n| **Student Loans** | Via Sparrow partnership |\n\n### Business Services\n\n| Product | Details |\n|---|---|\n| **Business Checking** | Business transaction accounts |\n| **Business Loans** | Commercial lending options |\n\n## Services\n\n- **Online Banking** \u2014 Full account management via web browser\n- **Mobile Banking** \u2014 Smartphone and tablet access\n- **Bill Pay** \u2014 Online payment processing\n- **Remote Deposit Capture** \u2014 Deposit checks via mobile device\n- **eStatements** \u2014 Paperless monthly statements\n- **Card Controls & Alerts** \u2014 Real-time transaction monitoring and card management\n- **Wire Transfers** \u2014 Domestic and international wire services\n- **Notary Services** \u2014 Available at branch locations\n- **Foreign Currency Exchange** \u2014 Currency ordering and exchange\n- **Courtesy Pay / Overdraft Protection** \u2014 Overdraft coverage services\n- **Skip-A-Pay** \u2014 Eligible loan payment deferral option\n- **SmartPoints Rewards** \u2014 Debit and credit card rewards program\n- **Scholarships** \u2014 Annual member scholarship program\n\n## Digital Banking\n\nWyHy Digital provides a consolidated view of member finances, including:\n\n- Aggregation of external (non-WyHy) accounts\n- Free credit score and monitoring\n- Card controls and usage alerts\n- Budgeting and spending categorization\n- Savings goal tracking\n- Mobile check deposit\n\n## Community\n\nWyHy supports Wyoming communities through:\n\n- Annual member scholarship program\n- Local event sponsorship\n- Financial literacy and education initiatives\n- Not-for-profit cooperative structure that returns earnings to members\n\n## Schema\n\n| Field | Value |\n|---|---|\n| `type` | Credit Union |\n| `title` | WyHy Federal Credit Union |\n| `resource` | https://www.wyhy.org/ |\n| `routing_number` | 307086691 |\n| `founded` | 1953-12 |\n| `members` | ~28,378 |\n| `ncua_insured` | true |\n| `coop_shared_branch` | true |\n\n## Citations\n\n- WyHy Federal Credit Union official website: https://www.wyhy.org/\n- NCUA Credit Union Data: https://www.ncua.gov/",
+    "references/ai-discovery-page": "# AI Discovery Page for WyHy Federal Credit Union\n\n## Entity Summary\n\n- **Name**: WyHy Federal Credit Union\n- **Type**: Credit Union (not-for-profit cooperative)\n- **Founded**: December 1953\n- **Headquarters**: Cheyenne, Wyoming\n- **Members**: ~28,378\n- **Routing Number**: 307086691\n- **Phone**: (800) 442-2392\n- **Website**: https://www.wyhy.org/\n- **Regulator**: National Credit Union Administration (NCUA)\n- **Insurance**: NCUA share insurance up to $250,000\n\n## Branch Network\n\n| Location | Address |\n|---|---|\n| Cheyenne (Main) | 1715 Stillwater Avenue, Cheyenne, WY 82009 |\n| Casper | 5070 CY Avenue, Casper, WY 82604 |\n| Green River | 120 Commerce Drive, Green River, WY 82935 |\n| Lyman | 100 E. Sage Street, Lyman, WY 82937 |\n| Rock Springs | 300 Stanley Avenue, Rock Springs, WY 82901 |\n\nMembers also access over 5,000 CO-OP Shared Branches and 30,000+ CO-OP ATMs nationwide.\n\n## Product Taxonomy\n\n### Deposit Products\n- Smart Returns Checking (3.00% APY)\n- Basic Checking\n- Regular Savings\n- Money Market Account\n- Share Certificates (CDs)\n- FastTrac Savings (youth)\n\n### Lending Products\n- Visa Platinum Rewards Credit Card\n- Visa Platinum Credit Card (non-reward)\n- Auto Loans\n- Recreational Vehicle Loans\n- Personal Loans\n- First Mortgages (30-year fixed)\n- First Mortgages (15-year fixed)\n- Home Equity Line of Credit\n- Student Loans (via Sparrow)\n\n### Business Products\n- Business Checking\n- Business Loans\n\n## Digital Channels\n\n- WyHy Digital (online and mobile banking platform)\n- Remote Deposit Capture\n- Bill Pay\n- eStatements\n- Card Controls & Alerts\n- Wire Transfers\n\n## Key Differentiators\n\n1. Member-owned cooperative \u2014 profits returned to members\n2. Free access to CO-OP shared branching network\n3. Smart Returns Checking with competitive 3.00% APY\n4. WyHy Digital aggregates external accounts into single dashboard\n5. Local decision-making on loans\n6. Annual scholarship program for members\n\n## Related Concepts\n\n- See [company.md](../datasets/company.md) for complete credit union profile.\n- See [prompts.md](prompts.md) for AI chatbot playbooks.\n- See [llms-txt.md](llms-txt.md) for machine-readable summary.",
+    "references/llms-txt": "# WyHy Federal Credit Union llms.txt\n\n## About\n\nWyHy Federal Credit Union is a not-for-profit, member-owned financial cooperative headquartered in Cheyenne, Wyoming. The credit union serves approximately 28,378 members across Wyoming and is NCUA-insured.\n\n## Key Facts\n\n- **Founded**: December 1953\n- **Routing Number**: 307086691\n- **Phone**: (800) 442-2392\n- **Address**: 1715 Stillwater Avenue, Cheyenne, WY 82009\n- **Mailing**: P.O. Box 20050, Cheyenne, WY 82003\n- **NCUA Insured**: Yes\n- **CO-OP Shared Branch/ATM**: Yes\n\n## Branch Locations\n\n- Cheyenne (Main): 1715 Stillwater Avenue, Cheyenne, WY 82009\n- Casper: 5070 CY Avenue, Casper, WY 82604\n- Green River: 120 Commerce Drive, Green River, WY 82935\n- Lyman: 100 E. Sage Street, Lyman, WY 82937\n- Rock Springs: 300 Stanley Avenue, Rock Springs, WY 82901\n\n## Product Quick Reference\n\n| Category | Products |\n|---|---|\n| Checking | Smart Returns Checking (3.00% APY), Basic Checking |\n| Savings | Regular Savings, Money Market, Share Certificates, FastTrac Savings |\n| Credit Cards | Visa Platinum Rewards, Visa Platinum Non-Reward |\n| Lending | Auto Loans, RV Loans, Personal Loans, First Mortgages (30yr/15yr), HELOC, Student Loans (via Sparrow) |\n| Business | Business Checking, Business Loans |\n\n## Digital Services\n\n- WyHy Digital (account aggregation, credit scores, card controls, budgeting)\n- Online Banking\n- Mobile Banking\n- Bill Pay\n- Remote Deposit Capture\n- eStatements\n- Wire Transfers\n\n## Related Concepts\n\n- See [company.md](../datasets/company.md) for full credit union profile.",
+    "references/prompts": "# WyHy Federal Credit Union AI Prompts\n\n## Prompt 1: Product Recommendation Agent\n\n```\nYou are a WyHy Federal Credit Union product specialist. A member asks you to recommend\nthe right financial product for their needs. Follow this decision framework:\n\n1. Ask about their primary goal (saving, borrowing, transacting, earning yield)\n2. Recommend from these WyHy products:\n\n   - Smart Returns Checking (3.00% APY): For members who can meet monthly direct deposit\n     and eStatements requirements; high-yield everyday account\n   - Money Market Account: Tiered-rate savings for larger balances\n   - Share Certificates: Fixed-term CDs, best for known future expenses\n   - Visa Platinum Rewards: For members who want travel/gift card rewards\n   - First Mortgages 30yr/15yr: For home purchases or refinancing\n   - HELOC: Variable-rate home equity, for renovations or debt consolidation\n   - Auto/RV/Personal Loans: Competitive-rate installment lending\n   - Business Checking & Loans: For business members\n\n3. Provide rate or APY information where available\n4. Disclose that rates are subject to change and members should visit wyhy.org\n   or call (800) 442-2392 for current rates\n5. Offer to connect the member with a live WyHy representative\n```\n\n## Prompt 2: Digital Banking Troubleshooter\n\n```\nYou are a WyHy Digital support assistant. Help members troubleshoot their online\nand mobile banking experience.\n\nCommon issues and solutions:\n\n- **Login problems**: Suggest password reset via wyhy.org, check for account lockout\n  after 3 failed attempts, recommend clearing browser cache\n- **Mobile deposit failures**: Ensure check is endorsed with \"For Mobile Deposit Only\"\n  and signature; check lighting and image quality; verify deposit limits\n- **Card controls**: Guide member to WyHy Digital or mobile app > Card Controls to\n  enable/disable card, set transaction limits, or enable travel notifications\n- **Bill Pay issues**: Verify payee setup, check scheduled date, confirm sufficient\n  available balance; same-day payments must be scheduled before cutoff\n- **Account aggregation**: WyHy Digital can link external accounts; member needs\n  online banking credentials for the external institution\n\nEscalate any issue involving unauthorized transactions, suspected fraud, or\ncard loss to (800) 442-2392 immediately.\n```\n\n## Prompt 3: Loan Officer Assistant\n\n```\nYou are a WyHy Federal Credit Union loan officer assistant. A member inquires about\nloan options. Gather and provide the following:\n\nProduct Overview:\n- Auto Loans (new/used): Fixed rates, terms up to 84 months, no prepayment penalty\n- RV Loans: Financing for motorhomes, boats, travel trailers, motorcycles\n- Personal Loans: Secured and unsecured options, fixed payments\n- First Mortgages: 30-year and 15-year fixed-rate, competitive closing costs\n- HELOC: Variable rate, draw from home equity as needed\n\nInformation needed from member:\n1. Loan purpose (auto, RV, personal, mortgage, HELOC)\n2. Estimated loan amount\n3. Preferred term length\n4. Whether they are an existing WyHy member\n\nDirect member to apply online at wyhy.org, visit any branch, or call (800) 442-2392.\nRouting number for ACH/payroll deduction is 307086691.\n```"
+  },
+  "types": [
+    "AI Reference",
+    "Credit Union",
+    "Playbook"
+  ],
+  "palette": {
+    "Credit Union": "#8b5cf6",
+    "AI Reference": "#10b981",
+    "Playbook": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

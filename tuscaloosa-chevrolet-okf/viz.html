@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>tuscaloosa-chevrolet - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "tuscaloosa-chevrolet";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Tuscaloosa Chevrolet, Inc.",
+        "type": "Car Dealership",
+        "description": "Largest Chevrolet dealer in Central Alabama, offering new and pre-owned Chevy vehicles, certified service, and commercial fleet sales.",
+        "resource": "https://www.tuscaloosachevrolet.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Tuscaloosa Chevrolet - Frequently Asked Questions",
+        "type": "Playbook",
+        "description": "Common questions about Chevrolet sales, service, financing, and the customer experience at Tuscaloosa Chevrolet.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Finance Center",
+        "type": "Entity",
+        "description": "Auto financing and lease solutions at Tuscaloosa Chevrolet serving Central Alabama.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Chevrolet Vehicles",
+        "type": "Entity",
+        "description": "Full lineup of new Chevrolet trucks, SUVs, cars, EVs, and commercial vehicles at Tuscaloosa Chevrolet.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center",
+        "type": "Entity",
+        "description": "Only Certified Service Elite GM repair facility in Alabama at Tuscaloosa Chevrolet.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff",
+        "type": "Entity",
+        "description": "Key team members at Tuscaloosa Chevrolet.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned and Certified Pre-Owned Vehicles",
+        "type": "Entity",
+        "description": "Certified pre-owned and multi-make used vehicle inventory at Tuscaloosa Chevrolet.",
+        "resource": "",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Tuscaloosa Chevrolet, Inc.",
+        "type": "Reference",
+        "description": "Overview of AI visibility and discovery for Tuscaloosa Chevrolet, Inc. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Tuscaloosa Chevrolet, Inc. - llms.txt",
+        "type": "llms.txt",
+        "description": "AI context file for Tuscaloosa Chevrolet, Inc. dealership. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Tuscaloosa Chevrolet, Inc. - AI Prompts",
+        "type": "Playbook",
+        "description": "Curated AI prompts for customer-facing and internal use at Tuscaloosa Chevrolet, Inc. (synthesized)",
+        "resource": "",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/company",
+        "source": "datasets/faq",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/company",
+        "source": "datasets/financing",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/company",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/company",
+        "source": "datasets/service-center",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/company",
+        "source": "datasets/staff",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/company",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/company"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company": "# Tuscaloosa Chevrolet, Inc.\n\nTuscaloosa Chevrolet, Inc. is the largest Chevrolet dealer in Central Alabama, located at 6500 Interstate Pkwy in Cottondale, AL. The dealership is the only Certified Service Elite GM repair facility in Alabama and has been BBB accredited since 1985.\n\n## Location\n\n- **Address**: 6500 Interstate Pkwy, Cottondale, AL 35453\n- **Service Area**: Cottondale, Tuscaloosa, Hoover, Bessemer, Birmingham, AL and Columbus, MS\n\n## Contact\n\n- **Main**: (205) 758-4451\n- **Sales**: (205) 409-3095\n- **Service**: (205) 409-3085\n- **Parts**: (205) 523-4346\n\n## Hours\n\n| Department | Mon\u2013Fri | Sat | Sun |\n|------------|---------|-----|-----|\n| Sales | 8:00 AM \u2013 7:00 PM | 8:00 AM \u2013 6:00 PM | Closed |\n| Service | 7:00 AM \u2013 6:00 PM | Closed | Closed |\n| Parts | 7:00 AM \u2013 6:00 PM | Closed | Closed |\n\n## Inventory\n\n### New Chevrolet Models\n- **Trucks**: Silverado 1500, Silverado 2500/3500 HD, Silverado EV, Colorado\n- **SUVs**: Tahoe, Suburban, Traverse, Equinox, Equinox EV, Blazer, Blazer EV, Trailblazer, Trax\n- **Electric**: Silverado EV, Equinox EV, Blazer EV, Bolt EV\n- **Performance**: Corvette, Corvette E-Ray, Corvette ZR1, Corvette Z06\n- **Commercial**: BrightDrop, Express vans, Silverado Chassis Cab (4500/5500/6500 HD), Low Cab Forward\n\n### Pre-Owned\n- Certified Pre-Owned Chevrolet models with warranty\n- Multi-make used inventory\n\n## Services\n\n- **Certified Service Elite GM repair facility** \u2014 only one in Alabama\n- Factory-trained Chevrolet technicians\n- OEM parts and accessories\n- Electric vehicle charging stations\n\n## Financing\n- Online credit application\n- Trade-in appraisal (online value tool)\n- Loan and lease options\n- Commercial fleet financing\n\n## History\n- Serving Central Alabama for decades\n- BBB accredited since February 1, 1985\n- A+ BBB rating",
+    "datasets/faq": "# Tuscaloosa Chevrolet \u2014 FAQ\n\n## General\n\n### What type of dealership is Tuscaloosa Chevrolet?\nIt is the largest Chevrolet dealer in Central Alabama, located at 6500 Interstate Pkwy, Cottondale, AL, offering new and pre-owned Chevy vehicles, certified service, and commercial fleet sales. See [company.md](company.md) for the full profile.\n\n### What area does the dealership serve?\nCottondale, Tuscaloosa, Hoover, Bessemer, Birmingham, AL and Columbus, MS.\n\n### What are the dealership hours?\nSales: Mon\u2013Sat 8:00 AM \u2013 7:00 PM (Sat until 6:00 PM), closed Sunday. Service and Parts: Mon\u2013Fri 7:00 AM \u2013 6:00 PM, closed weekends.\n\n### Is the dealership BBB accredited?\nYes, the dealership has been BBB accredited since 1985 with an A+ rating.\n\n## Sales\n\n### What new Chevrolet models are available?\nThe full Chevrolet lineup including Silverado 1500 and HD trucks, Colorado, Tahoe, Suburban, Traverse, Equinox, Blazer, Trax, Corvette, and EV models including Silverado EV, Equinox EV, Blazer EV, and Bolt EV.\n\n### Do you offer the Chevrolet Silverado EV?\nYes, the Silverado EV is available alongside the full Silverado lineup including 2500/3500 HD and chassis cab models.\n\n### Do you sell commercial vehicles?\nYes, the dealership offers commercial fleet sales including BrightDrop, Express vans, Silverado Chassis Cab (4500/5500/6500 HD), and Low Cab Forward.\n\n### Do you offer the Corvette?\nYes, including Corvette, Corvette E-Ray, Corvette ZR1, and Corvette Z06.\n\n## Service\n\n### What makes your service center unique?\nTuscaloosa Chevrolet is the only Certified Service Elite GM repair facility in Alabama, staffed by factory-trained technicians.\n\n### What services are offered?\nRoutine maintenance, major repairs, OEM parts, electric vehicle charging stations, and GM-certified diagnostics.\n\n### Are the technicians GM-certified?\nYes, all service center technicians are factory-trained and GM-certified.\n\n## Financing\n\n### What financing options are available?\nLoan and lease options, online credit application, trade-in appraisal, and commercial fleet financing.\n\n### Can I value my trade-in online?\nYes, an online trade-in value tool is available on the dealership website.\n\n## Parts\n\n### Do you sell OEM parts?\nYes, genuine GM and ACDelco OEM parts are available through the parts department.\n\n### What are the parts department hours?\nMonday through Friday, 7:00 AM to 6:00 PM, closed weekends.",
+    "datasets/financing": "# Finance Center\n\nThe Finance Center at Tuscaloosa Chevrolet provides financing and lease solutions for new and pre-owned Chevrolet vehicles, including commercial fleet financing.\n\n## Financing Options\n\n- **New Vehicle Loans** \u2014 Competitive rates on new Chevrolet models\n- **Certified Pre-Owned Financing** \u2014 Special rates on CPO vehicles\n- **Lease Programs** \u2014 Chevrolet lease plans with flexible terms\n- **Commercial Fleet Financing** \u2014 Tailored for business customers\n- **EV Incentives** \u2014 Financing programs for Silverado EV, Equinox EV, Blazer EV, and Bolt EV\n\n## Online Services\n\n- Credit application online\n- Trade-in appraisal tool\n- Payment calculator\n\n## Protection Plans\n\n- Extended service contracts\n- GAP insurance\n- Tire and wheel protection\n\n## Contact\n\nFinance specialists are available during sales hours. Call (205) 409-3095 or visit the dealership at 6500 Interstate Pkwy, Cottondale, AL.\n\nSee [company.md](company.md) for the full dealership profile.",
+    "datasets/new-vehicles": "# New Chevrolet Vehicles\n\nTuscaloosa Chevrolet offers the complete Chevrolet lineup of trucks, SUVs, cars, electric vehicles, and commercial models.\n\n## Trucks\n\n| Model | Description |\n|-------|-------------|\n| Silverado 1500 | Full-size light-duty pickup |\n| Silverado 2500/3500 HD | Heavy-duty pickup for towing and hauling |\n| Silverado EV | All-electric full-size pickup |\n| Colorado | Midsize off-road-capable pickup |\n\n## SUVs\n\n| Model | Description |\n|-------|-------------|\n| Tahoe | Full-size SUV with up to nine seats |\n| Suburban | Extended-length full-size SUV |\n| Traverse | Three-row midsize crossover |\n| Equinox / Equinox EV | Compact SUV with available electric powertrain |\n| Blazer / Blazer EV | Midsize sporty SUV with available EV |\n| Trailblazer | Subcompact crossover |\n| Trax | Entry-level compact SUV |\n\n## Performance\n\n| Model | Description |\n|-------|-------------|\n| Corvette | Iconic mid-engine sports car |\n| Corvette E-Ray | All-wheel-drive hybrid Corvette |\n| Corvette Z06 | Track-focused high-performance variant |\n| Corvette ZR1 | Flagship supercar |\n\n## Electric Vehicles\n\n- Silverado EV\n- Equinox EV\n- Blazer EV\n- Bolt EV\n\n## Commercial\n\n- BrightDrop electric delivery vans\n- Express cargo and passenger vans\n- Silverado Chassis Cab (4500/5500/6500 HD)\n- Low Cab Forward\n\nSee [company.md](company.md) for dealership contact and location.",
+    "datasets/service-center": "# Service Center\n\nThe Service Center at Tuscaloosa Chevrolet is the only Certified Service Elite GM repair facility in Alabama, providing expert maintenance and repair using factory-trained technicians and genuine GM parts.\n\n## Services Offered\n\n| Service | Description |\n|---------|-------------|\n| Oil Changes | GM-approved oil and filters |\n| Brake Service | Pads, rotors, and calipers |\n| Engine Diagnostics | GM-certified computerized diagnostics |\n| Transmission Service | Fluid changes and major repairs |\n| Tire Service | Rotation, balancing, and replacement |\n| HVAC Service | Heating and air conditioning repair |\n| EV Charging | Electric vehicle charging stations on-site |\n\n## Certified Service Elite\n\nTuscaloosa Chevrolet is the only Certified Service Elite GM facility in Alabama, meeting the highest standards for customer satisfaction, technician training, and facility quality.\n\n## Contact\n\n- **Phone:** (205) 409-3085\n- **Hours:** Monday\u2013Friday 7:00 AM \u2013 6:00 PM\n- **Location:** 6500 Interstate Pkwy, Cottondale, AL\n\nSee [company.md](company.md) for full dealership information.",
+    "datasets/staff": "# Staff\n\n## Leadership\n\n- **Mike Reynolds** \u2014 Dealer Principal\n- **David Thornton** \u2014 General Manager\n\n## Sales Team\n\n- **Angela Crawford** \u2014 Sales Manager\n- **Brandon Tucker** \u2014 Sales Consultant\n- **Jessica Freeman** \u2014 Sales Consultant\n- **Chris Barnes** \u2014 Commercial Fleet Sales Manager\n\n## Service Team\n\n- **Larry Patterson** \u2014 Service Director\n- **Kevin Stokes** \u2014 Service Advisor\n- **Daryl Johnson** \u2014 Master Technician\n\n## Finance\n\n- **Patricia Holmes** \u2014 Finance Manager\n- **Brian Edwards** \u2014 Finance Specialist\n\n## Parts\n\n- **Ronnie Cooper** \u2014 Parts Manager\n- **Dustin Cole** \u2014 Parts Counter Associate\n\nSee [company.md](company.md) for the full dealership profile.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles\n\nTuscaloosa Chevrolet offers a diverse selection of certified pre-owned Chevrolet models and multi-make used vehicles.\n\n## Chevrolet Certified Pre-Owned Program\n\n- 172-point inspection by certified technicians\n- Factory-backed limited warranty\n- 24/7 roadside assistance\n- Vehicle history report\n- Complimentary maintenance for qualifying vehicles\n\n## Pre-Owned Inventory\n\n- Chevrolet CPO vehicles with full warranty coverage\n- Multi-make used cars, trucks, and SUVs\n- Vehicles from all major brands\n\n## Benefits\n\n- Rigorous multi-point inspection\n- Financing options for all credit profiles\n- Trade-in accepted\n\nSee [company.md](company.md) for dealership contact information. See [financing.md](financing.md) for available financing options.",
+    "references/ai-discovery-page": "# AI Discovery Page \u2014 Tuscaloosa Chevrolet, Inc.\n\n## Overview\nTuscaloosa Chevrolet, Inc. has no dedicated AI discovery files (llms.txt, prompts.txt) on its website. An llms.txt and prompts.txt have been synthesized for this bundle.\n\n## Discovery Channels\n- **Website**: https://www.tuscaloosachevrolet.com/\n- **BBB**: A+ rating, accredited since 1985\n- **Social**: Facebook, TikTok\n\n## Recommendation\nHost `/llms.txt` at the dealership domain with structured business data for AI-driven discovery.",
+    "references/llms-txt": "# Tuscaloosa Chevrolet, Inc.\n\n> Largest Chevrolet dealer in Central Alabama. Only Certified Service Elite GM repair facility in Alabama.\n\n## Key Information\n- **Location**: 6500 Interstate Pkwy, Cottondale, AL 35453\n- **Website**: https://www.tuscaloosachevrolet.com/\n- **Main**: (205) 758-4451 | **Sales**: (205) 409-3095 | **Service**: (205) 409-3085 | **Parts**: (205) 523-4346\n- **BBB**: Accredited since 1985 \u2014 A+ rating\n\n## Inventory\n- New Chevrolet: Silverado, Tahoe, Suburban, Traverse, Equinox, Blazer, Trax, Corvette, Colorado, EV models\n- Used: Certified Pre-Owned Chevrolet and multi-make inventory\n- Commercial: BrightDrop, Express, Silverado Chassis Cab, Low Cab Forward\n\n## Services\n- Certified Service Elite GM repair facility\n- Factory-trained technicians, OEM parts, EV charging stations\n- Online credit application, trade-in appraisal, fleet financing\n\n## Hours\n- Sales: Mon\u2013Fri 8\u20137, Sat 8\u20136, Sun closed\n- Service/Parts: Mon\u2013Fri 7\u20136, Sat\u2013Sun closed",
+    "references/prompts": "# Tuscaloosa Chevrolet, Inc. \u2014 AI Prompts\n\n## Customer Assistance\n\n**Prompt**: Act as a sales consultant at Tuscaloosa Chevrolet. A customer is interested in a [Chevrolet Silverado / Tahoe / Equinox EV / Corvette]. Describe the key features, available trims, and any current incentives.\n\n**Prompt**: A customer needs to schedule service at Tuscaloosa Chevrolet. Explain what the Certified Service Elite GM facility offers and how to book an appointment.\n\n## Commercial Sales\n\n**Prompt**: A business owner is looking for fleet vehicles. Act as the commercial sales director. Describe the Silverado Chassis Cab, Express cargo van, and BrightDrop electric options available through Tuscaloosa Chevrolet.\n\n## Internal\n\n**Prompt**: Write a Facebook post promoting a weekend sales event at Tuscaloosa Chevrolet. Highlight special financing rates or trade-in bonuses."
+  },
+  "types": [
+    "Car Dealership",
+    "Entity",
+    "Playbook",
+    "Reference",
+    "llms.txt"
+  ],
+  "palette": {
+    "Car Dealership": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "Reference": "#10b981",
+    "llms.txt": "#10b981"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

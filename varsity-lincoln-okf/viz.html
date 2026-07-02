@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>varsity-lincoln - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "varsity-lincoln";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Varsity Lincoln",
+        "type": "Lincoln Dealership",
+        "description": "#1 Volume Lincoln Dealer in the World for 22 consecutive years, serving Novi, Ann Arbor, Wixom, Farmington Hills, and Metro Detroit with new and pre-owned Lincoln vehicles, certified service, and luxury vehicle financing.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Varsity Lincoln",
+        "type": "Playbook",
+        "description": "Common customer questions about Lincoln vehicles, financing, service, and dealership operations at Varsity Lincoln in Novi, Michigan.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing & Leasing - Varsity Lincoln",
+        "type": "Entity",
+        "description": "Vehicle financing and leasing options at Varsity Lincoln in Novi, Michigan including online applications, pre-approval, trade-in valuation, and payment calculators.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Lincoln Vehicles - Varsity Lincoln",
+        "type": "Entity",
+        "description": "Full lineup of new Lincoln vehicles available at Varsity Lincoln in Novi, Michigan including SUVs, crossovers, electrified models, and the Lincoln Black Label experience.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Varsity Lincoln Service Center",
+        "type": "Service Center",
+        "description": "Lincoln factory-certified service center offering routine maintenance, complex diagnostics, genuine OEM parts, Lincoln Pickup & Delivery, and Lincoln Mobile Service in Novi, Michigan.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Varsity Lincoln",
+        "type": "Entity",
+        "description": "Team directory for Varsity Lincoln including management, sales, service, and parts departments serving the Novi and Metro Detroit area.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Varsity Lincoln",
+        "type": "Entity",
+        "description": "Pre-owned and Lincoln Certified Pre-Owned vehicle inventory at Varsity Lincoln in Novi, Michigan including used luxury SUVs, cars, and the Lincoln Certified Pre-Owned program.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/vehicles",
+        "label": "Varsity Lincoln Vehicle Inventory",
+        "type": "Vehicle Inventory",
+        "description": "New Lincoln luxury SUV lineup and pre-owned inventory including Lincoln Certified Pre-Owned vehicles at Varsity Lincoln in Novi, Michigan.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Hub - Varsity Lincoln",
+        "type": "API",
+        "description": "AI-optimized discovery page with structured endpoints for LLM consumption, including business profile, vehicle inventory, prompts, and site directives for Varsity Lincoln in Novi, Michigan.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt - Varsity Lincoln",
+        "type": "API",
+        "description": "AI discovery and consumption directive for Varsity Lincoln providing structured API endpoints, schema types, and business context for the Novi, Michigan Lincoln dealership.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompt Library - Varsity Lincoln",
+        "type": "Playbook",
+        "description": "Structured Q&A prompts for consistent AI responses covering Lincoln vehicles, financing, service, and dealership operations at Varsity Lincoln in Novi, Michigan.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/website",
+        "label": "Varsity Lincoln Website",
+        "type": "Website Reference",
+        "description": "Official website of Varsity Lincoln, featuring new and pre-owned Lincoln inventory, service scheduling, credit applications, and trade-in valuation tools for the Novi and Metro Detroit area.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Lincoln Model Comparison",
+        "type": "Tables & Datasets",
+        "description": "Comparison table of Lincoln model specifications including Corsair, Nautilus, Aviator, and Navigator available at Varsity Lincoln in Novi, Michigan.",
+        "resource": "https://www.varsitylincoln.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/used-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/financing",
+        "source": "datasets/dealership",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/dealership",
+        "source": "datasets/financing",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/vehicles__datasets/new-vehicles",
+        "source": "datasets/vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/vehicles__datasets/used-vehicles",
+        "source": "datasets/vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/vehicles__datasets/dealership",
+        "source": "datasets/vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Varsity Lincoln\n\nVarsity Lincoln is a Lincoln luxury automotive dealership located at 49251 Grand River, Novi, MI 48374, serving Novi, Ann Arbor, Wixom, Farmington Hills, and the Metro Detroit area. The dealership is part of Varsity Automotive Group, family-owned and operated for over 30 years. Varsity Lincoln has been the #1 Volume Lincoln Dealer in the World for 22 consecutive years (since 1997).\n\n## Contact Information\n\n- **Sales**: (800) 240-8685\n- **Website**: https://www.varsitylincoln.com/\n\n## Location\n\n49251 Grand River, Novi, MI 48374\n\n## Service Area\n\nNovi, Ann Arbor, Wixom, Farmington Hills, and the Metro Detroit area.\n\n## Hours of Operation\n\n| Department | Hours |\n|---|---|\n| Sales Mon-Sat | 9:00 AM - 6:00 PM |\n| Sales Sun | Closed |\n| Service Mon-Fri | 7:00 AM - 6:00 PM |\n| Service Sat | 8:00 AM - 5:00 PM |\n| Service Sun | Closed |\n\n## Lincoln Models\n\n- **Corsair** \u2014 Compact luxury SUV (available plug-in hybrid)\n- **Nautilus** \u2014 Mid-size luxury SUV\n- **Aviator** \u2014 Mid-size three-row luxury SUV (available plug-in hybrid)\n- **Navigator / Navigator L** \u2014 Full-size luxury SUV\n\n## Awards & Recognition\n\n- #1 Volume Lincoln Dealer in the World for 22 consecutive years (since 1997)\n- Lincoln Triple Crown Award\n- Lincoln Leaders of Excellence\n- Lincoln President's Award\n- Ford One Hundred Club\n- CPO Sales Leadership Award\n- Lincoln Premier Club\n\n## Special Programs\n\n- **Lincoln Black Label** \u2014 Premium ownership experience with curated service, complimentary maintenance, and vehicle exchange privileges. Varsity Lincoln is one of only a few Lincoln Black Label dealers nationwide.\n- **Lincoln Electrified** \u2014 Hybrid and plug-in hybrid electric vehicle options including Aviator Grand Touring PHEV and Corsair PHEV.\n- **Lincoln Certified Pre-Owned** \u2014 Comprehensive warranty with 200-point inspection, 24/7 roadside assistance, and complimentary Lincoln Pickup & Delivery for covered repairs.\n\n## Unique Services\n\n- **Lincoln Pickup & Delivery** \u2014 Complimentary vehicle pick-up and drop-off for service appointments.\n- **Lincoln Mobile Service** \u2014 Factory-trained technicians dispatched to your home or office for select maintenance.\n- **Complimentary Loaner** \u2014 Courtesy vehicle provided during service appointments.\n- **Genuine OEM Parts** \u2014 Factory-original Lincoln parts for all repairs.\n- **Complimentary Delivery** \u2014 Free vehicle delivery within 300 miles.\n- **Customer Lounge** \u2014 Complimentary WiFi and refreshments while you wait.\n- **Online Service Scheduling** \u2014 Schedule appointments through the dealership website.\n\n## Online Tools\n\n- New vehicle inventory search\n- Pre-owned inventory search\n- Value Your Trade tool\n- Online credit application and pre-approval\n- Payment calculator\n- Service scheduling\n- Vehicle protection plans\n\n## Financing\n\nPersonalized luxury leasing, competitive APRs, online credit application and pre-approval, trade-in estimator, payment calculator, and vehicle protection plans available.\n\nSee [new-vehicles.md](new-vehicles.md) for new Lincoln inventory.\nSee [used-vehicles.md](used-vehicles.md) for pre-owned inventory.\nSee [service-center.md](service-center.md) for service offerings.\nSee [financing.md](financing.md) for financing and leasing options.",
+    "datasets/faq": "# Frequently Asked Questions\n\n## Vehicles & Inventory\n\n**Q: What Lincoln models are available at Varsity Lincoln?**\nA: The dealership carries the full Lincoln lineup including Corsair, Nautilus, Aviator, Navigator, and Navigator L.\n\n**Q: Do you have used vehicles from other manufacturers?**\nA: Yes. The pre-owned inventory spans multiple luxury makes and models, not just Lincoln.\n\n**Q: Are Lincoln Black Label vehicles available?**\nA: Yes. Varsity Lincoln is one of only a few Lincoln Black Label dealers nationwide, offering exclusive interior themes and premium ownership benefits.\n\n**Q: What is the Lincoln Certified Pre-Owned program?**\nA: It includes a 200-point inspection, comprehensive limited warranty, 24/7 roadside assistance, and complimentary Lincoln Pickup & Delivery for covered repairs.\n\n## Financing\n\n**Q: Can I apply for financing online?**\nA: Yes. Complete the online credit application on the Varsity Lincoln website from home.\n\n**Q: What credit situations do you work with?**\nA: The finance team works with multiple lending partners to accommodate various credit profiles.\n\n**Q: Do you offer both buying and leasing options?**\nA: Yes. The finance center provides both purchase financing and Lincoln luxury lease programs.\n\n**Q: Can I value my trade-in online?**\nA: Yes. Use the Value Your Trade tool on the Varsity Lincoln website for instant online valuation.\n\n## Service\n\n**Q: Do you use OEM or aftermarket parts?**\nA: The service department uses only genuine OEM Lincoln parts for all repairs.\n\n**Q: Do you offer mobile service?**\nA: Yes. Lincoln Mobile Service brings factory-trained technicians to your home or office for select maintenance.\n\n**Q: Do you offer Lincoln Pickup & Delivery?**\nA: Yes. Complimentary vehicle pick-up and drop-off for service appointments.\n\n**Q: Do you provide loaner vehicles during service?**\nA: Yes. Complimentary loaner vehicles are available during service appointments.\n\n**Q: Can I schedule service online?**\nA: Yes. Use the online service scheduling tool on the Varsity Lincoln website.\n\n## Dealership\n\n**Q: What are your sales hours?**\nA: Monday\u2013Saturday 9:00 AM \u2013 6:00 PM, Sunday Closed.\n\n**Q: Where is the dealership located?**\nA: 49251 Grand River, Novi, MI 48374.\n\n**Q: Is Varsity Lincoln family-owned?**\nA: Yes. Varsity Lincoln is part of the Varsity Automotive Group, family-owned and operated for over 30 years.\n\n**Q: Is Varsity Lincoln really the #1 Lincoln dealer in the world?**\nA: Yes. Varsity Lincoln has been the #1 Volume Lincoln Dealer in the World for 22 consecutive years, since 1997.\n\n**Q: Do you offer complimentary vehicle delivery?**\nA: Yes. Complimentary delivery within 300 miles on qualifying vehicles.\n\nSee [dealership.md](dealership.md) for full business profile.",
+    "datasets/financing": "# Financing & Leasing\n\nThe Varsity Lincoln Finance Center offers purchase financing and luxury lease programs for new and pre-owned Lincoln vehicles.\n\n## Financing Options\n\n- **Online Application**: Start the financing process from home via the online credit application on the Varsity Lincoln website\n- **Pre-Approval**: Get pre-approved before visiting the dealership\n- **Multiple Lending Partners**: The finance team works with multiple lenders to find competitive rates\n- **Flexible Terms**: Loan and lease solutions designed around different ownership goals and budgets\n\n## Leasing\n\nLincoln luxury leasing is available for customers who prefer lower monthly payments and the option to drive a new vehicle every few years.\n\n## Buying vs. Leasing\n\n| Factor | Buying | Leasing |\n|---|---|---|\n| Monthly Payment | Higher | Lower |\n| Ownership | Own the vehicle at end of term | Return vehicle at end of term |\n| Mileage | Unlimited | Limited by contract |\n| Sales Tax | Paid upfront or rolled into loan | Included in monthly payment |\n\n## Trade-In\n\nGet an instant online valuation through the Value Your Trade tool on the Varsity Lincoln website, or bring your vehicle in for an in-person appraisal.\n\n## Payment Calculators\n\nEstimate monthly payments using the payment calculator on the Varsity Lincoln website before visiting the dealership.\n\n## Finance Center Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM \u2013 6:00 PM |\n| Tuesday | 9:00 AM \u2013 6:00 PM |\n| Wednesday | 9:00 AM \u2013 6:00 PM |\n| Thursday | 9:00 AM \u2013 6:00 PM |\n| Friday | 9:00 AM \u2013 6:00 PM |\n| Saturday | 9:00 AM \u2013 6:00 PM |\n| Sunday | Closed |\n\n## Contact\n\n**Sales/Finance**: (800) 240-8685\n\nSee [dealership.md](dealership.md) for full business profile.\nSee [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.",
+    "datasets/new-vehicles": "# New Lincoln Vehicles\n\nVarsity Lincoln carries a comprehensive selection of new Lincoln vehicles across all model lines, with the distinction of being the #1 Volume Lincoln Dealer in the World for 22 consecutive years.\n\n## Luxury SUVs\n\n| Model | Type | Key Features |\n|---|---|---|\n| Corsair | Compact luxury SUV | 2.0L 250hp turbo, available PHEV, SYNC 4, Lincoln Co-Pilot360, available 20-inch wheels |\n| Nautilus | Mid-size luxury SUV | 2.0L turbo, available BlueCruise hands-free driving, Lincoln Co-Pilot360, available Panoramic Vista Roof |\n| Aviator | Mid-size three-row luxury SUV | Available Grand Touring PHEV, 3.0L twin-turbo V6, Lincoln Co-Pilot360 2.0, available Perfect Position seats |\n| Navigator / Navigator L | Full-size luxury SUV | 3.5L twin-turbo V6, 10-speed automatic, Perfect Position front seats with massage, Lincoln Co-Pilot360 2.0, available 30-way seats |\n\n## Lincoln Black Label\n\nVarsity Lincoln is a Lincoln Black Label dealer, offering an exclusive ownership experience that includes:\n\n- Curated interior themes with premium materials\n- Complimentary scheduled maintenance\n- Complimentary vehicle exchange (up to 3 days, 4 times per year)\n- Concierge service\n- Complimentary Lincoln Pickup & Delivery\n\n## Electrified Models\n\n- **Corsair PHEV** \u2014 Plug-in hybrid compact SUV\n- **Aviator Grand Touring** \u2014 Plug-in hybrid three-row SUV with 3.0L twin-turbo V6 + electric motor\n- Additional Lincoln electrified models as released\n\n## Commercial and Fleet\n\nVarsity Lincoln serves commercial and fleet customers with Lincoln vehicles suitable for executive transport and corporate fleets.\n\n## Current Inventory\n\nBrowse online at the Varsity Lincoln website for current new vehicle inventory and special offers.\n\nSee [dealership.md](dealership.md) for full business profile.\nSee [financing.md](financing.md) for purchase and lease options.\nSee [model-comparison.md](/tables/model-comparison.md) for detailed specifications.",
+    "datasets/service-center": "# Varsity Lincoln Service Center\n\nVarsity Lincoln's service center is staffed by Lincoln factory-trained technicians offering routine maintenance, complex diagnostics, and repairs for all Lincoln models, backed by genuine OEM parts.\n\n## Service Offerings\n\n- Routine maintenance (oil changes, tire rotations, fluid checks)\n- Complex diagnostics and engine/transmission repair\n- Genuine OEM Lincoln parts\n- Lincoln Pickup & Delivery \u2014 complimentary vehicle pick-up and drop-off\n- Complimentary loaner vehicles during service appointments\n- Lincoln Mobile Service \u2014 factory-trained technicians dispatched to your home or office\n- Lincoln Certified Pre-Owned warranty repairs\n- Online service scheduling\n- Customer lounge with complimentary WiFi\n\n## Lincoln Mobile Service\n\nSelect maintenance services performed at your home or office by factory-trained technicians, eliminating the need to visit the dealership.\n\n## Lincoln Pickup & Delivery\n\nComplimentary vehicle pick-up and drop-off for service appointments, maximizing customer convenience.\n\n## Service Contact\n\n- **Service Hours**: Mon-Fri 7:00 AM - 6:00 PM, Sat 8:00 AM - 5:00 PM, Sun Closed\n\nSee [dealership.md](dealership.md) for dealership profile and hours.",
+    "datasets/staff": "# Staff Directory\n\n## Management Department\n\n| Name | Title |\n|---|---|\n| Michael Torres | General Manager |\n| Sarah Chen | Sales Manager |\n| David Kowalski | General Sales Manager |\n| Jennifer Walsh | Finance Director |\n\n## Sales Department\n\n| Name | Title |\n|---|---|\n| Robert Mitchell | Sales Consultant |\n| Amanda Patel | Sales Consultant |\n| James Hart | Sales Consultant |\n| Lisa Benson | Sales Consultant |\n| Thomas Novak | Sales Consultant |\n| Maria Gonzalez | Sales Consultant |\n| Kevin Park | Finance Manager |\n| Eric Daniels | Finance Manager |\n\n## Service Department\n\n| Name | Title |\n|---|---|\n| Chris Thompson | Service Manager |\n| Angela Morrison | Service Manager |\n| Brian Fletcher | Service Advisor |\n| Derek Simmons | Service Advisor |\n| Rachel Kim | Service Advisor |\n| Steven Gray | Service Advisor |\n| Nicole Rivera | Service Advisor |\n| Mark Delaney | Mobile Service Advisor |\n| Tyler Schultz | Mobile Service Advisor |\n| Andrew Reese | Service Advisor |\n| Patrick O'Neill | Service Advisor |\n| Laura Caldwell | Service Advisor |\n\n## Parts Department\n\n| Name | Title |\n|---|---|\n| Frank Lombardi | Parts Manager |\n| Derek Huang | Assistant Parts Manager |\n\nSee [dealership.md](dealership.md) for business profile.\nSee [service-center.md](service-center.md) for service department details.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles\n\nVarsity Lincoln maintains a diverse pre-owned luxury inventory spanning Lincoln and other premium makes, with a range of model years and price points.\n\n## Inventory Categories\n\n| Category | Description |\n|---|---|\n| All Used Vehicles | Full pre-owned inventory across all makes and models |\n| Lincoln Certified Pre-Owned | Lincoln-certified vehicles with factory-backed warranty |\n| Used Luxury SUVs | Pre-owned luxury SUVs from Lincoln and other premium brands |\n| Pre-Owned Specials | Discounted pre-owned vehicles with special pricing |\n\n## Lincoln Certified Pre-Owned Program\n\nThe dealership offers the Lincoln Certified Pre-Owned program, which provides:\n\n- 200-point inspection by factory-trained technicians\n- Comprehensive limited warranty\n- 24/7 roadside assistance\n- Complimentary Lincoln Pickup & Delivery for covered repairs\n- Vehicle history report\n- Rental car coverage\n\n## Trade-In\n\nThe dealership offers trade-in evaluation through:\n- Online trade-in valuation tool on the Varsity Lincoln website\n- In-person appraisal at the dealership\n- Value Your Trade tool\n\n## Complimentary Delivery\n\nComplimentary vehicle delivery within 300 miles on qualifying vehicles.\n\nSee [dealership.md](dealership.md) for full business profile.\nSee [financing.md](financing.md) for financing options on pre-owned vehicles.\nSee [new-vehicles.md](new-vehicles.md) for the new Lincoln lineup.",
+    "datasets/vehicles": "# Varsity Lincoln Vehicle Inventory\n\nVarsity Lincoln offers the full Lincoln luxury SUV lineup alongside Lincoln Certified Pre-Owned vehicles and quality used luxury vehicles from multiple brands.\n\n## New Lincoln Vehicles\n\n| Model | Class | Passengers | Drivetrain | Key Features |\n|---|---|---|---|---|\n| Corsair | Compact luxury SUV | 5 | FWD/AWD | 2.0L 250hp turbo, available PHEV, SYNC 4, Lincoln Co-Pilot360 |\n| Nautilus | Mid-size luxury SUV | 5 | FWD/AWD | 2.0L turbo, available BlueCruise hands-free driving |\n| Aviator | Mid-size three-row luxury SUV | 6-7 | RWD/AWD | Available Grand Touring PHEV, 3.0L twin-turbo, Lincoln Co-Pilot360 2.0 |\n| Navigator / Navigator L | Full-size luxury SUV | 7-8 | 4WD | 3.5L twin-turbo V6, 10-speed auto, Perfect Position front seats |\n\n## Lincoln Certified Pre-Owned\n\nEvery Lincoln Certified Pre-Owned vehicle includes:\n\n- 200-point inspection\n- Comprehensive limited warranty\n- 24/7 roadside assistance\n- Complimentary Lincoln Pickup & Delivery for covered repairs\n- Vehicle history report\n\n## Pre-Owned Luxury Inventory\n\nQuality used luxury vehicles from multiple brands, each subject to a multi-point inspection.\n\nSee [new-vehicles.md](new-vehicles.md) for detailed new vehicle information.\nSee [used-vehicles.md](used-vehicles.md) for detailed pre-owned vehicle information.\nSee [dealership.md](dealership.md) for dealership profile.\nSee [model-comparison.md](/tables/model-comparison.md) for detailed specifications.",
+    "references/ai-discovery-page": "# AI Discovery Hub\n\nVarsity Lincoln maintains AI-optimized discovery endpoints with structured data optimized for LLM and AI crawler consumption via PromptGraph.\n\n## Global Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest | `https://api.promptgraph.ai/api/v1/varsity-lincoln/.well-known/ai-manifest.json` |\n| llms.txt | `https://api.promptgraph.ai/api/v1/varsity-lincoln/llms.txt` |\n| robots.txt | `https://api.promptgraph.ai/api/v1/varsity-lincoln/robots.txt` |\n| Sitemap | `https://api.promptgraph.ai/api/v1/varsity-lincoln/sitemap.xml` |\n| Config | `https://api.promptgraph.ai/api/v1/varsity-lincoln/config.json` |\n\n## API Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Complete business profile with address, contact, hours, ratings (JSON-LD) |\n| `/vehicles` | Full vehicle inventory with specs, pricing, availability (JSON-LD) |\n| `/offers` | Current special offers and incentives |\n| `/prompts` | Structured Q&A prompts for consistent AI responses |\n| `/testimonials` | Customer reviews and ratings (JSON-LD) |\n| `/gbp-context` | Google Business Profile data including reviews, posts, images |\n| `/site-content` | Clean, plain-text site mirror for LLM ingestion |\n| `/llms.txt` | AI discovery and consumption directives |\n| `/.well-known/ai-manifest.json` | Machine-readable AI resource directory |\n\n## Schema Types\n\n- AutoDealer (LocalBusiness)\n- Car (vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (prompts/FAQs)\n\n## Business Context\n\nVarsity Lincoln is the #1 Volume Lincoln Dealer in the World for 22 consecutive years, located at 49251 Grand River, Novi, MI 48374. Real-time inventory updates via JSON-LD API endpoints. Structured data optimized for AI discovery and consumption.\n\nSee [llms-txt.md](llms-txt.md) for the AI consumption directive.\nSee [prompts.md](prompts.md) for the prompt library.",
+    "references/llms-txt": "# llms.txt\n\nThe llms.txt file provides AI systems with structured discovery and consumption directives for Varsity Lincoln.\n\n## Format\n\n- **Format**: LLMForge v1.0\n- **Schema**: JSON-LD (Schema.org)\n- **Primary Discovery**: `/.well-known/ai-manifest.json`\n- **Last Updated**: 2026-07-03\n- **CORS**: Enabled for all origins\n\n## Discovery Endpoints\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (address, contact, hours, location) |\n| `/vehicles` | Complete inventory with specs and pricing |\n| `/offers` | Current special offers and incentives |\n| `/prompts` | Structured Q&A prompts |\n| `/testimonials` | Customer reviews and ratings |\n| `/gbp-context` | Google Business Profile context |\n| `/site-content` | Full site text mirror |\n| `/.well-known/ai-manifest.json` | AI resource directory |\n\n## Schema Types\n\n- LocalBusiness / AutoDealer\n- Car (vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (prompts/FAQs)\n\n## Business Context\n\nVarsity Lincoln, located at 49251 Grand River, Novi, MI 48374, is the #1 Volume Lincoln Dealer in the World for 22 consecutive years. Part of Varsity Automotive Group. Real-time inventory updates via JSON-LD API endpoints. Structured data optimized for AI discovery and consumption.\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the full AI Discovery Hub overview.\nSee [prompts.md](prompts.md) for the prompt library.",
+    "references/prompts": "# Prompt Library\n\nThe PromptGraph API provides structured prompts for Varsity Lincoln, covering vehicle features, financing, service, and general dealership questions.\n\n## Prompt Categories\n\n- Vehicle features and options\n- Financing and leasing\n- Service and maintenance\n- Trade-in and valuation\n- Dealership operations\n- Lincoln Black Label experience\n- Electric and hybrid vehicle guidance\n\n## Example Prompts\n\n| Topic | Question |\n|---|---|\n| Comfort Upgrades | \"I want to purchase a luxury SUV that comes equipped with a heated steering wheel and ventilated seats.\" |\n| Lincoln Black Label | \"What is the Lincoln Black Label program and what benefits does Varsity Lincoln offer?\" |\n| Top Dealer | \"Why is Varsity Lincoln the #1 Volume Lincoln Dealer in the World?\" |\n| Financing | Various questions about loan options, credit situations, lease terms |\n| Service | Maintenance scheduling, mobile service, OEM parts availability |\n| Electric Vehicles | Charging guidance, PHEV ownership, model comparisons |\n| Complimentary Delivery | \"Do you offer vehicle delivery outside the dealership?\" |\n\n## API Access\n\nEndpoint: `https://api.promptgraph.ai/api/v1/varsity-lincoln/prompts`\nFormat: JSON-LD (ItemList of CreativeWork)\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for API access details.\nSee [faq.md](/datasets/faq.md) for common customer questions.",
+    "references/website": "# Varsity Lincoln Website\n\nVarsity Lincoln operates its online presence at https://www.varsitylincoln.com/. The website provides full dealership capabilities including inventory browsing, service scheduling, credit applications, and trade-in valuation.\n\n## Site Features\n\n- New Lincoln vehicle inventory with photos, specs, and pricing\n- Pre-owned inventory search with Lincoln Certified Pre-Owned listings\n- Service center appointment scheduling\n- Online credit application and pre-approval\n- Payment calculator\n- Value Your Trade tool\n- Vehicle protection plans\n- Special offers and incentives\n- Lincoln model research and comparison\n- Lincoln Pickup & Delivery scheduling\n- Lincoln Mobile Service requests\n- Complimentary delivery within 300 miles details\n\nSee [dealership.md](/datasets/dealership.md) for full dealership profile.",
+    "tables/model-comparison": "# Lincoln Model Comparison\n\n| Model | Class | Passengers | Drivetrain | Starting MSRP | Key Features |\n|---|---|---|---|---|---|\n| Corsair | Compact SUV | 5 | FWD/AWD | $40K+ | 2.0L 250hp turbo, available PHEV, SYNC 4, Lincoln Co-Pilot360 |\n| Nautilus | Mid-size SUV | 5 | FWD/AWD | $50K+ | 2.0L turbo, available BlueCruise, Lincoln Co-Pilot360 |\n| Aviator | Mid-size 3-Row SUV | 6-7 | RWD/AWD | $55K+ | Available Grand Touring PHEV, 3.0L twin-turbo, Lincoln Co-Pilot360 2.0 |\n| Navigator / Navigator L | Full-size SUV | 7-8 | 4WD | $90K+ | 3.5L twin-turbo V6, 10-speed auto, Perfect Position front seats |\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for new inventory details.\nSee [vehicles.md](/datasets/vehicles.md) for combined inventory overview."
+  },
+  "types": [
+    "API",
+    "Entity",
+    "Lincoln Dealership",
+    "Playbook",
+    "Service Center",
+    "Tables & Datasets",
+    "Vehicle Inventory",
+    "Website Reference"
+  ],
+  "palette": {
+    "Lincoln Dealership": "#8b5cf6",
+    "Playbook": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "Service Center": "#8b5cf6",
+    "Vehicle Inventory": "#8b5cf6",
+    "API": "#10b981",
+    "Website Reference": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

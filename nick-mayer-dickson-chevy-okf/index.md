@@ -14,6 +14,7 @@ Chevrolet dealership in Dickson, TN serving the local community with new and pre
 - [staff.md](datasets/staff.md) - Staff directory for Nick Mayer Chevrolet of Dickson.
 - [service-center.md](datasets/service-center.md) - Full-service automotive center with factory-trained technicians and genuine OEM parts.
 - [faq.md](datasets/faq.md) - Frequently asked questions about the dealership, inventory, financing, and service.
+- [financing.md](datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
 
 ## References
 

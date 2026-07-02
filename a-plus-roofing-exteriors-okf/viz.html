@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>a-plus-roofing-exteriors - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "a-plus-roofing-exteriors";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/company-profile",
+        "label": "A Plus Roofing & Exteriors",
+        "type": "Roofing Contractor",
+        "description": "Professional roofing and exterior renovation company serving residential and commercial clients with roof repair, replacement, inspection, siding, gutters, windows, and storm damage restoration.",
+        "resource": "https://www.aplusroofingandexteriors.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 27
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-areas",
+        "label": "A Plus Roofing & Exteriors Service Areas",
+        "type": "Service Area",
+        "description": "Multi-state service coverage across the midwest and northeast United States with availability varying by location.",
+        "resource": "https://www.aplusroofingandexteriors.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/website",
+        "label": "A Plus Roofing & Exteriors Official Website",
+        "type": "Website",
+        "description": "Official company website providing service descriptions, portfolio gallery, service area information, and contact details for A Plus Roofing & Exteriors.",
+        "resource": "https://www.aplusroofingandexteriors.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/services-pricing",
+        "label": "A Plus Roofing & Exteriors Service Catalog",
+        "type": "Service Catalog",
+        "description": "Comprehensive table of all professional services offered including roofing, siding, gutters, windows, and storm damage restoration with descriptions and key features.",
+        "resource": "https://www.aplusroofingandexteriors.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/company-profile__datasets/service-areas",
+        "source": "datasets/company-profile",
+        "target": "datasets/service-areas"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-areas__datasets/company-profile",
+        "source": "datasets/service-areas",
+        "target": "datasets/company-profile"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/company-profile": "# A Plus Roofing & Exteriors\n\n## Services\n\n- **Roof repair & replacement** \u2014 Full-service roofing for residential and commercial properties including leak repair, shingle replacement, and complete roof replacement.\n- **Roof inspection** \u2014 Comprehensive inspection to identify damage, wear, and potential failure points.\n- **Attic inspection** \u2014 Assessment of attic ventilation, insulation, and structural integrity.\n- **Siding installation & repair** \u2014 Installation and repair of exterior siding materials including vinyl, fiber cement, and wood.\n- **Gutter installation & repair** \u2014 Seamless gutter systems, downspouts, and gutter guards.\n- **Window replacement** \u2014 Energy-efficient window installation and frame repair.\n- **Storm damage restoration** \u2014 Full restoration services following hail, wind, rain, and snow storms.\n- **Insurance claim assistance** \u2014 Guidance and documentation support for insurance claims related to storm damage.\n- **Emergency roof repair** \u2014 24/7 emergency service for leaks, fallen trees, and urgent structural damage.\n- **Ventilation systems** \u2014 Installation and upgrade of ridge vents, soffit vents, and powered attic ventilators.\n\n## Roofing Types\n\n- Asphalt shingles\n- Metal roofing\n- Flat roofing\n- Tile roofing\n- Slate roofing\n\n## Special Programs\n\n- Free estimates\n- Financing available (approved credit)\n- Insurance claim assistance\n- Lifetime workmanship warranty on select materials\n\n## Incident Response\n\n24/7 emergency service for storm damage, leaks, and fallen trees.\n\n## Coverage Area\n\nSee [service-areas.md](service-areas.md) for detailed geographic coverage.\n\n## Citations\n\n- [Official Website](https://www.aplusroofingandexteriors.com/)",
+    "datasets/service-areas": "# Service Areas\n\nA Plus Roofing & Exteriors serves a multi-state region across the midwest and northeast United States. Coverage availability varies by location; contact the company for service eligibility.\n\n## Coverage Regions\n\n| Region | States |\n|--------|--------|\n| Midwest | Ohio, Indiana, Illinois, Michigan, Kentucky, Pennsylvania |\n| Northeast | New York, New Jersey, Connecticut, Massachusetts, Maryland |\n\n## Service Model\n\n- On-site inspection and estimates within coverage area\n- Emergency response dispatched within coverage region\n- Remote consultations available for preliminary assessment\n\n## Related\n\nSee [company-profile.md](company-profile.md) for full business profile and service descriptions.",
+    "references/website": "# Official Website\n\nThe company website at [aplusroofingandexteriors.com](https://www.aplusroofingandexteriors.com/) serves as the primary public reference for A Plus Roofing & Exteriors.\n\n## Site Contents\n\n- **Service pages** \u2014 Detailed descriptions of roofing, siding, gutter, window, and restoration services.\n- **Portfolio gallery** \u2014 Project photos showcasing completed residential and commercial work.\n- **Service area** \u2014 Coverage information and location-specific availability.\n- **Contact information** \u2014 Phone, email, and inquiry form for estimates and emergency requests.\n- **About section** \u2014 Company history, mission, and team background.\n\n## Derived Concepts\n\n- [company-profile.md](/datasets/company-profile.md) \u2014 Business profile and service catalog sourced from website content.\n- [service-areas.md](/datasets/service-areas.md) \u2014 Geographic coverage data derived from website service area pages.\n- [services-pricing.md](/tables/services-pricing.md) \u2014 Structured service table compiled from website service descriptions.",
+    "tables/services-pricing": "# Service Catalog\n\n| Service Category | Service | Description | Key Features |\n|---|---|---|---|\n| Roofing | Roof Repair | Fixing leaks, damaged shingles, and localized roof issues | Emergency service available, free estimates |\n| Roofing | Roof Replacement | Complete removal and installation of new roof system | Multiple material options, lifetime workmanship warranty on select materials |\n| Roofing | Roof Inspection | Comprehensive assessment of roof condition | Identifies hidden damage, pre-purchase evaluations |\n| Roofing | Attic Inspection | Evaluation of attic ventilation and insulation | Prevents ice dams, improves energy efficiency |\n| Roofing | Emergency Roof Repair | 24/7 response to urgent roof damage | Storm damage, fallen trees, active leaks |\n| Siding | Siding Installation | New exterior siding installation | Vinyl, fiber cement, wood options |\n| Siding | Siding Repair | Replacement of damaged or worn siding sections | Matches existing material and color |\n| Gutters | Gutter Installation | Seamless gutter system installation | Custom-fit, multiple color options |\n| Gutters | Gutter Repair | Fixing leaks, sagging, and damaged sections | Downspout replacement, gutter guard installation |\n| Windows | Window Replacement | Energy-efficient window installation | Double-pane, triple-pane options, frame repair |\n| Restoration | Storm Damage Restoration | Full recovery from hail, wind, and water damage | Insurance claim assistance, complete rebuild services |\n| Restoration | Insurance Claim Assistance | Documentation and support for insurance claims | Estimates, photos, adjuster coordination |\n\n## Material Options\n\n| Material Type | Typical Applications | Durability |\n|---|---|---|\n| Asphalt Shingles | Residential roofs | 20\u201330 years |\n| Metal Roofing | Residential and commercial | 40\u201370 years |\n| Flat Roofing | Commercial and modern residential | 15\u201330 years |\n| Tile Roofing | Residential and luxury | 50+ years |\n| Slate Roofing | Premium residential | 75\u2013100 years |\n\n## Related\n\nSee [company-profile.md](/datasets/company-profile.md) for detailed service descriptions and special programs."
+  },
+  "types": [
+    "Roofing Contractor",
+    "Service Area",
+    "Service Catalog",
+    "Website"
+  ],
+  "palette": {
+    "Roofing Contractor": "#8b5cf6",
+    "Service Area": "#8b5cf6",
+    "Website": "#10b981",
+    "Service Catalog": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

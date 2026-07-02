@@ -7,6 +7,7 @@
 - [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned mobility vehicles and wheelchair accessible vans
 - [mobility-vehicles.md](datasets/mobility-vehicles.md) - Wheelchair accessible vans, BraunAbility conversions, pre-owned inventory
 - [faq.md](datasets/faq.md) - Frequently asked questions about vehicles, service, and financing
+- [financing.md](datasets/financing.md) - Financing through BraunAbility Financial Services, leasing, and payment options for wheelchair accessible vehicles
 - [staff.md](datasets/staff.md) - Key personnel at Basil Mobility
 - [service-center.md](datasets/service-center.md) - Full-service mobility vehicle service center with certified technicians
 - [testimonials.md](datasets/testimonials.md) - Customer reviews and ratings
@@ -28,3 +29,4 @@
 - **ai-discovery-page**, **llms-txt**, and **prompts** expose structured data via PromptGraph for the **dealership** and its inventory
 - **faq** answers common questions about the dealership's products and services
 - **model-comparison** compares the BraunAbility conversion options featured on **new-vehicles** and **mobility-vehicles**
+- **financing** details loan and lease options through BraunAbility Financial Services available at the **dealership**
