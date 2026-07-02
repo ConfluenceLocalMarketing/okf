@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>nick-mayer-lincoln-mayfield - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "nick-mayer-lincoln-mayfield";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Nick Mayer Lincoln Mayfield",
+        "type": "Entities",
+        "description": "Full dealership profile for Nick Mayer Lincoln Mayfield in Mayfield Heights, OH.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions",
+        "type": "Entities",
+        "description": "Frequently asked questions about Nick Mayer Lincoln Mayfield, Lincoln models, Black Label program, financing, and service offerings.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "Lincoln New Vehicle Lineup",
+        "type": "Entities",
+        "description": "Lincoln new vehicle lineup available at Nick Mayer Lincoln Mayfield including Corsair, Nautilus, Aviator, and Navigator.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/new-vehicles/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Lincoln Service Center",
+        "type": "Entities",
+        "description": "Service center at Nick Mayer Lincoln Mayfield offering Lincoln Priority Service, certified technicians, genuine parts, and valet amenities.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/service/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Dealership Staff Directory",
+        "type": "Entities",
+        "description": "Staff directory for Nick Mayer Lincoln Mayfield including sales, service, and management teams.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicle Inventory",
+        "type": "Entities",
+        "description": "Pre-owned multi-make inventory and Lincoln Certified Pre-Owned program at Nick Mayer Lincoln Mayfield.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/used-vehicles/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page",
+        "type": "APIs",
+        "description": "Documentation of the DealerOn platform and AI discovery capabilities for Nick Mayer Lincoln Mayfield.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Site Discovery",
+        "type": "APIs",
+        "description": "Site structure and discovery endpoints for Nick Mayer Lincoln Mayfield.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "AI Prompts",
+        "type": "APIs",
+        "description": "Categorized prompts for AI assistant interactions with Nick Mayer Lincoln Mayfield information.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials",
+        "type": "Entities",
+        "description": "Customer testimonials and reputation overview for Nick Mayer Lincoln Mayfield.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Lincoln Model Comparison",
+        "type": "Tables & Datasets",
+        "description": "Comparison table of Lincoln model specifications including Corsair, Nautilus, Aviator, and Navigator.",
+        "resource": "https://www.nickmayerlincolnmayfield.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Nick Mayer Lincoln Mayfield\n\nNick Mayer Lincoln Mayfield is a Lincoln dealership located at 6180 Mayfield Road, Mayfield Heights, OH 44124. The dealership serves the greater Cleveland area including Beachwood, Chagrin Falls, Mentor, and Middleburg Heights with new and pre-owned Lincoln vehicles, financing, service, and parts.\n\n## Contact Information\n\n- **Sales**: 440-442-8000\n- **Service**: 440-305-7710\n- **Parts**: 440-305-7710\n- **Website**: https://www.nickmayerlincolnmayfield.com/\n- **Platform**: DealerOn (FordDirect)\n\n## Location\n\n6180 Mayfield Road, Mayfield Heights, OH 44124\n\n## Service Area\n\nCleveland, Beachwood, Chagrin Falls, Mentor, Middleburg Heights, and surrounding Northeast Ohio communities.\n\n## Hours of Operation\n\n| Day | Hours |\n|---|---|\n| Monday | 9:00 AM - 8:00 PM |\n| Tuesday | 9:00 AM - 6:00 PM |\n| Wednesday | 9:00 AM - 6:00 PM |\n| Thursday | 9:00 AM - 8:00 PM |\n| Friday | 9:00 AM - 6:00 PM |\n| Saturday | 9:00 AM - 5:00 PM |\n| Sunday | Closed |\n\n## Lincoln Models\n\n- **Corsair** \u2014 Compact luxury SUV\n- **Nautilus** \u2014 Mid-size luxury SUV\n- **Aviator** \u2014 Mid-size three-row luxury SUV (available plug-in hybrid)\n- **Navigator** \u2014 Full-size luxury SUV\n\n## Unique Services\n\n- **Lincoln Valet** \u2014 Complimentary pick-up and drop-off service for vehicle maintenance\n- **Free Car Washes for Life** \u2014 Complimentary car washes for vehicles purchased at the dealership\n- **Online Service Scheduling** \u2014 Schedule appointments through the dealership website\n- **Lincoln Certified Pre-Owned** \u2014 Factory-backed pre-owned vehicle program\n\n## Online Tools\n\n- New vehicle inventory search\n- Pre-owned inventory search\n- Value Your Trade tool\n- Online credit application\n- Service scheduling\n- Parts ordering\n\nSee [new-vehicles.md](new-vehicles.md) for Lincoln model details.\nSee [service-center.md](service-center.md) for service offerings.",
+    "datasets/faq": "# Frequently Asked Questions\n\n## Lincoln Models\n\n**Q: What Lincoln models are available at Nick Mayer Lincoln Mayfield?**\nA: The dealership offers the full Lincoln SUV lineup including Corsair, Nautilus, Aviator, and Navigator.\n\n**Q: What is Lincoln Black Label?**\nA: Lincoln Black Label is a premium ownership program that includes complimentary scheduled maintenance, dedicated concierge service, premium detailing, Lincoln Pickup & Delivery, and exclusive interior theme options.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Financing and leasing options are available through Lincoln Financial Services and other lending partners. Online credit application is available on the dealership website.\n\n## Service\n\n**Q: Do you offer pick-up and delivery for service?**\nA: Yes, Lincoln Valet provides complimentary pick-up and drop-off service for vehicle maintenance.\n\n**Q: Is there a complimentary car wash with service?**\nA: Yes, the dealership offers free car washes for life for vehicles purchased at Nick Mayer Lincoln Mayfield.\n\n## Dealership\n\n**Q: Where is the dealership located?**\nA: 6180 Mayfield Road, Mayfield Heights, OH 44124.\n\n**Q: What are the dealership hours?**\nA: Monday and Thursday 9-8, Tuesday, Wednesday, Friday 9-6, Saturday 9-5, closed Sunday.\n\nSee [dealership.md](dealership.md) for full dealership information.\nSee [new-vehicles.md](new-vehicles.md) for Lincoln model details.\nSee [service-center.md](service-center.md) for service offerings.",
+    "datasets/new-vehicles": "# Lincoln New Vehicle Lineup\n\nNick Mayer Lincoln Mayfield offers the full Lincoln lineup of luxury SUVs, each available in multiple trims and optionally through the Lincoln Black Label program for premium ownership experiences.\n\n## SUV Models\n\n### Corsair\n\nThe Lincoln Corsair is a compact luxury SUV offering a refined ride, available all-wheel drive, and Lincoln's signature Quiet Flight design philosophy. It seats up to five passengers and features a 2.0L 250-horsepower engine with available plug-in hybrid powertrain.\n\n- Body style: Compact SUV\n- Passengers: 5\n- Drivetrain: FWD / AWD\n- Starting MSRP: $40,000+\n- Key feature: Available Lincoln Co-Pilot360 driver assist suite\n\n### Nautilus\n\nThe Lincoln Nautilus is a mid-size luxury SUV with available SYNC 4 technology, 8-speed SelectShift automatic transmission, and a 2.0L turbocharged engine. It seats five passengers with available all-wheel drive.\n\n- Body style: Mid-size SUV\n- Passengers: 5\n- Drivetrain: FWD / AWD\n- Starting MSRP: $50,000+\n- Key feature: SYNC 4 with available 24-inch panoramic display\n\n### Aviator\n\nThe Lincoln Aviator is a mid-size three-row luxury SUV offering seating for up to seven passengers. It features a 3.0L twin-turbocharged V6 engine and is available as a plug-in hybrid (Grand Touring model). Rear-wheel drive and all-wheel drive configurations are available.\n\n- Body style: Mid-size 3-Row SUV\n- Passengers: 6-7\n- Drivetrain: RWD / AWD\n- Starting MSRP: $55,000+\n- Key feature: Available plug-in hybrid powertrain\n\n### Navigator\n\nThe Lincoln Navigator is a full-size luxury SUV with seating for up to eight passengers. It features a 3.5L twin-turbocharged V6 engine paired with a 10-speed automatic transmission and standard 4WD. The hands-free liftgate and Lincoln's Perfect Position front seats are hallmark features.\n\n- Body style: Full-size SUV\n- Passengers: 7-8\n- Drivetrain: 4WD\n- Starting MSRP: $90,000+\n- Key feature: 3.5L twin-turbo V6 with 10-speed automatic transmission\n\n## Lincoln Black Label\n\nLincoln Black Label is an exclusive ownership program that includes:\n\n- Complimentary scheduled maintenance\n- Access to a dedicated Black Label concierge\n- Premium vehicle detailing with every service visit\n- Complimentary Lincoln Pickup & Delivery\n- Unique interior themes and materials\n\nSee [model-comparison.md](/tables/model-comparison.md) for detailed specification comparison.\nSee [dealership.md](dealership.md) for full dealership information.",
+    "datasets/service-center": "# Lincoln Service Center\n\nThe service center at Nick Mayer Lincoln Mayfield provides factory-authorized maintenance and repairs using genuine Lincoln parts and certified technicians.\n\n## Lincoln Priority Service\n\n- Online scheduling for convenience\n- Certified Lincoln technicians with ongoing factory training\n- Genuine Lincoln parts and accessories\n- Multi-point vehicle inspection with every service visit\n\n## Complimentary Services\n\n- **Lincoln Valet** \u2014 Complimentary pick-up and drop-off service within the service area\n- **Free Car Washes for Life** \u2014 Complimentary car washes for vehicles purchased at the dealership\n- **Complimentary Loaner Vehicles** \u2014 Available for qualifying service appointments\n\n## Service Offerings\n\n- Routine maintenance (oil changes, tire rotations, fluid checks)\n- Brake service and repair\n- Engine diagnostics and repair\n- Transmission service\n- Tire sales and installation\n- Air conditioning service\n- Battery testing and replacement\n- Lincoln genuine parts and accessories installation\n\n## Parts Department\n\n- Genuine Lincoln OEM parts\n- Accessories and merchandise\n- Online parts ordering available\n\n## Service Hours\n\nSame as dealership hours: Monday through Saturday, closed Sunday.\n\nSee [dealership.md](dealership.md) for full contact and hours information.",
+    "datasets/staff": "# Dealership Staff Directory\n\nNick Mayer Lincoln Mayfield employs a team of sales, service, and management professionals dedicated to providing Lincoln luxury service to customers in Mayfield Heights and the greater Cleveland area.\n\n## Departments\n\n- **Sales Team** \u2014 New and pre-owned vehicle specialists\n- **Finance Team** \u2014 Financing and leasing professionals\n- **Service Team** \u2014 Certified Lincoln technicians\n- **Parts Team** \u2014 Genuine Lincoln parts specialists\n- **Management** \u2014 Dealership leadership and operations\n\nSee [dealership.md](dealership.md) for dealership information.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicle Inventory\n\nNick Mayer Lincoln Mayfield offers a wide selection of pre-owned vehicles including Lincoln Certified Pre-Owned vehicles and multi-make used cars, trucks, and SUVs.\n\n## Inventory Features\n\n- Multi-make pre-owned inventory including Lincoln, Ford, and other brands\n- Searchable online inventory with photos and vehicle history reports\n- CarFax vehicle history reports available on most vehicles\n\n## Lincoln Certified Pre-Owned\n\nThe Lincoln Certified Pre-Owned program provides:\n\n- Comprehensive 172-point inspection by certified Lincoln technicians\n- Limited warranty coverage\n- 24/7 roadside assistance\n- Complimentary Lincoln Pickup & Delivery for covered repairs\n- Rental car reimbursement\n- Vehicle history report\n\n## Trade-In Program\n\n- Online Value Your Trade tool for instant estimates\n- Appraisal appointments available\n- Trade-in equity can be applied to new or pre-owned purchases\n\nSee [new-vehicles.md](new-vehicles.md) for the Lincoln new vehicle lineup.\nSee [dealership.md](dealership.md) for dealership contact information.",
+    "references/ai-discovery-page": "# AI Discovery Page\n\n## Platform\n\nNick Mayer Lincoln Mayfield operates on the **DealerOn** digital platform, powered by **FordDirect** integration. This platform provides the dealership's website, inventory management, service scheduling, and online retailing tools.\n\n## AI Discovery\n\nNo structured AI discovery endpoints (such as PromptGraph API) were found during site analysis. The site relies on conventional web pages and server-side rendering for content delivery.\n\n## Site Architecture\n\n- Static and server-rendered pages\n- FordDirect inventory API integration for vehicle listings\n- DealerOn content management system for page editing\n- Standard HTML forms for lead capture and service scheduling\n\nSee [llms-txt.md](llms-txt.md) for site structure overview.",
+    "references/llms-txt": "# LLMs.txt \u2014 Site Discovery\n\n## Key Pages\n\n- Home: https://www.nickmayerlincolnmayfield.com/\n- New Vehicles: https://www.nickmayerlincolnmayfield.com/new-vehicles/\n- Pre-Owned: https://www.nickmayerlincolnmayfield.com/used-vehicles/\n- Service: https://www.nickmayerlincolnmayfield.com/service/\n- Parts: https://www.nickmayerlincolnmayfield.com/parts/\n- Finance: https://www.nickmayerlincolnmayfield.com/finance/\n- About: https://www.nickmayerlincolnmayfield.com/about-us/\n\n## Social Media\n\n- Facebook: https://www.facebook.com/NickMayerLincolnMayfield/\n\n## API Endpoints\n\nNo structured API endpoints (OpenAPI, GraphQL, PromptGraph) were found during site analysis. Inventory is served through the FordDirect platform integration within the DealerOn CMS framework.\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for platform details.",
+    "references/prompts": "# AI Prompts\n\n## Dealership\n\n- \"Tell me about Nick Mayer Lincoln Mayfield\"\n- \"Where is Nick Mayer Lincoln Mayfield located?\"\n- \"What are the dealership hours?\"\n- \"What brands does the dealership carry?\"\n\n## Vehicle Shopping\n\n- \"What Lincoln models are available?\"\n- \"Compare Lincoln Corsair vs Nautilus\"\n- \"What is the Lincoln Aviator starting price?\"\n- \"Does the dealership have pre-owned inventory?\"\n- \"What is Lincoln Certified Pre-Owned?\"\n\n## Financing\n\n- \"What financing options are available?\"\n- \"How do I apply for credit online?\"\n- \"What is Lincoln Financial Services?\"\n- \"How does the trade-in process work?\"\n\n## Service\n\n- \"Does the dealership offer pick-up and delivery?\"\n- \"How do I schedule service online?\"\n- \"What is Lincoln Priority Service?\"\n- \"Do you offer free car washes?\"\n- \"What are the service hours?\"\n\n## Lincoln Ownership\n\n- \"What is Lincoln Black Label?\"\n- \"What warranty comes with a new Lincoln?\"\n- \"What is the Lincoln Co-Pilot360 system?\"\n- \"Tell me about Lincoln Pickup & Delivery\"\n\nSee [dealership.md](/datasets/dealership.md) for dealership information.\nSee [new-vehicles.md](/datasets/new-vehicles.md) for Lincoln model information.",
+    "references/testimonials": "# Customer Testimonials\n\nNick Mayer Lincoln Mayfield maintains a reputation for luxury customer service and Lincoln brand expertise in the Mayfield Heights community.\n\n## Common Themes\n\n- Professional and knowledgeable sales staff\n- Lincoln valet pick-up and drop-off convenience\n- Quality of service department work\n- Clean and welcoming dealership environment\n\nSee [dealership.md](/datasets/dealership.md) for dealership information.",
+    "tables/model-comparison": "# Lincoln Model Comparison\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP | Key Features |\n|---|---|---|---|---|---|\n| Corsair | Compact SUV | 5 | FWD/AWD | $40K+ | 2.0L 250hp, 48mo/50k mi warranty |\n| Nautilus | Mid-size SUV | 5 | FWD/AWD | $50K+ | 2.0L turbo, 8-speed SelectShift, SYNC 4 |\n| Aviator | Mid-size 3-Row SUV | 6-7 | RWD/AWD | $55K+ | Available plug-in hybrid, 3.0L twin-turbo |\n| Navigator | Full-size SUV | 7-8 | 4WD | $90K+ | 3.5L twin-turbo V6, 10-speed auto, hands-free liftgate |\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

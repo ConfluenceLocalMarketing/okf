@@ -1,0 +1,71 @@
+---
+type: Entities
+title: Frequently Asked Questions - Nick Mayer Ford
+description: Common questions about Nick Mayer Ford's inventory, financing, service, and dealership operations in Mayfield Heights, OH.
+resource: https://www.nickmayerford.com/
+tags:
+  - faq
+  - financing
+  - inventory
+  - service
+  - ford
+  - mayfield-heights
+  - ohio
+timestamp: 2026-07-02
+---
+
+# Frequently Asked Questions - Nick Mayer Ford
+
+## Inventory
+
+**What new Ford models do you carry?**
+Nick Mayer Ford carries the full Ford lineup including F-150, Ranger, Maverick, Explorer, Escape, Expedition, Bronco, Bronco Sport, Edge, Mustang, Mustang Mach-E, Transit, and E-Transit.
+
+**Do you have used cars from other brands?**
+Yes, the pre-owned inventory spans multiple makes beyond Ford, including Chevrolet, Toyota, Honda, and more.
+
+**Can I see vehicle history reports?**
+Yes, CarFax vehicle history reports are available for all pre-owned vehicles.
+
+## Financing
+
+**Do you offer second-chance financing?**
+Yes, Nick Mayer Ford offers second-chance financing options for customers with less-than-perfect credit.
+
+**Can I get financing after bankruptcy?**
+The finance team works with multiple lenders to assist customers who have gone through bankruptcy.
+
+**Can I apply for credit online?**
+Yes, an online credit application is available on the dealership website.
+
+**Do you accept trade-ins?**
+Yes, with an online trade-in valuation tool available for quick estimates.
+
+## Service
+
+**Are your technicians certified?**
+All service technicians are ASE certified and Ford-trained.
+
+**Can I schedule service online?**
+Yes, online service scheduling is available through the dealership website.
+
+**Do you use genuine Ford parts?**
+Yes, the parts department stocks genuine Ford OEM parts for all repairs and maintenance.
+
+## Dealership
+
+**Where are you located?**
+6200 Mayfield Road, Mayfield Heights, OH 44124.
+
+**What are your hours?**
+Monday through Thursday 9:00 AM – 8:00 PM (Mon/Thu), 9:00 AM – 6:00 PM (Tue/Wed/Fri), Saturday 9:00 AM – 5:00 PM, closed Sunday.
+
+**Do you have a service shuttle?**
+Contact the dealership for shuttle or loaner vehicle availability.
+
+## Related Concepts
+
+- [dealership.md](dealership.md) - Dealership overview
+- [new-vehicles.md](new-vehicles.md) - New Ford models
+- [used-vehicles.md](used-vehicles.md) - Pre-owned inventory
+- [service-center.md](service-center.md) - Service center

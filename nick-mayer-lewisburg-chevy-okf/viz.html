@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>nick-mayer-lewisburg-chevy - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "nick-mayer-lewisburg-chevy";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Nick Mayer Chevrolet Lewisburg",
+        "type": "Entities",
+        "description": "Chevrolet dealership in Lewisburg, TN selling new and pre-owned Chevrolet vehicles with financing, service, and parts.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Nick Mayer Chevrolet Lewisburg",
+        "type": "Entities",
+        "description": "Common questions about Chevrolet inventory, CarBravo, financing, and service at Nick Mayer Chevrolet Lewisburg.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Chevrolet Vehicles at Nick Mayer Chevrolet Lewisburg",
+        "type": "Entities",
+        "description": "Full lineup of new Chevrolet vehicles available at Nick Mayer Chevrolet Lewisburg, from trucks and SUVs to sedans, sports cars, and electric vehicles.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center at Nick Mayer Chevrolet Lewisburg",
+        "type": "Entities",
+        "description": "Chevrolet factory-trained service center offering maintenance, repairs, and genuine OEM parts.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff at Nick Mayer Chevrolet Lewisburg",
+        "type": "Entities",
+        "description": "Sales and service staff directory for Nick Mayer Chevrolet Lewisburg.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles at Nick Mayer Chevrolet Lewisburg",
+        "type": "Entities",
+        "description": "Multi-make pre-owned inventory with CarBravo certified used vehicles and trade-in appraisal services.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Nick Mayer Chevrolet Lewisburg",
+        "type": "References",
+        "description": "DealerOn platform with standard AI discovery page and no PromptGraph API integration.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt Reference for Nick Mayer Chevrolet Lewisburg",
+        "type": "References",
+        "description": "Key website pages and social media profiles for LLM discovery of Nick Mayer Chevrolet Lewisburg.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompt Collection for Nick Mayer Chevrolet Lewisburg",
+        "type": "References",
+        "description": "Curated prompts for common questions about Nick Mayer Chevrolet Lewisburg, organized by topic.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Testimonials and Reputation for Nick Mayer Chevrolet Lewisburg",
+        "type": "References",
+        "description": "Aggregate online ratings and customer review information for Nick Mayer Chevrolet Lewisburg.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Chevrolet Model Comparison",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of Chevrolet models available at Nick Mayer Chevrolet Lewisburg.",
+        "resource": "https://www.nickmayerchevroletgmcoflewisburg.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/faq",
+        "source": "datasets/dealership",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/faq",
+        "source": "datasets/service-center",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/faq",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Nick Mayer Chevrolet Lewisburg\n\nNick Mayer Chevrolet Lewisburg is a full-service Chevrolet dealership located at **861 N. Ellington Pkwy, Lewisburg, TN 37091**, serving the communities of **Lewisburg, Columbia, Franklin, and Fayetteville, Tennessee**.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | 931-246-4218 |\n| Service | 931-246-4351 |\n| Parts | 931-300-2764 |\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday \u2013 Friday | 9:00 AM \u2013 7:00 PM |\n| Saturday | 9:00 AM \u2013 6:00 PM |\n| Sunday | Closed |\n\n## Chevrolet Models\n\nThe dealership carries the full Chevrolet lineup, including the **Silverado 1500, Silverado HD (2500/3500), Equinox, Traverse, Tahoe, Suburban, Trax, Blazer, Malibu, Colorado, Corvette, and Bolt EV/EUV**.\n\n## Services\n\n- New vehicle sales and test drives\n- Pre-owned / CarBravo certified used vehicles\n- Chevrolet factory-trained service center\n- Genuine OEM parts department\n- Online financing application\n- Vehicle trade-in appraisal\n- Special offers and lease deals\n\n## Online Financing\n\nCustomers can apply for financing directly through the dealership website with a secure online credit application.\n\n## Location\n\nSituated on N Ellington Parkway (US-31A) in Lewisburg, the dealership is easily accessible from I-65 via US-412.\n\nSee [new-vehicles.md](new-vehicles.md) for detailed model information.\nSee [service-center.md](service-center.md) for service department details.\nSee [faq.md](faq.md) for frequently asked questions.",
+    "datasets/faq": "# Frequently Asked Questions \u2014 Nick Mayer Chevrolet Lewisburg\n\n## General\n\n**What are the dealership hours?**\nMonday\u2013Friday 9:00 AM \u2013 7:00 PM, Saturday 9:00 AM \u2013 6:00 PM, Sunday Closed.\n\n**What areas do you serve?**\nLewisburg, Columbia, Franklin, Fayetteville, and surrounding Middle Tennessee communities.\n\n## Chevrolet Inventory\n\n**What Chevrolet models are available?**\nSilverado 1500, Silverado HD (2500/3500), Equinox, Traverse, Tahoe, Suburban, Trax, Blazer, Malibu, Colorado, Corvette, and Bolt EV/EUV.\n\n**Can I test drive a vehicle?**\nYes. Contact the sales department at 931-246-4218 to schedule a test drive.\n\n## Pre-Owned and CarBravo\n\n**What is CarBravo?**\nCarBravo is GM's certified pre-owned vehicle program with a 172-point inspection, warranty coverage, and roadside assistance.\n\n**Do you take trade-ins?**\nYes. Online trade-in appraisal is available on the dealership website.\n\n## Financing\n\n**How do I apply for financing?**\nA secure online credit application is available on the dealership website.\n\n**Do you offer leases?**\nYes. Lease deals and special offers are available on select Chevrolet models.\n\n## Service\n\n**Do I need an appointment for service?**\nAppointments are recommended but walk-ins are welcome. Call 931-246-4351.\n\n**Do you use genuine OEM parts?**\nYes. The parts department stocks genuine GM and ACDelco parts. Call 931-300-2764.\n\nSee [dealership.md](dealership.md) for full contact information.\nSee [new-vehicles.md](new-vehicles.md) for model details.\nSee [service-center.md](service-center.md) for service information.",
+    "datasets/new-vehicles": "# New Chevrolet Vehicles at Nick Mayer Chevrolet Lewisburg\n\nNick Mayer Chevrolet Lewisburg offers the complete Chevrolet model lineup, from trucks and SUVs to sedans, sports cars, and electric vehicles.\n\n## Chevrolet Model Lineup\n\n### Silverado 1500\nFull-size light-duty pickup truck. Available in multiple trims (WT, Custom, LT, RST, LTZ, High Country, ZR2). Offers a choice of engines including the turbo-diesel Duramax 3.0L. Towing capacity up to 13,000 lbs. Configurations include Regular Cab, Double Cab, and Crew Cab.\n\n### Silverado HD (2500 / 3500)\nHeavy-duty pickup truck engineered for maximum capability. Towing capacity up to 36,000 lbs when properly equipped. Available with 6.6L V8 gas or 6.6L Duramax turbo-diesel engine.\n\n### Equinox\nCompact SUV seating 5 passengers. Standard FWD, available AWD. Known for fuel efficiency, modern technology, and a spacious interior. Available in LS, LT, RS, and Premier trims.\n\n### Traverse\nThree-row mid-size SUV seating 7-8 passengers. Available in LS, LT, RS, Z71, High Country trims. FWD standard, AWD available. Powered by a 2.5L turbo 4-cylinder. Class-leading cargo space.\n\n### Tahoe\nFull-size SUV seating 7-9 passengers. Available with 5.3L V8, 6.2L V8, or 3.0L Duramax diesel. Trims range from LS to High Country. Legendary nameplate with premium interior and advanced trailering tech.\n\n### Suburban\nExtended-length full-size SUV seating 7-9 passengers. Same engine and trim lineup as Tahoe but with additional cargo capacity behind the third row. The longest-running automotive nameplate in continuous production.\n\n### Trax\nSubcompact SUV seating 5 passengers. All-new design for 2024. Standard FWD. Known for affordability, modern styling, and standard Chevy Safety Assist suite. LS, 1LT, 2LT, and ACTIV trims.\n\n### Blazer\nMid-size SUV seating 5 passengers. Sporty styling with available RS trim. FWD standard, AWD available. Engine options include a 2.0L turbo 4-cylinder and 3.6L V6.\n\n### Malibu\nMid-size sedan seating 5 passengers. FWD. Efficient daily driver with available 2.0L turbo engine in the RS trim. Modern infotainment with Apple CarPlay and Android Auto.\n\n### Colorado\nMid-size pickup seating 5 passengers. RWD standard, 4WD available. Known for off-road capability with the Trail Boss trim. Available in WT, LT, Trail Boss, Z71, and ZR2 trims.\n\n### Corvette\nIconic American sports car seating 2 passengers. Mid-engine 6.2L V8 producing 490+ hp (495 hp with performance exhaust). RWD. Available as coupe or convertible (Stingray, Z06, E-Ray).\n\n### Bolt EV / Bolt EUV\nAll-electric vehicles. FWD with 259 miles of estimated range per charge. Bolt EUV offers slightly larger dimensions and available Super Cruise hands-free driving. Affordable entry into EV ownership.\n\nSee [dealership.md](dealership.md) for full dealership profile.\nSee [model-comparison.md](/tables/model-comparison.md) for detailed model specifications.",
+    "datasets/service-center": "# Service Center at Nick Mayer Chevrolet Lewisburg\n\nThe Nick Mayer Chevrolet Lewisburg service center provides factory-trained maintenance and repair for Chevrolet vehicles.\n\n## Service Department\n\nContact: **931-246-4351**\n\nFactory-trained technicians perform oil changes, tire rotations, brake service, engine diagnostics, transmission service, air conditioning service, and scheduled maintenance per the GM maintenance schedule.\n\n## Parts Department\n\nContact: **931-300-2764**\n\nThe parts department stocks genuine OEM Chevrolet parts, accessories, and fluids. Parts can be ordered online for pickup.\n\n## Services Offered\n\n- Oil changes and fluid flushes\n- Tire rotation and balancing\n- Brake inspection and replacement\n- Engine and transmission diagnostics\n- Air conditioning service\n- Battery testing and replacement\n- Scheduled maintenance (GM maintenance schedule)\n- Warranty repairs\n- Chevrolet accessories installation\n\n## Hours\n\n| Day | Hours |\n|---|---|\n| Monday \u2013 Friday | 9:00 AM \u2013 7:00 PM |\n| Saturday | 9:00 AM \u2013 6:00 PM |\n| Sunday | Closed |\n\nSee [dealership.md](dealership.md) for full dealership profile.\nSee [faq.md](faq.md) for service-related questions.",
+    "datasets/staff": "# Staff at Nick Mayer Chevrolet Lewisburg\n\nNick Mayer Chevrolet Lewisburg employs a team of sales consultants, service advisors, finance managers, and parts specialists dedicated to serving the Lewisburg, Columbia, Franklin, and Fayetteville communities.\n\n## Sales Team\n\nThe sales team assists customers with new Chevrolet purchases, pre-owned vehicle selection, test drives, and online financing applications.\n\n## Service Advisors\n\nService advisors coordinate maintenance and repair appointments through the Chevrolet factory-trained service center.\n\n## Finance Department\n\nFinance managers guide customers through financing, leasing, warranty, and protection product options.\n\nFor service-related inquiries, see [service-center.md](service-center.md).\nFor general dealership information, see [dealership.md](dealership.md).",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles at Nick Mayer Chevrolet Lewisburg\n\nNick Mayer Chevrolet Lewisburg carries a diverse selection of pre-owned vehicles spanning multiple makes and models.\n\n## CarBravo Certified Used Vehicles\n\nThe dealership participates in **CarBravo**, GM's certified pre-owned vehicle program. CarBravo offers:\n\n- Rigorous 172-point inspection\n- Vehicle history report\n- Limited warranty coverage\n- 24/7 roadside assistance\n- Flexible return policy\n- GM-backed financing options\n\n## Trade-In Appraisal\n\nCustomers can value their current vehicle online through the dealership website and receive a trade-in offer.\n\n## Inventory\n\nThe pre-owned lot typically includes late-model Chevrolet cars, trucks, and SUVs, along with competitive makes from Ford, RAM, Toyota, Honda, and GMC.\n\nSee [dealership.md](dealership.md) for full dealership profile.\nSee [faq.md](faq.md) for frequently asked questions about pre-owned vehicles.",
+    "references/ai-discovery-page": "# AI Discovery Page \u2014 Nick Mayer Chevrolet Lewisburg\n\nNick Mayer Chevrolet Lewisburg operates on the **DealerOn** dealership platform.\n\n## Platform Details\n\n- **Platform:** DealerOn\n- **PromptGraph API:** Not available\n\nThe dealership website follows standard DealerOn conventions for content management, inventory display, and SEO optimization.\n\n## AI / LLM Accessibility\n\nNo structured AI discovery endpoints (such as a PromptGraph API) were identified. The site relies on standard HTML, sitemaps, and metadata for search engine and AI crawler consumption.\n\n## Key Pages\n\n- Homepage: https://www.nickmayerchevroletgmcoflewisburg.com/\n- New Inventory: https://www.nickmayerchevroletgmcoflewisburg.com/new-inventory/\n- Used Inventory: https://www.nickmayerchevroletgmcoflewisburg.com/used-inventory/\n- Service: https://www.nickmayerchevroletgmcoflewisburg.com/service/\n- Parts: https://www.nickmayerchevroletgmcoflewisburg.com/parts/\n- Financing: https://www.nickmayerchevroletgmcoflewisburg.com/finance/\n\nSee [llms-txt.md](llms-txt.md) for the LLM discovery reference.",
+    "references/llms-txt": "# LLMs.txt Reference for Nick Mayer Chevrolet Lewisburg\n\nKey pages and social media profiles for AI/LLM discovery.\n\n## Website Pages\n\n- Homepage: https://www.nickmayerchevroletgmcoflewisburg.com/\n- New Inventory: https://www.nickmayerchevroletgmcoflewisburg.com/new-inventory/\n- Used Inventory: https://www.nickmayerchevroletgmcoflewisburg.com/used-inventory/\n- Service & Parts: https://www.nickmayerchevroletgmcoflewisburg.com/service/\n- Special Offers: https://www.nickmayerchevroletgmcoflewisburg.com/specials/\n- Financing: https://www.nickmayerchevroletgmcoflewisburg.com/finance/\n\n## Social Media\n\n- Facebook: https://www.facebook.com/NickMayerChevyBuickGMC/\n- YouTube: https://www.youtube.com/channel/UCvy83RBaRieJv2JENu8q5JA\n- Instagram: https://www.instagram.com/mayeroflewisburg/\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for platform details.",
+    "references/prompts": "# Prompt Collection for Nick Mayer Chevrolet Lewisburg\n\nCurated prompts for AI assistants and chatbots answering questions about Nick Mayer Chevrolet Lewisburg.\n\n## Sales Prompts\n\n- \"What Chevrolet models does Nick Mayer Chevrolet Lewisburg sell?\"\n- \"Where is Nick Mayer Chevrolet Lewisburg located?\"\n- \"What are the dealership hours for Nick Mayer Chevrolet Lewisburg?\"\n- \"What is the phone number for Nick Mayer Chevrolet Lewisburg sales?\"\n\n## Service Prompts\n\n- \"How do I schedule service at Nick Mayer Chevrolet Lewisburg?\"\n- \"Does Nick Mayer Chevrolet Lewisburg use genuine OEM parts?\"\n- \"What is the service center phone number?\"\n\n## Financing Prompts\n\n- \"How do I apply for financing at Nick Mayer Chevrolet Lewisburg?\"\n- \"Does Nick Mayer Chevrolet Lewisburg offer online credit applications?\"\n\n## Pre-Owned Prompts\n\n- \"What is CarBravo at Nick Mayer Chevrolet Lewisburg?\"\n- \"Can I trade in my vehicle at Nick Mayer Chevrolet Lewisburg?\"\n\nSee [faq.md](/datasets/faq.md) for the full FAQ.\nSee [dealership.md](/datasets/dealership.md) for contact details.",
+    "references/testimonials": "# Testimonials and Reputation for Nick Mayer Chevrolet Lewisburg\n\nCustomer reviews and ratings for Nick Mayer Chevrolet Lewisburg are available through multiple third-party platforms.\n\n## Overview\n\nThe dealership maintains an active presence on major review platforms. Prospective buyers and service customers are encouraged to consult Google Reviews, DealerRater, and Cars.com for current ratings and written testimonials.\n\n## Typical Praise Topics\n\n- Friendly and knowledgeable sales staff\n- Clean and welcoming showroom\n- Responsive service department\n- Fair pricing on new and pre-owned vehicles\n\nSee [dealership.md](/datasets/dealership.md) for full dealership profile.",
+    "tables/model-comparison": "# Chevrolet Model Comparison\n\n| Model | Body Type | Passengers | Drivetrain | Key Features |\n|---|---|---|---|---|\n| Trax | Subcompact SUV | 5 | FWD | Affordable, new 2024 design |\n| Equinox | Compact SUV | 5 | FWD/AWD | Popular crossover |\n| Blazer | Mid-size SUV | 5 | FWD/AWD | Sporty RS trim |\n| Traverse | 3-Row SUV | 7-8 | FWD/AWD | Family hauler |\n| Tahoe | Full-size SUV | 7-9 | RWD/4WD | Legendary nameplate |\n| Suburban | Full-size SUV | 7-9 | RWD/4WD | Extended cargo |\n| Malibu | Mid-size Sedan | 5 | FWD | Efficient daily driver |\n| Colorado | Mid-size Pickup | 5 | RWD/4WD | Trail Boss trim |\n| Silverado 1500 | Full-size Pickup | 5-6 | RWD/4WD | 13,000 lbs towing |\n| Silverado HD | Heavy-Duty Pickup | 5-6 | RWD/4WD | 36,000 lbs towing |\n| Corvette | Sports Car | 2 | RWD | 6.2L V8, 490+ hp |\n| Bolt EV/EUV | Electric | 5 | FWD | 259 mi range |\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions."
+  },
+  "types": [
+    "Entities",
+    "References",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "References": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

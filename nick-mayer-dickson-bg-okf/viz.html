@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>nick-mayer-dickson-bg - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "nick-mayer-dickson-bg";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Nick Mayer Buick GMC of Dickson",
+        "type": "Dealership Profile",
+        "description": "Buick and GMC dealership in Dickson, TN serving the local community with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions",
+        "type": "FAQ",
+        "description": "Frequently asked questions about the dealership, inventory, financing, and service.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Buick and GMC Inventory",
+        "type": "Vehicle Inventory",
+        "description": "New Buick and GMC inventory at Nick Mayer Buick GMC of Dickson.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center",
+        "type": "Service Center",
+        "description": "Full-service automotive center with factory-trained technicians and genuine OEM parts.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Dealership Staff",
+        "type": "Staff Directory",
+        "description": "Staff directory for Nick Mayer Buick GMC of Dickson.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Used and Pre-Owned Vehicles",
+        "type": "Vehicle Inventory",
+        "description": "Pre-owned and CarBravo certified used inventory available at the dealership.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page",
+        "type": "Reference Document",
+        "description": "AI discovery page for LLM crawlers to index the dealership's offerings.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt",
+        "type": "Reference Document",
+        "description": "LLMs.txt serving structured dealership data to AI agents.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Suggested AI Prompts",
+        "type": "Reference Document",
+        "description": "Suggested prompts for interacting with AI about the dealership.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials",
+        "type": "Reference Document",
+        "description": "Customer testimonials and reviews for Nick Mayer Buick GMC of Dickson.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Buick and GMC Model Comparison",
+        "type": "Comparison Table",
+        "description": "Comparison of Buick and GMC model lines with specifications.",
+        "resource": "https://www.nickmayerbuickgmcofdickson.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/faq",
+        "source": "datasets/dealership",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/used-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/faq",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Nick Mayer Buick GMC of Dickson\n\n## Location & Contact\n\n- **Address**: 2211 Highway 46 South, Dickson, TN 37055\n- **Sales**: 615-639-0282\n- **Service**: 615-560-1626\n- **Parts**: 615-560-1979\n- **Website**: https://www.nickmayerbuickgmcofdickson.com/\n- **Platform**: DealerOn\n\n## Hours\n\n| Day | Sales & Service Hours |\n|---|---|\n| Monday - Friday | 8:00 AM - 7:00 PM |\n| Saturday | 8:00 AM - 6:00 PM |\n| Sunday | Closed |\n\n## Brands\n\n### Buick Models\n- Enclave - 3-row full-size luxury SUV\n- Envision - Compact luxury SUV\n- Encore GX - Subcompact luxury SUV\n- Envista - Stylish crossover coupe\n\n### GMC Models\n- Sierra 1500 - Full-size light-duty pickup\n- Sierra 2500/3500 - Heavy-duty pickup trucks\n- Yukon / Yukon XL - Full-size luxury SUVs\n- Acadia - Mid-size crossover SUV\n- Terrain - Compact SUV\n- Canyon - Mid-size pickup\n- Hummer EV - All-electric supertruck\n\n## Services\n\n- New vehicle sales and leasing\n- Pre-owned and certified used vehicles (CarBravo)\n- Factory-trained service technicians\n- Genuine OEM parts and accessories\n- Online financing pre-approval\n- Trade-in valuation\n- Vehicle specials and incentives\n\n## CarBravo Certified Used\n\nThe dealership participates in the CarBravo program, offering certified pre-owned Chevrolet, Buick, GMC, and other makes with comprehensive warranty coverage and vehicle history verification.\n\n## Financing\n\nOnline credit applications and financing options are available through the dealership. See [faq.md](faq.md) for financing details or visit the finance department at the dealership.",
+    "datasets/faq": "# Frequently Asked Questions\n\n## Inventory & Sales\n\n**Q: What brands does the dealership carry?**\nA: Nick Mayer Buick GMC of Dickson sells new Buick and GMC vehicles plus a wide selection of pre-owned makes and models.\n\n**Q: What is CarBravo?**\nA: CarBravo is GM's certified pre-owned program offering inspected and warranted used vehicles. See [used-vehicles.md](used-vehicles.md) for more details.\n\n**Q: Can I browse inventory online?**\nA: Yes, the dealership website features full searchable inventory with photos, specifications, and vehicle history.\n\n## Financing\n\n**Q: Can I apply for financing online?**\nA: Yes, online credit applications are available on the dealership website.\n\n**Q: What financing options are available?**\nA: Financing, leasing, and special manufacturer APR offers are available. The finance department works with multiple lenders.\n\n## Service\n\n**Q: Do I need an appointment for service?**\nA: Appointments are recommended but walk-in service is available. See [service-center.md](service-center.md) for full details.\n\n**Q: What brands can you service?**\nA: The service center primarily services Buick and GMC vehicles but can work on most makes and models.\n\n## Dealership\n\n**Q: Where is the dealership located?**\nA: 2211 Highway 46 South, Dickson, TN 37055.\n\n**Q: What are the hours of operation?**\nA: Monday-Friday 8:00 AM - 7:00 PM, Saturday 8:00 AM - 6:00 PM, closed Sunday.\n\n**Q: How do I contact the dealership?**\nA: Sales: 615-639-0282, Service: 615-560-1626, Parts: 615-560-1979.",
+    "datasets/new-vehicles": "# New Buick and GMC Inventory\n\nNick Mayer Buick GMC of Dickson carries a full lineup of new Buick and GMC vehicles. See [dealership.md](dealership.md) for contact and location information.\n\n## Buick Models\n\n| Model | Category | Highlights |\n|---|---|---|\n| **Enclave** | 3-Row Full-Size Luxury SUV | Seats 7-8, premium interior, available AWD, advanced safety suite |\n| **Envision** | Compact Luxury SUV | 2.0L turbo engine, tech-forward cockpit, available AWD, sleek design |\n| **Encore GX** | Subcompact Luxury SUV | Turbo engine options, premium interior appointments, available AWD |\n| **Envista** | Subcompact Crossover Coupe | Stylish coupe-like design, affordable entry point, FWD standard |\n\n## GMC Models\n\n| Model | Category | Highlights |\n|---|---|---|\n| **Sierra 1500** | Full-Size Light-Duty Pickup | Up to 13,000 lbs towing, available Duramax diesel, MultiPro tailgate |\n| **Sierra 2500/3500** | Heavy-Duty Pickup | Up to 36,000 lbs max towing, powerful gas and diesel powertrains |\n| **Yukon / Yukon XL** | Full-Size SUV | Seats 7-9, available Denali luxury trim, ProGrade trailering system |\n| **Acadia** | Mid-Size Crossover SUV | Seats 7, family-friendly features, available AWD |\n| **Terrain** | Compact SUV | Efficient powertrains, versatile cargo space, available AWD |\n| **Canyon** | Mid-Size Pickup | Off-road capable AT4 trim, rugged design, available diesel |\n| **Hummer EV** | All-Electric SuperTruck | 1,000 hp, 3-motor e4WD, CrabWalk mode, Ultium battery platform |\n\n## Incentives & Specials\n\nCurrent manufacturer incentives, lease offers, and financing specials are available on select models. Contact the sales department at 615-639-0282 for current offers.\n\nSee [model-comparison.md](/tables/model-comparison.md) for detailed specifications.",
+    "datasets/service-center": "# Service Center\n\nThe service center at Nick Mayer Buick GMC of Dickson is equipped to handle all maintenance and repair needs for Buick, GMC, and other makes.\n\n## Services Offered\n\n- Routine maintenance (oil changes, tire rotations, fluid checks)\n- Brake service and repair\n- Engine diagnostics and repair\n- Transmission service\n- Air conditioning service\n- Tire sales and installation\n- Wheel alignment\n- Battery testing and replacement\n- Factory-scheduled maintenance\n- Warranty repairs\n- Recall service\n\n## Factory-Trained Technicians\n\nAll service work is performed by certified technicians who receive ongoing training on the latest Buick and GMC vehicle technologies and diagnostic equipment.\n\n## Genuine OEM Parts\n\nThe service center uses genuine OEM parts to ensure proper fit, function, and durability. The attached parts department stocks a full inventory of Buick and GMC components.\n\n## Service Hours\n\nSame as dealership hours:\n\n| Day | Hours |\n|---|---|\n| Monday - Friday | 8:00 AM - 7:00 PM |\n| Saturday | 8:00 AM - 6:00 PM |\n| Sunday | Closed |\n\nSchedule service by calling 615-560-1626. See [staff.md](staff.md) for department contacts.",
+    "datasets/staff": "# Dealership Staff\n\nSpecific staff names are not available at this time. The dealership operates through the following departments:\n\n## Sales Department\nAvailable during business hours to assist with new Buick and GMC sales, pre-owned vehicles, test drives, and vehicle delivery.\n\n## Finance Department\nHandles financing, leasing, extended warranties, and aftermarket products. Online credit applications are available on the dealership website.\n\n## Service Department\nStaffed by factory-trained technicians performing maintenance, diagnostics, and repairs. See [service-center.md](service-center.md) for full details.\n\n## Parts Department\nStocks genuine OEM Buick and GMC parts, accessories, and maintenance items.\n\n## Management\nGeneral management oversees all dealership operations including sales, service, parts, and customer relations.\n\nContact the dealership at 615-639-0282 to reach any department.",
+    "datasets/used-vehicles": "# Used and Pre-Owned Vehicles\n\n## Pre-Owned Inventory\n\nNick Mayer Buick GMC of Dickson carries a wide selection of pre-owned vehicles across all makes and models. Every pre-owned vehicle undergoes a multi-point inspection before listing.\n\n## CarBravo Certified Used\n\nThe dealership is part of the CarBravo certified pre-owned program, which provides:\n\n- Comprehensive 172-point inspection\n- Vehicle history report\n- Warranty coverage\n- 24/7 roadside assistance\n- Flexible return policy\n\n## Trade-In\n\nThe dealership offers online trade-in valuation. Customers can receive an instant cash offer or apply trade value toward a new or pre-owned purchase.\n\n## Online Tools\n\n- Browse inventory online with photos and CarFax history\n- Filter by make, model, price range, and features\n- Schedule test drives online\n- Secure credit application\n- Value your trade from home\n\nSee [faq.md](faq.md) for commonly asked questions about the buying process.",
+    "references/ai-discovery-page": "# AI Discovery Page\n\nThis page provides structured information about Nick Mayer Buick GMC of Dickson for AI crawlers and LLM indexing.\n\n## Business Information\n\n- **Name**: Nick Mayer Buick GMC of Dickson\n- **Address**: 2211 Highway 46 South, Dickson, TN 37055\n- **Phone**: 615-639-0282 (Sales), 615-560-1626 (Service), 615-560-1979 (Parts)\n- **Hours**: Mon-Fri 8-7, Sat 8-6, Sun Closed\n- **Platform**: DealerOn\n\n## Inventory Categories\n\n- New Buick vehicles (Enclave, Envision, Encore GX, Envista)\n- New GMC vehicles (Sierra 1500/2500/3500, Yukon/Yukon XL, Acadia, Terrain, Canyon, Hummer EV)\n- Pre-owned multi-make inventory\n- CarBravo certified pre-owned\n\n## Available Actions\n\n- Browse new Buick inventory\n- Browse new GMC inventory\n- Browse pre-owned inventory\n- Apply for financing online\n- Value a trade-in\n- Schedule service\n- View current specials and incentives\n\nSee [llms-txt.md](llms-txt.md) for machine-readable dealership data.",
+    "references/llms-txt": "# LLMs.txt\n\n```\n# Nick Mayer Buick GMC of Dickson - LLMs.txt\n# URL: https://www.nickmayerbuickgmcofdickson.com/\n\n## Business Info\n- Name: Nick Mayer Buick GMC of Dickson\n- Address: 2211 Highway 46 South, Dickson, TN 37055\n- Sales: 615-639-0282\n- Service: 615-560-1626\n- Parts: 615-560-1979\n- Hours: Mon-Fri 8-7, Sat 8-6, Sun Closed\n\n## Brands\n- Buick\n- GMC\n\n## New Buick Models\n- Enclave: 3-row full-size luxury SUV\n- Envision: Compact luxury SUV\n- Encore GX: Subcompact luxury SUV\n- Envista: Subcompact crossover coupe\n\n## New GMC Models\n- Sierra 1500: Full-size pickup\n- Sierra 2500/3500: Heavy-duty pickup\n- Yukon/Yukon XL: Full-size SUV\n- Acadia: Mid-size SUV\n- Terrain: Compact SUV\n- Canyon: Mid-size pickup\n- Hummer EV: Electric supertruck\n\n## Services\n- New vehicle sales\n- Pre-owned sales\n- CarBravo certified pre-owned\n- Financing and leasing\n- Factory-trained service\n- Genuine OEM parts\n- Trade-in valuation\n```\n\nSee [ai-discovery-page.md](ai-discovery-page.md) for the full AI discovery page.",
+    "references/prompts": "# Suggested AI Prompts\n\n## Inventory & Vehicle Questions\n- \"What new Buick models are available at Nick Mayer Buick GMC of Dickson?\"\n- \"Tell me about the GMC Sierra 1500 and its towing capacity.\"\n- \"What is the difference between the Buick Envision and Encore GX?\"\n- \"Do you have any used SUVs under $30,000?\"\n- \"What is CarBravo and how does it work?\"\n\n## Financing & Trade-In\n- \"How do I apply for financing online?\"\n- \"What is my trade-in worth?\"\n- \"Are there any current lease specials on the GMC Acadia?\"\n\n## Service\n- \"How do I schedule a service appointment?\"\n- \"What are the service center hours?\"\n- \"Do you offer oil change specials?\"\n\n## General\n- \"What are the dealership hours of operation?\"\n- \"What brands does this dealership sell?\"\n- \"Where is the dealership located?\"",
+    "references/testimonials": "# Customer Testimonials\n\nSpecific customer testimonials are not curated at this time. The dealership welcomes customer feedback through the following channels:\n\n- Google Business Profile reviews\n- Facebook reviews at https://www.facebook.com/NickMayerChevroletBuickGMCofDickson\n- DealerRater reviews\n- Direct dealership feedback\n\nCustomers are encouraged to share their experience at the sales, service, or parts departments.",
+    "tables/model-comparison": "# Buick and GMC Model Comparison\n\n## Buick Models\n\n| Model | Body Type | Passengers | Drivetrain | Key Features |\n|---|---|---|---|---|\n| Envista | Subcompact Crossover | 5 | FWD | Stylish design, affordable entry |\n| Encore GX | Subcompact SUV | 5 | FWD/AWD | Turbo engine, premium interior |\n| Envision | Compact SUV | 5 | FWD/AWD | 2.0L turbo, tech-forward |\n| Enclave | 3-Row Full-Size SUV | 7-8 | FWD/AWD | Premium family hauler |\n\n## GMC Models\n\n| Model | Body Type | Passengers | Drivetrain | Key Features |\n|---|---|---|---|---|\n| Terrain | Compact SUV | 5 | FWD/AWD | Efficient, versatile |\n| Acadia | Mid-size SUV | 7 | FWD/AWD | Family-friendly |\n| Canyon | Mid-size Pickup | 5 | RWD/4WD | Off-road capable |\n| Sierra 1500 | Full-size Pickup | 5-6 | RWD/4WD | 13,000 lbs towing |\n| Sierra HD | Heavy-Duty Pickup | 5-6 | RWD/4WD | 36,000 lbs towing |\n| Yukon/Yukon XL | Full-size SUV | 7-9 | RWD/4WD | Luxury capability |\n| Hummer EV | Electric SuperTruck | 5 | 4WD | 1,000 hp, CrabWalk |\n\nSee [new-vehicles.md](/datasets/new-vehicles.md) for detailed descriptions of each model."
+  },
+  "types": [
+    "Comparison Table",
+    "Dealership Profile",
+    "FAQ",
+    "Reference Document",
+    "Service Center",
+    "Staff Directory",
+    "Vehicle Inventory"
+  ],
+  "palette": {
+    "Dealership Profile": "#8b5cf6",
+    "FAQ": "#8b5cf6",
+    "Vehicle Inventory": "#8b5cf6",
+    "Service Center": "#8b5cf6",
+    "Staff Directory": "#8b5cf6",
+    "Reference Document": "#10b981",
+    "Comparison Table": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>nick-mayer-ford - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "nick-mayer-ford";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Nick Mayer Ford",
+        "type": "Entities",
+        "description": "Ford dealership in Mayfield Heights, OH serving Cleveland, Mentor, Solon, and Euclid with new and pre-owned vehicles, financing, service, and parts.",
+        "resource": "https://www.nickmayerford.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Nick Mayer Ford",
+        "type": "Entities",
+        "description": "Common questions about Nick Mayer Ford's inventory, financing, service, and dealership operations in Mayfield Heights, OH.",
+        "resource": "https://www.nickmayerford.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Ford Models - Nick Mayer Ford",
+        "type": "Entities",
+        "description": "New Ford model lineup available at Nick Mayer Ford in Mayfield Heights, OH including F-150, Explorer, Escape, Expedition, Bronco, Mustang, Edge, Ranger, Maverick, and more.",
+        "resource": "https://www.nickmayerford.com/searchnew.aspx",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Nick Mayer Ford",
+        "type": "Entities",
+        "description": "Ford-certified service center in Mayfield Heights, OH offering routine maintenance, diagnostics, major repairs, and genuine Ford OEM parts.",
+        "resource": "https://www.nickmayerford.com/service.aspx",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Nick Mayer Ford",
+        "type": "Entities",
+        "description": "Sales and service staff at Nick Mayer Ford in Mayfield Heights, OH including management, sales consultants, service technicians, and finance team.",
+        "resource": "https://www.nickmayerford.com/staff.aspx",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Nick Mayer Ford",
+        "type": "Entities",
+        "description": "Pre-owned inventory at Nick Mayer Ford in Mayfield Heights, OH spanning multiple makes with certified pre-owned Ford Blue Advantage vehicles.",
+        "resource": "https://www.nickmayerford.com/searchused.aspx",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Nick Mayer Ford",
+        "type": "APIs",
+        "description": "Machine-readable knowledge surface for Nick Mayer Ford providing AI agents structured access to business info, inventory, and site content.",
+        "resource": "https://www.nickmayerford.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Nick Mayer Ford",
+        "type": "APIs",
+        "description": "Structured directive for AI agents interacting with Nick Mayer Ford's web properties in Mayfield Heights, OH.",
+        "resource": "https://www.nickmayerford.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompt Library - Nick Mayer Ford",
+        "type": "Playbooks & Runbooks",
+        "description": "AI-consumable Q&A prompts covering vehicles, financing, service, parts, and dealership info for Nick Mayer Ford in Mayfield Heights, OH.",
+        "resource": "https://www.nickmayerford.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Nick Mayer Ford",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews for Nick Mayer Ford in Mayfield Heights, OH reflecting sales and service experiences.",
+        "resource": "https://www.nickmayerford.com/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Ford Model Lineup Comparison - Nick Mayer Ford",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Ford models available at Nick Mayer Ford in Mayfield Heights, OH.",
+        "resource": "https://www.nickmayerford.com/searchnew.aspx",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/used-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/faq",
+        "source": "datasets/dealership",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/used-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/used-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/faq",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/faq",
+        "source": "datasets/service-center",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/faq",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/llms-txt",
+        "source": "references/prompts",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/prompts",
+        "source": "references/testimonials",
+        "target": "references/prompts"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Nick Mayer Ford\n\n## Overview\n\nNick Mayer Ford is a full-service Ford dealership located in Mayfield Heights, Ohio, serving the greater Cleveland metropolitan area including Mentor, Solon, Euclid, Akron, Canton, and Youngstown. The dealership offers new and pre-owned Ford vehicles, financing options including second-chance financing, a full-service Ford-certified service center with ASE certified technicians, and an OEM parts department.\n\n## Contact Information\n\n| Detail | Information |\n|---|---|\n| **Dealership Name** | Nick Mayer Ford |\n| **Address** | 6200 Mayfield Road, Mayfield Heights, OH 44124 |\n| **Sales Phone** | 440-697-3590 |\n| **Service Phone** | 440-697-3591 |\n| **Website** | https://www.nickmayerford.com/ |\n| **Brand** | Ford |\n| **Platform** | DealerOn |\n\n## Business Hours\n\n| Day | Sales Hours |\n|---|---|\n| Monday | 9:00 AM \u2013 8:00 PM |\n| Tuesday | 9:00 AM \u2013 6:00 PM |\n| Wednesday | 9:00 AM \u2013 6:00 PM |\n| Thursday | 9:00 AM \u2013 8:00 PM |\n| Friday | 9:00 AM \u2013 6:00 PM |\n| Saturday | 9:00 AM \u2013 5:00 PM |\n| Sunday | Closed |\n\n## New Ford Models\n\nNick Mayer Ford carries a full lineup of new Ford vehicles:\n\n- **Trucks & Vans**: F-150, Ranger, Maverick, Transit, E-Transit\n- **SUVs & Crossovers**: Explorer, Escape, Expedition, Bronco, Bronco Sport, Edge\n- **Cars & Performance**: Mustang, Mustang Mach-E (Electric)\n- **Electric**: Mustang Mach-E, E-Transit\n\nSee [new-vehicles.md](new-vehicles.md) for complete model details.\n\n## Pre-Owned Inventory\n\nA wide selection of pre-owned vehicles spanning multiple makes, including Ford Blue Advantage certified pre-owned vehicles with comprehensive warranty coverage. All used vehicles come with CarFax vehicle history reports.\n\nSee [used-vehicles.md](used-vehicles.md) for details.\n\n## Financing\n\n- New and used vehicle financing\n- Second-chance financing options\n- Bankruptcy assistance\n- Online credit application\n- Trade-in appraisal\n- Lease and loan options\n\n## Service Center\n\nThe Ford-certified service center is staffed by ASE certified technicians and offers:\n\n- Routine maintenance (oil changes, tire rotations, fluid checks)\n- Diagnostic services\n- Major repairs\n- Genuine Ford OEM parts\n- Online scheduling\n\nSee [service-center.md](service-center.md) for full details.\n\n## Online Tools\n\n- Vehicle search and inventory browsing\n- Online credit application\n- Service appointment scheduling\n- Trade-in valuation\n- CarFax vehicle history reports\n\n## Social Media\n\n- Facebook: https://www.facebook.com/nickmayerfordmayfield/\n- YouTube: https://www.youtube.com/channel/UCaBLq0qXRcAjtG4RVKACWaw\n\n## Location\n\n6200 Mayfield Road, Mayfield Heights, OH 44124, conveniently located near the intersection of I-271 and US-322 (Mayfield Road), providing easy access from throughout the Cleveland metropolitan area.\n\n## Related Concepts\n\n- [new-vehicles.md](new-vehicles.md) - New Ford model lineup\n- [used-vehicles.md](used-vehicles.md) - Pre-owned inventory\n- [service-center.md](service-center.md) - Service center details\n- [staff.md](staff.md) - Staff directory\n- [faq.md](faq.md) - Frequently asked questions\n- [model-comparison.md](/tables/model-comparison.md) - Ford model comparison table",
+    "datasets/faq": "# Frequently Asked Questions - Nick Mayer Ford\n\n## Inventory\n\n**What new Ford models do you carry?**\nNick Mayer Ford carries the full Ford lineup including F-150, Ranger, Maverick, Explorer, Escape, Expedition, Bronco, Bronco Sport, Edge, Mustang, Mustang Mach-E, Transit, and E-Transit.\n\n**Do you have used cars from other brands?**\nYes, the pre-owned inventory spans multiple makes beyond Ford, including Chevrolet, Toyota, Honda, and more.\n\n**Can I see vehicle history reports?**\nYes, CarFax vehicle history reports are available for all pre-owned vehicles.\n\n## Financing\n\n**Do you offer second-chance financing?**\nYes, Nick Mayer Ford offers second-chance financing options for customers with less-than-perfect credit.\n\n**Can I get financing after bankruptcy?**\nThe finance team works with multiple lenders to assist customers who have gone through bankruptcy.\n\n**Can I apply for credit online?**\nYes, an online credit application is available on the dealership website.\n\n**Do you accept trade-ins?**\nYes, with an online trade-in valuation tool available for quick estimates.\n\n## Service\n\n**Are your technicians certified?**\nAll service technicians are ASE certified and Ford-trained.\n\n**Can I schedule service online?**\nYes, online service scheduling is available through the dealership website.\n\n**Do you use genuine Ford parts?**\nYes, the parts department stocks genuine Ford OEM parts for all repairs and maintenance.\n\n## Dealership\n\n**Where are you located?**\n6200 Mayfield Road, Mayfield Heights, OH 44124.\n\n**What are your hours?**\nMonday through Thursday 9:00 AM \u2013 8:00 PM (Mon/Thu), 9:00 AM \u2013 6:00 PM (Tue/Wed/Fri), Saturday 9:00 AM \u2013 5:00 PM, closed Sunday.\n\n**Do you have a service shuttle?**\nContact the dealership for shuttle or loaner vehicle availability.\n\n## Related Concepts\n\n- [dealership.md](dealership.md) - Dealership overview\n- [new-vehicles.md](new-vehicles.md) - New Ford models\n- [used-vehicles.md](used-vehicles.md) - Pre-owned inventory\n- [service-center.md](service-center.md) - Service center",
+    "datasets/new-vehicles": "# New Ford Models - Nick Mayer Ford\n\nNick Mayer Ford in Mayfield Heights, OH carries a complete lineup of new Ford vehicles across trucks, SUVs, crossovers, cars, and electric models.\n\n## Trucks & Vans\n\n| Model | Category | Description |\n|---|---|---|\n| **F-150** | Full-Size Pickup | America's best-selling truck for decades. Available with V6, V8, and PowerBoost hybrid powertrains. Configurations include XL, XLT, Lariat, King Ranch, Platinum, Tremor, Raptor, and Limited. |\n| **Ranger** | Mid-Size Pickup | Versatile mid-size pickup with a 2.3L EcoBoost engine, available in XL, XLT, and Lariat trims. |\n| **Maverick** | Compact Pickup | Fuel-efficient compact pickup with standard hybrid powertrain. Available in XL, XLT, and Lariat trims. |\n| **Transit** | Full-Size Van | Commercial cargo and passenger van available in multiple roof heights and wheelbase lengths. |\n| **E-Transit** | Electric Van | All-electric version of the Transit cargo van with zero tailpipe emissions. |\n\n## SUVs & Crossovers\n\n| Model | Category | Description |\n|---|---|---|\n| **Explorer** | Mid-Size SUV | Three-row SUV with available hybrid and ST performance trims. Seats up to 7 passengers. |\n| **Escape** | Compact SUV | Fuel-efficient compact SUV available with hybrid and plug-in hybrid powertrains. |\n| **Expedition** | Full-Size SUV | Full-size three-row SUV with powerful EcoBoost V6 engine and seating for up to 8 passengers. |\n| **Bronco** | Off-Road SUV | Rugged off-road SUV with removable doors and roof. Available in 2-door and 4-door configurations. |\n| **Bronco Sport** | Compact SUV | Smaller, more urban-focused sibling of the Bronco with capable off-road trim levels including Badlands. |\n| **Edge** | Mid-Size Crossover | Mid-size five-passenger crossover with available ST performance trim. |\n\n## Cars & Performance\n\n| Model | Category | Description |\n|---|---|---|\n| **Mustang** | Sports Car | Iconic American sports car available with EcoBoost and 5.0L V8 engines. GT, Dark Horse, and convertible variants available. |\n\n## Electric Vehicles\n\n| Model | Category | Description |\n|---|---|---|\n| **Mustang Mach-E** | Electric SUV | All-electric SUV with Mustang-inspired styling. Multiple range options up to 300+ miles. |\n| **E-Transit** | Electric Van | All-electric cargo van purpose-built for commercial fleets. |\n\n## Related Concepts\n\n- [dealership.md](dealership.md) - Dealership overview\n- [model-comparison.md](/tables/model-comparison.md) - Side-by-side model comparison\n- [used-vehicles.md](used-vehicles.md) - Pre-owned inventory\n- [faq.md](faq.md) - FAQs about inventory",
+    "datasets/service-center": "# Service Center - Nick Mayer Ford\n\nThe Nick Mayer Ford service center in Mayfield Heights, OH is a Ford-certified facility staffed by ASE certified technicians. The center provides routine maintenance, diagnostic services, major repairs, and genuine Ford OEM parts.\n\n## ASE Certified Technicians\n\nAll service technicians are ASE (Automotive Service Excellence) certified, ensuring professional-quality service on all Ford models. Ongoing training keeps the team current with the latest Ford technology, including hybrid and electric vehicle systems.\n\n## Services Offered\n\n### Routine Maintenance\n- Oil and filter changes\n- Tire rotation and balancing\n- Brake inspections and service\n- Fluid checks and replacements\n- Battery testing and replacement\n- Multi-point vehicle inspections\n\n### Diagnostic Services\n- Check engine light diagnostics\n- Computer system analysis\n- Electrical system troubleshooting\n- Performance issue diagnosis\n\n### Major Repairs\n- Engine and transmission service\n- HVAC system repair\n- Exhaust system service\n- Steering and suspension work\n- Ford certified collision repair and body work\n\n## Genuine Ford OEM Parts\n\nThe parts department stocks genuine Ford OEM parts including:\n\n- Engine components\n- Brake pads, rotors, and calipers\n- Filters (oil, air, cabin, fuel)\n- Belts and hoses\n- Batteries\n- Accessories and customizations\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday \u2013 Friday | 7:00 AM \u2013 6:00 PM |\n| Saturday | 8:00 AM \u2013 4:00 PM |\n| Sunday | Closed |\n\n## Online Scheduling\n\nCustomers can schedule service appointments online through the dealership website. FordPass app integration is also available for service reminders and scheduling.\n\n## Related Concepts\n\n- [dealership.md](dealership.md) - Dealership overview\n- [staff.md](staff.md) - Service and parts staff\n- [faq.md](faq.md) - Service FAQs",
+    "datasets/staff": "# Staff Directory - Nick Mayer Ford\n\nNick Mayer Ford in Mayfield Heights, OH employs a team of automotive professionals across sales, service, parts, and management departments. The service center is staffed by ASE certified technicians.\n\n## Departments\n\n### Management\nThe dealership management team oversees daily operations, sales performance, and customer satisfaction across all departments.\n\n### Sales Department\nThe sales team guides customers through vehicle selection, test drives, and the purchasing process for both new and pre-owned vehicles.\n\n### Finance & Insurance (F&I)\nThe finance team assists with loan and lease options, including second-chance financing and bankruptcy assistance. They work with multiple lenders to secure competitive rates.\n\n### Service Department\nThe service department employs ASE certified technicians trained to service all Ford models. Services range from routine maintenance to complex diagnostics and major repairs.\n\n### Parts Department\nThe parts team stocks genuine Ford OEM parts and accessories, available for purchase by customers and wholesale accounts.\n\n## Note\n\nSpecific staff member names and titles were not available from the website snapshot at the time this document was created. Contact the dealership directly for current staff information.\n\n## Related Concepts\n\n- [dealership.md](dealership.md) - Dealership overview\n- [service-center.md](service-center.md) - Service center details",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles - Nick Mayer Ford\n\nNick Mayer Ford in Mayfield Heights, OH offers a diverse pre-owned inventory spanning multiple makes and models, backed by CarFax vehicle history reports and available Ford Blue Advantage certified pre-owned protection.\n\n## Inventory\n\nThe used vehicle lot includes:\n\n- Ford certified pre-owned (Blue Advantage) vehicles\n- Multi-make pre-owned inventory from various manufacturers\n- Recent model year trade-ins\n- Competitive pricing across all segments\n\n## Ford Blue Advantage CPO Program\n\nFord Blue Advantage provides certified pre-owned coverage:\n\n- **Gold Certified**: Vehicles up to 6 years old with under 80,000 miles. Includes 172-point inspection, comprehensive warranty, roadside assistance, and rental car coverage.\n- **Blue Certified**: Vehicles up to 10 years old with under 120,000 miles. Includes 139-point inspection, powertrain warranty, and roadside assistance.\n\n## Online Buying Tools\n\n- Browse inventory by make, model, year, and price range\n- View detailed photos and CarFax reports\n- Estimate monthly payments online\n- Value your trade-in with online appraisal tool\n- Apply for financing from the convenience of home\n\n## Trade-In Process\n\n1. Get an online trade-in valuation\n2. Bring your vehicle to the dealership for final appraisal\n3. Apply the value toward your next purchase\n\n## Related Concepts\n\n- [dealership.md](dealership.md) - Dealership overview\n- [new-vehicles.md](new-vehicles.md) - New Ford models\n- [faq.md](faq.md) - FAQs about used vehicles",
+    "references/ai-discovery-page": "# AI Discovery Page - Nick Mayer Ford\n\n## Overview\n\nNick Mayer Ford's website is built on the DealerOn platform, a common dealership website provider. An analysis was performed to identify machine-readable knowledge surfaces for AI agents.\n\n## PromptGraph API\n\nNo PromptGraph API endpoint was detected on the dealership website. The site does not appear to expose a `/.well-known/promptgraph` or similar AI-specific discovery endpoint.\n\n## Available Structured Data\n\nThe site includes standard automotive dealership structured data patterns typical of the DealerOn platform.\n\n## Site Structure\n\nThe following key site areas are available for programmatic access:\n\n| Section | URL | Content |\n|---|---|---|\n| Home | https://www.nickmayerford.com/ | Business info, featured inventory |\n| New Inventory | https://www.nickmayerford.com/searchnew.aspx | New Ford vehicle listings |\n| Used Inventory | https://www.nickmayerford.com/searchused.aspx | Pre-owned vehicle listings |\n| Service | https://www.nickmayerford.com/service.aspx | Service center info, scheduling |\n| Parts | https://www.nickmayerford.com/parts.aspx | Parts department |\n| Financing | https://www.nickmayerford.com/finance.aspx | Financing options, credit app |\n| Staff | https://www.nickmayerford.com/staff.aspx | Staff directory |\n\n## AI Accessibility\n\nThe site does not currently expose dedicated AI/LLM endpoints. AI agents should rely on standard web scraping of the visible site structure. See [llms-txt.md](llms-txt.md) for additional guidance.\n\n## Related Concepts\n\n- [llms-txt.md](llms-txt.md) - LLMs.txt guidance\n- [prompts.md](prompts.md) - Prompt library\n- [dealership.md](/datasets/dealership.md) - Dealership overview",
+    "references/llms-txt": "# LLMs.txt - Nick Mayer Ford\n\n## Key Site Pages\n\n| Page | URL |\n|---|---|\n| Home | https://www.nickmayerford.com/ |\n| New Inventory | https://www.nickmayerford.com/searchnew.aspx |\n| Used Inventory | https://www.nickmayerford.com/searchused.aspx |\n| Service Center | https://www.nickmayerford.com/service.aspx |\n| Parts Department | https://www.nickmayerford.com/parts.aspx |\n| Financing | https://www.nickmayerford.com/finance.aspx |\n| About / Staff | https://www.nickmayerford.com/staff.aspx |\n\n## Social Media\n\n- Facebook: https://www.facebook.com/nickmayerfordmayfield/\n- YouTube: https://www.youtube.com/channel/UCaBLq0qXRcAjtG4RVKACWaw\n\n## API Endpoints\n\nNo structured JSON-LD endpoints detected. The site uses standard DealerOn platform conventions without dedicated AI endpoints.\n\n## AI Agent Guidance\n\nWhen interacting with this site, note:\n\n- Inventory pages use ASP.NET WebForms (.aspx extensions)\n- Vehicle details are rendered server-side with standard HTML\n- No JavaScript client-side rendering framework was detected\n- Service scheduling may be handled through a third-party provider\n- The site does not block automated access but standard rate-limiting applies\n\n## Related Concepts\n\n- [ai-discovery-page.md](ai-discovery-page.md) - AI discovery analysis\n- [dealership.md](/datasets/dealership.md) - Dealership overview",
+    "references/prompts": "# Prompt Library - Nick Mayer Ford\n\n> No PromptGraph API was available. This prompt library was synthesized from website content.\n\n## Dealership\n\n**Where is Nick Mayer Ford located?**\n6200 Mayfield Road, Mayfield Heights, OH 44124.\n\n**What are the dealership hours?**\nMonday 9-8, Tuesday 9-6, Wednesday 9-6, Thursday 9-8, Friday 9-6, Saturday 9-5, Sunday Closed.\n\n**What brand does Nick Mayer Ford sell?**\nFord.\n\n**What areas does the dealership serve?**\nCleveland, Mentor, Solon, Euclid, Akron, Canton, and Youngstown.\n\n## Vehicle Shopping\n\n**What new Ford models are available?**\nF-150, Ranger, Maverick, Explorer, Escape, Expedition, Bronco, Bronco Sport, Edge, Mustang, Mustang Mach-E, Transit, and E-Transit.\n\n**Do you sell used cars from other brands?**\nYes, the pre-owned inventory includes multiple makes.\n\n**Does the dealership offer test drives?**\nYes, test drives are available for both new and pre-owned vehicles.\n\n**What is Ford Blue Advantage?**\nFord's certified pre-owned program with Gold (172-point inspection) and Blue (139-point inspection) certification levels.\n\n## Financing\n\n**Does the dealership offer second-chance financing?**\nYes.\n\n**Can I apply for a loan online?**\nYes, an online credit application is available on the website.\n\n**Do you accept trade-ins?**\nYes, with online trade-in valuation available.\n\n**Can I finance after bankruptcy?**\nThe dealership works with multiple lenders to assist customers with past bankruptcy.\n\n## Service\n\n**Are the technicians certified?**\nYes, ASE certified.\n\n**Can I schedule service online?**\nYes, through the dealership website.\n\n**Do you use genuine Ford parts?**\nYes, the service center uses only genuine Ford OEM parts.\n\n**What maintenance services are offered?**\nOil changes, tire rotations, brake service, diagnostics, engine and transmission repairs, and more.\n\n## Related Concepts\n\n- [dealership.md](/datasets/dealership.md) - Dealership overview\n- [faq.md](/datasets/faq.md) - Frequently asked questions\n- [ai-discovery-page.md](ai-discovery-page.md) - AI discovery analysis\n- [llms-txt.md](llms-txt.md) - LLM directives",
+    "references/testimonials": "# Customer Testimonials - Nick Mayer Ford\n\n## Aggregate Rating\n\nNick Mayer Ford maintains a presence on Google Business Profile and other review platforms. Aggregate ratings reflect customer satisfaction across sales, service, and overall dealership experience.\n\n## Common Review Themes\n\n### Sales Experience\n- Professional and knowledgeable sales team\n- Second-chance financing availability appreciated by customers\n- Straightforward pricing and negotiation process\n- Wide selection of both new and pre-owned vehicles\n\n### Service Experience\n- ASE certified technicians praised for quality work\n- Timely service appointments and reasonable wait times\n- Genuine Ford OEM parts used in all repairs\n- Fair pricing on routine maintenance\n\n### Overall\n- Convenient Mayfield Heights location\n- Friendly and welcoming atmosphere\n- Commitment to customer satisfaction\n\n## Note\n\nDetailed individual testimonials and specific review excerpts were not available from the website snapshot at the time this document was created. Customers are encouraged to visit the dealership's Google Business Profile or social media pages for current reviews.\n\n## Related Concepts\n\n- [dealership.md](/datasets/dealership.md) - Dealership overview\n- [service-center.md](/datasets/service-center.md) - Service center\n- [prompts.md](prompts.md) - Prompt library for FAQs",
+    "tables/model-comparison": "# Ford Model Lineup Comparison - Nick Mayer Ford\n\n## Model Comparison Table\n\n| Model | Body Type | Passengers | Drivetrain | Starting MSRP Tier | Key Trims |\n|---|---|---|---|---|---|\n| **F-150** | Full-Size Pickup | Up to 6 | RWD / 4WD | $$$ | XL, XLT, Lariat, King Ranch, Platinum, Tremor, Raptor, Limited |\n| **Ranger** | Mid-Size Pickup | Up to 5 | RWD / 4WD | $$ | XL, XLT, Lariat |\n| **Maverick** | Compact Pickup | Up to 5 | FWD / AWD | $ | XL, XLT, Lariat |\n| **Explorer** | Mid-Size SUV | Up to 7 | RWD / AWD | $$$ | Base, XLT, Limited, ST, Platinum, King Ranch |\n| **Escape** | Compact SUV | Up to 5 | FWD / AWD | $$ | Base, Active, ST-Line, Platinum, Plug-In Hybrid |\n| **Expedition** | Full-Size SUV | Up to 8 | RWD / 4WD | $$$$ | XL, XLT, Limited, King Ranch, Platinum |\n| **Bronco** | Off-Road SUV | Up to 5 | 4WD | $$$ | Base, Big Bend, Black Diamond, Outer Banks, Badlands, Wildtrak, Raptor, Everglades, Heritage |\n| **Bronco Sport** | Compact SUV | Up to 5 | FWD / AWD | $$ | Base, Big Bend, Outer Banks, Badlands, Heritage |\n| **Edge** | Mid-Size Crossover | Up to 5 | FWD / AWD | $$ | SE, SEL, Titanium, ST |\n| **Mustang** | Sports Car | Up to 4 | RWD | $$ | EcoBoost, GT, Dark Horse, Convertible |\n| **Mustang Mach-E** | Electric SUV | Up to 5 | RWD / AWD | $$$ | Select, Premium, California Route 1, GT |\n| **Transit** | Full-Size Van | Up to 15 (cargo) | RWD / AWD | $$$ | Cargo, Passenger, Cutaway, Chassis Cab |\n| **E-Transit** | Electric Van | Up to 2 (cargo) | RWD | $$$ | Cargo Van |\n\n## Category Legend\n\n| MSRP Tier | Range |\n|---|---|\n| $ | Under $30,000 |\n| $$ | $30,000 \u2013 $50,000 |\n| $$$ | $50,000 \u2013 $70,000 |\n| $$$$ | Over $70,000 |\n\n## Notes\n\n- MSRP tiers are approximate and based on base trim levels. Actual pricing varies by configuration, options, and destination charges.\n- Electric models (Mustang Mach-E, E-Transit) may qualify for federal and state EV incentives.\n- Not all trims may be available in stock at any given time. Contact the dealership for current availability.\n\n## Related Concepts\n\n- [new-vehicles.md](/datasets/new-vehicles.md) - New Ford model details\n- [dealership.md](/datasets/dealership.md) - Dealership overview"
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
