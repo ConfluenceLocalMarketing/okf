@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/bridgeton-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Car-X Tire & Auto in Bridgeton is conveniently located on St. Charles Rock Road, just west of Lindbergh Boulevard. Serving the Bridgeton community, we\u2019re your go-to spot for everything from routine maintenance\u2014oil changes, brakes, and tires\u2014to more complex repairs.",
+  "url": "https://www.carx.com/st-louis/11229-st-charles-rock-rd/?utm_source=google&utm_medium=local&utm_campaign=st-louis/11229-st-charles-rock-rd&y_source=1_njg3njqxoc03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(314) 291-2279",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "11229 St. Charles Rock Rd.",
+    "addressLocality": "Bridgeton",
+    "addressRegion": "MO",
+    "postalCode": "63044",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.7390219,
+    "longitude": -90.4005978
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.7,
+    "reviewCount": 822,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJdTaQqWMx34cR0d0yur2RwdU"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/bridgeton-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/bridgeton-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/bridgeton-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T11:30:36.030Z"
+}

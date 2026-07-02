@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/ballwin-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Car-X Tire & Auto in Ballwin represents the highest standards of automotive care. Centrally located in Ballwin, our community-focused shop is dedicated to delivering reliable, welcoming, and exceptional service to every valued customer who visits us.\n\nAnd, if you need a trustworthy place for auto repairs in the Ballwin area - you have found it!",
+  "url": "https://www.carx.com/st-louis/15487-manchester-rd/?utm_source=google+business+profile&utm_medium=local&utm_campaign=st-louis/15487-manchester-rd&y_source=1_njg3njqxny03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(636) 394-4150",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "15487 Manchester Rd",
+    "addressLocality": "Ballwin",
+    "addressRegion": "MO",
+    "postalCode": "63011",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.5931989,
+    "longitude": -90.5673941
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.7,
+    "reviewCount": 525,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJjYtfErTV2IcRZQHdyNWVzvo"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/ballwin-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/ballwin-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/ballwin-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T11:28:01.490Z"
+}

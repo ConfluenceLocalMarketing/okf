@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/university-city-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Car-X Tire & Auto in University City is your trusted neighborhood auto care center at Olive Blvd and North and South Rd. Locally owned and community-focused, we deliver service tailored to your vehicle and peace of mind.\n\nLooking for affordable, reliable auto repair? Visit Car-X at 7720 Olive Blvd, University City, MO 63130. Family-operated and trusted for nearly 50 years, we handle everything from mystery noises to new tires and tune-ups\u2014keeping you confidently on the road.",
+  "url": "https://www.carx.com/st-louis/7720-olive-st/?utm_source=google+business+profile&utm_medium=local&utm_campaign=st-louis/7720-olive-st&y_source=1_njg3njqzmi03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(314) 727-7270",
+  "email": "n/a",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "7720 Olive Street",
+    "addressLocality": "University City",
+    "addressRegion": "MO",
+    "postalCode": "63130",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.6719708,
+    "longitude": -90.3369306
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.6,
+    "reviewCount": 918,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJUSiXcyA134cReUrHVj7ysF8"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/university-city-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/university-city-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/university-city-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T13:28:30.007Z"
+}

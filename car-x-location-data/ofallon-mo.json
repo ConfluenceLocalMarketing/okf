@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/ofallon-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Welcome to Car-X Tire & Auto in O\u2019Fallon, your trusted destination for outstanding automotive care, conveniently located at the intersection of South Kings Highway Boulevard and Oleatha Avenue.\n\nLooking for expert, hassle-free repair in O\u2019Fallon? For decades, we\u2019ve kept cars running smoothly with everything from quick oil changes to complex repairs\u2014always delivered by our friendly, skilled team.",
+  "url": "https://www.carx.com/st-louis/3004-highway-k/?utm_source=google+business+profile&utm_medium=local&utm_campaign=st-louis/3004-highway-k&y_source=1_njg3njqyoc03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(636) 379-3367",
+  "email": "n/a",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "3004 State Highway K",
+    "addressLocality": "O' Fallon",
+    "addressRegion": "MO",
+    "postalCode": "63368",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.7558821,
+    "longitude": -90.6994705
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.7,
+    "reviewCount": 599,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJS1aazBTR3ocRblCyQQGQ8zE"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/ofallon-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/ofallon-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/ofallon-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T13:20:15.973Z"
+}

@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/st-louis-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "At Car-X on Kingshighway, our ASE-certified technicians treat every car as if it were their own, delivering honest diagnostics, expert repairs, and budget-friendly pricing. Whether you're stopping in for a quick oil change, precision brake work, or top-quality tire service, expect the personal attention and reliability that have made our shop a beacon of trust in the city. Experience auto care with a hometown touch\u2014right here on Kingsway.",
+  "url": "https://www.carx.com/st-louis/3460-s-kingshighway/?utm_source=google+business+profile&utm_medium=local&utm_campaign=st-louis/3460-s-kingshighway&y_source=1_njg3njqyos03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(314) 353-7306",
+  "email": "n/a",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "3460 S Kingshighway Blvd",
+    "addressLocality": "Saint Louis",
+    "addressRegion": "MO",
+    "postalCode": "63109",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.5959914,
+    "longitude": -90.2706128
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.2,
+    "reviewCount": 640,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJNdmtvLC12IcRWW0-x2vcND4"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/st-louis-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/st-louis-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/st-louis-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T13:24:04.425Z"
+}

@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/maryland-heights-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Experience reliable auto care at Car-X Tire & Auto, located at 11825 Dorsett Rd, Maryland Heights, MO 63043, at the corner of Schuetz and Dorsett.\n\n\n\nFor nearly 50 years, our family-operated shop has provided trustworthy, affordable service\u2014from mystery noises to new tires and tune-ups\u2014keeping Maryland Heights drivers safely on the road.",
+  "url": "https://www.carxstl.com/locations/maryland-heights-mo/?utm_source=carx.com+maryland+heights&utm_medium=website&utm_campaign=sunnymedia&y_source=1_njg3njqyns03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(314) 770-2366",
+  "email": "n/a",
+  "additionalType": [
+    "Auto repair shop",
+    "Mechanic",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "11825 Dorsett Road",
+    "addressLocality": "Maryland Heights",
+    "addressRegion": "MO",
+    "postalCode": "63043",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.7150102,
+    "longitude": -90.4323278
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.4,
+    "reviewCount": 580,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJc3M5s2oy34cRkA1jZj7Eb9o"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/maryland-heights-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/maryland-heights-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/maryland-heights-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T13:10:27.841Z"
+}

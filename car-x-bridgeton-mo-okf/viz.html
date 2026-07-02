@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>car-x-bridgeton-mo - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "car-x-bridgeton-mo";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/location",
+        "label": "Car-X Tire & Auto - Bridgeton, MO",
+        "type": "Auto Repair Shop",
+        "description": "Car-X Tire & Auto location in Bridgeton, MO: address, hours, contact, 4.7-star rating, and full auto repair services.",
+        "resource": "https://api.promptgraph.ai/api/v1/bridgeton-mo/business",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/services",
+        "label": "Car-X Tire & Auto - Services",
+        "type": "Service Menu",
+        "description": "Complete auto repair and maintenance service menu including brakes, tires, scheduled maintenance, steering and suspension, diagnostics, inspections, and fleet services.",
+        "resource": "https://www.carxstl.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery",
+        "label": "Car-X Tire & Auto - AI Discovery Page",
+        "type": "AI Discovery Page",
+        "description": "PromptGraph AI Discovery Page for Car-X Tire & Auto with 16 ReadAction service endpoints, JSON-LD schema.org AutoDealer data, and available API endpoints.",
+        "resource": "https://www.carxstl.com/ai-discovery-page",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Car-X Tire & Auto - PromptGraph Prompt Library",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 105 structured Q&A prompt/response pairs covering all auto repair, maintenance, and service topics for the Car-X Tire & Auto chain.",
+        "resource": "https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/coupons",
+        "label": "Car-X Tire & Auto - Current Coupons & Promotions",
+        "type": "Promotion Table",
+        "description": "Current promotional offers, coupons, and financing options available at Car-X Tire & Auto locations.",
+        "resource": "https://www.carxstl.com/coupons",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery",
+        "source": "references/prompts",
+        "target": "references/ai-discovery"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/location": "# Car-X Tire & Auto \u2014 Bridgeton, MO\n\nCar-X Tire & Auto in Bridgeton is conveniently located on St. Charles Rock Road, just west of Lindbergh Boulevard. Serving the Bridgeton community, we\u2019re your go-to spot for everything from routine maintenance\u2014oil changes, brakes, and tires\u2014to more complex repairs.\n\n## Contact Information\n\n- **Address:** 11229 St. Charles Rock Rd., Bridgeton, MO 63044\n- **Phone:** (314) 291-2279\n- **Website:** [https://www.carxbridgeton.com](https://www.carxbridgeton.com)\n\n## Hours of Operation\n\n| Day | Hours |\n|-----|-------|\n| Monday - Friday | 7:30am-5:30pm |\n| Saturday | 7:30am-5:00pm |\n| Sunday | Closed |\n\n## Rating\n\n- **Overall Rating:** 4.7 / 5.0 (822 reviews)\n\n## Services Offered\n\n- Auto repair shop\n- Tire shop\n- Car repair and maintenance service\n\n## About Car-X\n\nCar-X Tire & Auto has been a family-owned, local business for over 50 years, with 19 convenient locations across the St. Louis region. They are dedicated to providing quality, reliable automotive service at a great price, with convenient financing options available.\n\n## Financing\n\nCar-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:\n\n- Quick approvals \u2014 often in minutes\n- Affordable monthly payments\n- No hidden fees\n- Options for all credit situations, including limited or less-than-perfect credit\n\nApply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/en-US/consumer/apply/merchant-locations)\n\n## Coupons & Specials\n\nCurrent promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](../tables/coupons.md) for details.",
+    "datasets/services": "Car-X Tire & Auto offers a comprehensive range of automotive repair and maintenance services across all locations. With nearly 50 years of experience keeping local drivers safe on the road, you can trust that your car is in capable hands.\n\n## Brakes & ABS Repair\n\nSqueaky, soft, or just not stopping like they used to? Car-X handles everything from replacing pads and rotors to full Anti-lock Braking System (ABS) diagnostics and repair.\n\n- Brake pad replacement\n- Rotor resurfacing and replacement\n- ABS diagnostics and repair\n- Brake fluid exchange\n- Complete brake system inspection\n- Brake caliper service\n\n## Engine Diagnostics & Repair\n\nWhenever electricity is involved, only a certified expert will do. Car-X uses advanced diagnostic tools to pinpoint codes and resolve issues like check engine lights, rough idling, and power loss.\n\n- Check engine light diagnostics\n- Catalytic converter replacement\n- Alternator and starter repair\n- Battery testing and replacement\n- Engine performance tuning\n- Belt and hose replacement\n- Sensor diagnostics and replacement\n\n## Tires & Alignment\n\nTires are your connection to the road. Car-X offers a wide selection of tires for all makes and models, with expert installation and service.\n\n### New Tire Sales & Installation\nFind the perfect tires and get them installed with precision from leading brands.\n\n### Tire Repair\nGot a flat? Sometimes a quick patch is all you need.\n\n### Wheel Alignment\nProper alignment means better handling and longer tire wear.\n\n- Tire rotation\n- Tire pressure monitoring system (TPMS) service\n- Tire balancing\n\n## Suspension & Steering\n\nFeeling every bump in the road? Is your steering wheel pulling to one side? Car-X will get your vehicle feeling smooth and straight again.\n\n- Shock and strut replacement\n- Suspension diagnostics\n- Power steering service\n- Steering column and rack repair\n- Ball joint and tie rod replacement\n\n## Oil Changes & Routine Maintenance\n\nEssential for your vehicle's health, Car-X offers full-service oil changes covering conventional, synthetic blend, and full synthetic options. Plus, take advantage of monthly specials to save.\n\n- Oil changes (conventional, synthetic blend, full synthetic)\n- Fluid checks and flushes\n- Filter replacement (air, cabin, fuel)\n- Tire rotations\n- Battery checks\n- Factory-scheduled services\n- Multi-point vehicle inspection\n\n## AC & Heating\n\nBecause nobody likes being sweaty in summer or frozen in winter! Car-X ensures your climate control is on point.\n\n- AC performance check\n- Refrigerant recharge\n- AC compressor replacement\n- Heating system diagnosis\n\n## Lights, Wipers & Accessories\n\nSee and be seen with Car-X's lighting, wiper, and accessory services.\n\n- Headlight restoration\n- Wiper blade replacement\n- Bulb replacement\n- Accessory installation\n\n## Pre-Owned Vehicle Inspections\n\nBefore sealing the deal on a used car, Car-X offers thorough pre-owned vehicle inspections covering the engine, suspension, and all critical systems.\n\n## Fleet Services\n\nCar-X Tire & Auto Fleet Services keeps your business wheels turning with comprehensive commercial vehicle maintenance. Whether you manage delivery vans, construction trucks, or company cars, Car-X minimizes downtime and protects your bottom line.\n\n- **Rapid Repairs:** Certified technicians get vehicles serviced and back to work quickly\n- **Customized Maintenance Plans:** Routines designed for your specific business needs\n- **Complete Vehicle Care:** Brakes, tires, engine diagnostics, A/C, and more from one trusted partner\n- **No-Surprise Billing:** Straightforward estimates before any work begins\n- **Tech-Powered Inspections:** Digital vehicle check-ups with photos and easy-to-understand reports\n- **Missouri State Safety Inspections:** Free inspections to keep your fleet compliant\n\n## Financing\n\nCar-X Tire & Auto makes necessary auto repairs and maintenance affordable with convenient financing through Snap Finance.\n\n- **Quick Approvals:** Fast decisions, often in minutes\n- **Affordable Payments:** Spread the cost of repairs over time with manageable payments\n- **No Hidden Fees:** Transparent terms with no surprises\n- **Flexible Credit:** Financing options for all credit situations, including limited or less-than-perfect credit",
+    "references/ai-discovery": "The AI Discovery Page at `https://www.carxstl.com/ai-discovery-page` exposes structured AI-consumable data about Car-X Tire & Auto via PromptGraph. The page provides a JSON-LD schema.org AutoDealer document with 16 `ReadAction` potentialAction entries, each targeting a dedicated service landing page.\n\n## Corporate Profile\n\n- **Name:** Car-X Tire & Auto\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Auto repair shop, Tire shop, Car repair and maintenance service\n- **Phone:** (314) 353-7306\n- **Address:** 3460 S Kingshighway Blvd, Saint Louis, MO 63109\n- **Rating:** 4.2/5 (614 reviews)\n- **Years in Operation:** Nearly 50 years\n- **Locations:** Over 160 nationwide, 19 in St. Louis region\n\n## Available AI Discovery Endpoints\n\n| Endpoint | URL |\n|----------|-----|\n| /business | `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/business` |\n| /prompts | `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/prompts` |\n| /testimonials | `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/testimonials` |\n| /gbp-context | `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/gbp-context` |\n| /site-content | `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/site-content` |\n| /sitemap.xml | `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/sitemap.xml` |\n| /robots.txt | `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/robots.txt` |\n| /.well-known/ai-manifest.json | `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/.well-known/ai-manifest.json` |\n| /llms.txt | `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/llms.txt` |\n\n## ReadAction Service Pages\n\nThe JSON-LD document defines 16 ReadAction entries, each mapping to a dedicated service landing page with AI-optimized descriptive content:\n\n| # | Action Name | Target URL Template |\n|---|-------------|-------------------|\n| 1 | Trusted Auto Repair Near Me | /trusted-auto-repair-near-me |\n| 2 | Tire Shop Near Me | /tire-shop-near-me |\n| 3 | Brake Repair Services | /brake-repair-services |\n| 4 | Auto Financing Options | /auto-financing-options |\n| 5 | Fleet Services for Businesses | /fleet-services-for-businesses |\n| 6 | Oil Change and Maintenance | /oil-change-and-maintenance |\n| 7 | Affordable Tires Nationwide | /affordable-tires-nationwide |\n| 8 | ASE Certified Mechanics | /ase-certified-mechanics |\n| 9 | Auto Coupons and Specials | /auto-coupons-and-specials |\n| 10 | State Safety Inspections | /state-safety-inspections |\n| 11 | Wheel Alignment Services | /wheel-alignment-services |\n| 12 | Engine Diagnostics and Repair | /engine-diagnostics-and-repair |\n| 13 | Commercial Fleet Maintenance | /commercial-fleet-maintenance |\n| 14 | Family Owned Auto Chain | /family-owned-auto-chain |\n| 15 | Auto Repair with Financing | /auto-repair-with-financing |\n| 16 | (unnamed - general auto repair) | (corporate level) |\n\n## Key ReadAction Descriptions\n\nEach ReadAction contains an AI-targeted description. Below are selected examples:\n\n- **Trusted Auto Repair Near Me:** \"Car-X Tire & Auto is your trusted family-owned auto repair provider with over 160 convenient locations nationwide. For nearly 50 years we've delivered expert repairs on brakes, ABS, steering, suspension, engine diagnostics, scheduled maintenance and more using quality parts and ASE-certified technicians.\"\n- **Fleet Services for Businesses:** \"We minimize downtime through rapid repairs, preventive maintenance programs, full inspections, brakes, tires, oil changes, diagnostics, A/C service, safety checks and digital reporting with no-surprise billing.\"\n- **Auto Financing Options:** \"Get fast approvals often in minutes, then spread payments over time with transparent terms \u2014 no hidden fees.\"\n\n## Usage\n\nThe AI Discovery Page is designed for AI systems to discover available endpoints, structured data, and service descriptions. It enables intelligent agents to:\n\n1. Discover available API endpoints for structured data access\n2. Understand the business profile and service offerings\n3. Access AI-optimized descriptions for each service category\n4. Link to specific service landing pages for detailed information",
+    "references/prompts": "# Car-X Tire & Auto \u2014 PromptGraph Prompt Library\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/prompts` exposes 105 structured Q&A prompt/response pairs covering a wide range of automotive repair and maintenance topics. Below is a categorized summary.\n\n## Engine & Performance (22 prompts)\n\nTopics include engine diagnostics, cooling systems, fuel systems, exhaust systems, sensors, belts, and gaskets.\n\n- Adjusting automotive belt tensioner tracking\n- Bolting on automotive dual exhaust upgrades\n- Cleaning fuel injectors for better gas mileage\n- Exchanging dirty rear differential fluids\n- Installing replacement engine cooling thermostats\n- Replacing faulty exhaust oxygen sensors\n- Sealing leaking engine valve cover gaskets\n- Servicing engine cooling fans\n- Servicing four wheel drive transfer cases\n- Testing manifold absolute pressure sensors\n- Timing belt replacements for interference engines\n- And 11 more engine-related topics\n\n## Brakes & Suspension (18 prompts)\n\nTopics include brake systems, steering, suspension components, and wheel alignment.\n\n- Bleeding air from hydraulic brake systems\n- Changing drum brake shoes\n- Installing adjustable coilover suspension kits\n- Machining warped disc brake rotors\n- Performing complete brake caliper rebuilds\n- Replacing power steering pumps\n- Servicing electronic stability control systems\n- And 11 more brake/suspension-related topics\n\n## Electrical & Electronics (15 prompts)\n\nTopics include batteries, alternators, starters, wiring, sensors, and electronic systems.\n\n- Diagnosing parasitic battery drains\n- Installing remote car starters\n- Replacing ignition switch assemblies\n- Servicing alternator charging systems\n- Troubleshooting intermittent electrical problems\n- And 10 more electrical/electronics topics\n\n## Heating & Air Conditioning (10 prompts)\n\nTopics include AC systems, heaters, climate control, and refrigerant service.\n\n## Tires & Wheels (12 prompts)\n\nTopics include tire mounting, balancing, alignment, TPMS, and wheel repair.\n\n## Maintenance & Fluids (14 prompts)\n\nTopics include oil changes, fluid exchanges, filters, and scheduled maintenance services.\n\n## Exhaust Systems (8 prompts)\n\nTopics include catalytic converters, mufflers, exhaust pipes, and emission systems.\n\n## Other Services (6 prompts)\n\nTopics including pre-owned vehicle inspections, fleet services, and general auto care advice.\n\n## Usage\n\nThese prompts are designed for AI systems to provide accurate, location-specific responses about Car-X services. The PromptGraph API is accessible for integration into chatbots, virtual assistants, and AI-powered customer service platforms.\n\n## AI Discovery Integration\n\nThe Car-X corporate umbrella has an AI Discovery Page at `https://www.carxstl.com/ai-discovery-page` which exposes 16 structured ReadAction entries for specific service landing pages. See [ai-discovery.md](ai-discovery.md) for full details.\n\n### Related ReadAction Topics\n\nThe AI Discovery ReadActions align with the PromptGraph prompt library categories:\n\n| ReadAction | Related Prompt Category |\n|------------|----------------------|\n| Trusted Auto Repair Near Me | Engine & Performance, Brakes & Suspension |\n| Tire Shop Near Me | Tires & Wheels |\n| Brake Repair Services | Brakes & Suspension |\n| Auto Financing Options | Other Services |\n| Fleet Services for Businesses | Other Services |\n| Oil Change and Maintenance | Maintenance & Fluids |\n| Engine Diagnostics and Repair | Engine & Performance, Electrical & Electronics |",
+    "tables/coupons": "Current promotional offers available at Car-X Tire & Auto locations. Offers may vary by location and are subject to change.\n\n| Promotion | Description | Category |\n|-----------|-------------|----------|\n| Full Service Oil Change | Complete oil change service with filter replacement | Maintenance |\n| $50 Off Brake Pads Installed | Discount on front & rear lifetime brake pad installation | Brakes |\n| Buy 3 Tires, Get 1 Free | Purchase three tires and receive the fourth at no cost | Tires |\n| AC Performance Check | Air conditioning system diagnostic and performance verification | AC & Heating |\n| Service Discounts | General service savings on various repair categories | General |\n| Free Lifetime Wheel Alignment | Complimentary alignment ($225 value) with purchase of 4 select tires | Tires |\n| Valvoline Oil Change Savings | Save up to $35 on Valvoline oil change with free tire rotation | Maintenance |\n| Cold Weather Package | Primary ($49.99) and Premium ($79.99) cold weather vehicle prep packages | Seasonal |\n\n## Financing Partner\n\nCar-X partners with **Snap Finance** to offer flexible payment options for auto repairs and tire purchases:\n\n- Quick approvals often in minutes\n- Affordable monthly payments with transparent terms\n- No hidden fees\n- Options for all credit situations"
+  },
+  "types": [
+    "AI Discovery Page",
+    "Auto Repair Shop",
+    "Playbooks & Runbooks",
+    "Promotion Table",
+    "Service Menu"
+  ],
+  "palette": {
+    "Auto Repair Shop": "#8b5cf6",
+    "Service Menu": "#8b5cf6",
+    "AI Discovery Page": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Promotion Table": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

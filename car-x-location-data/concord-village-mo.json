@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/concord-village-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Car-X Tire & Auto in Concord Village conveniently located near the suburban corridor in South St. Louis County. It\u2019s situated directly on Tesson Ferry Road (Route 21). This location is just minutes from Gravois Road (Route 30) and within a short drive of I-270. As a local cornerstone, we pride ourselves on delivering dependable, friendly, and tailored service to each valued customer.",
+  "url": "https://www.carx.com/st-louis/11420-tesson-ferry-rd/?utm_source=google+business+profile&utm_medium=local&utm_campaign=st-louis/11420-tesson-ferry-rd&y_source=1_njg3njqxos03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(314) 842-7100",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "11420 Tesson Ferry Rd",
+    "addressLocality": "Saint Louis",
+    "addressRegion": "MO",
+    "postalCode": "63123",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.524984,
+    "longitude": -90.3530619
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.7,
+    "reviewCount": 470,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJSzv6yeHI2IcRXyBslSEMfb4"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/concord-village-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/concord-village-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/concord-village-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T11:32:45.057Z"
+}

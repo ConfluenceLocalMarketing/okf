@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/fairview-heights-il/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Discover exceptional automotive service at Car-X Tire & Auto in Fairview Heights, conveniently located just south of St. Clair Square Shopping Center.   As a trusted community business, we\u2019re dedicated to providing reliable, friendly care to every customer who brings their vehicle to us.",
+  "url": "https://www.carxstl.com/locations/fairview-heights-il/?y_source=1_njg3njqwos03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(618) 236-1710",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "5409 N Illinois Rt 159",
+    "addressLocality": "Fairview Heights",
+    "addressRegion": "IL",
+    "postalCode": "62208",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.5821689,
+    "longitude": -89.9853386
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.4,
+    "reviewCount": 431,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJp0ooze0BdogRT6o_CZHuDvc"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/fairview-heights-il/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/fairview-heights-il/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/fairview-heights-il/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T12:51:33.199Z"
+}

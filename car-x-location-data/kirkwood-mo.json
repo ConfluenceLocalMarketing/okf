@@ -1,0 +1,64 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/kirkwood-mo/business#organization",
+  "name": "Car-X Tire & Auto (Kirkwood)",
+  "description": "Car-X Kirkwood, MO is your one stop shop for oil changes, tires and complete auto repair. Car-X Kirkwood, MO is part of the Car-X Tire & Auto family, providing quality, reliable automotive service at a great price. Our team of expert technicians is here to help with everything from routine maintenance and brake repairs to exhaust work and complex engine diagnostics.",
+  "url": "https://www.carxkirkwood.com/",
+  "telephone": "(314) 965-4450",
+  "email": "info@carxkirkwood.com",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire Shop",
+    "Brake Shop",
+    "Oil Change Service",
+    "Car Inspection Station",
+    "Wheel Alignment Service",
+    "Mechanic"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "11139 Manchester Rd",
+    "addressLocality": "Kirkwood (Des Peres area)",
+    "addressRegion": "MO",
+    "postalCode": "63122",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.6001,
+    "longitude": -90.4358
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Monday \u2013 Friday: 7:30 AM \u2013 5:30 PM\nSaturday: 7:30 AM \u2013 5:00 PM\nSunday: Closed"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.7,
+    "reviewCount": 314,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJA25uYrLN2IcR-8IOg259tZk"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/kirkwood-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/kirkwood-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/kirkwood-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T13:06:54.878Z"
+}

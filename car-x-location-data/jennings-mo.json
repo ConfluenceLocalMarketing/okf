@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/jennings-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Welcome to Car-X Tire & Auto in Jennings, your go-to destination for exceptional automotive care at the corner of Lucas-Hunt Road and West Florissant Avenue. As a trusted local hub, we\u2019re dedicated to providing dependable, friendly, and customized service designed to meet the unique needs of every customer.",
+  "url": "https://www.carx.com/st-louis/7557-w-florissant/?utm_source=google+business+profile&utm_medium=local&utm_campaign=st-louis/7557-w-florissant&y_source=1_njg3njqymc03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(314) 261-3600",
+  "email": "n/a",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "7557 W Florissant",
+    "addressLocality": "Jennings",
+    "addressRegion": "MO",
+    "postalCode": "63136",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.725296,
+    "longitude": -90.2744204
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.1,
+    "reviewCount": 411,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJC6feOztK34cR4TuT6OOil4w"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/jennings-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/jennings-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/jennings-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T13:03:37.989Z"
+}

@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/granite-il/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Positioned on Nameoki Road in Granite City, Car-X Tire & Auto is your destination for exceptional automotive care. As a local business, we prioritize delivering dependable and friendly service for every customer who walks through our doors.",
+  "url": "https://www.carx.com/st-louis/3711-nameoki-road/?utm_source=google&utm_medium=local&utm_campaign=st-louis/3711-nameoki-road&y_source=1_njg3njqxms03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(618) 877-2283",
+  "additionalType": [
+    "Auto repair shop",
+    "Car repair and maintenance service",
+    "Oil change service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "3711 Nameoki Road",
+    "addressLocality": "Granite City",
+    "addressRegion": "IL",
+    "postalCode": "62040",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.7282328,
+    "longitude": -90.1238841
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.7,
+    "reviewCount": 952,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJO_gZHCVS34cROWHsuCn5Zyo"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/granite-il/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/granite-il/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/granite-il/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T12:55:50.817Z"
+}

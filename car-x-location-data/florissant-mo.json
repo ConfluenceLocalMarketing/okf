@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/florissant-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Welcome to Car-X Tire & Auto in Florissant, conveniently located at the busy junction of North Lindbergh and Old Halls Ferry Road. As a proud local fixture, we\u2019re dedicated to offering trustworthy, approachable, and customized automotive service to every customer who walks through our doors.",
+  "url": "https://www.carx.com/st-louis/14227-old-halls-ferry-rd/?utm_source=google&utm_medium=local&utm_campaign=st-louis/14227-old-halls-ferry-rd&y_source=1_njg3njqymy03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(314) 741-4300",
+  "additionalType": [
+    "Auto repair shop",
+    "Tire shop",
+    "Car repair and maintenance service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "14227 Old Halls Ferry Road",
+    "addressLocality": "Florissant",
+    "addressRegion": "MO",
+    "postalCode": "63034",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.8162594,
+    "longitude": -90.2822212
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.5,
+    "reviewCount": 375,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJIxb9PwtI34cRqX7lsJDgteM"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/florissant-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/florissant-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/florissant-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T12:53:24.522Z"
+}

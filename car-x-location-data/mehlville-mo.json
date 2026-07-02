@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "@id": "https://api.promptgraph.ai/api/v1/mehlville-mo/business#organization",
+  "name": "Car-X Tire & Auto",
+  "description": "Car-X Tire & Auto in Mehlville, strategically located at the corner of Lemay Ferry and Victory, represents the epitome of trusted automotive care. As your local maintenance and repair shop, we prioritize delivering dependable, friendly, and personalized service for every valued customer.",
+  "url": "https://www.carx.com/st-louis/3560-lemay-ferry/?utm_source=google&utm_medium=local&utm_campaign=st-louis/3560-lemay-ferry&y_source=1_njg3njqzmc03mtutbg9jyxrpb24ud2vic2l0zq==",
+  "telephone": "(314) 894-0089",
+  "email": "n/a",
+  "additionalType": [
+    "Auto repair shop",
+    "Mechanic",
+    "Tire shop",
+    "Car repair and maintenance service",
+    "Tire service"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "3560 Lemay Ferry Rd",
+    "addressLocality": "Saint Louis",
+    "addressRegion": "MO",
+    "postalCode": "63125",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 38.5106947,
+    "longitude": -90.3197756
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "description": "Mon: 7:30am-5:30pm, Tue: 7:30am-5:30pm, Wed: 7:30am-5:30pm, Thu: 7:30am-5:30pm, Fri: 7:30am-5:30pm, Sat: 7:30am-5:00pm"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.7,
+    "reviewCount": 395,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "sameAs": [
+    "https://www.google.com/maps/place/?q=place_id:ChIJY3VWykDI2IcR6YePtMNdVrw"
+  ],
+  "subjectOf": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/mehlville-mo/vehicles",
+      "name": "Vehicle Inventory"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/mehlville-mo/offers",
+      "name": "Current Offers"
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.promptgraph.ai/api/v1/mehlville-mo/prompts",
+      "name": "Q&A / FAQ Content"
+    }
+  ],
+  "dateModified": "2026-02-20T13:14:26.756Z"
+}
