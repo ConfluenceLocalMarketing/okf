@@ -33,4 +33,4 @@ Maria handles appointments, customer inquiries, and service coordination. Biling
 
 James performs general maintenance, oil changes, tire services, and brake repairs. Committed to quality work and customer satisfaction.
 
-See [company.md](avondale-auto-repair-okf/datasets/company.md) for shop information, certifications, and contact details.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/avondale-auto-repair-okf/datasets/company.md) for shop information, certifications, and contact details.

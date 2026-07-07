@@ -76,7 +76,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wi
 
 ## Q&A Prompt Library (62 Prompts)
 
-The `/prompts` endpoint exposes 62 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](ron-marhofer-nissan-okf/references/prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 62 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/prompts.md) for the full library. Topics include:
 
 - Vehicle shopping and model-specific inquiries
 - Financing, leasing, and trade-in questions
@@ -86,7 +86,7 @@ The `/prompts` endpoint exposes 62 structured Q&A prompt/response pairs serving 
 
 ## Testimonials Endpoint
 
-The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](ron-marhofer-nissan-okf/references/testimonials.md) for details.
+The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/testimonials.md) for details.
 
 ## LLM-Accessible Actions (ReadAction)
 
@@ -116,6 +116,6 @@ The AI Discovery Page defines 9 structured `ReadAction` entries that agents can 
 
 This page exists to give AI agents direct access to structured knowledge about Ron Marhofer Nissan without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](ron-marhofer-nissan-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](ron-marhofer-nissan-okf/references/prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](ron-marhofer-nissan-okf/references/testimonials.md) for customer review data.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/testimonials.md) for customer review data.

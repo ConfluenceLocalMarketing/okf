@@ -65,5 +65,5 @@ As there is no PromptGraph API for this dealership, the following prompt categor
 - Eric Wiler — 2019 Kitsap Philanthropic Award
 - Haselwood Auto Group — YMCA Lifetime Philanthropy Award
 
-See [ai-discovery-page.md](west-hills-chrysler-jeep-dodge-ram-okf/references/ai-discovery-page.md) for the AI infrastructure assessment.
-See [faq.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/references/ai-discovery-page.md) for the AI infrastructure assessment.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/faq.md) for common questions and answers.

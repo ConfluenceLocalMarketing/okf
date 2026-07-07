@@ -83,4 +83,4 @@ West Hills Mazda is a full-service Mazda dealership located at **1000 Oyster Bay
 
 - Aggregate rating: 4.7 / 5.0 (892 reviews)
 
-See [autoplex.md](west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.
+See [autoplex.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.

@@ -56,6 +56,6 @@ Check the dealership website for current manufacturer incentives, lease specials
 
 Browse the complete new inventory online at [Team Lincoln Las Vegas](https://www.teamlincolnlasvegas.com/).
 
-See [dealership.md](friendly-lincoln-las-vegas-okf/datasets/dealership.md) for full dealership profile.
-See [model-comparison.md](friendly-lincoln-las-vegas-okf/tables/model-comparison.md) for detailed specifications.
-See [financing.md](friendly-lincoln-las-vegas-okf/datasets/financing.md) for purchase and lease options.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/dealership.md) for full dealership profile.
+See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/tables/model-comparison.md) for detailed specifications.
+See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/financing.md) for purchase and lease options.

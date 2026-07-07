@@ -55,4 +55,4 @@ Online payment calculator tools allow customers to estimate monthly payments bas
 **Finance Department**: 360-728-3077
 **Online Application**: https://www.westhillscjd.com/finance/
 
-See [dealership.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for full business profile and hours.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for full business profile and hours.

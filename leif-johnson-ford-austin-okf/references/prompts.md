@@ -45,4 +45,4 @@ Endpoint: `https://api.promptgraph.ai/api/v1/leif-johnson-austin/prompts`
 Format: JSON-LD (ItemList of CreativeWork)
 Total Prompts: 118
 
-See [ai-discovery-page.md](leif-johnson-ford-austin-okf/references/ai-discovery-page.md) for API access details and [faq.md](leif-johnson-ford-austin-okf/datasets/faq.md) for common customer questions.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/references/ai-discovery-page.md) for API access details and [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/faq.md) for common customer questions.

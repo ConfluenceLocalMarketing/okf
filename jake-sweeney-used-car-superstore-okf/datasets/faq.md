@@ -62,4 +62,4 @@ A: 11521 Princeton Pike, Cincinnati, OH 45246.
 **Q: What hours is the dealership open?**
 A: Sales: Mon-Thu 9am-8pm, Fri-Sat 9am-6pm, Sun Please Call First. Service: Mon-Fri 7:30am-6pm, Sat 8am-2pm, Sun Closed.
 
-See [prompts.md](jake-sweeney-used-car-superstore-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

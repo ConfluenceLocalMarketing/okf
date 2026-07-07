@@ -64,4 +64,4 @@ Petersen CDJR provides comprehensive financing solutions including commercial ve
 - All makes and models accepted
 - Trade equity applied toward purchase
 
-See [company.md](petersen-chrysler-dodge-jeep-ram-okf/datasets/company.md) for location and contact information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/company.md) for location and contact information.

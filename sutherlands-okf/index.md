@@ -8,13 +8,13 @@ This bundle documents Sutherlands Home Improvement, a family-owned retailer sinc
 
 ## Datasets
 
-- [company.md](sutherlands-okf/datasets/company.md) - Full business profile: departments, building packages, services, history.
+- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/sutherlands-okf/datasets/company.md) - Full business profile: departments, building packages, services, history.
 
 ## References
 
-- [llms-txt.md](sutherlands-okf/references/llms-txt.md) - Structured AI context.
-- [prompts.md](sutherlands-okf/references/prompts.md) - Curated AI prompts for customer assistance.
-- [ai-discovery-page.md](sutherlands-okf/references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/sutherlands-okf/references/llms-txt.md) - Structured AI context.
+- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/sutherlands-okf/references/prompts.md) - Curated AI prompts for customer assistance.
+- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/sutherlands-okf/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

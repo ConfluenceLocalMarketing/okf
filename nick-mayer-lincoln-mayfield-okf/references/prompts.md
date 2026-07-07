@@ -53,5 +53,5 @@ timestamp: 2026-07-02
 - "What is the Lincoln Co-Pilot360 system?"
 - "Tell me about Lincoln Pickup & Delivery"
 
-See [dealership.md](nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for dealership information.
-See [new-vehicles.md](nick-mayer-lincoln-mayfield-okf/datasets/new-vehicles.md) for Lincoln model information.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for dealership information.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/datasets/new-vehicles.md) for Lincoln model information.

@@ -99,5 +99,5 @@ Email: sarahdsweeney@gmail.com
 - CityBeat award: Best used car dealership in Cincinnati
 - PromptGraph-collected reviews: Predominantly 5-star with consistent praise for low-pressure sales, patient staff, and financing assistance
 
-See [testimonials.md](jake-sweeney-used-car-superstore-okf/references/testimonials.md) for detailed customer reviews.
-See [staff.md](jake-sweeney-used-car-superstore-okf/datasets/staff.md) for full directory.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/references/testimonials.md) for detailed customer reviews.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/staff.md) for full directory.

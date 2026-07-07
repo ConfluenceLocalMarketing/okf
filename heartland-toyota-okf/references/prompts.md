@@ -84,5 +84,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/heartland-toyota/promp
 | 11 | `familyfocused-toyota-suv-recommendations` | Family SUV guidance |
 | 12 | `truckfocused-buyers-looking-at-tacoma-and-tundra` | Truck selection help |
 
-See [ai-discovery-page.md](heartland-toyota-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](heartland-toyota-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/datasets/faq.md) for common questions and answers.

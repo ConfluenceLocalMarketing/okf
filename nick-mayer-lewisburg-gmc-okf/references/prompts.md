@@ -38,5 +38,5 @@ Curated prompts for AI assistants and chatbots answering questions about Nick Ma
 - "What is CarBravo at Nick Mayer GMC Lewisburg?"
 - "Can I trade in my vehicle at Nick Mayer GMC Lewisburg?"
 
-See [faq.md](nick-mayer-lewisburg-gmc-okf/datasets/faq.md) for the full FAQ.
-See [dealership.md](nick-mayer-lewisburg-gmc-okf/datasets/dealership.md) for contact details.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/faq.md) for the full FAQ.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/dealership.md) for contact details.

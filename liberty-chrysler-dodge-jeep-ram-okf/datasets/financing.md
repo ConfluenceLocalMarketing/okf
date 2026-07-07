@@ -60,4 +60,4 @@ The finance team at Liberty CDJR provides competitive rates, lease programs, and
 - Model-specific incentives
 - Seasonal sales events
 
-See [company.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for dealership contact information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for dealership contact information.

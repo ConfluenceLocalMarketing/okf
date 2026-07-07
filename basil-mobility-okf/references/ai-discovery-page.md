@@ -76,7 +76,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data:
 
 ## Q&A Prompt Library (74 Prompts)
 
-The `/prompts` endpoint exposes 74 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](basil-mobility-okf/references/prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 74 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/prompts.md) for the full library. Topics include:
 
 - Vehicle shopping (side-entry, rear-entry, lowered-floor, hybrid accessible vans)
 - Adaptive equipment (hand controls, steering aids, transfer seats, wheelchair lifts)
@@ -112,5 +112,5 @@ The `/prompts` endpoint exposes 74 structured Q&A prompt/response pairs serving 
 
 This page exists to give AI agents direct access to structured knowledge about Basil Mobility without requiring web scraping or form navigation. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](basil-mobility-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](basil-mobility-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/prompts.md) for the complete Q&A prompt library.

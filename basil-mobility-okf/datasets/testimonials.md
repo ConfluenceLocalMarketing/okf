@@ -29,4 +29,4 @@ The Braley family describes the Basil Family Dealerships as "the best car buying
 
 Customers can share their own experiences via the dealership's review submission channels. Basil Mobility values feedback from the community it serves in Western New York.
 
-See [dealership.md](basil-mobility-okf/datasets/dealership.md) for full business profile and contact information.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/dealership.md) for full business profile and contact information.

@@ -56,4 +56,4 @@ Friendly Ford operates a full [Collision Center](https://www.friendlyfordlasvega
 
 View current service and parts specials for discounted maintenance packages.
 
-See [staff.md](friendly-ford-las-vegas-okf/datasets/staff.md) for the service team and [friendly-ford-las-vegas.md](friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for general business information.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/staff.md) for the service team and [friendly-ford-las-vegas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for general business information.

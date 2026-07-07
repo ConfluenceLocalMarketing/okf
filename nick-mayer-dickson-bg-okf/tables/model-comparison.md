@@ -35,4 +35,4 @@ timestamp: 2026-07-02
 | Yukon/Yukon XL | Full-size SUV | 7-9 | RWD/4WD | Luxury capability |
 | Hummer EV | Electric SuperTruck | 5 | 4WD | 1,000 hp, CrabWalk |
 
-See [new-vehicles.md](nick-mayer-dickson-bg-okf/datasets/new-vehicles.md) for detailed descriptions of each model.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-dickson-bg-okf/datasets/new-vehicles.md) for detailed descriptions of each model.

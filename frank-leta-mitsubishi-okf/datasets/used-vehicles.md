@@ -50,4 +50,4 @@ Frank Leta Mitsubishi offers a large selection of pre-owned vehicles crossing al
 - Flexible financing including credit amnesty programs
 - Sales and service under one roof
 
-See [company.md](frank-leta-mitsubishi-okf/datasets/company.md) for location and hours.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/frank-leta-mitsubishi-okf/datasets/company.md) for location and hours.

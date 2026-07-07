@@ -51,5 +51,5 @@ timestamp: 2026-07-02
 
 ## Related Concepts
 
-- [new-vehicles.md](nick-mayer-ford-okf/datasets/new-vehicles.md) - New Ford model details
-- [dealership.md](nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
+- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/new-vehicles.md) - New Ford model details
+- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview

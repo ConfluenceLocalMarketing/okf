@@ -35,5 +35,5 @@ Customers can value their current vehicle online through the dealership website 
 
 The pre-owned lot typically includes late-model Chevrolet cars, trucks, and SUVs, along with competitive makes from Ford, RAM, Toyota, Honda, and GMC.
 
-See [dealership.md](nick-mayer-lewisburg-chevy-okf/datasets/dealership.md) for full dealership profile.
-See [faq.md](nick-mayer-lewisburg-chevy-okf/datasets/faq.md) for frequently asked questions about pre-owned vehicles.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-chevy-okf/datasets/dealership.md) for full dealership profile.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-chevy-okf/datasets/faq.md) for frequently asked questions about pre-owned vehicles.

@@ -43,4 +43,4 @@ The llms.txt file provides AI systems with structured discovery and consumption 
 
 Friendly Ford Las Vegas specializes in automotive sales and service, located at 660 N Decatur Blvd, Las Vegas, NV 89107. Over 470 new Ford vehicles in inventory. Financing options including ITIN program. Factory-trained service department with collision center at 1650 N Decatur Blvd.
 
-See [ai-discovery-page.md](friendly-ford-las-vegas-okf/references/ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](friendly-ford-las-vegas-okf/references/prompts.md) for the prompt library.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/references/ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/references/prompts.md) for the prompt library.

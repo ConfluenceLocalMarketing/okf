@@ -54,6 +54,6 @@ Nissan CPO vehicles include:
 
 ## Service Perks
 
-Free lifetime car washes and loaner cars available for service. See [service-center.md](mclarty-nissan-of-little-rock-okf/datasets/service-center.md).
+Free lifetime car washes and loaner cars available for service. See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mclarty-nissan-of-little-rock-okf/datasets/service-center.md).
 
-See [company.md](mclarty-nissan-of-little-rock-okf/datasets/company.md) for location and contact information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mclarty-nissan-of-little-rock-okf/datasets/company.md) for location and contact information.

@@ -77,5 +77,5 @@ From `https://api.promptgraph.ai/api/v1/buying-signals/business`:
 - **URL:** https://buyingsignals.com/
 - **Date Modified:** 2026-04-14T01:25:54.440Z
 
-See [company.md](buying-signals-okf/datasets/company.md) for the full business profile.
-See [llms-txt.md](buying-signals-okf/references/llms-txt.md) for the complete llms.txt directive.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full business profile.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/references/llms-txt.md) for the complete llms.txt directive.

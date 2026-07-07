@@ -84,5 +84,5 @@ All-electric hatchback, one of the best-selling EVs globally. Affordable electri
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.
 
-See [dealership.md](ron-marhofer-nissan-okf/datasets/dealership.md) for contact information and current programs.
-See [model-comparison.md](ron-marhofer-nissan-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/tables/model-comparison.md) for side-by-side model specifications.

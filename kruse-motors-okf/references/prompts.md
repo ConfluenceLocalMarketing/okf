@@ -73,5 +73,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/kruse-motors/prompts` 
 | Where to find Subaru Outback deals Marshall | Outback availability |
 | Fuel-efficient cars prompt for Kruse Motors | Fuel-efficient inventory |
 
-See [llms-txt.md](kruse-motors-okf/references/llms-txt.md) for the full llms.txt directive.
-See [ai-discovery-page.md](kruse-motors-okf/references/ai-discovery-page.md) for structured endpoint details.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/references/llms-txt.md) for the full llms.txt directive.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/references/ai-discovery-page.md) for structured endpoint details.

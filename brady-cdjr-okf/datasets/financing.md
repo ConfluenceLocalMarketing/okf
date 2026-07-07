@@ -44,4 +44,4 @@ Use online payment calculators to estimate monthly payments based on down paymen
 
 ---
 
-For complete dealership information, see [company.md](brady-cdjr-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/brady-cdjr-okf/datasets/company.md).

@@ -48,4 +48,4 @@ Estimate monthly payments using the online car payment calculator on the dealers
 
 Contact the finance department at (360) 919-1063 or through the dealership's sales line.
 
-See [dealership.md](haselwood-chevrolet-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](haselwood-chevrolet-okf/datasets/new-vehicles.md) or [used-vehicles.md](haselwood-chevrolet-okf/datasets/used-vehicles.md) for inventory.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/datasets/used-vehicles.md) for inventory.

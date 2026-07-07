@@ -66,4 +66,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 - [West Hills Ford: Adventure-Ready Broncos & Trucks](http://api.promptgraph.ai/api/v1/west-hills-ford/prompts/west-hills-ford-adventure-ready-broncos-&-trucks) - Fan-favorite Broncos, Explorer, pickups
 - [Trusted Ford Service & Financing in Bremerton](http://api.promptgraph.ai/api/v1/west-hills-ford/prompts/trusted-ford-service-&-financing-in-bremerton) - Bad-credit-friendly financing, OEM service
 
-See [ai-discovery-page.md](west-hills-ford-okf/references/ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-ford-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

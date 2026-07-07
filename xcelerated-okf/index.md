@@ -8,13 +8,13 @@ This bundle documents Xcelerated Data, a consumer data platform delivering ident
 
 ## Datasets
 
-- [company.md](xcelerated-okf/datasets/company.md) - Full business profile: location, data platform, solutions, compliance.
+- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/xcelerated-okf/datasets/company.md) - Full business profile: location, data platform, solutions, compliance.
 
 ## References
 
-- [llms-txt.md](xcelerated-okf/references/llms-txt.md) - Structured AI context for the data platform.
-- [prompts.md](xcelerated-okf/references/prompts.md) - Curated AI prompts for solution inquiries.
-- [ai-discovery-page.md](xcelerated-okf/references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/xcelerated-okf/references/llms-txt.md) - Structured AI context for the data platform.
+- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/xcelerated-okf/references/prompts.md) - Curated AI prompts for solution inquiries.
+- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/xcelerated-okf/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

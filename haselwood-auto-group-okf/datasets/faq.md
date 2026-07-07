@@ -68,4 +68,4 @@ A: Yes, Click-N-Drive online purchasing includes home delivery options.
 **Q: Is military appreciation offered?**
 A: Yes, the group has a dedicated Military Appreciation program with specialized incentives for active-duty members and veterans.
 
-See [prompts.md](haselwood-auto-group-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

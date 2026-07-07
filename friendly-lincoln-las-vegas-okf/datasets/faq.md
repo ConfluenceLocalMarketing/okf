@@ -76,5 +76,5 @@ A: Sales can be reached at (702) 790-8429.
 **Q: How do I contact the service department?**
 A: Service can be reached at (702) 799-9734.
 
-See [dealership.md](friendly-lincoln-las-vegas-okf/datasets/dealership.md) for full business profile.
-See [service-center.md](friendly-lincoln-las-vegas-okf/datasets/service-center.md) for service department information.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/dealership.md) for full business profile.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/service-center.md) for service department information.

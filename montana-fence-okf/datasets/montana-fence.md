@@ -39,8 +39,8 @@ Montana Fence offers a full range of fencing solutions:
 
 ## Fence Types
 
-See [services.md](montana-fence-okf/tables/services.md) for a complete comparison of fence types and materials.
+See [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montana-fence-okf/tables/services.md) for a complete comparison of fence types and materials.
 
 ## Locations
 
-See [locations.md](montana-fence-okf/datasets/locations.md) for full location details including addresses and hours.
+See [locations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montana-fence-okf/datasets/locations.md) for full location details including addresses and hours.

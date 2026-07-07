@@ -40,4 +40,4 @@ This page provides structured information about Nick Mayer Chevrolet of Dickson 
 - Schedule service
 - View current specials and incentives
 
-See [llms-txt.md](nick-mayer-dickson-chevy-okf/references/llms-txt.md) for machine-readable dealership data.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-dickson-chevy-okf/references/llms-txt.md) for machine-readable dealership data.

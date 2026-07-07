@@ -67,5 +67,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-nort
 | 15 | `electric-bmw-i4-ix-test-drive-cincinnati` | EV test drive |
 | 16 | `tell-me-about-bmw-of-cincinnati-north--are-they-a` | General dealership overview |
 
-See [ai-discovery-page.md](bmw-of-cincinnati-north-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](bmw-of-cincinnati-north-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/faq.md) for common questions and answers.

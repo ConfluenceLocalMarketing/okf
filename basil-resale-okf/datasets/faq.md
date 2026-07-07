@@ -162,7 +162,7 @@ Yes - customer loyalty programs and repeat buyer benefits are available.
 
 ## Related
 
-See [dealership.md](basil-resale-okf/datasets/dealership.md) for full business profile, hours, and contact information.
-See [used-vehicles.md](basil-resale-okf/datasets/used-vehicles.md) for the pre-owned inventory details.
-See [commercial-trucks.md](basil-resale-okf/datasets/commercial-trucks.md) for commercial vehicle inventory.
-See [prompts.md](basil-resale-okf/references/prompts.md) for the full 77-prompt PromptGraph library.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile, hours, and contact information.
+See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/used-vehicles.md) for the pre-owned inventory details.
+See [commercial-trucks.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/commercial-trucks.md) for commercial vehicle inventory.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/references/prompts.md) for the full 77-prompt PromptGraph library.

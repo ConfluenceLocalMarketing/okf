@@ -56,4 +56,4 @@ McLarty Nissan offers competitive financing and online buying options for custom
 - Competitive offers
 - Trade equity applied to purchase
 
-See [company.md](mclarty-nissan-of-little-rock-okf/datasets/company.md) for full dealership location and contact.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mclarty-nissan-of-little-rock-okf/datasets/company.md) for full dealership location and contact.

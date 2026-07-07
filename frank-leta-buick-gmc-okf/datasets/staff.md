@@ -38,4 +38,4 @@ timestamp: 2026-07-03
 
 ---
 
-For complete dealership information, see [company.md](frank-leta-buick-gmc-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/frank-leta-buick-gmc-okf/datasets/company.md).

@@ -55,6 +55,6 @@ Customers can apply for financing directly through the dealership website with a
 
 Situated on N Ellington Parkway (US-31A) in Lewisburg, the dealership is easily accessible from I-65 via US-412.
 
-See [new-vehicles.md](nick-mayer-lewisburg-gmc-okf/datasets/new-vehicles.md) for detailed model information.
-See [service-center.md](nick-mayer-lewisburg-gmc-okf/datasets/service-center.md) for service department details.
-See [faq.md](nick-mayer-lewisburg-gmc-okf/datasets/faq.md) for frequently asked questions.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/new-vehicles.md) for detailed model information.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/service-center.md) for service department details.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/faq.md) for frequently asked questions.

@@ -53,5 +53,5 @@ timestamp: 2026-07-01
 - OnStar connected services
 - Factory warranty included
 
-See [dealership.md](ron-marhofer-chevrolet-okf/datasets/dealership.md) for business hours and contact.
-See [model-comparison.md](ron-marhofer-chevrolet-okf/tables/model-comparison.md) for detailed model comparison.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-chevrolet-okf/datasets/dealership.md) for business hours and contact.
+See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-chevrolet-okf/tables/model-comparison.md) for detailed model comparison.

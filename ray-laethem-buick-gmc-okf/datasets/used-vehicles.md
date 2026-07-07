@@ -33,4 +33,4 @@ The dealership offers trade-in evaluation through an online appraisal tool and i
 
 View current pre-owned specials on the dealership website.
 
-See [dealership.md](ray-laethem-buick-gmc-okf/datasets/dealership.md) for full business profile and [financing.md](ray-laethem-buick-gmc-okf/datasets/financing.md) for financing options on pre-owned vehicles.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for full business profile and [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/financing.md) for financing options on pre-owned vehicles.

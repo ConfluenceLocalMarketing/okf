@@ -85,14 +85,14 @@ Models available include:
 
 Sales and service staff frequently praised by customers include: Hallie Abbott, Jason Vaughn, Roman (Romyl), Emilio Perez, Terry, Joe Collins, Tony, Royan, Mike B., Chris Car, Xavier, Jeff, David, Adam, Mike, Jordan, Danny, Rachel, Frank (finance), Mike Owens, Joe Collins, and others.
 
-See [staff.md](jake-sweeney-mazda-tri-county-okf/datasets/staff.md) for full directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - Aggregate rating: **4.8 / 5.0** (2,030 reviews)
 - PromptGraph-collected reviews: All 5-star with consistent praise for low-pressure sales, patient staff, and knowledgeable service
 
-See [testimonials.md](jake-sweeney-mazda-tri-county-okf/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

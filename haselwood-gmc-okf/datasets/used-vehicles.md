@@ -68,4 +68,4 @@ CarBravo is GM's certified used vehicle program that offers:
 - Flexible return policy
 - Online buying and at-home delivery options
 
-See [dealership.md](haselwood-gmc-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-gmc-okf/datasets/dealership.md) for current financing and trade-in programs.

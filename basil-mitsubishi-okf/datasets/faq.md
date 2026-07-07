@@ -123,8 +123,8 @@ The Basil Difference refers to the dealership's commitment to customer-first ser
 
 ## Related
 
-See [dealership.md](basil-mitsubishi-okf/datasets/dealership.md) for full business profile and contact information.
-See [new-vehicles.md](basil-mitsubishi-okf/datasets/new-vehicles.md) for the Mitsubishi model lineup.
-See [used-vehicles.md](basil-mitsubishi-okf/datasets/used-vehicles.md) for pre-owned and CPO inventory.
-See [staff.md](basil-mitsubishi-okf/datasets/staff.md) for full staff directory.
-See [testimonials.md](basil-mitsubishi-okf/references/testimonials.md) for customer reviews.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/dealership.md) for full business profile and contact information.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/new-vehicles.md) for the Mitsubishi model lineup.
+See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/used-vehicles.md) for pre-owned and CPO inventory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/staff.md) for full staff directory.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/testimonials.md) for customer reviews.

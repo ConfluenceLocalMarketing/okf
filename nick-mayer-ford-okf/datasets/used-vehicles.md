@@ -50,6 +50,6 @@ Ford Blue Advantage provides certified pre-owned coverage:
 
 ## Related Concepts
 
-- [dealership.md](nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
-- [new-vehicles.md](nick-mayer-ford-okf/datasets/new-vehicles.md) - New Ford models
-- [faq.md](nick-mayer-ford-okf/datasets/faq.md) - FAQs about used vehicles
+- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
+- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/new-vehicles.md) - New Ford models
+- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/faq.md) - FAQs about used vehicles

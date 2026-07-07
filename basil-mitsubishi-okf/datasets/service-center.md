@@ -83,5 +83,5 @@ The on-site collision center handles exterior body repairs:
 
 Monthly promotions and offers on vehicle service are available on the [service specials page](https://www.basilmitsubishi.com/service/service-specials/).
 
-See [dealership.md](basil-mitsubishi-okf/datasets/dealership.md) for full business profile.
-See [staff.md](basil-mitsubishi-okf/datasets/staff.md) for service team personnel.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/dealership.md) for full business profile.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/staff.md) for service team personnel.

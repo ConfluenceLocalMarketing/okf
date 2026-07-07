@@ -53,4 +53,4 @@ Liberty CDJR offers the complete lineup of new Chrysler, Dodge, Jeep, and RAM ve
 | Pacifica | Minivan | Stow 'n Go seating |
 | Pacifica Hybrid | Plug-In Hybrid Minivan | 32-mile EV range |
 
-See [company.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for dealership location and hours.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for dealership location and hours.

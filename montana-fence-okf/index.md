@@ -10,13 +10,13 @@ Locally owned and operated fence contractor serving Montana since 1977, providin
 
 ## Datasets
 
-- [montana-fence.md](montana-fence-okf/datasets/montana-fence.md) - Core business profile for Montana Fence.
-- [locations.md](montana-fence-okf/datasets/locations.md) - Physical locations and service area for Montana Fence.
+- [montana-fence.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montana-fence-okf/datasets/montana-fence.md) - Core business profile for Montana Fence.
+- [locations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montana-fence-okf/datasets/locations.md) - Physical locations and service area for Montana Fence.
 
 ## References
 
-- [website.md](montana-fence-okf/references/website.md) - Source data extracted from the Montana Fence website.
+- [website.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montana-fence-okf/references/website.md) - Source data extracted from the Montana Fence website.
 
 ## Tables
 
-- [services.md](montana-fence-okf/tables/services.md) - Fence types and services offered by Montana Fence.
+- [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montana-fence-okf/tables/services.md) - Fence types and services offered by Montana Fence.

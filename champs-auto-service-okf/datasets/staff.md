@@ -33,4 +33,4 @@ Patricia manages customer relations, scheduling, and service coordination. She h
 
 Tom handles commercial fleet accounts, preventive maintenance scheduling, and priority service coordination for business customers.
 
-See [company.md](champs-auto-service-okf/datasets/company.md) for shop information, certifications, and contact details.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/champs-auto-service-okf/datasets/company.md) for shop information, certifications, and contact details.

@@ -72,5 +72,5 @@ Compact sedan, starting MSRP $24,650. Available in 2.5 S, Select, Preferred, Pre
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.
 
-See [dealership.md](jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) for contact information and current programs.
-See [model-comparison.md](jake-sweeney-mazda-tri-county-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/tables/model-comparison.md) for side-by-side model specifications.

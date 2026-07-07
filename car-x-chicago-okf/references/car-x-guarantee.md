@@ -27,4 +27,4 @@ Every repair and service performed at Car-X Tire & Auto is backed by the Car-X G
 - Flexible financing options available
 - Towing and diagnostic scanning services
 
-See [car-x-tire-auto.md](car-x-chicago-okf/datasets/car-x-tire-auto.md) for the full list of services covered under this guarantee.
+See [car-x-tire-auto.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-chicago-okf/datasets/car-x-tire-auto.md) for the full list of services covered under this guarantee.

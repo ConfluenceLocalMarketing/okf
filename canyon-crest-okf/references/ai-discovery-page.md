@@ -54,5 +54,5 @@ The AI Discovery Page provides structured, machine-readable venue information fo
 - Event gallery (web page)
 - Event calendar (web page)
 
-See [llms-txt.md](canyon-crest-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](canyon-crest-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/canyon-crest-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/canyon-crest-okf/references/prompts.md) for the complete Q&A prompt library.

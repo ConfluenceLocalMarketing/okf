@@ -65,4 +65,4 @@ Jake Sweeney Chevrolet has collected 100+ customer testimonials through the Prom
 - **Accountability** - Service department stands behind their work, fixing mistakes without additional charges
 - **Loaner availability** - Loaner vehicles provided for longer service jobs
 
-See [staff.md](jake-sweeney-chevrolet-okf/datasets/staff.md) for the full staff directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/staff.md) for the full staff directory.

@@ -49,4 +49,4 @@ Volvo Parts Webstore offers a comprehensive catalog of genuine OEM Volvo parts, 
 - Discount pricing below MSRP
 - Nationwide shipping
 
-See [company.md](volvo-parts-webstore-okf/datasets/company.md) for the full business profile. See [faq.md](volvo-parts-webstore-okf/datasets/faq.md) for ordering and shipping details.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/volvo-parts-webstore-okf/datasets/company.md) for the full business profile. See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/volvo-parts-webstore-okf/datasets/faq.md) for ordering and shipping details.

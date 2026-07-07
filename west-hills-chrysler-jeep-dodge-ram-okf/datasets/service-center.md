@@ -79,5 +79,5 @@ Genuine Mopar OEM parts and accessories available including:
 | Saturday | 8:00 AM - 4:00 PM |
 | Sunday | Closed |
 
-See [staff.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/staff.md) for full service department directory.
-See [dealership.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for contact information.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/staff.md) for full service department directory.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for contact information.

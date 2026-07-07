@@ -59,4 +59,4 @@ A: Jake Sweeney Lifetime Mechanical Protection is included on qualifying vehicle
 **Q: Does the dealership partner with Shamrock Customs?**
 A: Yes, Jake Sweeney Chevrolet is associated with Shamrock Customs for truck lifting and aftermarket accessories.
 
-See [prompts.md](jake-sweeney-chevrolet-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

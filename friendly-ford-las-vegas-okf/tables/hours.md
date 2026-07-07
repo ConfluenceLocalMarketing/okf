@@ -42,4 +42,4 @@ timestamp: 2026-07-03
 
 Operates at 1650 N Decatur Blvd, Las Vegas, NV 89107. Contact for current hours.
 
-See [contact.md](friendly-ford-las-vegas-okf/tables/contact.md) for phone numbers and addresses.
+See [contact.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/tables/contact.md) for phone numbers and addresses.

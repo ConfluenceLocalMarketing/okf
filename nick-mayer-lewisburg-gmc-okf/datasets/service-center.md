@@ -48,5 +48,5 @@ The parts department stocks genuine OEM GMC parts, accessories, and fluids. Part
 | Saturday | 9:00 AM – 6:00 PM |
 | Sunday | Closed |
 
-See [dealership.md](nick-mayer-lewisburg-gmc-okf/datasets/dealership.md) for full dealership profile.
-See [faq.md](nick-mayer-lewisburg-gmc-okf/datasets/faq.md) for service-related questions.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/dealership.md) for full dealership profile.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/faq.md) for service-related questions.

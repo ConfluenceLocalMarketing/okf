@@ -42,4 +42,4 @@ Structured prompts for AI systems covering Lincoln vehicle features, financing, 
 
 Endpoints are available through the dealership website at `https://www.teamlincolnlasvegas.com/`.
 
-See [ai-discovery-page.md](friendly-lincoln-las-vegas-okf/references/ai-discovery-page.md) for API access details and [faq.md](friendly-lincoln-las-vegas-okf/datasets/faq.md) for common customer questions.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/references/ai-discovery-page.md) for API access details and [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/faq.md) for common customer questions.

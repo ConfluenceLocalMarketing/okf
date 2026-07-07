@@ -45,4 +45,4 @@ Avondale Auto Repair is a family-owned service center located at 3425 N Pulaski 
 - Synchrony Car Care Credit Card accepted
 - Snap Finance available
 
-See [company.md](avondale-auto-repair-okf/datasets/company.md) for more information about our shop, history, and vehicle coverage.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/avondale-auto-repair-okf/datasets/company.md) for more information about our shop, history, and vehicle coverage.

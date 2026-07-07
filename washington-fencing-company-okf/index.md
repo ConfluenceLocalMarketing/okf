@@ -8,13 +8,13 @@ Locally owned fence installation company serving Seattle, Tacoma, Bellevue, and 
 
 ## Datasets
 
-- [washington-fencing-company.md](washington-fencing-company-okf/datasets/washington-fencing-company.md) - Core business profile for Washington Fencing Company.
+- [washington-fencing-company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/washington-fencing-company-okf/datasets/washington-fencing-company.md) - Core business profile for Washington Fencing Company.
 
 ## References
 
-- [website.md](washington-fencing-company-okf/references/website.md) - Source information from the official Washington Fencing Company website.
+- [website.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/washington-fencing-company-okf/references/website.md) - Source information from the official Washington Fencing Company website.
 
 ## Tables
 
-- [services.md](washington-fencing-company-okf/tables/services.md) - Service offerings including installation, gate fabrication, and consultations.
-- [fence-types.md](washington-fencing-company-okf/tables/fence-types.md) - Comparison of fence materials offered and their characteristics.
+- [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/washington-fencing-company-okf/tables/services.md) - Service offerings including installation, gate fabrication, and consultations.
+- [fence-types.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/washington-fencing-company-okf/tables/fence-types.md) - Comparison of fence materials offered and their characteristics.

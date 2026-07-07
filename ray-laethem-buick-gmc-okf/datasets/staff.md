@@ -54,4 +54,4 @@ timestamp: 2026-07-03
 | Brian Sullivan | Parts Manager |
 | Derek Johnson | Parts Specialist |
 
-See [dealership.md](ray-laethem-buick-gmc-okf/datasets/dealership.md) for business profile and [service-center.md](ray-laethem-buick-gmc-okf/datasets/service-center.md) for service department details.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for business profile and [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/service-center.md) for service department details.

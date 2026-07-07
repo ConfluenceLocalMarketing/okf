@@ -84,5 +84,5 @@ All new Chevrolet models include:
 - **Equinox** - Popular compact SUV with strong consumer ratings
 - **Bolt EV** - Recognized for affordable EV accessibility
 
-See [new-vehicles.md](jake-sweeney-chevrolet-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](jake-sweeney-chevrolet-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/dealership.md) for current offers and promotions.

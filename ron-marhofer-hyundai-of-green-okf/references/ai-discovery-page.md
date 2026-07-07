@@ -59,7 +59,7 @@ Inventory data is updated in real-time.
 
 ## Related
 
-- See [llms-txt.md](ron-marhofer-hyundai-of-green-okf/references/llms-txt.md) for LLM consumption directives.
-- See [prompts.md](ron-marhofer-hyundai-of-green-okf/references/prompts.md) for the Q&A prompt library.
-- See [testimonials.md](ron-marhofer-hyundai-of-green-okf/references/testimonials.md) for customer reviews.
-- See [dealership.md](ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the business profile.
+- See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/references/llms-txt.md) for LLM consumption directives.
+- See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/references/prompts.md) for the Q&A prompt library.
+- See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/references/testimonials.md) for customer reviews.
+- See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the business profile.

@@ -72,5 +72,5 @@ All-electric retro-styled van, inspired by the classic Microbus. Available in re
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.
 
-See [dealership.md](haselwood-volkswagen-of-bremerton-okf/datasets/dealership.md) for contact information and current programs.
-See [model-comparison.md](haselwood-volkswagen-of-bremerton-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/tables/model-comparison.md) for side-by-side model specifications.

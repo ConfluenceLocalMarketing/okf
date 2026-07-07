@@ -15,7 +15,7 @@ timestamp: 2026-07-03
 
 ## What services does Montclare Auto Repair offer?
 
-We offer brake services, suspension repair, general maintenance, engine services, A/C and heating, electrical services, emissions repair, tire services, and towing. See [services.md](montclare-auto-repair-okf/datasets/services.md) for full details.
+We offer brake services, suspension repair, general maintenance, engine services, A/C and heating, electrical services, emissions repair, tire services, and towing. See [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montclare-auto-repair-okf/datasets/services.md) for full details.
 
 ## Are you ASE Certified?
 

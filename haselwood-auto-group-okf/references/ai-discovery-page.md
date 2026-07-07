@@ -92,11 +92,11 @@ Haselwood Auto Group provides a Model Context Protocol (MCP) server for browsing
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](haselwood-auto-group-okf/references/prompts.md) for details.
+The `/prompts` endpoint exposes structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/prompts.md) for details.
 
 ## Testimonials Endpoint
 
-The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](haselwood-auto-group-okf/references/testimonials.md) for details.
+The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/testimonials.md) for details.
 
 ## LLM-Accessible Actions (ReadAction)
 
@@ -125,6 +125,6 @@ The AI Discovery Page defines 10 structured `ReadAction` entries that agents can
 | Robots.txt | `/robots.txt` |
 | Sitemap XML | `/sitemap.xml` |
 
-See [llms-txt.md](haselwood-auto-group-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](haselwood-auto-group-okf/references/prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](haselwood-auto-group-okf/references/testimonials.md) for customer review data.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/testimonials.md) for customer review data.

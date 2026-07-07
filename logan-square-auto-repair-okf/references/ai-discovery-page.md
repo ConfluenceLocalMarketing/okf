@@ -62,7 +62,7 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/logan-square-auto-repa
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes structured Q&A pairs. See [prompts.md](logan-square-auto-repair-okf/references/prompts.md) for the full library.
+The `/prompts` endpoint exposes structured Q&A pairs. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/references/prompts.md) for the full library.
 
-See [llms-txt.md](logan-square-auto-repair-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](logan-square-auto-repair-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/references/prompts.md) for the complete Q&A prompt library.

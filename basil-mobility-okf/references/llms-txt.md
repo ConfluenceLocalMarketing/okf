@@ -80,5 +80,5 @@ The PromptGraph API exposes 74 structured prompt/response pairs covering:
 - **Rentals:** Short and long-term accessible van rentals
 - **Dealership:** Customer service, family-oriented support, first-time buyer assistance, shuttle service, reviews
 
-See [ai-discovery-page.md](basil-mobility-okf/references/ai-discovery-page.md) for structured semantic endpoints and AI manifest details.
-See [prompts.md](basil-mobility-okf/references/prompts.md) for the complete PromptGraph prompt library.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/ai-discovery-page.md) for structured semantic endpoints and AI manifest details.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/prompts.md) for the complete PromptGraph prompt library.

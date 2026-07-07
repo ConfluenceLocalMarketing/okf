@@ -1,3 +1,3 @@
 # References
 
-- [website.md](bath-fitter-okf/references/website.md) — Official Bath Fitter Metro Detroit website at localbathfitter.com.
+- [website.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bath-fitter-okf/references/website.md) — Official Bath Fitter Metro Detroit website at localbathfitter.com.

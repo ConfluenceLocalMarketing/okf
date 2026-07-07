@@ -8,12 +8,12 @@ World's largest truckstop located in Walcott, Iowa since 1964 — featuring 900 
 
 ## Datasets
 
-- [iowa-80-truckstop.md](iowa-80-truckstop-okf/datasets/iowa-80-truckstop.md) - Core profile of the Iowa 80 Truckstop including history, operating details, and full amenity listing.
+- [iowa-80-truckstop.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/iowa-80-truckstop-okf/datasets/iowa-80-truckstop.md) - Core profile of the Iowa 80 Truckstop including history, operating details, and full amenity listing.
 
 ## References
 
-- [website.md](iowa-80-truckstop-okf/references/website.md) - The official Iowa 80 Truckstop website at iowa80truckstop.com.
+- [website.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/iowa-80-truckstop-okf/references/website.md) - The official Iowa 80 Truckstop website at iowa80truckstop.com.
 
 ## Tables
 
-- [amenities.md](iowa-80-truckstop-okf/tables/amenities.md) - Structured comparison of all amenities, services, and dining options at the truckstop.
+- [amenities.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/iowa-80-truckstop-okf/tables/amenities.md) - Structured comparison of all amenities, services, and dining options at the truckstop.

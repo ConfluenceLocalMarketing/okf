@@ -61,4 +61,4 @@ A: No, no-appointment test drives are welcome.
 **Q: Is there a vehicle hold policy?**
 A: Yes, the dealership allows customers to hold vehicles before arriving.
 
-See [prompts.md](ron-marhofer-buick-gmc-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

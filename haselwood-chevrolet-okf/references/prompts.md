@@ -49,5 +49,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-chevrolet/pr
 | 6 | `dedicated-support-for-our-bremerton` | Military appreciation |
 | 7 | `quality-pre-owned-transportation-for-every-budget` | Economy Vehicle Program |
 
-See [ai-discovery-page.md](haselwood-chevrolet-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](haselwood-chevrolet-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/datasets/faq.md) for common questions and answers.

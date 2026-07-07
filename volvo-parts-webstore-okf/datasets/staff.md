@@ -28,4 +28,4 @@ timestamp: 2026-07-03
 - **Marcus Williams** — Fulfillment Lead
 - **Jake Morrison** — Shipping Coordinator
 
-See [company.md](volvo-parts-webstore-okf/datasets/company.md) for the full business profile.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/volvo-parts-webstore-okf/datasets/company.md) for the full business profile.

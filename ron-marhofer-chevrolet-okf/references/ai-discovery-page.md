@@ -60,4 +60,4 @@ The AI Manifest is available at:
 
 `http://api.promptgraph.ai/api/v1/ron-marhofer-chevrolet`
 
-See [llms-txt.md](ron-marhofer-chevrolet-okf/references/llms-txt.md) for LLM directives.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-chevrolet-okf/references/llms-txt.md) for LLM directives.

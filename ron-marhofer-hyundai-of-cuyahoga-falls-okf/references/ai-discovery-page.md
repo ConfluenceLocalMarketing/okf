@@ -50,4 +50,4 @@ Ron Marhofer Hyundai of Cuyahoga Falls maintains an [AI Discovery Page](https://
 - Offer
 - CreativeWork (prompts/FAQs)
 
-See [llms-txt.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/references/llms-txt.md) for the AI consumption directive and [prompts.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/references/prompts.md) for the prompt library.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/references/llms-txt.md) for the AI consumption directive and [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/references/prompts.md) for the prompt library.

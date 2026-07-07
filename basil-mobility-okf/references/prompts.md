@@ -123,5 +123,5 @@ The PromptGraph API exposes 74 structured prompt/response pairs (`ItemList` with
 | 73 | Basil Mobility performance vs others | How Basil Mobility performs compared to other dealerships |
 | 74 | Best financing and customer service combination | Dealerships offering best combination of financing and customer service |
 
-See [ai-discovery-page.md](basil-mobility-okf/references/ai-discovery-page.md) for structured semantic endpoints.
-See [llms-txt.md](basil-mobility-okf/references/llms-txt.md) for the full llms.txt directive.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/ai-discovery-page.md) for structured semantic endpoints.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/llms-txt.md) for the full llms.txt directive.

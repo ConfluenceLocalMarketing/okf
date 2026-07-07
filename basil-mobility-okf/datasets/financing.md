@@ -59,4 +59,4 @@ Estimate monthly payments using the payment calculator before visiting the deale
 
 Contact the finance department through the dealership's sales line at (716) 206-5266.
 
-See [dealership.md](basil-mobility-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](basil-mobility-okf/datasets/new-vehicles.md), [used-vehicles.md](basil-mobility-okf/datasets/used-vehicles.md), or [mobility-vehicles.md](basil-mobility-okf/datasets/mobility-vehicles.md) for inventory.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/new-vehicles.md), [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/used-vehicles.md), or [mobility-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/mobility-vehicles.md) for inventory.

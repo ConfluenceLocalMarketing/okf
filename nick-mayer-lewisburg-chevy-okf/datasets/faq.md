@@ -54,6 +54,6 @@ Appointments are recommended but walk-ins are welcome. Call 931-246-4351.
 **Do you use genuine OEM parts?**
 Yes. The parts department stocks genuine GM and ACDelco parts. Call 931-300-2764.
 
-See [dealership.md](nick-mayer-lewisburg-chevy-okf/datasets/dealership.md) for full contact information.
-See [new-vehicles.md](nick-mayer-lewisburg-chevy-okf/datasets/new-vehicles.md) for model details.
-See [service-center.md](nick-mayer-lewisburg-chevy-okf/datasets/service-center.md) for service information.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-chevy-okf/datasets/dealership.md) for full contact information.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-chevy-okf/datasets/new-vehicles.md) for model details.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-chevy-okf/datasets/service-center.md) for service information.

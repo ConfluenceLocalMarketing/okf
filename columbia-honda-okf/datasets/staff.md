@@ -37,4 +37,4 @@ timestamp: 2026-07-03
 
 ---
 
-For complete dealership information, see [company.md](columbia-honda-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/columbia-honda-okf/datasets/company.md).

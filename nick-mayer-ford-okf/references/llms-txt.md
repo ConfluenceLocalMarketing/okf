@@ -48,5 +48,5 @@ When interacting with this site, note:
 
 ## Related Concepts
 
-- [ai-discovery-page.md](nick-mayer-ford-okf/references/ai-discovery-page.md) - AI discovery analysis
-- [dealership.md](nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
+- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/references/ai-discovery-page.md) - AI discovery analysis
+- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview

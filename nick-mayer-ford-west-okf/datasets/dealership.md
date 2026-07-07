@@ -56,13 +56,13 @@ Nick Mayer Ford West carries a full lineup of new Ford vehicles:
 - **Cars & Performance**: Mustang, Mustang Mach-E (Electric)
 - **Electric**: Mustang Mach-E, E-Transit
 
-See [new-vehicles.md](nick-mayer-ford-west-okf/datasets/new-vehicles.md) for complete model details.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/new-vehicles.md) for complete model details.
 
 ## Pre-Owned Inventory
 
 A wide selection of pre-owned vehicles spanning multiple makes, including Ford Blue Advantage certified pre-owned vehicles with comprehensive warranty coverage. All used vehicles come with CarFax vehicle history reports.
 
-See [used-vehicles.md](nick-mayer-ford-west-okf/datasets/used-vehicles.md) for details.
+See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/used-vehicles.md) for details.
 
 ## Financing
 
@@ -83,7 +83,7 @@ The Ford-certified service center is staffed by ASE certified technicians and of
 - Genuine Ford OEM parts
 - Online scheduling
 
-See [service-center.md](nick-mayer-ford-west-okf/datasets/service-center.md) for full details.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/service-center.md) for full details.
 
 ## Online Tools
 
@@ -103,9 +103,9 @@ See [service-center.md](nick-mayer-ford-west-okf/datasets/service-center.md) for
 
 ## Related Concepts
 
-- [new-vehicles.md](nick-mayer-ford-west-okf/datasets/new-vehicles.md) - New Ford model lineup
-- [used-vehicles.md](nick-mayer-ford-west-okf/datasets/used-vehicles.md) - Pre-owned inventory
-- [service-center.md](nick-mayer-ford-west-okf/datasets/service-center.md) - Service center details
-- [staff.md](nick-mayer-ford-west-okf/datasets/staff.md) - Staff directory
-- [faq.md](nick-mayer-ford-west-okf/datasets/faq.md) - Frequently asked questions
-- [model-comparison.md](nick-mayer-ford-west-okf/tables/model-comparison.md) - Ford model comparison table
+- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/new-vehicles.md) - New Ford model lineup
+- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/used-vehicles.md) - Pre-owned inventory
+- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/service-center.md) - Service center details
+- [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/staff.md) - Staff directory
+- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/faq.md) - Frequently asked questions
+- [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/tables/model-comparison.md) - Ford model comparison table

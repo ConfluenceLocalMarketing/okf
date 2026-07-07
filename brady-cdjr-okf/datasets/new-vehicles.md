@@ -55,4 +55,4 @@ Visit the dealership at 5080 Academy Ln, Bessemer, AL 35022, or call (205) 922-6
 
 ---
 
-For complete dealership information, see [company.md](brady-cdjr-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/brady-cdjr-okf/datasets/company.md).

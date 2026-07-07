@@ -18,7 +18,7 @@ resource: https://www.westhillsmazda.com/finance/
 
 The West Hills Mazda Finance Center offers comprehensive financing solutions for new and pre-owned Mazda vehicles, serving customers throughout the Kitsap Peninsula, Silverdale, Port Orchard, Poulsbo, and surrounding Washington communities.
 
-See [dealership.md](west-hills-mazda-okf/datasets/dealership.md) for full business profile.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/datasets/dealership.md) for full business profile.
 
 ## Financing Options
 

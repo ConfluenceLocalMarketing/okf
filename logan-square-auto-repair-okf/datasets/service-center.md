@@ -47,4 +47,4 @@ Logan Square Auto Repair is a family-owned service center established in 1997, l
 
 Wide range of makes including Acura, Audi, BMW, Chrysler, Dodge, Ford, GMC, Honda, Hyundai, Jaguar, Jeep, KIA, Land Rover, Lexus, Mazda, Mercedes-Benz, Mini, Mitsubishi, Nissan, Porsche, Saab, Subaru, Tesla, Toyota, Volkswagen, Volvo, and more.
 
-See [company.md](logan-square-auto-repair-okf/datasets/company.md) for more information about our shop history and services.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/datasets/company.md) for more information about our shop history and services.

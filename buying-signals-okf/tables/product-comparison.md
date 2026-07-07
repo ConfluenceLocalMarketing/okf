@@ -54,4 +54,4 @@ timestamp: 2026-06-26
 | Attribution | No | Yes | No | No | Yes |
 
 See each product's dataset file for detailed descriptions.
-See [company.md](buying-signals-okf/datasets/company.md) for the full company profile.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full company profile.

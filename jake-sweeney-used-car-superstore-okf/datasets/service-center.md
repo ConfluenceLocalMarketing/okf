@@ -48,4 +48,4 @@ Customer reviews highlight strong service department operations:
 - Genuine OEM and quality aftermarket replacement parts
 - Parts available for all makes and models
 
-See [staff.md](jake-sweeney-used-car-superstore-okf/datasets/staff.md) for service department directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/staff.md) for service department directory.

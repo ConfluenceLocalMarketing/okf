@@ -42,4 +42,4 @@ timestamp: 2026-07-03
 - **Liberty Automotive Group** — Dealer Group
 - **Scott Reynolds** — General Manager
 
-See [company.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for dealership location and contact information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for dealership location and contact information.

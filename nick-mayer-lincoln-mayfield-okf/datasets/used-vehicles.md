@@ -40,5 +40,5 @@ The Lincoln Certified Pre-Owned program provides:
 - Appraisal appointments available
 - Trade-in equity can be applied to new or pre-owned purchases
 
-See [new-vehicles.md](nick-mayer-lincoln-mayfield-okf/datasets/new-vehicles.md) for the Lincoln new vehicle lineup.
-See [dealership.md](nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for dealership contact information.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/datasets/new-vehicles.md) for the Lincoln new vehicle lineup.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for dealership contact information.

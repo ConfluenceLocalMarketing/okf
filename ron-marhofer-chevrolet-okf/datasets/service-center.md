@@ -46,4 +46,4 @@ timestamp: 2026-07-01
 
 The service center is dedicated to keeping vehicles running smoothly with outstanding care for Stow, Akron, Cuyahoga Falls, and Northeast Ohio Chevrolet owners.
 
-See [dealership.md](ron-marhofer-chevrolet-okf/datasets/dealership.md) for business hours and location.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-chevrolet-okf/datasets/dealership.md) for business hours and location.

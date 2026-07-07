@@ -54,4 +54,4 @@ The dealership operates a [Collision Center](https://www.leifjohnsonford.com/col
 
 View current [Service & Parts Specials](https://www.leifjohnsonford.com/service-parts-specials/) for discounted maintenance packages.
 
-See [staff.md](leif-johnson-ford-austin-okf/datasets/staff.md) for the service team directory and [dealership.md](leif-johnson-ford-austin-okf/datasets/dealership.md) for general business information.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/staff.md) for the service team directory and [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/dealership.md) for general business information.

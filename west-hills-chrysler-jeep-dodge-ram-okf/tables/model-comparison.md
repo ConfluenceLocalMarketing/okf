@@ -95,5 +95,5 @@ Standard and available features across models:
 - Available blind spot monitoring and rear cross-path detection
 - Available adaptive cruise control
 
-See [new-vehicles.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for current offers and promotions.

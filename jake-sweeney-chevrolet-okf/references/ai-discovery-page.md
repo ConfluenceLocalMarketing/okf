@@ -101,7 +101,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data:
 
 ## Q&A Prompt Library (119 Prompts)
 
-The `/prompts` endpoint exposes 119 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](jake-sweeney-chevrolet-okf/references/prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 119 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/references/prompts.md) for the full library. Topics include:
 
 - Vehicle shopping and model-specific inquiries
 - Financing, leasing, and trade-in questions
@@ -120,7 +120,7 @@ The `/testimonials` endpoint exposes customer review data:
 - **Most-cited staff:** Ricky Steed, Dante Henley, Andre Valines, Robert Davis, Darrin Aden, Michael Ellis, Chris Page, Pip (Sokpheap), Rich Blank, Brad, Tyler Lycans, Marcus, Raheem, Deondre, Lamonte, Joe Gray, Ishmael
 - Common themes: stress-free buying, no-pressure sales, credit-challenged approvals, out-of-town buyers, service department accountability
 
-See [testimonials.md](jake-sweeney-chevrolet-okf/references/testimonials.md) for customer review data.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/references/testimonials.md) for customer review data.
 
 ## LLM-Accessible Actions
 
@@ -187,6 +187,6 @@ The AI Discovery Page defines 14+ structured `ReadAction` entries that agents ca
 
 This page exists to give AI agents direct access to structured knowledge about Jake Sweeney Chevrolet without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](jake-sweeney-chevrolet-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](jake-sweeney-chevrolet-okf/references/prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](jake-sweeney-chevrolet-okf/references/testimonials.md) for customer review data.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/references/testimonials.md) for customer review data.

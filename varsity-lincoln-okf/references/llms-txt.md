@@ -51,5 +51,5 @@ The llms.txt file provides AI systems with structured discovery and consumption 
 
 Varsity Lincoln, located at 49251 Grand River, Novi, MI 48374, is the #1 Volume Lincoln Dealer in the World for 22 consecutive years. Part of Varsity Automotive Group. Real-time inventory updates via JSON-LD API endpoints. Structured data optimized for AI discovery and consumption.
 
-See [ai-discovery-page.md](varsity-lincoln-okf/references/ai-discovery-page.md) for the full AI Discovery Hub overview.
-See [prompts.md](varsity-lincoln-okf/references/prompts.md) for the prompt library.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/references/ai-discovery-page.md) for the full AI Discovery Hub overview.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/references/prompts.md) for the prompt library.

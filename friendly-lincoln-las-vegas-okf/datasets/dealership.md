@@ -70,5 +70,5 @@ Las Vegas, Henderson, North Las Vegas, and surrounding Southern Nevada communiti
 
 Personalized luxury leasing, competitive APRs, online finance application, and trade-in support available.
 
-See [vehicles.md](friendly-lincoln-las-vegas-okf/datasets/vehicles.md) for Lincoln model and inventory details.
-See [service-center.md](friendly-lincoln-las-vegas-okf/datasets/service-center.md) for service offerings.
+See [vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/vehicles.md) for Lincoln model and inventory details.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/service-center.md) for service offerings.

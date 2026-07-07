@@ -63,4 +63,4 @@ Chrysler, Jeep, Dodge, and RAM Certified Pre-Owned vehicles undergo rigorous ins
 
 Vehicle service contracts and extended warranty protection plans available for most pre-owned vehicles.
 
-See [dealership.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for current financing and trade-in programs.

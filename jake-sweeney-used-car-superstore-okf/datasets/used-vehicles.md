@@ -58,4 +58,4 @@ Jake Sweeney Used Car Superstore maintains one of the largest pre-owned vehicle 
 
 The dealership offers rotating monthly specials on select pre-owned vehicles. Current specials vary and are updated on the [specials page](https://www.sweeneyusedcars.com/pre-owned-vehicle-offers-cincinnati-oh.htm).
 
-See [dealership.md](jake-sweeney-used-car-superstore-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/dealership.md) for current financing and trade-in programs.

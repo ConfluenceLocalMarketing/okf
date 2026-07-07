@@ -84,4 +84,4 @@ Heartland Toyota has collected customer testimonials through the PromptGraph pla
 - **Competitive rates** - Multiple lenders, ability to beat pre-approvals
 - **Thorough explanations** - Customers appreciate clear walkthroughs of paperwork
 
-See [staff.md](heartland-toyota-okf/datasets/staff.md) for the full staff directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/datasets/staff.md) for the full staff directory.

@@ -82,7 +82,7 @@ These prompts are designed for AI systems to provide accurate, location-specific
 
 ## AI Discovery Integration
 
-The Car-X corporate umbrella has an AI Discovery Page at `https://www.carxstl.com/ai-discovery-page` which exposes 16 structured ReadAction entries for specific service landing pages. See [ai-discovery.md](car-x-bridgeton-mo-okf/references/ai-discovery.md) for full details.
+The Car-X corporate umbrella has an AI Discovery Page at `https://www.carxstl.com/ai-discovery-page` which exposes 16 structured ReadAction entries for specific service landing pages. See [ai-discovery.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-bridgeton-mo-okf/references/ai-discovery.md) for full details.
 
 ### Related ReadAction Topics
 

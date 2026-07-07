@@ -25,6 +25,6 @@ The company website at [aplusroofingandexteriors.com](https://www.aplusroofingan
 
 ## Derived Concepts
 
-- [company-profile.md](a-plus-roofing-exteriors-okf/datasets/company-profile.md) — Business profile and service catalog sourced from website content.
-- [service-areas.md](a-plus-roofing-exteriors-okf/datasets/service-areas.md) — Geographic coverage data derived from website service area pages.
-- [services-pricing.md](a-plus-roofing-exteriors-okf/tables/services-pricing.md) — Structured service table compiled from website service descriptions.
+- [company-profile.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/company-profile.md) — Business profile and service catalog sourced from website content.
+- [service-areas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/service-areas.md) — Geographic coverage data derived from website service area pages.
+- [services-pricing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/tables/services-pricing.md) — Structured service table compiled from website service descriptions.

@@ -101,7 +101,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data:
 
 ## Q&A Prompt Library (64 Prompts)
 
-The `/prompts` endpoint exposes 64 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](basil-mitsubishi-okf/references/prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 64 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/prompts.md) for the full library. Topics include:
 
 - Vehicle shopping and model-specific inquiries
 - Financing, leasing, and trade-in questions
@@ -145,6 +145,6 @@ The AI Discovery Page defines structured `ReadAction` entries that agents can in
 
 This page exists to give AI agents direct access to structured knowledge about Basil Mitsubishi without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](basil-mitsubishi-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](basil-mitsubishi-okf/references/prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](basil-mitsubishi-okf/references/testimonials.md) for customer review data.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/testimonials.md) for customer review data.

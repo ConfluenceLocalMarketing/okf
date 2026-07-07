@@ -46,4 +46,4 @@ Every new Mitsubishi includes:
 - **5-Year/Unlimited-Mile Roadside Assistance**
 - **7-Year/100,000-Mile Anti-Corrosion Perforation Warranty**
 
-See [company.md](frank-leta-mitsubishi-okf/datasets/company.md) for dealership contact and location information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/frank-leta-mitsubishi-okf/datasets/company.md) for dealership contact and location information.

@@ -77,14 +77,14 @@ Mazda models available include:
 
 ## Staff
 
-See [staff.md](west-hills-mazda-okf/datasets/staff.md) for full directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - Aggregate rating: 4.7 / 5.0 (892 reviews) across major platforms
 - Google Business Profile: 4.7 stars (882+ reviews)
 
-See [testimonials.md](west-hills-mazda-okf/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

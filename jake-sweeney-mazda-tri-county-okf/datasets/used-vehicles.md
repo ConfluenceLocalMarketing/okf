@@ -53,4 +53,4 @@ The dealership offers online purchasing options:
 - Competitive trade-in values
 - On-the-spot evaluation
 
-See [dealership.md](jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) for current financing and trade-in programs.

@@ -32,6 +32,6 @@ Ron Marhofer Hyundai of Green has an average rating of 4.5 out of 5.0 based on o
 
 ## Related
 
-- See [dealership.md](ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the business profile.
-- See [staff.md](ron-marhofer-hyundai-of-green-okf/datasets/staff.md) for staff mentioned in reviews.
-- See [service-center.md](ron-marhofer-hyundai-of-green-okf/datasets/service-center.md) for service department details.
+- See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the business profile.
+- See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/staff.md) for staff mentioned in reviews.
+- See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/service-center.md) for service department details.

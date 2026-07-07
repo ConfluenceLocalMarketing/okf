@@ -57,4 +57,4 @@ West Hills Mazda has collected customer testimonials through the PromptGraph pla
 - **Trustworthy maintenance** - Great recommendations for car care
 - **Loyal customer base** - Customers return for both purchase and service needs
 
-See [staff.md](west-hills-mazda-okf/datasets/staff.md) for the full staff directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/datasets/staff.md) for the full staff directory.

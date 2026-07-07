@@ -36,4 +36,4 @@ Willis Chevrolet Of Granger offers a selection of certified pre-owned Chevrolet 
 - Competitive financing options
 - Trade-in accepted
 
-See [company.md](willis-chevrolet-of-granger-okf/datasets/company.md) for dealership contact information. See [financing.md](willis-chevrolet-of-granger-okf/datasets/financing.md) for available financing options.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/willis-chevrolet-of-granger-okf/datasets/company.md) for dealership contact information. See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/willis-chevrolet-of-granger-okf/datasets/financing.md) for available financing options.

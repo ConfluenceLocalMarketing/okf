@@ -60,4 +60,4 @@ Volkswagen Certified Pre-Owned vehicles undergo rigorous inspection and include:
 - Sell your vehicle even without purchase
 - Competitive trade-in values
 
-See [dealership.md](haselwood-volkswagen-of-bremerton-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/datasets/dealership.md) for current financing and trade-in programs.

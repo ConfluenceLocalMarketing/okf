@@ -85,4 +85,4 @@ Staff directory compiled from the dealership website and customer reviews.
 
 Parts service available through the dealership with genuine Hyundai OEM components.
 
-See [testimonials.md](haselwood-hyundai-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-hyundai-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.

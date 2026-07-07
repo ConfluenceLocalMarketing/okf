@@ -53,4 +53,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 - [Sitemap](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/sitemap.xml) - XML sitemap for search engine and AI crawler discovery
 - [Configuration](http://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/config.json) - System configuration and metadata
 
-See [ai-discovery-page.md](bmw-of-cincinnati-north-okf/references/ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

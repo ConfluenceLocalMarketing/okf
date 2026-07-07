@@ -67,4 +67,4 @@ The dealership offers a dedicated EV overview with charging support, ownership g
 
 Approximately 179 total vehicles in inventory mix. Updated daily. Browse online at the [new vehicle inventory page](https://www.leifjohnsonfordofmanor.com/inventory/new-vehicles/) and [new specials](https://www.leifjohnsonfordofmanor.com/inventory/new-specials/).
 
-See [dealership.md](leif-johnson-ford-manor-okf/datasets/dealership.md) for full business profile and [financing.md](leif-johnson-ford-manor-okf/datasets/financing.md) for purchase/lease options.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/dealership.md) for full business profile and [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/financing.md) for purchase/lease options.

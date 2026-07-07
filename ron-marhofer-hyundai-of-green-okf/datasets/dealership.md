@@ -75,7 +75,7 @@ The dealership is Ohio's number one volume Hyundai dealer and offers free home d
 
 ## Related
 
-- See [new-vehicles.md](ron-marhofer-hyundai-of-green-okf/datasets/new-vehicles.md) for the current Hyundai model lineup.
-- See [service-center.md](ron-marhofer-hyundai-of-green-okf/datasets/service-center.md) for service department details.
-- See [staff.md](ron-marhofer-hyundai-of-green-okf/datasets/staff.md) for staff directory.
-- See [faq.md](ron-marhofer-hyundai-of-green-okf/datasets/faq.md) for frequently asked questions.
+- See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/new-vehicles.md) for the current Hyundai model lineup.
+- See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/service-center.md) for service department details.
+- See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/staff.md) for staff directory.
+- See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/faq.md) for frequently asked questions.

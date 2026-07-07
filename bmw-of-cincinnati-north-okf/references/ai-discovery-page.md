@@ -94,7 +94,7 @@ The `/offers` endpoint exposes current promotional offers:
 
 ## Q&A Prompt Library (16 Prompts)
 
-The `/prompts` endpoint exposes 16 structured Q&A prompt/response pairs. See [prompts.md](bmw-of-cincinnati-north-okf/references/prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 16 structured Q&A prompt/response pairs. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/references/prompts.md) for the full library. Topics include:
 
 - New inventory and dealership information
 - Certified pre-owned BMW near Cincinnati
@@ -152,5 +152,5 @@ The PromptGraph platform defines structured knowledge resources that agents can 
 
 This page documents the structured AI-accessible resources for BMW of Cincinnati North. All information is available via JSON endpoints and semantic markup through the PromptGraph API at `https://api.promptgraph.ai/api/v1/bmw-of-cincinnati-north/`.
 
-See [llms-txt.md](bmw-of-cincinnati-north-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](bmw-of-cincinnati-north-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/references/prompts.md) for the complete Q&A prompt library.

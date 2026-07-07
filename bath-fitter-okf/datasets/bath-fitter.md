@@ -41,7 +41,7 @@ Family owned and operated for over 30 years, Bath Fitter Metro Detroit specializ
 
 ## Service Area
 
-See [service-area.md](bath-fitter-okf/datasets/service-area.md) for the full list of municipalities served.
+See [service-area.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bath-fitter-okf/datasets/service-area.md) for the full list of municipalities served.
 
 ## Citations
 

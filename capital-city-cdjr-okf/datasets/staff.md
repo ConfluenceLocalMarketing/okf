@@ -38,4 +38,4 @@ timestamp: 2026-07-03
 
 ---
 
-For complete dealership information, see [company.md](capital-city-cdjr-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/capital-city-cdjr-okf/datasets/company.md).

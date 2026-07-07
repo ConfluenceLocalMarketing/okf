@@ -44,4 +44,4 @@ timestamp: 2026-07-03
 - **Joe Machens** — Dealer Principal
 - **Brandon Cooper** — General Manager
 
-See [company.md](mclarty-nissan-of-little-rock-okf/datasets/company.md) for dealership location and contact information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mclarty-nissan-of-little-rock-okf/datasets/company.md) for dealership location and contact information.

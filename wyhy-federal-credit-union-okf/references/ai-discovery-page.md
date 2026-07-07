@@ -82,6 +82,6 @@ Members also access over 5,000 CO-OP Shared Branches and 30,000+ CO-OP ATMs nati
 
 ## Related Concepts
 
-- See [company.md](wyhy-federal-credit-union-okf/datasets/company.md) for complete credit union profile.
-- See [prompts.md](wyhy-federal-credit-union-okf/references/prompts.md) for AI chatbot playbooks.
-- See [llms-txt.md](wyhy-federal-credit-union-okf/references/llms-txt.md) for machine-readable summary.
+- See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/wyhy-federal-credit-union-okf/datasets/company.md) for complete credit union profile.
+- See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/wyhy-federal-credit-union-okf/references/prompts.md) for AI chatbot playbooks.
+- See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/wyhy-federal-credit-union-okf/references/llms-txt.md) for machine-readable summary.

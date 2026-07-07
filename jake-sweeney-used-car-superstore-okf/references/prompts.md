@@ -54,5 +54,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-
 | 9 | `diverse-brand-inventory-at-cincinnatis-used-car-giant` | Multi-brand inventory |
 | 10 | `what-weekend-sales-events-at-jake-sweeney-used-car-superstore-cincinnati-offer-bmw-convertibles-100k-200k` | Weekend events |
 
-See [ai-discovery-page.md](jake-sweeney-used-car-superstore-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](jake-sweeney-used-car-superstore-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/faq.md) for common questions and answers.

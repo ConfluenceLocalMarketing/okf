@@ -26,6 +26,6 @@ Competitive audience conquesting platform that identifies competitor shoppers an
 
 ## Related
 
-See [geo-signals.md](buying-signals-okf/datasets/geo-signals.md) for location-based targeting.
-See [marketing-suite.md](buying-signals-okf/datasets/marketing-suite.md) for campaign execution.
-See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.
+See [geo-signals.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/geo-signals.md) for location-based targeting.
+See [marketing-suite.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/marketing-suite.md) for campaign execution.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.

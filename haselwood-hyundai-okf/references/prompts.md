@@ -71,5 +71,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-hyundai/prom
 | 6 | `reliable-transportation-for-every-budget` | Economy Vehicle Program |
 | 7 | `factory-certified-care-to-keep-your-hyundai-running-like-new` | Service department |
 
-See [ai-discovery-page.md](haselwood-hyundai-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](haselwood-hyundai-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-hyundai-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-hyundai-okf/datasets/faq.md) for common questions and answers.

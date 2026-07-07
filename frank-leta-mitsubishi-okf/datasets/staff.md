@@ -40,4 +40,4 @@ timestamp: 2026-07-03
 - **Frank Leta** — Dealer Principal / Owner
 - **Chris Brennan** — General Manager
 
-See [company.md](frank-leta-mitsubishi-okf/datasets/company.md) for dealership location and contact information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/frank-leta-mitsubishi-okf/datasets/company.md) for dealership location and contact information.

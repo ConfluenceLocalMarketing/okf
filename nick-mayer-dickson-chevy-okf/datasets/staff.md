@@ -22,7 +22,7 @@ Available during business hours to assist with new Chevrolet sales, pre-owned ve
 Handles financing, leasing, extended warranties, and aftermarket products. Online credit applications are available on the dealership website.
 
 ## Service Department
-Staffed by factory-trained technicians performing maintenance, diagnostics, and repairs. See [service-center.md](nick-mayer-dickson-chevy-okf/datasets/service-center.md) for full details.
+Staffed by factory-trained technicians performing maintenance, diagnostics, and repairs. See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-dickson-chevy-okf/datasets/service-center.md) for full details.
 
 ## Parts Department
 Stocks genuine OEM Chevrolet parts, accessories, and maintenance items.

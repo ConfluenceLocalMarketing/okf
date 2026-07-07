@@ -92,5 +92,5 @@ Standard and available features across the lineup:
 - Wireless Apple CarPlay and Android Auto
 - Available Super Cruise (select models)
 
-See [new-vehicles.md](ron-marhofer-buick-gmc-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](ron-marhofer-buick-gmc-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/datasets/dealership.md) for current offers and promotions.

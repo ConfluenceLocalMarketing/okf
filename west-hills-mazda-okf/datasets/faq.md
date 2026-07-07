@@ -63,4 +63,4 @@ A: West Hills Mazda is part of the Haselwood Auto Group, which also includes oth
 **Q: What are the dealership hours?**
 A: Monday through Saturday 9:00 AM - 8:00 PM, Sunday 10:00 AM - 7:00 PM.
 
-See [prompts.md](west-hills-mazda-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

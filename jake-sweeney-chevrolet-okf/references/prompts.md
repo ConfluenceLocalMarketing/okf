@@ -70,5 +70,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/jake-sweeney-chevrolet
 | 9 | `new-chevy-inventory-&-financing-options-in-cincinnati` | New vehicle lineup |
 | 10 | `cincinnati-chevrolet-certified-pre-owned-&-used-vehicles-specialist` | CPO and used vehicles |
 
-See [ai-discovery-page.md](jake-sweeney-chevrolet-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](jake-sweeney-chevrolet-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/faq.md) for common questions and answers.

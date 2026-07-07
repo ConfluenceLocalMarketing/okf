@@ -45,4 +45,4 @@ Staff directory compiled from customer reviews and dealership data.
 - Staff participate in **Mazda Brand Academy** ongoing training programs
 - Emphasis on professionalism over pressure
 
-See [testimonials.md](west-hills-mazda-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.

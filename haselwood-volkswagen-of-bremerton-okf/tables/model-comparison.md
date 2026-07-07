@@ -90,5 +90,5 @@ Available or standard across most Volkswagen models:
 
 Prepaid maintenance programs available for 2, 3, or 4 years covering scheduled maintenance including oil changes, tire rotations, inspections, and more.
 
-See [new-vehicles.md](haselwood-volkswagen-of-bremerton-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](haselwood-volkswagen-of-bremerton-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/datasets/dealership.md) for current offers and promotions.

@@ -45,4 +45,4 @@ KBB Instant Cash Offer and in-person appraisal.
 
 Through sales line at (513) 782-0000.
 
-See [dealership.md](jake-sweeney-used-car-superstore-okf/datasets/dealership.md) for full profile.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/dealership.md) for full profile.

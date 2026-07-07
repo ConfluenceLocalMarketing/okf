@@ -58,4 +58,4 @@ The dealership operates a full collision repair center for body repair and paint
 
 The Test Drive To Go program brings vehicles to your home or office for a test drive and also provides vehicle pickup and delivery for service appointments.
 
-See [staff.md](ray-laethem-buick-gmc-okf/datasets/staff.md) for the service team directory and [dealership.md](ray-laethem-buick-gmc-okf/datasets/dealership.md) for general business information.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/staff.md) for the service team directory and [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for general business information.

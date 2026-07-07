@@ -44,4 +44,4 @@ Volvo Recharge models are available as plug-in hybrid (PHEV) and fully electric 
 - Industry-leading safety technology (Pilot Assist, City Safety)
 - Sustainable luxury with electrified powertrains
 
-See [company.md](the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for dealership contact and location.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for dealership contact and location.

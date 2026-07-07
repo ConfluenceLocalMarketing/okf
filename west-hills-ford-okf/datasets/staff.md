@@ -75,4 +75,4 @@ Staff directory compiled from the dealership website and customer reviews.
 
 - **Chris Patton** - Parts Manager
 
-See [testimonials.md](west-hills-ford-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-ford-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.

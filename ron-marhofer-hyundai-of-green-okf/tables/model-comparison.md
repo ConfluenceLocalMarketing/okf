@@ -63,5 +63,5 @@ timestamp: 2026-07-01
 
 ## Related
 
-- See [new-vehicles.md](ron-marhofer-hyundai-of-green-okf/datasets/new-vehicles.md) for full model details.
-- See [dealership.md](ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the business profile.
+- See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/new-vehicles.md) for full model details.
+- See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the business profile.

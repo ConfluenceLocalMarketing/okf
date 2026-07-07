@@ -29,7 +29,7 @@ The Hyundai service center at Ron Marhofer Hyundai of Green provides expert care
 
 ## Service Hours
 
-Same as showroom hours. See [dealership.md](ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for complete hours of operation.
+Same as showroom hours. See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for complete hours of operation.
 
 ## Contact
 
@@ -59,7 +59,7 @@ The parts department stocks a comprehensive inventory of OEM components and acce
 
 ## Related
 
-- See [dealership.md](ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the full business profile and hours.
-- See [staff.md](ron-marhofer-hyundai-of-green-okf/datasets/staff.md) for service staff.
-- See [testimonials.md](ron-marhofer-hyundai-of-green-okf/references/testimonials.md) for customer reviews.
-- See [faq.md](ron-marhofer-hyundai-of-green-okf/datasets/faq.md) for frequently asked questions about service.
+- See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the full business profile and hours.
+- See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/staff.md) for service staff.
+- See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/references/testimonials.md) for customer reviews.
+- See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/faq.md) for frequently asked questions about service.

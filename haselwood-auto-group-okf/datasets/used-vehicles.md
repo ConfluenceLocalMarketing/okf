@@ -70,4 +70,4 @@ An exclusive program offering budget-friendly, pre-owned cars that undergo rigor
 - Competitive trade-in values with third-party market evaluation
 - Cash offers for trade-ins (even without vehicle purchase)
 
-See [dealership.md](haselwood-auto-group-okf/datasets/dealership.md) for member dealership locations and contact information.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/datasets/dealership.md) for member dealership locations and contact information.

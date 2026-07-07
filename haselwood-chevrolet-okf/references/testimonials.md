@@ -62,4 +62,4 @@ Haselwood Chevrolet has collected customer testimonials through the PromptGraph 
 - **Fast turnaround** - Service completed quickly with good communication
 - **Professional advisors** - Service advisors keep customers informed throughout the process
 
-See [staff.md](haselwood-chevrolet-okf/datasets/staff.md) for the full staff directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/datasets/staff.md) for the full staff directory.

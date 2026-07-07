@@ -60,4 +60,4 @@ timestamp: 2026-07-03
 | Patricia Adams | Parts Manager | padams@friendlyfordlv.com |
 | Steven Wright | Assistant Parts Manager | swright@friendlyfordlv.com |
 
-See [friendly-ford-las-vegas.md](friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for business profile and [service-center.md](friendly-ford-las-vegas-okf/datasets/service-center.md) for service department details.
+See [friendly-ford-las-vegas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for business profile and [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/service-center.md) for service department details.

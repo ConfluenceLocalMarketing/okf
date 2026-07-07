@@ -1,4 +1,4 @@
 # Datasets
 
-- [company.md](weathercraft-garden-okf/datasets/company.md) - Roofing and exterior solutions contractor in Garden City, Kansas offering commercial roofing, industrial roofing, flat roofing, coatings, shingle roofing, and metal roofing services as part of the Weathercraft Companies network.
+- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/weathercraft-garden-okf/datasets/company.md) - Roofing and exterior solutions contractor in Garden City, Kansas offering commercial roofing, industrial roofing, flat roofing, coatings, shingle roofing, and metal roofing services as part of the Weathercraft Companies network.
 

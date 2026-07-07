@@ -32,4 +32,4 @@ The Service Center at Valley Hi Kia provides comprehensive maintenance and repai
 - **Phone:** (760) 983-7146
 - **Location:** 14644 Valley Center Drive, Victorville, CA
 
-See [company.md](valley-hi-kia-okf/datasets/company.md) for full dealership information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/valley-hi-kia-okf/datasets/company.md) for full dealership information.

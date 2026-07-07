@@ -115,7 +115,7 @@ Yes - short and long-term accessible van rentals are available.
 
 Yes - a two-way courtesy shuttle is available during service appointments.
 
-See [dealership.md](basil-mobility-okf/datasets/dealership.md) for full business profile, hours, and contact information.
-See [new-vehicles.md](basil-mobility-okf/datasets/new-vehicles.md) for details on new BraunAbility conversions.
-See [mobility-vehicles.md](basil-mobility-okf/datasets/mobility-vehicles.md) for the full vehicle lineup.
-See [service-center.md](basil-mobility-okf/datasets/service-center.md) for service department details.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/dealership.md) for full business profile, hours, and contact information.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/new-vehicles.md) for details on new BraunAbility conversions.
+See [mobility-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/mobility-vehicles.md) for the full vehicle lineup.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/service-center.md) for service department details.

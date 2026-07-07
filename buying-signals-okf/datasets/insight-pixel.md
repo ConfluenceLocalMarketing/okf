@@ -32,6 +32,6 @@ As observed on the Buying Signals website:
 
 ## Related
 
-See [consumer-intelligence.md](buying-signals-okf/datasets/consumer-intelligence.md) for buyer behavior analytics.
-See [data-hygiene.md](buying-signals-okf/datasets/data-hygiene.md) for data enrichment and identity graph resolution.
-See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.
+See [consumer-intelligence.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/consumer-intelligence.md) for buyer behavior analytics.
+See [data-hygiene.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/data-hygiene.md) for data enrichment and identity graph resolution.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.

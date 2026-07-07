@@ -77,5 +77,5 @@ Standard across most Nissan models:
 - High Beam Assist
 - Rear Automatic Braking
 
-See [new-vehicles.md](ron-marhofer-nissan-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](ron-marhofer-nissan-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/dealership.md) for current offers and promotions.

@@ -63,4 +63,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 - **Contact:** Phone: (513) 782-1150, Email: sarahdsweeney@gmail.com
 - **Website:** `https://www.jakesweeneymazda.com/`
 
-See [ai-discovery-page.md](jake-sweeney-mazda-tri-county-okf/references/ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

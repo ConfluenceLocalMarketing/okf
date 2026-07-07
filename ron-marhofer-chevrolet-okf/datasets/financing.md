@@ -61,4 +61,4 @@ Online payment calculators allow customers to estimate monthly payments based on
 
 The Finance Department can be reached at **(330) 752-1612** during business hours.
 
-See [dealership.md](ron-marhofer-chevrolet-okf/datasets/dealership.md) for full business profile and hours.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-chevrolet-okf/datasets/dealership.md) for full business profile and hours.

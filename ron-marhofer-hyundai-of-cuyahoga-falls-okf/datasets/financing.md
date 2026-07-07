@@ -54,4 +54,4 @@ Online payment calculator tools allow customers to estimate monthly payments bas
 **Finance Department**: (234) 245-6086
 **Online Application**: https://www.hyundaiofakron.com/finance/
 
-See [dealership.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/dealership.md) for full business profile and hours.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/dealership.md) for full business profile and hours.

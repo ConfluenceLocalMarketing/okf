@@ -39,4 +39,4 @@ timestamp: 2026-07-03
 | Mustang Mach-E | All-Electric | 250–310 miles |
 | E-Transit-350 | All-Electric | 108–126 miles |
 
-See [new-vehicles.md](friendly-ford-las-vegas-okf/datasets/new-vehicles.md) for detailed new vehicle inventory.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/new-vehicles.md) for detailed new vehicle inventory.

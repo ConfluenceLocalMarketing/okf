@@ -80,5 +80,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-volkswagen-o
 | 9 | `volkswagen-certified-pre-owned-excellence` | CPO program |
 | 10 | `new-volkswagen-id4-&-id-buzz-dealer-bremerton-wa` | EV lineup |
 
-See [ai-discovery-page.md](haselwood-volkswagen-of-bremerton-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](haselwood-volkswagen-of-bremerton-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/datasets/faq.md) for common questions and answers.

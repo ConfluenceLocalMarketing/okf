@@ -97,7 +97,7 @@ The `/prompts` endpoint exposes 77 structured Q&A prompt/response pairs serving 
 9. **Collision Center Services** - Full collision repair capabilities
 10. **Commercial Truck Inventory** - Dedicated work-ready commercial vehicles
 
-See [dealership.md](basil-resale-okf/datasets/dealership.md) for full business profile.
-See [used-vehicles.md](basil-resale-okf/datasets/used-vehicles.md) for pre-owned inventory.
-See [llms-txt.md](basil-resale-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](basil-resale-okf/references/prompts.md) for the complete Q&A prompt library.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile.
+See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/used-vehicles.md) for pre-owned inventory.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/references/prompts.md) for the complete Q&A prompt library.

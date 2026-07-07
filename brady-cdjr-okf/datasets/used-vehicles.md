@@ -34,4 +34,4 @@ Get a value assessment for your current vehicle and apply it toward a pre-owned 
 
 ---
 
-For complete dealership information, see [company.md](brady-cdjr-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/brady-cdjr-okf/datasets/company.md).

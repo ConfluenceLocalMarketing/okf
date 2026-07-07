@@ -74,5 +74,5 @@ BraunAbility is the leading mobility conversion manufacturer, preferred 15:1 by 
 
 - Facebook: https://www.facebook.com/people/Basil-Mobility/61577505262817/
 
-See [staff.md](basil-mobility-okf/datasets/staff.md) for staff directory.
-See [service-center.md](basil-mobility-okf/datasets/service-center.md) for service department details.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/staff.md) for staff directory.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/service-center.md) for service department details.

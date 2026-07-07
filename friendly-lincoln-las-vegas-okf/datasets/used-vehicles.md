@@ -51,5 +51,5 @@ The dealership offers trade-in valuation through:
 
 View current pre-owned specials on the dealership website for featured vehicles with special pricing.
 
-See [dealership.md](friendly-lincoln-las-vegas-okf/datasets/dealership.md) for full business profile.
-See [financing.md](friendly-lincoln-las-vegas-okf/datasets/financing.md) for financing options on pre-owned vehicles.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/dealership.md) for full business profile.
+See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/financing.md) for financing options on pre-owned vehicles.

@@ -98,4 +98,4 @@ West Hills Ford is a full-service Ford dealership located at **1100 Oyster Bay A
 
 - Aggregate rating: 4.6 / 5.0 (3,135 reviews)
 
-See [autoplex.md](west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.
+See [autoplex.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.

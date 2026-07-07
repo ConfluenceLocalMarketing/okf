@@ -37,4 +37,4 @@ Service appointments can be scheduled online through the dealership website. Che
 - **Phone:** (515) 259-1214
 - **Location:** Granger, IA
 
-See [company.md](willis-chevrolet-of-granger-okf/datasets/company.md) for full dealership information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/willis-chevrolet-of-granger-okf/datasets/company.md) for full dealership information.

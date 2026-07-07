@@ -22,7 +22,7 @@ Available during business hours to assist with new Buick and GMC sales, pre-owne
 Handles financing, leasing, extended warranties, and aftermarket products. Online credit applications are available on the dealership website.
 
 ## Service Department
-Staffed by factory-trained technicians performing maintenance, diagnostics, and repairs. See [service-center.md](nick-mayer-dickson-bg-okf/datasets/service-center.md) for full details.
+Staffed by factory-trained technicians performing maintenance, diagnostics, and repairs. See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-dickson-bg-okf/datasets/service-center.md) for full details.
 
 ## Parts Department
 Stocks genuine OEM Buick and GMC parts, accessories, and maintenance items.

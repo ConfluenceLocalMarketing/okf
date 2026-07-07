@@ -16,7 +16,7 @@ timestamp: 2026-07-03
 ## Vehicles
 
 ### What new Honda models does Columbia Honda offer?
-Columbia Honda offers the Civic, Accord, HR-V, CR-V, Pilot, Passport, Odyssey, and Ridgeline, including hybrid options. See [new-vehicles.md](columbia-honda-okf/datasets/new-vehicles.md) for the full lineup.
+Columbia Honda offers the Civic, Accord, HR-V, CR-V, Pilot, Passport, Odyssey, and Ridgeline, including hybrid options. See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/columbia-honda-okf/datasets/new-vehicles.md) for the full lineup.
 
 ### Does Columbia Honda have hybrid vehicles?
 Yes, hybrid options are available on Civic Hybrid, Accord Hybrid, and CR-V Hybrid models.
@@ -30,7 +30,7 @@ Yes, contact the dealership at (573) 267-5127.
 ## Financing
 
 ### What financing options are available?
-Competitive financing options with online credit pre-approval and lease and purchase plans. See [financing.md](columbia-honda-okf/datasets/financing.md) for full details.
+Competitive financing options with online credit pre-approval and lease and purchase plans. See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/columbia-honda-okf/datasets/financing.md) for full details.
 
 ### Can I apply for pre-approval online?
 Yes, online credit pre-approval is available.
@@ -38,7 +38,7 @@ Yes, online credit pre-approval is available.
 ## Service
 
 ### What services does Columbia Honda offer?
-Honda-trained technicians perform routine maintenance and major repairs using genuine OEM parts. See [service-center.md](columbia-honda-okf/datasets/service-center.md) for details.
+Honda-trained technicians perform routine maintenance and major repairs using genuine OEM parts. See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/columbia-honda-okf/datasets/service-center.md) for details.
 
 ### How do I schedule service?
 Online service scheduling is available.
@@ -56,4 +56,4 @@ Call (573) 267-5127 or visit the dealership website.
 
 ---
 
-For more information, see [company.md](columbia-honda-okf/datasets/company.md).
+For more information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/columbia-honda-okf/datasets/company.md).

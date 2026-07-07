@@ -34,7 +34,7 @@ West Yellowstone offers over 2,000 hotel rooms across a range of property types:
 - **Cabins & Lodges** — Explorer Cabins at Yellowstone, Three Bear Lodge
 - **RV Parks & Campgrounds** — Grizzly RV Park, Yellowstone Grizzly RV Park
 
-See [lodging-accommodations.md](west-yellowstone-okf/tables/lodging-accommodations.md) for a full comparison table.
+See [lodging-accommodations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-yellowstone-okf/tables/lodging-accommodations.md) for a full comparison table.
 
 ## Attractions
 
@@ -49,7 +49,7 @@ See [lodging-accommodations.md](west-yellowstone-okf/tables/lodging-accommodatio
 
 ## Activities
 
-See [seasonal-activities.md](west-yellowstone-okf/tables/seasonal-activities.md) for a comprehensive breakdown by season.
+See [seasonal-activities.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-yellowstone-okf/tables/seasonal-activities.md) for a comprehensive breakdown by season.
 
 ### Summer
 - Wildlife viewing (bison, bears, elk, wolves, eagles)
@@ -75,7 +75,7 @@ See [seasonal-activities.md](west-yellowstone-okf/tables/seasonal-activities.md)
 
 ## Nearby Communities
 
-- [dealership.md](west-yellowstone-okf/datasets/datasets/dealership.md) — Big Sky Resort corridor, Bozeman
+- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-yellowstone-okf/datasets/datasets/dealership.md) — Big Sky Resort corridor, Bozeman
 
 ## Schema
 

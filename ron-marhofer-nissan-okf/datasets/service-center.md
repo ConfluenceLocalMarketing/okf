@@ -67,5 +67,5 @@ Genuine Nissan OEM parts and accessories available including:
 | Saturday | 9:00 AM - 5:00 PM |
 | Sunday | Closed |
 
-See [staff.md](ron-marhofer-nissan-okf/datasets/staff.md) for full service department directory.
-See [dealership.md](ron-marhofer-nissan-okf/datasets/dealership.md) for contact information.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/staff.md) for full service department directory.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/dealership.md) for contact information.

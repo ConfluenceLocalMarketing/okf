@@ -53,4 +53,4 @@ Capital City CDJR offers a complete lineup of new Jeep, Ram, Dodge, and Chrysler
 
 ---
 
-For complete dealership information, see [company.md](capital-city-cdjr-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/capital-city-cdjr-okf/datasets/company.md).

@@ -14,11 +14,11 @@ timestamp: 2026-07-03
 
 ## What services does Champs Auto Service offer?
 
-We offer oil changes, brake repair, transmission service, engine diagnostics, tune-ups, exhaust repair, power steering service, fleet services, pre-purchase inspections, tire services, and suspension work. See [services.md](champs-auto-service-okf/datasets/services.md) for details.
+We offer oil changes, brake repair, transmission service, engine diagnostics, tune-ups, exhaust repair, power steering service, fleet services, pre-purchase inspections, tire services, and suspension work. See [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/champs-auto-service-okf/datasets/services.md) for details.
 
 ## Are you ASE Certified?
 
-Yes. Our technicians are ASE Master Certified and we are a NAPA AutoCare Center. See [company.md](champs-auto-service-okf/datasets/company.md) for all certifications.
+Yes. Our technicians are ASE Master Certified and we are a NAPA AutoCare Center. See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/champs-auto-service-okf/datasets/company.md) for all certifications.
 
 ## Do you service all makes and models?
 
@@ -34,7 +34,7 @@ Yes. We offer 10% off brake service, oil change coupons, and seasonal promotions
 
 ## Do you provide fleet services?
 
-Yes. We offer preventive maintenance, repairs, and priority scheduling for business fleets. See [services.md](champs-auto-service-okf/datasets/services.md) for fleet program details.
+Yes. We offer preventive maintenance, repairs, and priority scheduling for business fleets. See [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/champs-auto-service-okf/datasets/services.md) for fleet program details.
 
 ## Do you perform pre-purchase inspections?
 

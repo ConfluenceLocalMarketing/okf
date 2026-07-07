@@ -87,7 +87,7 @@ The LLM-optimized inventory page is at `/llm-inventory.htm`.
 
 ## Q&A Prompt Library (38 Prompts)
 
-The `/prompts` endpoint exposes 38 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](heartland-toyota-okf/references/prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 38 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/references/prompts.md) for the full library. Topics include:
 
 - Vehicle shopping and model-specific inquiries
 - Financing, leasing, and trade-in questions
@@ -97,7 +97,7 @@ The `/prompts` endpoint exposes 38 structured Q&A prompt/response pairs serving 
 
 ## Testimonials Endpoint
 
-The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](heartland-toyota-okf/references/testimonials.md) for details.
+The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/references/testimonials.md) for details.
 
 ## LLM-Accessible Actions (ReadAction)
 
@@ -140,6 +140,6 @@ The AI Discovery Page defines 20 structured `ReadAction` entries that agents can
 
 This page exists to give AI agents direct access to structured knowledge about Heartland Toyota without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints, semantic markup, and MCP tools through the PromptGraph API.
 
-See [llms-txt.md](heartland-toyota-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](heartland-toyota-okf/references/prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](heartland-toyota-okf/references/testimonials.md) for customer review data.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/references/testimonials.md) for customer review data.

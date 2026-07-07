@@ -57,4 +57,4 @@ Mazda Certified Pre-Owned vehicles undergo rigorous inspection and include:
 - Competitive trade-in values
 - Cash offers for trade-ins (even without vehicle purchase)
 
-See [dealership.md](west-hills-mazda-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/datasets/dealership.md) for current financing and trade-in programs.

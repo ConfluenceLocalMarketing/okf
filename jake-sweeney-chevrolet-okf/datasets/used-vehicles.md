@@ -47,4 +47,4 @@ The dealership offers **Jake Sweeney Express**, an online purchasing option desi
 - Competitive trade-in values
 - On-the-spot trade evaluation at the **Jake Sweeney Trade Center**
 
-See [dealership.md](jake-sweeney-chevrolet-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/dealership.md) for current financing and trade-in programs.

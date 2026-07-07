@@ -58,4 +58,4 @@ Gibson Truck World operates a full-service maintenance and repair center complem
 - **Phone:** (407) 321-0660
 - **Address:** 3455 S Orlando Dr, Sanford, FL 32773
 
-See [company.md](gibson-truck-world-okf/datasets/company.md) for full dealership details.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/gibson-truck-world-okf/datasets/company.md) for full dealership details.

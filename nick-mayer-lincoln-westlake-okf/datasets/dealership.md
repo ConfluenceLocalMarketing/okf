@@ -71,5 +71,5 @@ Cleveland, Avon, Lakewood, Fairview Park, Rocky River, and surrounding Northeast
 - Service scheduling
 - Parts ordering
 
-See [new-vehicles.md](nick-mayer-lincoln-westlake-okf/datasets/new-vehicles.md) for Lincoln model details.
-See [service-center.md](nick-mayer-lincoln-westlake-okf/datasets/service-center.md) for service offerings.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/new-vehicles.md) for Lincoln model details.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/service-center.md) for service offerings.

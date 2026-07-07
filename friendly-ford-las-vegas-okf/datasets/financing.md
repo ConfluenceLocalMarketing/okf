@@ -63,4 +63,4 @@ Estimate monthly payments using online payment calculators before visiting the d
 
 **Sales**: (702) 996-4360 (new) / (702) 718-4683 (used)
 
-See [friendly-ford-las-vegas.md](friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for full business profile and [new-vehicles.md](friendly-ford-las-vegas-okf/datasets/new-vehicles.md) or [used-vehicles.md](friendly-ford-las-vegas-okf/datasets/used-vehicles.md) for inventory.
+See [friendly-ford-las-vegas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/used-vehicles.md) for inventory.

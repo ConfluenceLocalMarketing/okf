@@ -158,7 +158,7 @@ All-electric mid-size luxury SUV. Starting MSRP $75,150. Available in xDrive50 a
 
 ## Promotions & Offers
 
-Current promotions include lease offers on 2026 X3, X5, X5 PHEV, 330i, 530i, and X1 models. BMW Certified Pre-Owned APR offers as low as 1.99% for iX models, 2.99% for i4/i5/i7, and 4.99% for other CPO models. See [dealership.md](bmw-of-cincinnati-north-okf/datasets/dealership.md) for contact information and current programs.
+Current promotions include lease offers on 2026 X3, X5, X5 PHEV, 330i, 530i, and X1 models. BMW Certified Pre-Owned APR offers as low as 1.99% for iX models, 2.99% for i4/i5/i7, and 4.99% for other CPO models. See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/dealership.md) for contact information and current programs.
 
-See [model-comparison.md](bmw-of-cincinnati-north-okf/tables/model-comparison.md) for side-by-side model specifications.
-See [dealership.md](bmw-of-cincinnati-north-okf/datasets/dealership.md) for current offers and financing programs.
+See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/dealership.md) for current offers and financing programs.

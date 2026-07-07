@@ -17,7 +17,7 @@ timestamp: 2026-07-03
 ## General
 
 ### What type of dealership is Autobarn Volvo Cars of Oak Park?
-It is a full-service Volvo dealership located at 1140 Garfield Street, Oak Park, IL, serving Chicagoland with new and certified pre-owned Volvo vehicles, factory-trained service, and genuine Volvo parts. See [company.md](the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for the full profile.
+It is a full-service Volvo dealership located at 1140 Garfield Street, Oak Park, IL, serving Chicagoland with new and certified pre-owned Volvo vehicles, factory-trained service, and genuine Volvo parts. See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for the full profile.
 
 ### What area does the dealership serve?
 Oak Park and the greater Chicagoland area.

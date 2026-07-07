@@ -71,5 +71,5 @@ All new Mazda models include:
 - **Mazda CX-90** - Multiple automotive awards for premium interior and driving dynamics
 - **Mazda3** - IIHS Top Safety Pick+
 
-See [new-vehicles.md](jake-sweeney-mazda-tri-county-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) for current offers and promotions.

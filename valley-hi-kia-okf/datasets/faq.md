@@ -17,7 +17,7 @@ timestamp: 2026-07-03
 ## General
 
 ### What type of dealership is Valley Hi Kia?
-It is a premier Kia dealership located at 14644 Valley Center Drive, Victorville, CA, serving the High Desert and Inland Empire with new Kia sales, pre-owned vehicles, and expert service. See [company.md](valley-hi-kia-okf/datasets/company.md) for the full profile.
+It is a premier Kia dealership located at 14644 Valley Center Drive, Victorville, CA, serving the High Desert and Inland Empire with new Kia sales, pre-owned vehicles, and expert service. See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/valley-hi-kia-okf/datasets/company.md) for the full profile.
 
 ### What area does the dealership serve?
 Victorville, Apple Valley, Hesperia, Adelanto, Barstow, and the greater High Desert and Inland Empire communities.

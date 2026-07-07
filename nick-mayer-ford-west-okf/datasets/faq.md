@@ -65,7 +65,7 @@ Contact the dealership for shuttle or loaner vehicle availability.
 
 ## Related Concepts
 
-- [dealership.md](nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview
-- [new-vehicles.md](nick-mayer-ford-west-okf/datasets/new-vehicles.md) - New Ford models
-- [used-vehicles.md](nick-mayer-ford-west-okf/datasets/used-vehicles.md) - Pre-owned inventory
-- [service-center.md](nick-mayer-ford-west-okf/datasets/service-center.md) - Service center
+- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview
+- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/new-vehicles.md) - New Ford models
+- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/used-vehicles.md) - Pre-owned inventory
+- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/service-center.md) - Service center

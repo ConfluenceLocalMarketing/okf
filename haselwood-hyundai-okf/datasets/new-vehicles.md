@@ -92,5 +92,5 @@ Most new Hyundai models include:
 
 All new Hyundai vehicles purchased or leased from Haselwood Hyundai include **Hyundai Complimentary Maintenance** for 3 years or 36,000 miles, covering oil changes, tire rotations, and multi-point inspections.
 
-See [dealership.md](haselwood-hyundai-okf/datasets/dealership.md) for contact information and current programs.
-See [model-comparison.md](haselwood-hyundai-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-hyundai-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-hyundai-okf/tables/model-comparison.md) for side-by-side model specifications.

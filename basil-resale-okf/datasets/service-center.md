@@ -70,5 +70,5 @@ Full collision repair services for all makes and models:
 - Free shuttle service
 - Online scheduling
 
-See [dealership.md](basil-resale-okf/datasets/dealership.md) for full business profile and contact information.
-See [commercial-trucks.md](basil-resale-okf/datasets/commercial-trucks.md) for commercial vehicle service.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile and contact information.
+See [commercial-trucks.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/commercial-trucks.md) for commercial vehicle service.

@@ -59,4 +59,4 @@ Kia Certified Pre-Owned vehicles undergo rigorous inspection and include:
 - Competitive trade-in values
 - Sell your car online tool
 
-See [dealership.md](west-hills-kia-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/datasets/dealership.md) for current financing and trade-in programs.

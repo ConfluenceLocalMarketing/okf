@@ -66,4 +66,4 @@ The dealership participates in the CarBravo program, offering certified pre-owne
 
 ## Financing
 
-Online credit applications and financing options are available through the dealership. See [faq.md](nick-mayer-dickson-bg-okf/datasets/faq.md) for financing details or visit the finance department at the dealership.
+Online credit applications and financing options are available through the dealership. See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-dickson-bg-okf/datasets/faq.md) for financing details or visit the finance department at the dealership.

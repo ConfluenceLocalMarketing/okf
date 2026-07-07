@@ -74,5 +74,5 @@ Mid-size 3-row luxury SUV seating up to 7 passengers. Available in Preferred, Sp
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. Dealer Discount of 1 applied to everyone. Contact the dealership for current offers.
 
-See [dealership.md](ron-marhofer-buick-gmc-okf/datasets/dealership.md) for contact information and current programs.
-See [model-comparison.md](ron-marhofer-buick-gmc-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/tables/model-comparison.md) for side-by-side model specifications.

@@ -71,6 +71,6 @@ Customers can schedule service appointments online through the dealership websit
 
 ## Related Concepts
 
-- [dealership.md](nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview
-- [staff.md](nick-mayer-ford-west-okf/datasets/staff.md) - Service and parts staff
-- [faq.md](nick-mayer-ford-west-okf/datasets/faq.md) - Service FAQs
+- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview
+- [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/staff.md) - Service and parts staff
+- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/faq.md) - Service FAQs

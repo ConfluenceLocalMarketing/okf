@@ -39,6 +39,6 @@ The PromptGraph API provides structured prompts for consistent AI responses abou
 
 ## Related
 
-- See [faq.md](ron-marhofer-hyundai-of-green-okf/datasets/faq.md) for frequently asked questions.
-- See [ai-discovery-page.md](ron-marhofer-hyundai-of-green-okf/references/ai-discovery-page.md) for API documentation.
-- See [llms-txt.md](ron-marhofer-hyundai-of-green-okf/references/llms-txt.md) for LLM consumption directives.
+- See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/faq.md) for frequently asked questions.
+- See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/references/ai-discovery-page.md) for API documentation.
+- See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/references/llms-txt.md) for LLM consumption directives.

@@ -84,14 +84,14 @@ Volkswagen models available include:
 
 ## Staff
 
-See [staff.md](haselwood-volkswagen-of-bremerton-okf/datasets/staff.md) for full directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - Aggregate rating: 4.3 / 5.0 (723 reviews) across major platforms
 - Google Business Profile: 4.3 stars
 
-See [testimonials.md](haselwood-volkswagen-of-bremerton-okf/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

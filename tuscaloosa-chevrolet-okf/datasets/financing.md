@@ -39,4 +39,4 @@ The Finance Center at Tuscaloosa Chevrolet provides financing and lease solution
 
 Finance specialists are available during sales hours. Call (205) 409-3095 or visit the dealership at 6500 Interstate Pkwy, Cottondale, AL.
 
-See [company.md](tuscaloosa-chevrolet-okf/datasets/company.md) for the full dealership profile.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/tuscaloosa-chevrolet-okf/datasets/company.md) for the full dealership profile.

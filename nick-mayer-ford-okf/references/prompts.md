@@ -75,7 +75,7 @@ Oil changes, tire rotations, brake service, diagnostics, engine and transmission
 
 ## Related Concepts
 
-- [dealership.md](nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
-- [faq.md](nick-mayer-ford-okf/datasets/faq.md) - Frequently asked questions
-- [ai-discovery-page.md](nick-mayer-ford-okf/references/ai-discovery-page.md) - AI discovery analysis
-- [llms-txt.md](nick-mayer-ford-okf/references/llms-txt.md) - LLM directives
+- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
+- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/faq.md) - Frequently asked questions
+- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/references/ai-discovery-page.md) - AI discovery analysis
+- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/references/llms-txt.md) - LLM directives

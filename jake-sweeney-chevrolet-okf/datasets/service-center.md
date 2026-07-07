@@ -43,10 +43,10 @@ Customer reviews highlight recent improvements in service department operations:
 
 ## Service Specials
 
-The dealership offers rotating service specials. See [dealership.md](jake-sweeney-chevrolet-okf/datasets/dealership.md) for current offers.
+The dealership offers rotating service specials. See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/dealership.md) for current offers.
 
 ## Parts Department
 
 Genuine GM and OEM replacement parts available. See the parts specials page for current promotions.
 
-See [staff.md](jake-sweeney-chevrolet-okf/datasets/staff.md) for full service department directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/staff.md) for full service department directory.

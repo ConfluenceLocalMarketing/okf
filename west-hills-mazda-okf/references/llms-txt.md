@@ -58,4 +58,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 - [Sitemap](http://api.promptgraph.ai/api/v1/west-hills-mazda/sitemap.xml) - XML sitemap for search engine and AI crawler discovery
 - [Configuration](http://api.promptgraph.ai/api/v1/west-hills-mazda/config.json) - System configuration and metadata
 
-See [ai-discovery-page.md](west-hills-mazda-okf/references/ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

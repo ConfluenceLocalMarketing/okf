@@ -52,4 +52,4 @@ Willis Chevrolet Of Granger offers the complete Chevrolet lineup of trucks, SUVs
 - Blazer EV
 - Equinox EV
 
-See [company.md](willis-chevrolet-of-granger-okf/datasets/company.md) for dealership contact and location.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/willis-chevrolet-of-granger-okf/datasets/company.md) for dealership contact and location.

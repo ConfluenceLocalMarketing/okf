@@ -52,4 +52,4 @@ Buying Signals unifies clean data, website identity resolution, shopper behavior
 - Offer
 - CreativeWork (for prompts/FAQs)
 
-See [ai-discovery-page.md](buying-signals-okf/references/ai-discovery-page.md) for structured semantic endpoints and AI manifest details.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/references/ai-discovery-page.md) for structured semantic endpoints and AI manifest details.

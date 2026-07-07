@@ -31,4 +31,4 @@ timestamp: 2026-07-02
 
 No structured API endpoints (OpenAPI, GraphQL, PromptGraph) were found during site analysis. Inventory is served through the FordDirect platform integration within the DealerOn CMS framework.
 
-See [ai-discovery-page.md](nick-mayer-lincoln-mayfield-okf/references/ai-discovery-page.md) for platform details.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/references/ai-discovery-page.md) for platform details.

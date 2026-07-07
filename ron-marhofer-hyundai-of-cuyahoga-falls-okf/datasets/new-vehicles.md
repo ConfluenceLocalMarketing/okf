@@ -66,4 +66,4 @@ Ron Marhofer Hyundai of Cuyahoga Falls carries a comprehensive selection of new 
 
 Browse online at the [new vehicle inventory page](https://www.hyundaiofakron.com/new-inventory/index.htm) and view current [new specials](https://www.hyundaiofakron.com/promotions/new/index.htm).
 
-See [dealership.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/dealership.md) for full business profile and [model-comparison.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/tables/model-comparison.md) for detailed model comparisons.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/dealership.md) for full business profile and [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/tables/model-comparison.md) for detailed model comparisons.

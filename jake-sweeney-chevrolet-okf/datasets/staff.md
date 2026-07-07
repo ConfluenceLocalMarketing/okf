@@ -62,4 +62,4 @@ Staff recognized in customer reviews and Google Business Profile data:
 - **John Williams (John W.)** - Sales manager; keeps it real during negotiation
 - **Collins** - Helpful and professional
 
-See [testimonials.md](jake-sweeney-chevrolet-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.

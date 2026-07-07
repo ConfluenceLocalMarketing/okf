@@ -66,4 +66,4 @@ A: Yes, the Test Drive at Home program brings the vehicle to your location for a
 **Q: Is there a vehicle hold policy?**
 A: Yes, the dealership allows customers to hold vehicles before arriving.
 
-See [prompts.md](west-hills-ford-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-ford-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

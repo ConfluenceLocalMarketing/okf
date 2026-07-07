@@ -35,6 +35,6 @@ Campaigns are powered by proprietary data combining identity resolution, enriche
 
 ## Related
 
-See [geo-signals.md](buying-signals-okf/datasets/geo-signals.md) for location-based audience activation.
-See [business-intelligence.md](buying-signals-okf/datasets/business-intelligence.md) for campaign measurement.
-See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.
+See [geo-signals.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/geo-signals.md) for location-based audience activation.
+See [business-intelligence.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/business-intelligence.md) for campaign measurement.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.

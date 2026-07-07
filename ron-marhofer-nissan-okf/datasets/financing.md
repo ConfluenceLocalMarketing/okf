@@ -55,4 +55,4 @@ Online payment calculator tools allow customers to estimate monthly payments bas
 **Finance Department**: (234) 245-6026
 **Online Application**: https://www.ronmarhofernissan.com/finance/
 
-See [dealership.md](ron-marhofer-nissan-okf/datasets/dealership.md) for full business profile and hours.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/dealership.md) for full business profile and hours.

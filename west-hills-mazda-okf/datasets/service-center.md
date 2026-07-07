@@ -65,5 +65,5 @@ Genuine Mazda OEM parts and accessories available including:
 | Saturday | 9:00 AM - 8:00 PM |
 | Sunday | 10:00 AM - 7:00 PM |
 
-See [staff.md](west-hills-mazda-okf/datasets/staff.md) for full service department directory.
-See [dealership.md](west-hills-mazda-okf/datasets/dealership.md) for contact information.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/datasets/staff.md) for full service department directory.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/datasets/dealership.md) for contact information.

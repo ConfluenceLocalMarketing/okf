@@ -38,4 +38,4 @@ Ana assists customers with service recommendations, estimates, and coordination 
 
 Dave handles vehicle towing and recovery as well as shop support duties.
 
-See [company.md](montclare-auto-repair-okf/datasets/company.md) for shop information, certifications, amenities, and contact details.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montclare-auto-repair-okf/datasets/company.md) for shop information, certifications, amenities, and contact details.

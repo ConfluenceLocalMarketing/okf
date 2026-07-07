@@ -45,6 +45,6 @@ A: 6180 Mayfield Road, Mayfield Heights, OH 44124.
 **Q: What are the dealership hours?**
 A: Monday and Thursday 9-8, Tuesday, Wednesday, Friday 9-6, Saturday 9-5, closed Sunday.
 
-See [dealership.md](nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for full dealership information.
-See [new-vehicles.md](nick-mayer-lincoln-mayfield-okf/datasets/new-vehicles.md) for Lincoln model details.
-See [service-center.md](nick-mayer-lincoln-mayfield-okf/datasets/service-center.md) for service offerings.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for full dealership information.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/datasets/new-vehicles.md) for Lincoln model details.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/datasets/service-center.md) for service offerings.

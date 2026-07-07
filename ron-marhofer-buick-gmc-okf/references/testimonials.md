@@ -61,4 +61,4 @@ Ron Marhofer Buick GMC has collected customer testimonials through the PromptGra
 - **Smooth process** - Efficient move through sales and finance
 - **Not commissioned** - Sales team is not commissioned, providing red carpet treatment
 
-See [staff.md](ron-marhofer-buick-gmc-okf/datasets/staff.md) for the full staff directory.
+See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/datasets/staff.md) for the full staff directory.

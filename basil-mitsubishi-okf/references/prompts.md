@@ -126,5 +126,5 @@ The PromptGraph API exposes 64 structured prompt/response pairs (`ItemList` with
 | 62 | Service center comparison | How Basil Mitsubishi service center compares locally |
 | 63 | Best Mitsubishi dealerships near Buffalo | Best Mitsubishi dealerships available near Buffalo, NY |
 
-See [ai-discovery-page.md](basil-mitsubishi-okf/references/ai-discovery-page.md) for structured semantic endpoints.
-See [llms-txt.md](basil-mitsubishi-okf/references/llms-txt.md) for the full llms.txt directive.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/ai-discovery-page.md) for structured semantic endpoints.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/llms-txt.md) for the full llms.txt directive.

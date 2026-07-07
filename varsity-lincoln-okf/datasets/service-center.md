@@ -43,4 +43,4 @@ Complimentary vehicle pick-up and drop-off for service appointments, maximizing 
 
 - **Service Hours**: Mon-Fri 7:00 AM - 6:00 PM, Sat 8:00 AM - 5:00 PM, Sun Closed
 
-See [dealership.md](varsity-lincoln-okf/datasets/dealership.md) for dealership profile and hours.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/dealership.md) for dealership profile and hours.

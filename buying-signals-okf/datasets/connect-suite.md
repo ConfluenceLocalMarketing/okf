@@ -26,5 +26,5 @@ A unified integration layer that connects social media platforms, marketing camp
 
 ## Related
 
-See [consumer-intelligence.md](buying-signals-okf/datasets/consumer-intelligence.md) for buyer behavior analytics.
-See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.
+See [consumer-intelligence.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/consumer-intelligence.md) for buyer behavior analytics.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.

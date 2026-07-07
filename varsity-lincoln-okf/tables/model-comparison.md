@@ -26,5 +26,5 @@ timestamp: 2026-07-03
 | Aviator | Mid-size 3-Row SUV | 6-7 | RWD/AWD | $55K+ | Available Grand Touring PHEV, 3.0L twin-turbo, Lincoln Co-Pilot360 2.0 |
 | Navigator / Navigator L | Full-size SUV | 7-8 | 4WD | $90K+ | 3.5L twin-turbo V6, 10-speed auto, Perfect Position front seats |
 
-See [new-vehicles.md](varsity-lincoln-okf/datasets/new-vehicles.md) for new inventory details.
-See [vehicles.md](varsity-lincoln-okf/datasets/vehicles.md) for combined inventory overview.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/new-vehicles.md) for new inventory details.
+See [vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/vehicles.md) for combined inventory overview.

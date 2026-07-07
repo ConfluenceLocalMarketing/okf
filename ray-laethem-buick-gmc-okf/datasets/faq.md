@@ -69,4 +69,4 @@ A: Yes. Founded in 1940, the dealership has been family-owned and operated for t
 **Q: What special programs do you offer?**
 A: The dealership offers Buick GMC Military Offer, First Responder Discount, and various lease and purchase specials.
 
-See [dealership.md](ray-laethem-buick-gmc-okf/datasets/dealership.md) for full business profile.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for full business profile.

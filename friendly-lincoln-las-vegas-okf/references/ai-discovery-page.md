@@ -45,4 +45,4 @@ Friendly Lincoln Las Vegas provides structured endpoints optimized for LLM and A
 | llms.txt | `https://www.teamlincolnlasvegas.com/llms.txt` |
 | robots.txt | `https://www.teamlincolnlasvegas.com/robots.txt` |
 
-See [llms-txt.md](friendly-lincoln-las-vegas-okf/references/llms-txt.md) for the AI consumption directive and [prompts.md](friendly-lincoln-las-vegas-okf/references/prompts.md) for the prompt library.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/references/llms-txt.md) for the AI consumption directive and [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/references/prompts.md) for the prompt library.

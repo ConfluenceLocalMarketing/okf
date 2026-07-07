@@ -28,6 +28,6 @@ Central analytics platform that unifies data hygiene, website identity resolutio
 
 ## Related
 
-See [marketing-suite.md](buying-signals-okf/datasets/marketing-suite.md) for campaign execution.
-See [insight-pixel.md](buying-signals-okf/datasets/insight-pixel.md) for visitor identification data.
-See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.
+See [marketing-suite.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/marketing-suite.md) for campaign execution.
+See [insight-pixel.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/insight-pixel.md) for visitor identification data.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.

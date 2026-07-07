@@ -96,4 +96,4 @@ West Hills Chrysler Jeep Dodge RAM is a multi-franchise dealership located at **
 
 - Aggregate rating: 4.5 / 5.0 (2,660 reviews)
 
-See [autoplex.md](west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.
+See [autoplex.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.

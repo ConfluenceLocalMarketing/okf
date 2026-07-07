@@ -61,7 +61,7 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/carpet-interiors/sitem
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes 10 structured Q&A pairs. See [prompts.md](carpet-interiors-okf/references/prompts.md) for the full library. Topics include flooring store overview, carpet installation, luxury vinyl plank, hardwood, ceramic tile, laminate, area rugs, professional installation, free estimates, and Healthier Living installation.
+The `/prompts` endpoint exposes 10 structured Q&A pairs. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/carpet-interiors-okf/references/prompts.md) for the full library. Topics include flooring store overview, carpet installation, luxury vinyl plank, hardwood, ceramic tile, laminate, area rugs, professional installation, free estimates, and Healthier Living installation.
 
-See [llms-txt.md](carpet-interiors-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](carpet-interiors-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/carpet-interiors-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/carpet-interiors-okf/references/prompts.md) for the complete Q&A prompt library.

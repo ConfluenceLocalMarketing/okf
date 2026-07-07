@@ -59,4 +59,4 @@ Estimate monthly payments using the [Payment Calculators](https://www.leifjohnso
 
 **Finance/Sales**: (737)-338-7505
 
-See [dealership.md](leif-johnson-ford-manor-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](leif-johnson-ford-manor-okf/datasets/new-vehicles.md) or [used-vehicles.md](leif-johnson-ford-manor-okf/datasets/used-vehicles.md) for inventory.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/used-vehicles.md) for inventory.

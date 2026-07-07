@@ -1,5 +1,5 @@
 # References
 
-- [llms-txt.md](logan-square-auto-repair-okf/references/llms-txt.md) - LLMForge v1.0 directive with API endpoints for business info, prompts, testimonials, and site content. Established 1997.
-- [prompts.md](logan-square-auto-repair-okf/references/prompts.md) - Structured Q&A prompt/response pairs covering auto repair, maintenance, diagnostics, and vehicle-specific services.
-- [ai-discovery-page.md](logan-square-auto-repair-okf/references/ai-discovery-page.md) - Machine-readable knowledge base and semantic data endpoints for AI agents via PromptGraph.
+- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/references/llms-txt.md) - LLMForge v1.0 directive with API endpoints for business info, prompts, testimonials, and site content. Established 1997.
+- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/references/prompts.md) - Structured Q&A prompt/response pairs covering auto repair, maintenance, diagnostics, and vehicle-specific services.
+- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/references/ai-discovery-page.md) - Machine-readable knowledge base and semantic data endpoints for AI agents via PromptGraph.

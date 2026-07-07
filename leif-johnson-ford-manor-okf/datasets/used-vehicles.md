@@ -44,4 +44,4 @@ The dealership offers trade-in evaluation through:
 - [Used Vehicle Specials](https://www.leifjohnsonfordofmanor.com/inventory/used-vehicle-specials/)
 - [Demo Specials](https://www.leifjohnsonfordofmanor.com/inventory/demo-specials/)
 
-See [dealership.md](leif-johnson-ford-manor-okf/datasets/dealership.md) for full business profile and [financing.md](leif-johnson-ford-manor-okf/datasets/financing.md) for financing options on pre-owned vehicles.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/dealership.md) for full business profile and [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/financing.md) for financing options on pre-owned vehicles.

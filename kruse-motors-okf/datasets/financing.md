@@ -57,6 +57,6 @@ The finance department handles various credit situations from excellent credit t
 
 Special offers and incentives are available for used car, truck, and SUV purchases in addition to new vehicle programs.
 
-See [dealership.md](kruse-motors-okf/datasets/dealership.md) for the full business profile.
-See [new-vehicles.md](kruse-motors-okf/datasets/new-vehicles.md) for current new vehicle pricing and models.
-See [used-vehicles.md](kruse-motors-okf/datasets/used-vehicles.md) for pre-owned inventory deals.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/dealership.md) for the full business profile.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/new-vehicles.md) for current new vehicle pricing and models.
+See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/used-vehicles.md) for pre-owned inventory deals.

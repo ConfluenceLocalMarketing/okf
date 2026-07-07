@@ -48,6 +48,6 @@ A: Monday through Friday 9-6, closed Saturday and Sunday.
 **Q: Are you the top Lincoln dealer in the area?**
 A: Yes, Nick Mayer Lincoln Westlake is the #1 volume Lincoln dealer in the Great Lakes Market area.
 
-See [dealership.md](nick-mayer-lincoln-westlake-okf/datasets/dealership.md) for full dealership information.
-See [new-vehicles.md](nick-mayer-lincoln-westlake-okf/datasets/new-vehicles.md) for Lincoln model details.
-See [service-center.md](nick-mayer-lincoln-westlake-okf/datasets/service-center.md) for service offerings.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/dealership.md) for full dealership information.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/new-vehicles.md) for Lincoln model details.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/service-center.md) for service offerings.

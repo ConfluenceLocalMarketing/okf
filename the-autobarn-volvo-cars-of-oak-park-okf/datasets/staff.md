@@ -35,4 +35,4 @@ timestamp: 2026-07-03
 
 - **Steve Patterson** — Parts Manager
 
-See [company.md](the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for the full dealership profile.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for the full dealership profile.

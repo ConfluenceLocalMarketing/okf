@@ -57,6 +57,6 @@ Mercedes-Benz CPO program includes:
 
 ## Financing
 
-Special CPO and pre-owned financing rates available. See [financing.md](mercedes-benz-of-caldwell-okf/datasets/financing.md).
+Special CPO and pre-owned financing rates available. See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mercedes-benz-of-caldwell-okf/datasets/financing.md).
 
-See [company.md](mercedes-benz-of-caldwell-okf/datasets/company.md) for location and contact.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mercedes-benz-of-caldwell-okf/datasets/company.md) for location and contact.

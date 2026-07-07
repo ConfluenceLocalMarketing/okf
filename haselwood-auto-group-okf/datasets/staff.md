@@ -55,4 +55,4 @@ Haselwood Auto Group offers career opportunities through the UltiPro recruiting 
 - Klean Freak career opportunities (sister company)
 - Wyoming career opportunities
 
-See [testimonials.md](haselwood-auto-group-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.

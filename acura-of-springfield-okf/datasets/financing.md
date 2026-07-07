@@ -41,4 +41,4 @@ Use online payment calculators to estimate monthly payments based on down paymen
 
 ---
 
-For complete dealership information, see [company.md](acura-of-springfield-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/acura-of-springfield-okf/datasets/company.md).

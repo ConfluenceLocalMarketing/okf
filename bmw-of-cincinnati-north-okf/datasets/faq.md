@@ -62,4 +62,4 @@ A: BMW Value Service offers competitively priced maintenance for select out-of-w
 **Q: Does the dealership have genuine BMW parts?**
 A: Yes, the parts department carries genuine Original BMW Parts, Original BMW Batteries, M Performance Parts, and BMW accessories.
 
-See [prompts.md](bmw-of-cincinnati-north-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

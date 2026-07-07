@@ -46,4 +46,4 @@ The PromptGraph API provides structured prompts for Ron Marhofer Hyundai of Cuya
 Endpoint: `https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahoga-falls/prompts`
 Format: JSON-LD (ItemList of CreativeWork)
 
-See [ai-discovery-page.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/references/ai-discovery-page.md) for API access details and [faq.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/faq.md) for common customer questions.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/references/ai-discovery-page.md) for API access details and [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/faq.md) for common customer questions.

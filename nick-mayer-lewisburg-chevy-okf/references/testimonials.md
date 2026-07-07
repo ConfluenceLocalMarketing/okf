@@ -25,4 +25,4 @@ The dealership maintains an active presence on major review platforms. Prospecti
 - Responsive service department
 - Fair pricing on new and pre-owned vehicles
 
-See [dealership.md](nick-mayer-lewisburg-chevy-okf/datasets/dealership.md) for full dealership profile.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-chevy-okf/datasets/dealership.md) for full dealership profile.

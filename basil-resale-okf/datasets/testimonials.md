@@ -39,4 +39,4 @@ Basil Resale Sheridan has an **aggregate rating of 4.5 out of 5.0** from **2,579
 - **Edmunds:** 8 reviews (2.5 out of 5)
 - **Google Maps:** Available via GBP context
 
-See [dealership.md](basil-resale-okf/datasets/dealership.md) for full business profile and contact information.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile and contact information.

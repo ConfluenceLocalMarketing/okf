@@ -6,24 +6,24 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [dealership.md](jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs
-- [new-vehicles.md](jake-sweeney-mazda-tri-county-okf/datasets/new-vehicles.md) - New Mazda model lineup including CX-30, CX-5, CX-50, CX-70, CX-90, MX-5 Miata, and Mazda3
-- [used-vehicles.md](jake-sweeney-mazda-tri-county-okf/datasets/used-vehicles.md) - Pre-owned and Mazda certified pre-owned inventory with multi-make selection
-- [staff.md](jake-sweeney-mazda-tri-county-okf/datasets/staff.md) - Staff directory including sales consultants, service advisors, and finance team compiled from customer reviews
-- [service-center.md](jake-sweeney-mazda-tri-county-okf/datasets/service-center.md) - Service center details, routine maintenance, diagnostics, major repairs, and parts department
-- [faq.md](jake-sweeney-mazda-tri-county-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
-- [financing.md](jake-sweeney-mazda-tri-county-okf/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators
+- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs
+- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/new-vehicles.md) - New Mazda model lineup including CX-30, CX-5, CX-50, CX-70, CX-90, MX-5 Miata, and Mazda3
+- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/used-vehicles.md) - Pre-owned and Mazda certified pre-owned inventory with multi-make selection
+- [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/staff.md) - Staff directory including sales consultants, service advisors, and finance team compiled from customer reviews
+- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/service-center.md) - Service center details, routine maintenance, diagnostics, major repairs, and parts department
+- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators
 
 ## References
 
-- [ai-discovery-page.md](jake-sweeney-mazda-tri-county-okf/references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
-- [llms-txt.md](jake-sweeney-mazda-tri-county-okf/references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
-- [testimonials.md](jake-sweeney-mazda-tri-county-okf/references/testimonials.md) - Customer reviews with all 5-star ratings, most-praised staff, and notable excerpts
-- [prompts.md](jake-sweeney-mazda-tri-county-okf/references/prompts.md) - Complete PromptGraph library of 10 structured Q&A prompts covering vehicles, financing, service, and dealership info
+- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
+- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
+- [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/references/testimonials.md) - Customer reviews with all 5-star ratings, most-praised staff, and notable excerpts
+- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/references/prompts.md) - Complete PromptGraph library of 10 structured Q&A prompts covering vehicles, financing, service, and dealership info
 
 ## Tables
 
-- [model-comparison.md](jake-sweeney-mazda-tri-county-okf/tables/model-comparison.md) - Side-by-side comparison of all new Mazda models including body type, drivetrain, seating, features, trims, and warranty
+- [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/tables/model-comparison.md) - Side-by-side comparison of all new Mazda models including body type, drivetrain, seating, features, trims, and warranty
 
 ## Relationships
 

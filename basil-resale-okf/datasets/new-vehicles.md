@@ -46,5 +46,5 @@ The Basil Family Dealerships represent multiple franchises including:
 
 ## Related
 
-See [dealership.md](basil-resale-okf/datasets/dealership.md) for full business profile and contact information.
-See [used-vehicles.md](basil-resale-okf/datasets/used-vehicles.md) for the pre-owned inventory.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile and contact information.
+See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/used-vehicles.md) for the pre-owned inventory.

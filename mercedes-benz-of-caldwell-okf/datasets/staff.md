@@ -45,4 +45,4 @@ timestamp: 2026-07-03
 - **Dealer Principal** — Mercedes-Benz of Caldwell
 - **Anthony Marino** — General Manager
 
-See [company.md](mercedes-benz-of-caldwell-okf/datasets/company.md) for dealership location and contact information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mercedes-benz-of-caldwell-okf/datasets/company.md) for dealership location and contact information.

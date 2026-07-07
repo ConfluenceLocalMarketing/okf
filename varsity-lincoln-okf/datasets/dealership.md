@@ -88,7 +88,7 @@ Novi, Ann Arbor, Wixom, Farmington Hills, and the Metro Detroit area.
 
 Personalized luxury leasing, competitive APRs, online credit application and pre-approval, trade-in estimator, payment calculator, and vehicle protection plans available.
 
-See [new-vehicles.md](varsity-lincoln-okf/datasets/new-vehicles.md) for new Lincoln inventory.
-See [used-vehicles.md](varsity-lincoln-okf/datasets/used-vehicles.md) for pre-owned inventory.
-See [service-center.md](varsity-lincoln-okf/datasets/service-center.md) for service offerings.
-See [financing.md](varsity-lincoln-okf/datasets/financing.md) for financing and leasing options.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/new-vehicles.md) for new Lincoln inventory.
+See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/used-vehicles.md) for pre-owned inventory.
+See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/service-center.md) for service offerings.
+See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/financing.md) for financing and leasing options.

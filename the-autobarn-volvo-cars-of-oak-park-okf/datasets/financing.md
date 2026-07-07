@@ -37,4 +37,4 @@ Customers can complete a credit application online and receive pre-approval befo
 
 Finance specialists are available during dealership hours. Call (708) 786-6560 or visit the dealership at 1140 Garfield Street, Oak Park, IL.
 
-See [company.md](the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for the full dealership profile.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for the full dealership profile.

@@ -78,5 +78,5 @@ Standard across most Honda models:
 - Forward Collision Warning
 - Lane Departure Warning
 
-See [new-vehicles.md](west-hills-honda-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](west-hills-honda-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-honda-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-honda-okf/datasets/dealership.md) for current offers and promotions.

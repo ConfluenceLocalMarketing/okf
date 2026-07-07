@@ -86,4 +86,4 @@ Email: gsjones.haselwood@gmail.com
 - Aggregate rating: 4.6 / 5.0 (2,019 reviews)
 - Google Business Profile: 4.6 stars (1,870+ reviews)
 
-See [autoplex.md](west-hills-autoplex-okf/datasets/autoplex.md) for the group overview and member dealership listings.
+See [autoplex.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/autoplex.md) for the group overview and member dealership listings.

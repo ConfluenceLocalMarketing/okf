@@ -48,4 +48,4 @@ Powered by SimplePart e-commerce technology.
 - **Email:** sales@volvopartswebstore.com
 - **Location:** 1140 Garfield Street, Oak Park, IL 60304
 
-See [company.md](volvo-parts-webstore-okf/datasets/company.md) for the full business profile.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/volvo-parts-webstore-okf/datasets/company.md) for the full business profile.

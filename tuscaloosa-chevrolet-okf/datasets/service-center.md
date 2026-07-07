@@ -38,4 +38,4 @@ Tuscaloosa Chevrolet is the only Certified Service Elite GM facility in Alabama,
 - **Hours:** Monday–Friday 7:00 AM – 6:00 PM
 - **Location:** 6500 Interstate Pkwy, Cottondale, AL
 
-See [company.md](tuscaloosa-chevrolet-okf/datasets/company.md) for full dealership information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/tuscaloosa-chevrolet-okf/datasets/company.md) for full dealership information.

@@ -54,4 +54,4 @@ Gibson Truck World provides financing solutions for truck buyers across the coun
 
 Online payment calculator on the Gibson Truck World website for estimating monthly payments.
 
-See [company.md](gibson-truck-world-okf/datasets/company.md) for location and contact information.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/gibson-truck-world-okf/datasets/company.md) for location and contact information.

@@ -81,5 +81,5 @@ Topics include:
 - Service center with laser alignment, handheld diagnostic computers
 - Basil Family Dealerships legacy and community involvement
 
-See [ai-discovery-page.md](basil-resale-okf/references/ai-discovery-page.md) for structured semantic endpoints and AI manifest details.
-See [prompts.md](basil-resale-okf/references/prompts.md) for the complete PromptGraph prompt library.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/references/ai-discovery-page.md) for structured semantic endpoints and AI manifest details.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/references/prompts.md) for the complete PromptGraph prompt library.

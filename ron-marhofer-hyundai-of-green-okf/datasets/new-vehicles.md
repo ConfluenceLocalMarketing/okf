@@ -69,6 +69,6 @@ Ron Marhofer Hyundai of Green carries a full lineup of new Hyundai models, from 
 
 ## Related
 
-- See [model-comparison.md](ron-marhofer-hyundai-of-green-okf/tables/model-comparison.md) for detailed model specifications.
-- See [dealership.md](ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the full business profile.
-- See [used-vehicles.md](ron-marhofer-hyundai-of-green-okf/datasets/used-vehicles.md) for pre-owned inventory.
+- See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/tables/model-comparison.md) for detailed model specifications.
+- See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the full business profile.
+- See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/used-vehicles.md) for pre-owned inventory.

@@ -46,4 +46,4 @@ Staff directory compiled from the dealership website and customer reviews.
 
 - Parts team with genuine OEM Buick and GMC parts
 
-See [testimonials.md](ron-marhofer-buick-gmc-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.

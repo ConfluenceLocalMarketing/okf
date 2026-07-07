@@ -40,4 +40,4 @@ Service customers enjoy lifetime car washes as part of the Leta for Life program
 
 ---
 
-For complete dealership information, see [company.md](frank-leta-buick-gmc-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/frank-leta-buick-gmc-okf/datasets/company.md).

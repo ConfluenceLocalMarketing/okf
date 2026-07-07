@@ -44,5 +44,5 @@ The PromptGraph API provides structured prompts for Varsity Lincoln, covering ve
 Endpoint: `https://api.promptgraph.ai/api/v1/varsity-lincoln/prompts`
 Format: JSON-LD (ItemList of CreativeWork)
 
-See [ai-discovery-page.md](varsity-lincoln-okf/references/ai-discovery-page.md) for API access details.
-See [faq.md](varsity-lincoln-okf/datasets/faq.md) for common customer questions.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/references/ai-discovery-page.md) for API access details.
+See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/faq.md) for common customer questions.

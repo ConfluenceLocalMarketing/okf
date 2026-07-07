@@ -57,4 +57,4 @@ Ray Laethem Buick GMC carries a comprehensive selection of new Buick and GMC veh
 
 Browse online at the [new vehicle inventory page](https://www.laethemgm.com/).
 
-See [dealership.md](ray-laethem-buick-gmc-okf/datasets/dealership.md) for full business profile and [financing.md](ray-laethem-buick-gmc-okf/datasets/financing.md) for purchase/lease options.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for full business profile and [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/financing.md) for purchase/lease options.

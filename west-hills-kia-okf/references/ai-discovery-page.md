@@ -85,7 +85,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wi
 
 ## Q&A Prompt Library (10 Prompts)
 
-The `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](west-hills-kia-okf/references/prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/references/prompts.md) for the full library. Topics include:
 
 - Dealership positioning and customer service
 - New and pre-owned vehicle inquiries
@@ -95,7 +95,7 @@ The `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs serving 
 
 ## Testimonials Endpoint
 
-The `/testimonials` endpoint exposes customer review data with predominantly 4-5 star ratings. See [testimonials.md](west-hills-kia-okf/references/testimonials.md) for details.
+The `/testimonials` endpoint exposes customer review data with predominantly 4-5 star ratings. See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/references/testimonials.md) for details.
 
 ## Offers Endpoint
 
@@ -133,6 +133,6 @@ The AI Discovery Page defines multiple structured `ReadAction` entries that agen
 
 This page exists to give AI agents direct access to structured knowledge about West Hills Kia without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](west-hills-kia-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](west-hills-kia-okf/references/prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](west-hills-kia-okf/references/testimonials.md) for customer review data.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/references/testimonials.md) for customer review data.

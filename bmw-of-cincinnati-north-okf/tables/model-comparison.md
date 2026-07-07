@@ -126,5 +126,5 @@ All new BMW models include:
 - **i4 / iX** - Recognized for EV technology and driving dynamics
 - **M models** - Legendary performance credentials across the lineup
 
-See [new-vehicles.md](bmw-of-cincinnati-north-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](bmw-of-cincinnati-north-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/dealership.md) for current offers and promotions.

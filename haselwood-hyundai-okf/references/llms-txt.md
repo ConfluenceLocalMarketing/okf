@@ -70,4 +70,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 - [Reliable Transportation for Every Budget](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts/reliable-transportation-for-every-budget) - Economy Vehicle Program
 - [Factory-Certified Care to Keep Your Hyundai Running Like New](http://api.promptgraph.ai/api/v1/haselwood-hyundai/prompts/factory-certified-care-to-keep-your-hyundai-running-like-new) - Hyundai factory-trained service
 
-See [ai-discovery-page.md](haselwood-hyundai-okf/references/ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-hyundai-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

@@ -19,13 +19,13 @@ timestamp: 2026-07-03
 ## Vehicles
 
 **Q: What new CDJR models do you carry?**
-A: We carry the full lineup: Jeep Wrangler, Grand Cherokee, Gladiator; RAM 1500 and heavy-duty trucks; Dodge Durango, Hornet; Chrysler Pacifica. See [new-vehicles.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/new-vehicles.md).
+A: We carry the full lineup: Jeep Wrangler, Grand Cherokee, Gladiator; RAM 1500 and heavy-duty trucks; Dodge Durango, Hornet; Chrysler Pacifica. See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/new-vehicles.md).
 
 **Q: Do you offer test drives?**
 A: Yes, test drives are available for all new and pre-owned vehicles at our Libertyville location.
 
 **Q: What pre-owned vehicles do you have?**
-A: We offer a wide selection of quality used and certified pre-owned CDJR vehicles. See [used-vehicles.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/used-vehicles.md).
+A: We offer a wide selection of quality used and certified pre-owned CDJR vehicles. See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/used-vehicles.md).
 
 **Q: Do you have the Jeep Wrangler 4xe?**
 A: Yes, we carry the Jeep Wrangler 4xe plug-in hybrid model.
@@ -36,7 +36,7 @@ A: Yes, we carry the Jeep Wrangler 4xe plug-in hybrid model.
 A: Yes, we have upfront, no-haggle pricing on all vehicles.
 
 **Q: Can I get financing with bad credit?**
-A: Yes, we offer all-credit programs with competitive rates and online pre-approval. See [financing.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/financing.md).
+A: Yes, we offer all-credit programs with competitive rates and online pre-approval. See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/financing.md).
 
 **Q: What lease deals do you have?**
 A: We offer competitive lease specials on most new CDJR models. Check our website for current offers.
@@ -47,7 +47,7 @@ A: Yes, online pre-approval is available directly on our website.
 ## Service
 
 **Q: What services does your service center provide?**
-A: Full-service maintenance and repairs by Mopar-certified technicians using genuine Mopar parts. See [service-center.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/service-center.md).
+A: Full-service maintenance and repairs by Mopar-certified technicians using genuine Mopar parts. See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/service-center.md).
 
 **Q: Do you service non-CDJR vehicles?**
 A: Yes, our technicians service all makes and models.
@@ -58,7 +58,7 @@ A: Yes, we use only genuine Mopar parts for all CDJR repairs and maintenance.
 ## General
 
 **Q: Where are you located?**
-A: Libertyville, Illinois, serving Libertyville, Gurnee, and the greater Chicago suburbs. See [company.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md).
+A: Libertyville, Illinois, serving Libertyville, Gurnee, and the greater Chicago suburbs. See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md).
 
 **Q: What is your phone number?**
 A: (224) 424-3318.

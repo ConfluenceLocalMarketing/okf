@@ -72,7 +72,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data:
 
 ## Q&A Prompt Library (10 Prompts)
 
-The `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs. See [prompts.md](jake-sweeney-used-car-superstore-okf/references/prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/references/prompts.md) for the full library. Topics include:
 
 - Trusted used car dealer positioning
 - Online car buying experience
@@ -92,10 +92,10 @@ The `/testimonials` endpoint exposes customer review data:
 - **Most-cited staff:** David Shelton, Darrin Aden, Andre Valines, Mike Ellis, Ishmael Allen, Chris Page, Brad Monhollen, Michael Byrden, Abraham Lopez
 - Common themes: stress-free buying, no-pressure sales, patient staff, credit-challenged approvals, service communication
 
-See [testimonials.md](jake-sweeney-used-car-superstore-okf/references/testimonials.md) for customer review data.
+See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/references/testimonials.md) for customer review data.
 
 ## LLMs.txt
 
 Full llms.txt available at `https://api.promptgraph.ai/api/v1/jake-sweeney-used-car-superstore/llms.txt` documenting all API endpoints, site info, and 10 featured prompts.
 
-See [llms-txt.md](jake-sweeney-used-car-superstore-okf/references/llms-txt.md) for the full directive.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/references/llms-txt.md) for the full directive.

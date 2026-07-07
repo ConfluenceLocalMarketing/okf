@@ -59,4 +59,4 @@ The finance center at Mercedes-Benz of Caldwell provides tailored purchase and l
 - College graduate program
 - Loyalty and conquest programs
 
-See [company.md](mercedes-benz-of-caldwell-okf/datasets/company.md) for dealership location and contact.
+See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mercedes-benz-of-caldwell-okf/datasets/company.md) for dealership location and contact.

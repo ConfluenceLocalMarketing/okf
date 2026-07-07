@@ -43,4 +43,4 @@ Friendly Ford Las Vegas maintains structured endpoints optimized for LLM and AI 
 - Offer
 - CreativeWork (prompts/FAQs)
 
-See [llms-txt.md](friendly-ford-las-vegas-okf/references/llms-txt.md) for the AI consumption directive and [prompts.md](friendly-ford-las-vegas-okf/references/prompts.md) for the prompt library.
+See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/references/llms-txt.md) for the AI consumption directive and [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/references/prompts.md) for the prompt library.
