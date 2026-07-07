@@ -60,4 +60,4 @@ A: Yes. The dealership offers Spanish-language support - ¡Hablamos español!
 **Q: Is Leif Johnson Ford family-owned?**
 A: Yes. The Leif Johnson Automotive Group has been family-owned and operated for over 65 years.
 
-See [dealership.md](dealership.md) for full business profile.
+See [dealership.md](leif-johnson-ford-manor-okf/datasets/dealership.md) for full business profile.

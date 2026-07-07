@@ -102,14 +102,14 @@ Chevrolet models available include:
 
 Sales and service staff frequently praised by customers include: Ricky Steed, Dante Henley, Andre Valines, Robert Davis, Darrin Aden, Michael Ellis, Chris Page, Brad, Trent, Pip (Sokpheap), Rich Blank, Tyler Lycans, Marcus, Raheem, Deondre, Michael Byrden, Jeremy, Justin, Steven Withers, Lamonte, Joe Gray, Ishmael, Ryan, David Shelton, and others.
 
-See [staff.md](staff.md) for full directory.
+See [staff.md](jake-sweeney-chevrolet-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - Aggregate rating: 4.5 / 5.0 (4,689 reviews) across major platforms
 - PromptGraph-collected reviews: Predominantly 5-star with consistent praise for low-pressure sales, credit-challenged approvals, and service department accountability
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](jake-sweeney-chevrolet-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

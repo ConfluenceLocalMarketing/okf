@@ -15,7 +15,7 @@ timestamp: 2026-07-03
 
 ## What services does Logan Square Auto Repair offer?
 
-We offer engine repair, brakes, oil changes, suspension, tires, A/C, electrical, emissions, transmission repair, and advanced diagnostics. See [services.md](services.md) for full details.
+We offer engine repair, brakes, oil changes, suspension, tires, A/C, electrical, emissions, transmission repair, and advanced diagnostics. See [services.md](logan-square-auto-repair-okf/datasets/services.md) for full details.
 
 ## How long have you been in business?
 
@@ -23,7 +23,7 @@ Logan Square Auto Repair was established in 1997, serving Chicago's Logan Square
 
 ## Are you ASE Certified?
 
-Yes. Our technicians are ASE Certified. We are also AAA Approved, BBB Accredited, and a NAPA AutoCare Center. See [company.md](company.md) for all certifications.
+Yes. Our technicians are ASE Certified. We are also AAA Approved, BBB Accredited, and a NAPA AutoCare Center. See [company.md](logan-square-auto-repair-okf/datasets/company.md) for all certifications.
 
 ## Do you service luxury and import vehicles?
 
@@ -31,7 +31,7 @@ Yes. We service a wide range including Acura, Audi, BMW, Jaguar, Land Rover, Lex
 
 ## Do you offer the same ownership as Avondale Auto Repair?
 
-Yes. Logan Square Auto Repair and Avondale Auto Repair share the same family ownership. See [company.md](company.md) for details.
+Yes. Logan Square Auto Repair and Avondale Auto Repair share the same family ownership. See [company.md](logan-square-auto-repair-okf/datasets/company.md) for details.
 
 ## How do I schedule an appointment?
 

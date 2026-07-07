@@ -23,4 +23,4 @@ Nick Mayer Lincoln Westlake, the #1 volume Lincoln dealer in the Great Lakes Mar
 - Quality of service department work
 - Clean and welcoming dealership environment
 
-See [dealership.md](/datasets/dealership.md) for dealership information.
+See [dealership.md](nick-mayer-lincoln-westlake-okf/datasets/dealership.md) for dealership information.

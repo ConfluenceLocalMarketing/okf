@@ -24,4 +24,4 @@ timestamp: 2026-07-02
 | Aviator | Mid-size 3-Row SUV | 6-7 | RWD/AWD | $55K+ | Available plug-in hybrid, 3.0L twin-turbo |
 | Navigator | Full-size SUV | 7-8 | 4WD | $90K+ | 3.5L twin-turbo V6, 10-speed auto, hands-free liftgate |
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.
+See [new-vehicles.md](nick-mayer-lincoln-mayfield-okf/datasets/new-vehicles.md) for detailed model descriptions.

@@ -69,4 +69,4 @@ Recognized by Ford Motor Company for many achievements.
 - Instagram: https://www.instagram.com/leifjohnsonford/
 - X/Twitter: https://twitter.com/leifjohnsonford
 
-See [new-vehicles.md](new-vehicles.md) and [used-vehicles.md](used-vehicles.md) for current inventory. See [service-center.md](service-center.md) for service department details, [financing.md](financing.md) for finance options, and [staff.md](staff.md) for team directory.
+See [new-vehicles.md](leif-johnson-ford-austin-okf/datasets/new-vehicles.md) and [used-vehicles.md](leif-johnson-ford-austin-okf/datasets/used-vehicles.md) for current inventory. See [service-center.md](leif-johnson-ford-austin-okf/datasets/service-center.md) for service department details, [financing.md](leif-johnson-ford-austin-okf/datasets/financing.md) for finance options, and [staff.md](leif-johnson-ford-austin-okf/datasets/staff.md) for team directory.

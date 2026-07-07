@@ -66,7 +66,7 @@ The AI Manifest (v1.0) provides a machine-readable directory of all AI resources
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes 10+ structured Q&A prompt/response pairs. See [prompts.md](prompts.md) for the full library.
+The `/prompts` endpoint exposes 10+ structured Q&A prompt/response pairs. See [prompts.md](a-abel-roofing-okf/references/prompts.md) for the full library.
 
 ## LLM-Accessible Actions
 
@@ -78,5 +78,5 @@ The `/prompts` endpoint exposes 10+ structured Q&A prompt/response pairs. See [p
 6. **Aluminum Soffit Fascia Protection** — .019 thick aluminum, moisture/rot prevention
 7. **Complete Roof Tear-Off Specialists** — Full removal/replacement using Owens Corning systems
 
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
-See [prompts.md](prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](a-abel-roofing-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](a-abel-roofing-okf/references/prompts.md) for the complete Q&A prompt library.

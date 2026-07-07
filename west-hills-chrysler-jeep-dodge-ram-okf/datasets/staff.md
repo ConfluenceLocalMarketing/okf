@@ -44,4 +44,4 @@ Staff directory compiled from the dealership website.
 - **Chuck Haselwood** - Founder; 1996 Dealer of the Year, 1998 Time Magazine Quality Dealer of the Year, Rex Brown Distinguished Service Award, Thunderbird Award for Philanthropy
 - **Joanne Haselwood** - Rex Brown Award recipient for athletics commitment in Kitsap County
 
-See [dealership.md](dealership.md) for dealership contact information.
+See [dealership.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for dealership contact information.

@@ -72,4 +72,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 
 - [MCP Session Endpoint](https://mcp.promptgraph.ai/west-hills-kia/mcp) - Model Context Protocol server for AI agent inventory queries
 
-See [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](west-hills-kia-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

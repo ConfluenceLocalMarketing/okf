@@ -62,4 +62,4 @@ timestamp: 2026-06-29
 | John Meaux | Assistant Parts Manager | jmeaux@truckcityford.com |
 | Jake Thetford | Parts Director | jthetford@riataford.com |
 
-See [dealership.md](dealership.md) for business profile and [service-center.md](service-center.md) for service department details.
+See [dealership.md](leif-johnson-ford-buda-okf/datasets/dealership.md) for business profile and [service-center.md](leif-johnson-ford-buda-okf/datasets/service-center.md) for service department details.

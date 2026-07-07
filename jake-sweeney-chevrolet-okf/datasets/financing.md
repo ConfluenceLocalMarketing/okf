@@ -49,4 +49,4 @@ Estimate monthly payments using the online payment calculator on the dealership 
 
 Contact the finance department at (513) 716-5927 or through the dealership's sales line.
 
-See [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.
+See [dealership.md](jake-sweeney-chevrolet-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](jake-sweeney-chevrolet-okf/datasets/new-vehicles.md) or [used-vehicles.md](jake-sweeney-chevrolet-okf/datasets/used-vehicles.md) for inventory.

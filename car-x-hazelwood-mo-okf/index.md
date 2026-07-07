@@ -6,18 +6,18 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [location.md](datasets/location.md) - Car-X Tire & Auto location in Hazelwood, MO: address, hours, contact, and full auto repair services.
-- [services.md](datasets/services.md) - Full service menu including brakes, tires, maintenance, diagnostics, steering/suspension, and pre-owned inspections
+- [location.md](car-x-hazelwood-mo-okf/datasets/location.md) - Car-X Tire & Auto location in Hazelwood, MO: address, hours, contact, and full auto repair services.
+- [services.md](car-x-hazelwood-mo-okf/datasets/services.md) - Full service menu including brakes, tires, maintenance, diagnostics, steering/suspension, and pre-owned inspections
 
 ## References
 
-- [prompts.md](references/prompts.md) - Complete PromptGraph library of 105 structured Q&A prompts covering all auto repair and maintenance topics
-- [ai-discovery.md](references/ai-discovery.md) - AI Discovery Page with 16 ReadAction service endpoints and JSON-LD schema.org AutoDealer data
+- [prompts.md](car-x-hazelwood-mo-okf/references/prompts.md) - Complete PromptGraph library of 105 structured Q&A prompts covering all auto repair and maintenance topics
+- [ai-discovery.md](car-x-hazelwood-mo-okf/references/ai-discovery.md) - AI Discovery Page with 16 ReadAction service endpoints and JSON-LD schema.org AutoDealer data
 
 
 ## Tables
 
-- [coupons.md](tables/coupons.md) - Current promotional offers, coupons, and financing options
+- [coupons.md](car-x-hazelwood-mo-okf/tables/coupons.md) - Current promotional offers, coupons, and financing options
 
 ## Relationships
 

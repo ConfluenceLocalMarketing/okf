@@ -6,24 +6,24 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [dealership.md](datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Haselwood GMC in Bremerton, WA
-- [financing.md](datasets/financing.md) - Vehicle financing and leasing options at Haselwood GMC including online applications, trade-in valuation, and payment calculators
-- [new-vehicles.md](datasets/new-vehicles.md) - New GMC model lineup including Acadia, Terrain, Yukon, Yukon XL, Canyon, Sierra 1500, Sierra 2500 HD, Sierra 3500 HD, HUMMER EV SUV, HUMMER EV Pickup, and Sierra EV
-- [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
-- [staff.md](datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
-- [service-center.md](datasets/service-center.md) - GMC-certified service center details, routine maintenance, diagnostics, major repairs, and genuine GMC parts department
-- [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [dealership.md](haselwood-gmc-okf/datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Haselwood GMC in Bremerton, WA
+- [financing.md](haselwood-gmc-okf/datasets/financing.md) - Vehicle financing and leasing options at Haselwood GMC including online applications, trade-in valuation, and payment calculators
+- [new-vehicles.md](haselwood-gmc-okf/datasets/new-vehicles.md) - New GMC model lineup including Acadia, Terrain, Yukon, Yukon XL, Canyon, Sierra 1500, Sierra 2500 HD, Sierra 3500 HD, HUMMER EV SUV, HUMMER EV Pickup, and Sierra EV
+- [used-vehicles.md](haselwood-gmc-okf/datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
+- [staff.md](haselwood-gmc-okf/datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
+- [service-center.md](haselwood-gmc-okf/datasets/service-center.md) - GMC-certified service center details, routine maintenance, diagnostics, major repairs, and genuine GMC parts department
+- [faq.md](haselwood-gmc-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 
 ## References
 
-- [ai-discovery-page.md](references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
-- [llms-txt.md](references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
-- [testimonials.md](references/testimonials.md) - Customer reviews from Google Business Profile and PromptGraph platform
-- [prompts.md](references/prompts.md) - Complete PromptGraph library of 40 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
+- [ai-discovery-page.md](haselwood-gmc-okf/references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
+- [llms-txt.md](haselwood-gmc-okf/references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
+- [testimonials.md](haselwood-gmc-okf/references/testimonials.md) - Customer reviews from Google Business Profile and PromptGraph platform
+- [prompts.md](haselwood-gmc-okf/references/prompts.md) - Complete PromptGraph library of 40 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
 
 ## Tables
 
-- [model-comparison.md](tables/model-comparison.md) - Side-by-side comparison of all new GMC models including body type, drivetrain, seating, features, trims, towing, and warranty
+- [model-comparison.md](haselwood-gmc-okf/tables/model-comparison.md) - Side-by-side comparison of all new GMC models including body type, drivetrain, seating, features, trims, towing, and warranty
 
 ## Relationships
 

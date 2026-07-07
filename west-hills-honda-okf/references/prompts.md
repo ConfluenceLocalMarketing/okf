@@ -75,5 +75,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-honda/promp
 | 8 | `factory-certified-honda-service-you-can-rely-on` | Service department |
 | 9 | `professionalism-and-integrity-the-haselwood-difference` | Values-based business |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](west-hills-honda-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](west-hills-honda-okf/datasets/faq.md) for common questions and answers.

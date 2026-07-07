@@ -50,4 +50,4 @@ Montclare Automotive Corp., doing business as Montclare Auto Repair, is a family
 - Senior, AAA, and military discounts
 - Spanish spoken
 
-See [company.md](company.md) for more information about our shop and services.
+See [company.md](montclare-auto-repair-okf/datasets/company.md) for more information about our shop and services.

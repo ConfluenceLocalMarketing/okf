@@ -1,3 +1,3 @@
 # Tables
 
-- [amenities.md](amenities.md) - Full amenities matrix across all resort facilities.
+- [amenities.md](funcity-resort-great-river-entertainment-okf/tables/amenities.md) - Full amenities matrix across all resort facilities.

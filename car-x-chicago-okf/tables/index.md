@@ -1,3 +1,3 @@
 # Tables
 
-- [services-pricing.md](services-pricing.md) - Service categories and pricing overview for Car-X Chicago.
+- [services-pricing.md](car-x-chicago-okf/tables/services-pricing.md) - Service categories and pricing overview for Car-X Chicago.

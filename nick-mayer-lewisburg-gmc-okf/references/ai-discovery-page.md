@@ -34,4 +34,4 @@ No structured AI discovery endpoints (such as a PromptGraph API) were identified
 - Parts: https://www.nickmayergmcoflewisburg.com/parts/
 - Financing: https://www.nickmayergmcoflewisburg.com/finance/
 
-See [llms-txt.md](llms-txt.md) for the LLM discovery reference.
+See [llms-txt.md](nick-mayer-lewisburg-gmc-okf/references/llms-txt.md) for the LLM discovery reference.

@@ -71,5 +71,5 @@ Lincoln Black Label is an exclusive ownership program that includes:
 - Complimentary Lincoln Pickup & Delivery
 - Unique interior themes and materials
 
-See [model-comparison.md](/tables/model-comparison.md) for detailed specification comparison.
-See [dealership.md](dealership.md) for full dealership information.
+See [model-comparison.md](nick-mayer-lincoln-mayfield-okf/tables/model-comparison.md) for detailed specification comparison.
+See [dealership.md](nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for full dealership information.

@@ -72,4 +72,4 @@ A: Yes, through the KBB Instant Cash Offer tool — get a value for your car onl
 **Q: Is there a vehicle hold policy?**
 A: Yes, the dealership allows customers to hold vehicles before arriving.
 
-See [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](west-hills-kia-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

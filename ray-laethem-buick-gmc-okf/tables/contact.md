@@ -27,5 +27,5 @@ timestamp: 2026-07-03
 
 ## Citations
 
-- See [dealership.md](../datasets/dealership.md) for full dealership profile
-- See [hours.md](hours.md) for operating hours
+- See [dealership.md](ray-laethem-buick-gmc-okf/datasets/dealership.md) for full dealership profile
+- See [hours.md](ray-laethem-buick-gmc-okf/tables/hours.md) for operating hours

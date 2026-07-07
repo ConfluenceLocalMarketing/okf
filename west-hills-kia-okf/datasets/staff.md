@@ -47,4 +47,4 @@ Staff directory compiled from the dealership website, customer reviews, and Prom
 
 Parts team available to assist with genuine Kia parts and accessories. Contact the parts department at (360) 728-3070.
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](west-hills-kia-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.

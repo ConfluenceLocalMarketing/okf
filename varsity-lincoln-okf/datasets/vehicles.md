@@ -44,7 +44,7 @@ Every Lincoln Certified Pre-Owned vehicle includes:
 
 Quality used luxury vehicles from multiple brands, each subject to a multi-point inspection.
 
-See [new-vehicles.md](new-vehicles.md) for detailed new vehicle information.
-See [used-vehicles.md](used-vehicles.md) for detailed pre-owned vehicle information.
-See [dealership.md](dealership.md) for dealership profile.
-See [model-comparison.md](/tables/model-comparison.md) for detailed specifications.
+See [new-vehicles.md](varsity-lincoln-okf/datasets/new-vehicles.md) for detailed new vehicle information.
+See [used-vehicles.md](varsity-lincoln-okf/datasets/used-vehicles.md) for detailed pre-owned vehicle information.
+See [dealership.md](varsity-lincoln-okf/datasets/dealership.md) for dealership profile.
+See [model-comparison.md](varsity-lincoln-okf/tables/model-comparison.md) for detailed specifications.

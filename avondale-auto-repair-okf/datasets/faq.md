@@ -14,11 +14,11 @@ timestamp: 2026-07-03
 
 ## What services does Avondale Auto Repair offer?
 
-We offer engine repair, routine maintenance, brake repair, oil changes, suspension and steering service, tire service, A/C and heating repair, electrical diagnostics, and emissions repair. See [services.md](services.md) for full details.
+We offer engine repair, routine maintenance, brake repair, oil changes, suspension and steering service, tire service, A/C and heating repair, electrical diagnostics, and emissions repair. See [services.md](avondale-auto-repair-okf/datasets/services.md) for full details.
 
 ## Are you ASE Certified?
 
-Yes, our technicians are ASE Certified. We are also AAA Approved, a NAPA AutoCare Center, and a CARFAX Top-Rated Service Center. See [company.md](company.md) for all certifications.
+Yes, our technicians are ASE Certified. We are also AAA Approved, a NAPA AutoCare Center, and a CARFAX Top-Rated Service Center. See [company.md](avondale-auto-repair-okf/datasets/company.md) for all certifications.
 
 ## Do you work on both domestic and foreign vehicles?
 
@@ -38,7 +38,7 @@ Yes. As a NAPA AutoCare Center, we offer a 24-month / 24,000-mile nationwide war
 
 ## Do you provide financing options?
 
-Yes. We accept the Synchrony Car Care Credit Card and Snap Finance. See [company.md](company.md) for details.
+Yes. We accept the Synchrony Car Care Credit Card and Snap Finance. See [company.md](avondale-auto-repair-okf/datasets/company.md) for details.
 
 ## How much does an oil change cost?
 

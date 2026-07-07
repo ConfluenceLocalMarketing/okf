@@ -75,4 +75,4 @@ A: Yes. The Leif Johnson Automotive Group has been family-owned and operated for
 **Q: What community programs do you support?**
 A: The dealership supports Earning by Learning, Responsible Parenting, Toys for Tots, and other local initiatives.
 
-See [dealership.md](dealership.md) for full business profile.
+See [dealership.md](leif-johnson-ford-buda-okf/datasets/dealership.md) for full business profile.

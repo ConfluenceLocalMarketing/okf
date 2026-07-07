@@ -33,5 +33,5 @@ Certified technicians trained by BraunAbility to service all conversion types:
 - Power door systems
 - Securement systems
 
-See [dealership.md](dealership.md) for full business profile and contact information.
-See [service-center.md](service-center.md) for service department details.
+See [dealership.md](basil-mobility-okf/datasets/dealership.md) for full business profile and contact information.
+See [service-center.md](basil-mobility-okf/datasets/service-center.md) for service department details.

@@ -69,4 +69,4 @@ Leif Johnson Ford of Austin offers a dedicated Work Trucks program through [Work
 
 Browse online at the [new vehicle inventory page](https://www.leifjohnsonford.com/inventory/new-vehicles/) and [new specials](https://www.leifjohnsonford.com/inventory/new-specials/).
 
-See [dealership.md](dealership.md) for full business profile and [financing.md](financing.md) for purchase/lease options.
+See [dealership.md](leif-johnson-ford-austin-okf/datasets/dealership.md) for full business profile and [financing.md](leif-johnson-ford-austin-okf/datasets/financing.md) for purchase/lease options.

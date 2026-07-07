@@ -48,4 +48,4 @@ Leif Johnson Ford of Manor maintains an [AI Discovery Hub](https://www.leifjohns
 - Offer
 - CreativeWork (prompts/FAQs)
 
-See [llms-txt.md](llms-txt.md) for the AI consumption directive and [prompts.md](prompts.md) for the prompt library.
+See [llms-txt.md](leif-johnson-ford-manor-okf/references/llms-txt.md) for the AI consumption directive and [prompts.md](leif-johnson-ford-manor-okf/references/prompts.md) for the prompt library.

@@ -73,6 +73,6 @@ BraunAbility Financial Services and Basil Mobility assist customers in exploring
 - Disability advocacy organization assistance
 - BraunAbility Financial Services dedicated team: 1-800-488-0359
 
-See [mobility-vehicles.md](mobility-vehicles.md) for full vehicle lineup.
-See [dealership.md](dealership.md) for full business profile and contact information.
-See [model-comparison.md](/tables/model-comparison.md) for side-by-side specifications.
+See [mobility-vehicles.md](basil-mobility-okf/datasets/mobility-vehicles.md) for full vehicle lineup.
+See [dealership.md](basil-mobility-okf/datasets/dealership.md) for full business profile and contact information.
+See [model-comparison.md](basil-mobility-okf/tables/model-comparison.md) for side-by-side specifications.

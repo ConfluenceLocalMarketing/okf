@@ -75,7 +75,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data featuring a wi
 
 ## Q&A Prompt Library (7 Prompts)
 
-The `/prompts` endpoint exposes 7 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 7 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](haselwood-chevrolet-okf/references/prompts.md) for the full library. Topics include:
 
 - Vehicle shopping and model-specific inquiries
 - Financing, leasing, and trade-in questions
@@ -86,7 +86,7 @@ The `/prompts` endpoint exposes 7 structured Q&A prompt/response pairs serving a
 
 ## Testimonials Endpoint
 
-The `/testimonials` endpoint exposes customer review data with a 4.4 aggregate rating. See [testimonials.md](testimonials.md) for details.
+The `/testimonials` endpoint exposes customer review data with a 4.4 aggregate rating. See [testimonials.md](haselwood-chevrolet-okf/references/testimonials.md) for details.
 
 ## LLM-Accessible Actions
 
@@ -114,6 +114,6 @@ The PromptGraph API defines structured prompts that agents can invoke:
 
 This page exists to give AI agents direct access to structured knowledge about Haselwood Chevrolet without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
-See [prompts.md](prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](testimonials.md) for customer review data.
+See [llms-txt.md](haselwood-chevrolet-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](haselwood-chevrolet-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](haselwood-chevrolet-okf/references/testimonials.md) for customer review data.

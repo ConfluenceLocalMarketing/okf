@@ -85,5 +85,5 @@ Standard or available across most Ford models:
 - Reverse Brake Assist (on select models)
 - BlueCruise Hands-Free Highway Driving (on select models)
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](west-hills-ford-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](west-hills-ford-okf/datasets/dealership.md) for current offers and promotions.

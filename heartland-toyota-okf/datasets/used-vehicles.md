@@ -63,4 +63,4 @@ Toyota Certified Pre-Owned vehicles undergo rigorous 160-point inspection and in
 - Competitive trade-in values
 - Cash offers for trade-ins (even without vehicle purchase)
 
-See [dealership.md](dealership.md) for current financing and trade-in programs.
+See [dealership.md](heartland-toyota-okf/datasets/dealership.md) for current financing and trade-in programs.

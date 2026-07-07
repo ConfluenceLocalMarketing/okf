@@ -54,5 +54,5 @@ Each pre-owned vehicle undergoes inspection to ensure safety and reliability of 
 - Electronic trade-in appraisals - quick digital estimate from home
 - Fair market trade-in evaluation for used accessible vans
 
-See [dealership.md](dealership.md) for full business profile and contact information.
-See [mobility-vehicles.md](mobility-vehicles.md) for complete vehicle details.
+See [dealership.md](basil-mobility-okf/datasets/dealership.md) for full business profile and contact information.
+See [mobility-vehicles.md](basil-mobility-okf/datasets/mobility-vehicles.md) for complete vehicle details.

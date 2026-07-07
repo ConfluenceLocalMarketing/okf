@@ -54,4 +54,4 @@ timestamp: 2026-07-02
 - Trade-in valuation
 ```
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the full AI discovery page.
+See [ai-discovery-page.md](nick-mayer-dickson-bg-okf/references/ai-discovery-page.md) for the full AI discovery page.

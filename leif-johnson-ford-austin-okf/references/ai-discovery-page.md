@@ -53,4 +53,4 @@ Leif Johnson Ford of Austin maintains an [AI Discovery Hub](https://www.leifjohn
 
 This AI Discovery Optimization page was structured by a Technical SEO Engineer and Web Developer to maximize LLM discovery and human readability, using semantic HTML, direct API endpoint integration, and valid AutoDealer Schema.org markup.
 
-See [llms-txt.md](llms-txt.md) for the AI consumption directive and [prompts.md](prompts.md) for the prompt library.
+See [llms-txt.md](leif-johnson-ford-austin-okf/references/llms-txt.md) for the AI consumption directive and [prompts.md](leif-johnson-ford-austin-okf/references/prompts.md) for the prompt library.

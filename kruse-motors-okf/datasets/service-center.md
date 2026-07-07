@@ -68,5 +68,5 @@ Service coupons and specials are available for oil changes, tire rotations, brak
 | Transmission Fluid | Every 30,000–60,000 miles |
 | Coolant Flush | Every 30,000–50,000 miles |
 
-See [dealership.md](dealership.md) for the full business profile.
-See [brand-comparison.md](/tables/brand-comparison.md) for service-related brand features.
+See [dealership.md](kruse-motors-okf/datasets/dealership.md) for the full business profile.
+See [brand-comparison.md](kruse-motors-okf/tables/brand-comparison.md) for service-related brand features.

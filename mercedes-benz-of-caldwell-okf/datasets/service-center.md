@@ -59,4 +59,4 @@ The service center at Mercedes-Benz of Caldwell is staffed by factory-trained te
 - **Phone:** (973) 227-3600
 - **Location:** Caldwell (West Caldwell), NJ
 
-See [company.md](company.md) for full dealership information.
+See [company.md](mercedes-benz-of-caldwell-okf/datasets/company.md) for full dealership information.

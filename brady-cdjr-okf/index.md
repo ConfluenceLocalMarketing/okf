@@ -8,19 +8,19 @@ This bundle documents Brady Chrysler Dodge Jeep Ram, a CDJR dealership in Bessem
 
 ## Datasets
 
-- [company.md](datasets/company.md) - Full business profile: location, inventory, services, hours, financing.
-- [faq.md](datasets/faq.md) — Frequently asked questions about Brady CDJR
-- [financing.md](datasets/financing.md) — Finance center with online credit application and payment calculator
-- [new-vehicles.md](datasets/new-vehicles.md) — Full new CDJR vehicle lineup
-- [service-center.md](datasets/service-center.md) — Mopar-certified service center
-- [staff.md](datasets/staff.md) — Key dealership staff members
-- [used-vehicles.md](datasets/used-vehicles.md) — Pre-owned vehicle inventory and CPO program
+- [company.md](brady-cdjr-okf/datasets/company.md) - Full business profile: location, inventory, services, hours, financing.
+- [faq.md](brady-cdjr-okf/datasets/faq.md) — Frequently asked questions about Brady CDJR
+- [financing.md](brady-cdjr-okf/datasets/financing.md) — Finance center with online credit application and payment calculator
+- [new-vehicles.md](brady-cdjr-okf/datasets/new-vehicles.md) — Full new CDJR vehicle lineup
+- [service-center.md](brady-cdjr-okf/datasets/service-center.md) — Mopar-certified service center
+- [staff.md](brady-cdjr-okf/datasets/staff.md) — Key dealership staff members
+- [used-vehicles.md](brady-cdjr-okf/datasets/used-vehicles.md) — Pre-owned vehicle inventory and CPO program
 
 ## References
 
-- [llms-txt.md](references/llms-txt.md) - Structured AI context for the dealership.
-- [prompts.md](references/prompts.md) - Curated AI prompts for customer and internal use.
-- [ai-discovery-page.md](references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](brady-cdjr-okf/references/llms-txt.md) - Structured AI context for the dealership.
+- [prompts.md](brady-cdjr-okf/references/prompts.md) - Curated AI prompts for customer and internal use.
+- [ai-discovery-page.md](brady-cdjr-okf/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

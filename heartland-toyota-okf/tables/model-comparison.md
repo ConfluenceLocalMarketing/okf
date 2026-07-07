@@ -106,5 +106,5 @@ Standard or available across most Toyota models:
 
 Complimentary scheduled maintenance for 2 years / 25,000 miles, plus 24/7 roadside assistance for 3 years / 36,000 miles on all new Toyotas.
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](heartland-toyota-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](heartland-toyota-okf/datasets/dealership.md) for current offers and promotions.

@@ -63,7 +63,7 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/avondale-auto-repair/s
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes structured Q&A pairs. See [prompts.md](prompts.md) for the full library.
+The `/prompts` endpoint exposes structured Q&A pairs. See [prompts.md](avondale-auto-repair-okf/references/prompts.md) for the full library.
 
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
-See [prompts.md](prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](avondale-auto-repair-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](avondale-auto-repair-okf/references/prompts.md) for the complete Q&A prompt library.

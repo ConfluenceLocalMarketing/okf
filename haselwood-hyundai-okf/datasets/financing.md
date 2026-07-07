@@ -50,4 +50,4 @@ Estimate monthly payments using the online car payment calculator on the dealers
 
 Contact the finance department at (360) 842-2566 or through the dealership's sales line.
 
-See [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.
+See [dealership.md](haselwood-hyundai-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](haselwood-hyundai-okf/datasets/new-vehicles.md) or [used-vehicles.md](haselwood-hyundai-okf/datasets/used-vehicles.md) for inventory.

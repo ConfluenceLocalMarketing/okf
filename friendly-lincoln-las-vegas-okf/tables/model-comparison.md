@@ -25,4 +25,4 @@ timestamp: 2026-07-03
 | Aviator | Mid-size 3-Row SUV | 6-7 | RWD/AWD | $55K+ | Available plug-in hybrid, 3.0L twin-turbo, Lincoln Co-Pilot360 2.0 |
 | Navigator | Full-size SUV | 7-8 | 4WD | $90K+ | 3.5L twin-turbo V6, 10-speed auto, Perfect Position front seats |
 
-See [vehicles.md](/datasets/vehicles.md) for inventory details.
+See [vehicles.md](friendly-lincoln-las-vegas-okf/datasets/vehicles.md) for inventory details.

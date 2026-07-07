@@ -38,4 +38,4 @@ Accurate trade-in valuations with vehicle history reports.
 
 ---
 
-For complete dealership information, see [company.md](company.md).
+For complete dealership information, see [company.md](chaparral-buick-gmc-okf/datasets/company.md).

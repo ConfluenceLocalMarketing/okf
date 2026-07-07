@@ -6,24 +6,24 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [dealership.md](datasets/dealership.md) - Business profile, hours, contact, services, location, and community programs for West Hills Chrysler Jeep Dodge RAM in Bremerton, WA
-- [new-vehicles.md](datasets/new-vehicles.md) - New Chrysler, Jeep, Dodge, and RAM model lineup including Pacifica, Wrangler, Grand Cherokee, Charger, Durango, RAM trucks, and ProMaster vans
-- [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, online buying tools, and trade-in services
-- [staff.md](datasets/staff.md) - Staff directory including management, sales managers, finance team, and service/parts managers
-- [service-center.md](datasets/service-center.md) - Mopar-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Mopar parts department
-- [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
-- [financing.md](datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
+- [dealership.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) - Business profile, hours, contact, services, location, and community programs for West Hills Chrysler Jeep Dodge RAM in Bremerton, WA
+- [new-vehicles.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/new-vehicles.md) - New Chrysler, Jeep, Dodge, and RAM model lineup including Pacifica, Wrangler, Grand Cherokee, Charger, Durango, RAM trucks, and ProMaster vans
+- [used-vehicles.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, online buying tools, and trade-in services
+- [staff.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/staff.md) - Staff directory including management, sales managers, finance team, and service/parts managers
+- [service-center.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/service-center.md) - Mopar-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Mopar parts department
+- [faq.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
 
 ## References
 
-- [ai-discovery-page.md](references/ai-discovery-page.md) - AI-facing infrastructure assessment, tested endpoints, and structured data availability
-- [llms-txt.md](references/llms-txt.md) - llms.txt availability assessment and key site pages for AI crawling
-- [testimonials.md](references/testimonials.md) - Customer reviews, dealership reputation, and community awards
-- [prompts.md](references/prompts.md) - AI prompt patterns for querying dealership knowledge
+- [ai-discovery-page.md](west-hills-chrysler-jeep-dodge-ram-okf/references/ai-discovery-page.md) - AI-facing infrastructure assessment, tested endpoints, and structured data availability
+- [llms-txt.md](west-hills-chrysler-jeep-dodge-ram-okf/references/llms-txt.md) - llms.txt availability assessment and key site pages for AI crawling
+- [testimonials.md](west-hills-chrysler-jeep-dodge-ram-okf/references/testimonials.md) - Customer reviews, dealership reputation, and community awards
+- [prompts.md](west-hills-chrysler-jeep-dodge-ram-okf/references/prompts.md) - AI prompt patterns for querying dealership knowledge
 
 ## Tables
 
-- [model-comparison.md](tables/model-comparison.md) - Side-by-side comparison of all new Chrysler, Jeep, Dodge, and RAM models including body type, drivetrain, seating, features, towing, and warranty
+- [model-comparison.md](west-hills-chrysler-jeep-dodge-ram-okf/tables/model-comparison.md) - Side-by-side comparison of all new Chrysler, Jeep, Dodge, and RAM models including body type, drivetrain, seating, features, towing, and warranty
 
 ## Relationships
 

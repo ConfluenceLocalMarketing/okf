@@ -68,4 +68,4 @@ Jake Sweeney Used Car Superstore has collected 52+ customer testimonials through
 - **Parts sourcing** - Team finds parts from other dealers when backordered
 - **Photo documentation** - Work progress shared with customers
 
-See [staff.md](/datasets/staff.md) for the full staff directory.
+See [staff.md](jake-sweeney-used-car-superstore-okf/datasets/staff.md) for the full staff directory.

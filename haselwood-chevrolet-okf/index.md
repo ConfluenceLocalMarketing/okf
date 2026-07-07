@@ -6,24 +6,24 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [dealership.md](datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Haselwood Chevrolet in Bremerton, WA
-- [financing.md](datasets/financing.md) - Vehicle financing and leasing options at Haselwood Chevrolet including online applications, trade-in valuation, and payment calculators
-- [new-vehicles.md](datasets/new-vehicles.md) - New Chevrolet, Buick, and GMC model lineup including Silverado, Equinox, Trax, Tahoe, Suburban, Blazer, Trailblazer, Traverse, Colorado, Corvette, and EV models
-- [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned inventory with multi-make selection, CarBravo certified program, competitive pricing, and online buying tools
-- [staff.md](datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
-- [service-center.md](datasets/service-center.md) - Chevrolet-certified service center details, routine maintenance, diagnostics, major repairs, and genuine OEM parts department
-- [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [dealership.md](haselwood-chevrolet-okf/datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Haselwood Chevrolet in Bremerton, WA
+- [financing.md](haselwood-chevrolet-okf/datasets/financing.md) - Vehicle financing and leasing options at Haselwood Chevrolet including online applications, trade-in valuation, and payment calculators
+- [new-vehicles.md](haselwood-chevrolet-okf/datasets/new-vehicles.md) - New Chevrolet, Buick, and GMC model lineup including Silverado, Equinox, Trax, Tahoe, Suburban, Blazer, Trailblazer, Traverse, Colorado, Corvette, and EV models
+- [used-vehicles.md](haselwood-chevrolet-okf/datasets/used-vehicles.md) - Pre-owned inventory with multi-make selection, CarBravo certified program, competitive pricing, and online buying tools
+- [staff.md](haselwood-chevrolet-okf/datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
+- [service-center.md](haselwood-chevrolet-okf/datasets/service-center.md) - Chevrolet-certified service center details, routine maintenance, diagnostics, major repairs, and genuine OEM parts department
+- [faq.md](haselwood-chevrolet-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 
 ## References
 
-- [ai-discovery-page.md](references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
-- [llms-txt.md](references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
-- [testimonials.md](references/testimonials.md) - Customer reviews with aggregate 4.4-star rating, most-praised staff, and notable excerpts
-- [prompts.md](references/prompts.md) - Complete PromptGraph library of 7 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
+- [ai-discovery-page.md](haselwood-chevrolet-okf/references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
+- [llms-txt.md](haselwood-chevrolet-okf/references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
+- [testimonials.md](haselwood-chevrolet-okf/references/testimonials.md) - Customer reviews with aggregate 4.4-star rating, most-praised staff, and notable excerpts
+- [prompts.md](haselwood-chevrolet-okf/references/prompts.md) - Complete PromptGraph library of 7 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
 
 ## Tables
 
-- [model-comparison.md](tables/model-comparison.md) - Side-by-side comparison of all new Chevrolet models including body type, drivetrain, seating, features, trims, towing, and warranty
+- [model-comparison.md](haselwood-chevrolet-okf/tables/model-comparison.md) - Side-by-side comparison of all new Chevrolet models including body type, drivetrain, seating, features, trims, towing, and warranty
 
 ## Relationships
 

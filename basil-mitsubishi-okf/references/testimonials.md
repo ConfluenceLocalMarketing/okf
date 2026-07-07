@@ -58,5 +58,5 @@ timestamp: 2026-06-24
 
 No pressure, transparent, professional, went above and beyond, customer for life, honest, efficient, knowledgeable, friendly, stress-free.
 
-See [dealership.md](/datasets/dealership.md) for full business profile.
-See [staff.md](/datasets/staff.md) for staff directory.
+See [dealership.md](basil-mitsubishi-okf/datasets/dealership.md) for full business profile.
+See [staff.md](basil-mitsubishi-okf/datasets/staff.md) for staff directory.

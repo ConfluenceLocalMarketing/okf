@@ -51,7 +51,7 @@ timestamp: 2026-07-03
 
 ## Coverage Area
 
-See [service-areas.md](service-areas.md) for detailed geographic coverage.
+See [service-areas.md](a-plus-roofing-exteriors-okf/datasets/service-areas.md) for detailed geographic coverage.
 
 ## Citations
 

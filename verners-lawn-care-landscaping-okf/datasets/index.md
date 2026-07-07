@@ -1,3 +1,3 @@
 # Datasets
 
-- [company.md](company.md) — Family-owned lawn care company serving South Hills, PA
+- [company.md](verners-lawn-care-landscaping-okf/datasets/company.md) — Family-owned lawn care company serving South Hills, PA

@@ -91,4 +91,4 @@ timestamp: 2026-07-03
 
 ## Citations
 
-Data sourced from the official Iowa 80 Truckstop website ([iowa80truckstop.com](https://iowa80truckstop.com/)). See [iowa-80-truckstop.md](../datasets/iowa-80-truckstop.md) for the full concept profile.
+Data sourced from the official Iowa 80 Truckstop website ([iowa80truckstop.com](https://iowa80truckstop.com/)). See [iowa-80-truckstop.md](iowa-80-truckstop-okf/datasets/iowa-80-truckstop.md) for the full concept profile.

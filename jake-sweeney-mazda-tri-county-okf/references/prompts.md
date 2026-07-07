@@ -54,5 +54,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/jake-sweeney-mazda-tri
 | 9 | `top-rated-mazda-dealership-with-exceptional-cincinnati-reviews` | Reviews, no-pressure sales, expert financing |
 | 10 | `jake-sweeney-mazda-service-pricing-prompt` | Service pricing and packages |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](jake-sweeney-mazda-tri-county-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](jake-sweeney-mazda-tri-county-okf/datasets/faq.md) for common questions and answers.

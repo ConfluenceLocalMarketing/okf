@@ -48,4 +48,4 @@ Same as dealership hours:
 | Saturday | 8:00 AM - 6:00 PM |
 | Sunday | Closed |
 
-Schedule service by calling 615-560-1626. See [staff.md](staff.md) for department contacts.
+Schedule service by calling 615-560-1626. See [staff.md](nick-mayer-dickson-bg-okf/datasets/staff.md) for department contacts.

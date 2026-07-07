@@ -31,4 +31,4 @@ timestamp: 2026-07-03
 | Main Dealership | 660 N Decatur Blvd, Las Vegas, NV 89107 |
 | Collision Center | 1650 N Decatur Blvd, Las Vegas, NV 89107 |
 
-See [hours.md](hours.md) for operating hours and [friendly-ford-las-vegas.md](/datasets/friendly-ford-las-vegas.md) for the full dealership profile.
+See [hours.md](friendly-ford-las-vegas-okf/tables/hours.md) for operating hours and [friendly-ford-las-vegas.md](friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for the full dealership profile.

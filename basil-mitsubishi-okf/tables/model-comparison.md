@@ -64,5 +64,5 @@ All new Mitsubishi models include:
 
 - **Outlander:** 2026 Family Green Car of the Year (Green Car Journal)
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](basil-mitsubishi-okf/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](basil-mitsubishi-okf/datasets/dealership.md) for current offers and promotions.

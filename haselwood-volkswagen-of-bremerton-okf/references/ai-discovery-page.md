@@ -78,7 +78,7 @@ An LLM-optimized inventory page is also available at `/llm-inventory.htm` with a
 
 ## Q&A Prompt Library (39 Prompts)
 
-The `/prompts` endpoint exposes 39 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 39 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](haselwood-volkswagen-of-bremerton-okf/references/prompts.md) for the full library. Topics include:
 
 - Vehicle shopping and model-specific inquiries
 - Financing, leasing, and trade-in questions
@@ -89,7 +89,7 @@ The `/prompts` endpoint exposes 39 structured Q&A prompt/response pairs serving 
 
 ## Testimonials Endpoint
 
-The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](testimonials.md) for details.
+The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](haselwood-volkswagen-of-bremerton-okf/references/testimonials.md) for details.
 
 ## MCP Server
 
@@ -136,6 +136,6 @@ The AI Discovery Page defines 20 structured `ReadAction` entries that agents can
 
 This page exists to give AI agents direct access to structured knowledge about Haselwood Volkswagen of Bremerton without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
-See [prompts.md](prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](testimonials.md) for customer review data.
+See [llms-txt.md](haselwood-volkswagen-of-bremerton-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](haselwood-volkswagen-of-bremerton-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](haselwood-volkswagen-of-bremerton-okf/references/testimonials.md) for customer review data.

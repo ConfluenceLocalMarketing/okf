@@ -95,5 +95,5 @@ Promotions vary by model and include low APR financing, lease specials, and reba
 
 New vehicle purchases include the **Lifetime Powertrain Warranty**, setting the dealership apart from standard competitors.
 
-See [dealership.md](dealership.md) for contact information and current programs.
-See [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](west-hills-honda-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](west-hills-honda-okf/tables/model-comparison.md) for side-by-side model specifications.

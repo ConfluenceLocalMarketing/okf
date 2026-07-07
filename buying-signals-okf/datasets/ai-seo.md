@@ -35,5 +35,5 @@ Modern SEO services optimized for how the internet works now - structured data, 
 
 ## Related
 
-See [ai-discovery-page.md](/references/ai-discovery-page.md) for PromptGraph API and AI Manifest details.
-See [company.md](company.md) for the full product ecosystem.
+See [ai-discovery-page.md](buying-signals-okf/references/ai-discovery-page.md) for PromptGraph API and AI Manifest details.
+See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.

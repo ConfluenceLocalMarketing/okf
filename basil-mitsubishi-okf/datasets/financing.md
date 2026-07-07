@@ -18,7 +18,7 @@ resource: https://www.basilmitsubishi.com/finance/
 
 The Basil Mitsubishi Finance Center offers comprehensive financing solutions for new and pre-owned Mitsubishi vehicles, serving customers throughout the greater Buffalo area including Williamsville, Amherst, Clarence, Lockport, Tonawanda, Depew, Cheektowaga, Kenmore, Lackawanna, and West Seneca.
 
-See [dealership.md](dealership.md) for full business profile.
+See [dealership.md](basil-mitsubishi-okf/datasets/dealership.md) for full business profile.
 
 ## Financing Options
 

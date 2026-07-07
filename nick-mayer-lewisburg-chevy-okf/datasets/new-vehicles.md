@@ -65,5 +65,5 @@ Iconic American sports car seating 2 passengers. Mid-engine 6.2L V8 producing 49
 ### Bolt EV / Bolt EUV
 All-electric vehicles. FWD with 259 miles of estimated range per charge. Bolt EUV offers slightly larger dimensions and available Super Cruise hands-free driving. Affordable entry into EV ownership.
 
-See [dealership.md](dealership.md) for full dealership profile.
-See [model-comparison.md](/tables/model-comparison.md) for detailed model specifications.
+See [dealership.md](nick-mayer-lewisburg-chevy-okf/datasets/dealership.md) for full dealership profile.
+See [model-comparison.md](nick-mayer-lewisburg-chevy-okf/tables/model-comparison.md) for detailed model specifications.

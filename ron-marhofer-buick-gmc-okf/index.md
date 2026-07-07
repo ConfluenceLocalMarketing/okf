@@ -6,24 +6,24 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [dealership.md](datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Ron Marhofer Buick GMC in North Canton, OH
-- [new-vehicles.md](datasets/new-vehicles.md) - New Buick and GMC model lineup including Encore GX, Envision, Enclave, Terrain, Acadia, Yukon, Sierra, Canyon, and HUMMER EV
-- [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
-- [staff.md](datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
-- [service-center.md](datasets/service-center.md) - Buick and GMC certified service center details, routine maintenance, diagnostics, major repairs, and genuine OEM parts department
-- [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
-- [financing.md](datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators
+- [dealership.md](ron-marhofer-buick-gmc-okf/datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Ron Marhofer Buick GMC in North Canton, OH
+- [new-vehicles.md](ron-marhofer-buick-gmc-okf/datasets/new-vehicles.md) - New Buick and GMC model lineup including Encore GX, Envision, Enclave, Terrain, Acadia, Yukon, Sierra, Canyon, and HUMMER EV
+- [used-vehicles.md](ron-marhofer-buick-gmc-okf/datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
+- [staff.md](ron-marhofer-buick-gmc-okf/datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
+- [service-center.md](ron-marhofer-buick-gmc-okf/datasets/service-center.md) - Buick and GMC certified service center details, routine maintenance, diagnostics, major repairs, and genuine OEM parts department
+- [faq.md](ron-marhofer-buick-gmc-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](ron-marhofer-buick-gmc-okf/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators
 
 ## References
 
-- [ai-discovery-page.md](references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
-- [llms-txt.md](references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
-- [testimonials.md](references/testimonials.md) - Customer reviews with predominantly 5-star ratings, most-praised staff, and notable excerpts
-- [prompts.md](references/prompts.md) - Complete PromptGraph library of 10+ structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
+- [ai-discovery-page.md](ron-marhofer-buick-gmc-okf/references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
+- [llms-txt.md](ron-marhofer-buick-gmc-okf/references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
+- [testimonials.md](ron-marhofer-buick-gmc-okf/references/testimonials.md) - Customer reviews with predominantly 5-star ratings, most-praised staff, and notable excerpts
+- [prompts.md](ron-marhofer-buick-gmc-okf/references/prompts.md) - Complete PromptGraph library of 10+ structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
 
 ## Tables
 
-- [model-comparison.md](tables/model-comparison.md) - Side-by-side comparison of all new Buick and GMC models including body type, drivetrain, seating, features, trims, towing, and warranty
+- [model-comparison.md](ron-marhofer-buick-gmc-okf/tables/model-comparison.md) - Side-by-side comparison of all new Buick and GMC models including body type, drivetrain, seating, features, trims, towing, and warranty
 
 ## Relationships
 

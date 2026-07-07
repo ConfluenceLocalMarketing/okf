@@ -1,3 +1,3 @@
 # References
 
-- [website.md](website.md) - Source information from the official Washington Fencing Company website.
+- [website.md](washington-fencing-company-okf/references/website.md) - Source information from the official Washington Fencing Company website.

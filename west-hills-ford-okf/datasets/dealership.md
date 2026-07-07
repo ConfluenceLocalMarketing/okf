@@ -86,14 +86,14 @@ Ford models available include:
 
 ## Staff
 
-See [staff.md](staff.md) for full directory.
+See [staff.md](west-hills-ford-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - Aggregate rating: 4.6 / 5.0 (3,135 reviews) across major platforms
 - Google Business Profile: 4.6 stars (2,960+ reviews)
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](west-hills-ford-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

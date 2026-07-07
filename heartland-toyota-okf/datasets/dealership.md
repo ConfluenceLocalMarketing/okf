@@ -92,7 +92,7 @@ Toyota models available include:
 
 ## Staff
 
-See [staff.md](staff.md) for full directory.
+See [staff.md](heartland-toyota-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
@@ -100,7 +100,7 @@ See [staff.md](staff.md) for full directory.
 - **CARFAX:** 4.6 / 5.0 (1,977 verified reviews)
 - **Kelley Blue Book:** 4.9 stars
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](heartland-toyota-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

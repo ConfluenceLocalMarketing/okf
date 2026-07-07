@@ -24,4 +24,4 @@ timestamp: 2026-07-02
 | Yukon XL | Full-size SUV | 7-9 | RWD/4WD | Max cargo capacity |
 | Hummer EV | Electric SuperTruck | 5 | 4WD | 1,000 hp, CrabWalk, Ultium |
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions.
+See [new-vehicles.md](nick-mayer-lewisburg-gmc-okf/datasets/new-vehicles.md) for detailed model descriptions.

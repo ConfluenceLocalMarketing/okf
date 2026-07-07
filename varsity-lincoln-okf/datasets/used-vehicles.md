@@ -50,6 +50,6 @@ The dealership offers trade-in evaluation through:
 
 Complimentary vehicle delivery within 300 miles on qualifying vehicles.
 
-See [dealership.md](dealership.md) for full business profile.
-See [financing.md](financing.md) for financing options on pre-owned vehicles.
-See [new-vehicles.md](new-vehicles.md) for the new Lincoln lineup.
+See [dealership.md](varsity-lincoln-okf/datasets/dealership.md) for full business profile.
+See [financing.md](varsity-lincoln-okf/datasets/financing.md) for financing options on pre-owned vehicles.
+See [new-vehicles.md](varsity-lincoln-okf/datasets/new-vehicles.md) for the new Lincoln lineup.

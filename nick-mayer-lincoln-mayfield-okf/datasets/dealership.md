@@ -71,5 +71,5 @@ Cleveland, Beachwood, Chagrin Falls, Mentor, Middleburg Heights, and surrounding
 - Service scheduling
 - Parts ordering
 
-See [new-vehicles.md](new-vehicles.md) for Lincoln model details.
-See [service-center.md](service-center.md) for service offerings.
+See [new-vehicles.md](nick-mayer-lincoln-mayfield-okf/datasets/new-vehicles.md) for Lincoln model details.
+See [service-center.md](nick-mayer-lincoln-mayfield-okf/datasets/service-center.md) for service offerings.

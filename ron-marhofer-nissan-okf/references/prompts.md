@@ -67,5 +67,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/ron-marhofer-nissan/pr
 | 8 | `flexible-nissan-financing-&-leasing-cuyahoga-falls-oh` | Financing options |
 | 9 | `used-cars-&-trucks-at-ron-marhofer-nissan-cuyahoga-falls` | Used inventory |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](ron-marhofer-nissan-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](ron-marhofer-nissan-okf/datasets/faq.md) for common questions and answers.

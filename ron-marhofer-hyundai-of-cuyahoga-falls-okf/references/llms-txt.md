@@ -49,4 +49,4 @@ The [llms.txt](https://api.promptgraph.ai/api/v1/ron-marhofer-hyundai-of-cuyahog
 
 Ron Marhofer Hyundai of Cuyahoga Falls specializes in automotive sales and service, serving the Akron, Canton, and Cleveland areas. Real-time inventory updates via JSON-LD API endpoints. Structured data optimized for AI discovery and consumption.
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](prompts.md) for the prompt library.
+See [ai-discovery-page.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/references/ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/references/prompts.md) for the prompt library.

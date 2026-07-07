@@ -55,4 +55,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 - [Do people like working with Ron Marhofer Buick GMC?](http://api.promptgraph.ai/api/v1/ron-marhofer-buick-gmc/prompts/do-people-like-working-with-ron-marhofer-buick-gmc) - Employee experience
 - [What's it actually like dealing with Ron Marhofer Buick GMC?](http://api.promptgraph.ai/api/v1/ron-marhofer-buick-gmc/prompts/whats-it-actually-like-dealing-with-ron-marhofer-buick-gmc) - Customer experience
 
-See [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](ron-marhofer-buick-gmc-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

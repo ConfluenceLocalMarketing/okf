@@ -72,4 +72,4 @@ A: Yes, Haselwood offers military appreciation programs with specialized incenti
 **Q: Are there economy vehicles available?**
 A: Yes, the Economy Vehicle Program provides low-cost, reliable, safety-inspected transportation for budget-conscious buyers.
 
-See [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](haselwood-chevrolet-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

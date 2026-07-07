@@ -83,5 +83,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-gmc/prompts`
 | 19 | `find-local-gmc-dealer` | Dealership location |
 | 20 | `used-gmc-terrain-bremerton` | Used Terrain search |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](haselwood-gmc-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](haselwood-gmc-okf/datasets/faq.md) for common questions and answers.

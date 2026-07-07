@@ -39,4 +39,4 @@ timestamp: 2026-06-30
 | E-Transit | All-Electric | 108–126 miles |
 | Escape PHEV | Plug-In Hybrid | 37 miles electric |
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed new vehicle inventory.
+See [new-vehicles.md](leif-johnson-ford-austin-okf/datasets/new-vehicles.md) for detailed new vehicle inventory.

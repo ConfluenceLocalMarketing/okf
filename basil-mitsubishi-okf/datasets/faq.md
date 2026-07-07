@@ -123,8 +123,8 @@ The Basil Difference refers to the dealership's commitment to customer-first ser
 
 ## Related
 
-See [dealership.md](dealership.md) for full business profile and contact information.
-See [new-vehicles.md](new-vehicles.md) for the Mitsubishi model lineup.
-See [used-vehicles.md](used-vehicles.md) for pre-owned and CPO inventory.
-See [staff.md](staff.md) for full staff directory.
-See [testimonials.md](/references/testimonials.md) for customer reviews.
+See [dealership.md](basil-mitsubishi-okf/datasets/dealership.md) for full business profile and contact information.
+See [new-vehicles.md](basil-mitsubishi-okf/datasets/new-vehicles.md) for the Mitsubishi model lineup.
+See [used-vehicles.md](basil-mitsubishi-okf/datasets/used-vehicles.md) for pre-owned and CPO inventory.
+See [staff.md](basil-mitsubishi-okf/datasets/staff.md) for full staff directory.
+See [testimonials.md](basil-mitsubishi-okf/references/testimonials.md) for customer reviews.

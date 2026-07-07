@@ -74,4 +74,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 - [Your Gateway to the All-Electric Volkswagen Future](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts/your-gateway-to-the-all-electric-volkswagen-future) - Electric ID.4 and EV expertise
 - [Your Bremerton Volkswagen Headquarters](http://api.promptgraph.ai/api/v1/haselwood-volkswagen-of-bremerton/prompts/your-bremerton-volkswagen-headquarters) - Complete Kitsap County VW resource
 
-See [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](haselwood-volkswagen-of-bremerton-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

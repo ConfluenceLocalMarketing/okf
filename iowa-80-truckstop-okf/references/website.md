@@ -48,4 +48,4 @@ The official website for Iowa 80 Truckstop provides comprehensive information ab
 
 ## Citations
 
-Data for this bundle sourced from the official website and related Iowa 80 Group properties. See [iowa-80-truckstop.md](../datasets/iowa-80-truckstop.md) for the full concept profile.
+Data for this bundle sourced from the official website and related Iowa 80 Group properties. See [iowa-80-truckstop.md](iowa-80-truckstop-okf/datasets/iowa-80-truckstop.md) for the full concept profile.

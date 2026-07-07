@@ -40,4 +40,4 @@ The dealership offers online trade-in valuation. Customers can receive an instan
 - Secure credit application
 - Value your trade from home
 
-See [faq.md](faq.md) for commonly asked questions about the buying process.
+See [faq.md](nick-mayer-dickson-chevy-okf/datasets/faq.md) for commonly asked questions about the buying process.

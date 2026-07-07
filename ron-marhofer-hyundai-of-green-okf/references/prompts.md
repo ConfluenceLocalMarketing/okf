@@ -39,6 +39,6 @@ The PromptGraph API provides structured prompts for consistent AI responses abou
 
 ## Related
 
-- See [faq.md](../datasets/faq.md) for frequently asked questions.
-- See [ai-discovery-page.md](ai-discovery-page.md) for API documentation.
-- See [llms-txt.md](llms-txt.md) for LLM consumption directives.
+- See [faq.md](ron-marhofer-hyundai-of-green-okf/datasets/faq.md) for frequently asked questions.
+- See [ai-discovery-page.md](ron-marhofer-hyundai-of-green-okf/references/ai-discovery-page.md) for API documentation.
+- See [llms-txt.md](ron-marhofer-hyundai-of-green-okf/references/llms-txt.md) for LLM consumption directives.

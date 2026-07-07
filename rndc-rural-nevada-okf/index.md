@@ -8,13 +8,13 @@ This bundle documents RNDC, a non-profit CDFI serving rural Nevada.
 
 ## Datasets
 
-- [company.md](datasets/company.md) - Full profile: services, programs, service area.
+- [company.md](rndc-rural-nevada-okf/datasets/company.md) - Full profile: services, programs, service area.
 
 ## References
 
-- [llms-txt.md](references/llms-txt.md) - Structured AI context.
-- [prompts.md](references/prompts.md) - Curated AI prompts for client inquiries.
-- [ai-discovery-page.md](references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](rndc-rural-nevada-okf/references/llms-txt.md) - Structured AI context.
+- [prompts.md](rndc-rural-nevada-okf/references/prompts.md) - Curated AI prompts for client inquiries.
+- [ai-discovery-page.md](rndc-rural-nevada-okf/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

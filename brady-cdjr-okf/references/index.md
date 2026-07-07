@@ -1,3 +1,3 @@
 # References
 
-- [llms-txt.md](llms-txt.md) - LLMs.txt reference for dealership AI context (placeholder).
+- [llms-txt.md](brady-cdjr-okf/references/llms-txt.md) - LLMs.txt reference for dealership AI context (placeholder).

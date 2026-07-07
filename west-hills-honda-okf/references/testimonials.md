@@ -72,4 +72,4 @@ West Hills Honda has collected customer testimonials through the PromptGraph pla
 
 > "West Hills Honda made my service experience one of the best I've had at a dealership. Megan was helpful and communicative from the start. The location is really nice and has a great waiting area with refreshments while you wait for your car. They also offer a shuttle service up to 15 miles from the dealership." - Coral F
 
-See [staff.md](/datasets/staff.md) for the full staff directory.
+See [staff.md](west-hills-honda-okf/datasets/staff.md) for the full staff directory.

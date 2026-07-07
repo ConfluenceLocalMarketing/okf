@@ -52,4 +52,4 @@ Despite the lack of a formal llms.txt, the following key pages are available for
 
 No structured JSON-LD API endpoints were discovered beyond standard Dealer.com platform page markup and sitemap.
 
-See [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint assessment.
+See [ai-discovery-page.md](west-hills-chrysler-jeep-dodge-ram-okf/references/ai-discovery-page.md) for detailed endpoint assessment.

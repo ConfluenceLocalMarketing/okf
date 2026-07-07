@@ -75,4 +75,4 @@ A: Yes. The dealership uses a transparent, no-haggle pricing model.
 **Q: What community programs do you support?**
 A: The dealership supports Earning by Learning, Responsible Parenting, Toys for Tots, and other local initiatives.
 
-See [dealership.md](dealership.md) for full business profile.
+See [dealership.md](leif-johnson-ford-austin-okf/datasets/dealership.md) for full business profile.

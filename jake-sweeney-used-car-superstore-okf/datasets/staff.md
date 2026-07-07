@@ -49,4 +49,4 @@ Staff recognized in customer reviews and PromptGraph testimonial data:
 - **Vincent** - Walks through paperwork, explains gap insurance and warranty options
 - **Brad** (finance) - Educates first-time buyers on credit building
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](jake-sweeney-used-car-superstore-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.

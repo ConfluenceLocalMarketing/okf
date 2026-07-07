@@ -23,4 +23,4 @@ Nick Mayer Lincoln Mayfield maintains a reputation for luxury customer service a
 - Quality of service department work
 - Clean and welcoming dealership environment
 
-See [dealership.md](/datasets/dealership.md) for dealership information.
+See [dealership.md](nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for dealership information.

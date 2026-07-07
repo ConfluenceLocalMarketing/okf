@@ -50,4 +50,4 @@ Staff directory compiled from the dealership website and customer reviews.
 
 - Parts team available for genuine GM parts, accessories, and tires
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](haselwood-chevrolet-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.

@@ -136,5 +136,5 @@ The PromptGraph API exposes 77 structured prompt/response pairs (`ItemList` with
 | 76 | Low down payment car buying | Programs for low down payment vehicle purchases |
 | 77 | Student car buying program | Special programs for student car buyers |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for structured semantic endpoints.
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
+See [ai-discovery-page.md](basil-resale-okf/references/ai-discovery-page.md) for structured semantic endpoints.
+See [llms-txt.md](basil-resale-okf/references/llms-txt.md) for the full llms.txt directive.

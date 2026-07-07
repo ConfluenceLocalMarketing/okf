@@ -24,4 +24,4 @@ Nick Mayer Lincoln Westlake employs a team of sales, service, and management pro
 - **Parts Team** — Genuine Lincoln parts specialists
 - **Management** — Dealership leadership and operations
 
-See [dealership.md](dealership.md) for dealership information.
+See [dealership.md](nick-mayer-lincoln-westlake-okf/datasets/dealership.md) for dealership information.

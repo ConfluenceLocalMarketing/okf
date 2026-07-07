@@ -135,5 +135,5 @@ The PromptGraph API exposes 78 structured prompt/response pairs at `/api/v1/buyi
 | 77 | Digital marketing consulting | Expert guidance for marketing strategy |
 | 78 | Sales and marketing alignment | Bridging sales and marketing teams |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for PromptGraph API details.
-See [company.md](/datasets/company.md) for the full business profile.
+See [ai-discovery-page.md](buying-signals-okf/references/ai-discovery-page.md) for PromptGraph API details.
+See [company.md](buying-signals-okf/datasets/company.md) for the full business profile.

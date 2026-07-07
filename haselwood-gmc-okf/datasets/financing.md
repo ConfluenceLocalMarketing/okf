@@ -48,4 +48,4 @@ Estimate monthly payments using the online payment calculator on the dealership 
 
 Contact the finance department at (360) 919-2226 or through the dealership's sales line.
 
-See [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.
+See [dealership.md](haselwood-gmc-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](haselwood-gmc-okf/datasets/new-vehicles.md) or [used-vehicles.md](haselwood-gmc-okf/datasets/used-vehicles.md) for inventory.

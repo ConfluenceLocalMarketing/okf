@@ -76,5 +76,5 @@ Tool to narrow down options by make, model, features, and price range to find th
 - 82% recommend rate on Facebook (423 reviews)
 - Over 350 reviews on DealerRater
 
-See [dealership.md](dealership.md) for full business profile and contact information.
-See [commercial-trucks.md](commercial-trucks.md) for dedicated commercial vehicle inventory.
+See [dealership.md](basil-resale-okf/datasets/dealership.md) for full business profile and contact information.
+See [commercial-trucks.md](basil-resale-okf/datasets/commercial-trucks.md) for dedicated commercial vehicle inventory.

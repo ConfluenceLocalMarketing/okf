@@ -58,4 +58,4 @@ Nissan Certified Pre-Owned vehicles undergo rigorous inspection and include:
 - Cash offers for trade-ins (even without vehicle purchase)
 - Competitive trade-in values
 
-See [dealership.md](dealership.md) for current financing and trade-in programs.
+See [dealership.md](ron-marhofer-nissan-okf/datasets/dealership.md) for current financing and trade-in programs.

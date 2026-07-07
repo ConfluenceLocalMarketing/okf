@@ -63,5 +63,5 @@ timestamp: 2026-07-03
 | Frank Lombardi | Parts Manager |
 | Derek Huang | Assistant Parts Manager |
 
-See [dealership.md](dealership.md) for business profile.
-See [service-center.md](service-center.md) for service department details.
+See [dealership.md](varsity-lincoln-okf/datasets/dealership.md) for business profile.
+See [service-center.md](varsity-lincoln-okf/datasets/service-center.md) for service department details.

@@ -54,5 +54,5 @@ Kruse Motors maintains a 4.6-star rating from over 1,250 Google reviews. The tes
 
 > "Kruse Motors is the tops in my book. Everyone treats you with respect and they listen to your needs and take you through the whole process of buying a car." - Steven Maas (5 stars)
 
-See [staff.md](/datasets/staff.md) for the staff directory.
-See [dealership.md](/datasets/dealership.md) for the full business profile.
+See [staff.md](kruse-motors-okf/datasets/staff.md) for the staff directory.
+See [dealership.md](kruse-motors-okf/datasets/dealership.md) for the full business profile.

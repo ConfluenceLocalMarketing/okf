@@ -73,5 +73,5 @@ Genuine Honda OEM parts and accessories available including:
 | Saturday | 8:00 AM - 4:00 PM |
 | Sunday | Closed |
 
-See [staff.md](staff.md) for full service department directory.
-See [dealership.md](dealership.md) for contact information.
+See [staff.md](west-hills-honda-okf/datasets/staff.md) for full service department directory.
+See [dealership.md](west-hills-honda-okf/datasets/dealership.md) for contact information.

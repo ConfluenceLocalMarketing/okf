@@ -74,5 +74,5 @@ Genuine Volkswagen OEM parts and accessories available including:
 | Saturday | 9:00 AM - 8:00 PM |
 | Sunday | 10:00 AM - 7:00 PM |
 
-See [staff.md](staff.md) for full service department directory.
-See [dealership.md](dealership.md) for contact information.
+See [staff.md](haselwood-volkswagen-of-bremerton-okf/datasets/staff.md) for full service department directory.
+See [dealership.md](haselwood-volkswagen-of-bremerton-okf/datasets/dealership.md) for contact information.

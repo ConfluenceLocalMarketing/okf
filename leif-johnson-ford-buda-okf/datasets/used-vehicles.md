@@ -49,4 +49,4 @@ The dealership offers trade-in evaluation through:
 
 The dealership offers a [7-Day Money-Back Guarantee](https://www.leifjohnsonfordofbuda.com/7-day-money-back-guarantee/) for added peace of mind on vehicle purchases.
 
-See [dealership.md](dealership.md) for full business profile and [financing.md](financing.md) for financing options on pre-owned vehicles.
+See [dealership.md](leif-johnson-ford-buda-okf/datasets/dealership.md) for full business profile and [financing.md](leif-johnson-ford-buda-okf/datasets/financing.md) for financing options on pre-owned vehicles.

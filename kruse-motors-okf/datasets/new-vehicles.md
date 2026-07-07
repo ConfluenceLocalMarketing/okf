@@ -63,6 +63,6 @@ Kruse Motors offers a multi-brand new vehicle lineup featuring Ford, Lincoln, Bu
 | Terrain | Compact SUV | Robust styling, AT4 trim, efficient engine |
 | Yukon | Full-size SUV | Three-row seating, Denali Ultimate, available Duramax diesel |
 
-See [dealership.md](dealership.md) for the full business profile.
-See [financing.md](financing.md) for current lease and finance offers.
-See [brand-comparison.md](/tables/brand-comparison.md) for side-by-side brand comparison.
+See [dealership.md](kruse-motors-okf/datasets/dealership.md) for the full business profile.
+See [financing.md](kruse-motors-okf/datasets/financing.md) for current lease and finance offers.
+See [brand-comparison.md](kruse-motors-okf/tables/brand-comparison.md) for side-by-side brand comparison.

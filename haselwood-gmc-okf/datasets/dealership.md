@@ -78,14 +78,14 @@ GMC models available include:
 
 ## Staff
 
-See [staff.md](staff.md) for full directory.
+See [staff.md](haselwood-gmc-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - PromptGraph AI platform data available
 - Google Business Profile connected via OAuth
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](haselwood-gmc-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

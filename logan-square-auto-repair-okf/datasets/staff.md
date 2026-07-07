@@ -38,4 +38,4 @@ Kevin performs general maintenance, tire services, oil changes, and brake repair
 
 Rachel handles customer intake, explains repair recommendations, and coordinates service scheduling. She helps customers understand their vehicle's needs.
 
-See [company.md](company.md) for shop information, certifications, and contact details.
+See [company.md](logan-square-auto-repair-okf/datasets/company.md) for shop information, certifications, and contact details.

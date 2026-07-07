@@ -39,4 +39,4 @@ The PromptGraph API provides structured prompts for Leif Johnson Ford of Buda, c
 Endpoint: `https://api.promptgraph.ai/api/v1/leif-johnson-buda/prompts`
 Format: JSON-LD (ItemList of CreativeWork)
 
-See [ai-discovery-page.md](ai-discovery-page.md) for API access details and [faq.md](/datasets/faq.md) for common customer questions.
+See [ai-discovery-page.md](leif-johnson-ford-buda-okf/references/ai-discovery-page.md) for API access details and [faq.md](leif-johnson-ford-buda-okf/datasets/faq.md) for common customer questions.

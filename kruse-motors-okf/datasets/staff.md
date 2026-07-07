@@ -71,5 +71,5 @@ Staff members mentioned in customer testimonials and reviews across sales, servi
 | Salvador Duran | Sales | Professional, very personable |
 | Donavan | Sales / Finance | Superb job with trade |
 
-See [dealership.md](dealership.md) for the full business profile.
-See [testimonials.md](/references/testimonials.md) for the complete collection of customer reviews.
+See [dealership.md](kruse-motors-okf/datasets/dealership.md) for the full business profile.
+See [testimonials.md](kruse-motors-okf/references/testimonials.md) for the complete collection of customer reviews.

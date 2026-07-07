@@ -53,5 +53,5 @@ timestamp: 2026-06-24
 - **Hybrid option:** XT on Toyota Sienna for fuel efficiency.
 - **In-floor ramp (XI):** Ramp stows under the vehicle floor, leaving more cabin space.
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for full new vehicle inventory.
-See [mobility-vehicles.md](/datasets/mobility-vehicles.md) for the full vehicle listing.
+See [new-vehicles.md](basil-mobility-okf/datasets/new-vehicles.md) for full new vehicle inventory.
+See [mobility-vehicles.md](basil-mobility-okf/datasets/mobility-vehicles.md) for the full vehicle listing.

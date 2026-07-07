@@ -84,7 +84,7 @@ Honda models available include:
 
 ## Staff
 
-See [staff.md](staff.md) for full directory.
+See [staff.md](west-hills-honda-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
@@ -92,7 +92,7 @@ See [staff.md](staff.md) for full directory.
 - Google Business Profile: 4.6 stars (2,000+ reviews)
 - BBB Accredited since 2020, A+ rating
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](west-hills-honda-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

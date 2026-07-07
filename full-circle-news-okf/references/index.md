@@ -1,3 +1,3 @@
 # References
 
-- [llms-txt.md](llms-txt.md) - LLMs.txt reference for Full Circle News AI context.
+- [llms-txt.md](full-circle-news-okf/references/llms-txt.md) - LLMs.txt reference for Full Circle News AI context.

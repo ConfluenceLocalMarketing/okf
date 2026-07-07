@@ -77,4 +77,4 @@ A: Yes. Varsity Lincoln has been the #1 Volume Lincoln Dealer in the World for 2
 **Q: Do you offer complimentary vehicle delivery?**
 A: Yes. Complimentary delivery within 300 miles on qualifying vehicles.
 
-See [dealership.md](dealership.md) for full business profile.
+See [dealership.md](varsity-lincoln-okf/datasets/dealership.md) for full business profile.

@@ -63,4 +63,4 @@ A: Yes, free home delivery up to 150 miles is available for vehicle purchases.
 **Q: Is there a vehicle hold policy?**
 A: Yes, the dealership allows customers to hold vehicles before arriving.
 
-See [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](ron-marhofer-nissan-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

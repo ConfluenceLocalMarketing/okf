@@ -81,5 +81,5 @@ New Hyundai vehicles purchased or leased from Haselwood Hyundai include complime
 
 The dealership offers rotating service specials and coupons. See the service specials page for current promotions.
 
-See [staff.md](staff.md) for full service department directory.
-See [dealership.md](dealership.md) for contact information.
+See [staff.md](haselwood-hyundai-okf/datasets/staff.md) for full service department directory.
+See [dealership.md](haselwood-hyundai-okf/datasets/dealership.md) for contact information.

@@ -91,5 +91,5 @@ Hybrid minivan seating up to 8 passengers. Available in LE, XLE, XSE, Limited, P
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. Current offers include military and college grad rebates.
 
-See [dealership.md](dealership.md) for contact information and current programs.
-See [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](heartland-toyota-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](heartland-toyota-okf/tables/model-comparison.md) for side-by-side model specifications.

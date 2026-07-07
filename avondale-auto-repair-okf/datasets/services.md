@@ -55,4 +55,4 @@ Battery testing and replacement, alternator repair, starter service, and electri
 
 Emissions testing, diagnostics, and repair to ensure compliance with Illinois environmental standards.
 
-See [company.md](company.md) for our full certifications, financing options, and contact information.
+See [company.md](avondale-auto-repair-okf/datasets/company.md) for our full certifications, financing options, and contact information.

@@ -44,4 +44,4 @@ timestamp: 2026-07-01
 | Elantra Hybrid | Hybrid | Exceptional fuel economy, stylish compact sedan |
 | Sonata Hybrid | Hybrid | Sleek design with hybrid efficiency |
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed new vehicle inventory.
+See [new-vehicles.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/new-vehicles.md) for detailed new vehicle inventory.

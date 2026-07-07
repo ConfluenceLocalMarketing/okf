@@ -43,4 +43,4 @@ Online valuation and in-person appraisal.
 
 Through sales line at 615-639-0282.
 
-See [dealership.md](dealership.md) for full profile.
+See [dealership.md](nick-mayer-dickson-bg-okf/datasets/dealership.md) for full profile.

@@ -74,8 +74,8 @@ The dealership operates two service centers:
 - **Kruse Motors Ford Lincoln** - Ford and Lincoln service
 - **Kruse Motors Buick GMC** - Buick and GMC service
 
-See [service-center.md](service-center.md) for full service department details.
-See [new-vehicles.md](new-vehicles.md) for new vehicle brands and models.
-See [used-vehicles.md](used-vehicles.md) for pre-owned inventory details.
-See [financing.md](financing.md) for financing and lease options.
-See [ai-discovery-page.md](/references/ai-discovery-page.md) for machine-readable structured data.
+See [service-center.md](kruse-motors-okf/datasets/service-center.md) for full service department details.
+See [new-vehicles.md](kruse-motors-okf/datasets/new-vehicles.md) for new vehicle brands and models.
+See [used-vehicles.md](kruse-motors-okf/datasets/used-vehicles.md) for pre-owned inventory details.
+See [financing.md](kruse-motors-okf/datasets/financing.md) for financing and lease options.
+See [ai-discovery-page.md](kruse-motors-okf/references/ai-discovery-page.md) for machine-readable structured data.

@@ -74,6 +74,6 @@ Yes. The We Buy Cars program allows you to sell your vehicle directly with no ob
 **Does Kruse match KBB values?**
 Kruse partners with Kelley Blue Book to provide transparent, fair-market offers through the KBB Instant Cash Offer program.
 
-See [dealership.md](dealership.md) for the full business profile.
-See [financing.md](financing.md) for detailed financing information.
-See [service-center.md](service-center.md) for service department details.
+See [dealership.md](kruse-motors-okf/datasets/dealership.md) for the full business profile.
+See [financing.md](kruse-motors-okf/datasets/financing.md) for detailed financing information.
+See [service-center.md](kruse-motors-okf/datasets/service-center.md) for service department details.

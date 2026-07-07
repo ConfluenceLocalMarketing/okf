@@ -18,7 +18,7 @@ timestamp: 2026-07-03
 ## Vehicles
 
 **Q: What Mercedes-Benz models do you carry?**
-A: Full lineup including C-Class, E-Class, S-Class, GLC, GLE, GLS, G-Class, EQ electric vehicles, and AMG performance models. See [new-vehicles.md](new-vehicles.md).
+A: Full lineup including C-Class, E-Class, S-Class, GLC, GLE, GLS, G-Class, EQ electric vehicles, and AMG performance models. See [new-vehicles.md](mercedes-benz-of-caldwell-okf/datasets/new-vehicles.md).
 
 **Q: Do you have electric vehicles?**
 A: Yes, the full EQ lineup including EQS, EQE, EQB, EQS SUV, and EQE SUV.
@@ -27,12 +27,12 @@ A: Yes, the full EQ lineup including EQS, EQE, EQB, EQS SUV, and EQE SUV.
 A: Yes, we carry Mercedes-AMG performance variants.
 
 **Q: What is offered in the certified pre-owned program?**
-A: Factory-backed CPO with inspections, extended warranty, and roadside assistance. See [used-vehicles.md](used-vehicles.md).
+A: Factory-backed CPO with inspections, extended warranty, and roadside assistance. See [used-vehicles.md](mercedes-benz-of-caldwell-okf/datasets/used-vehicles.md).
 
 ## Financing
 
 **Q: What financing rates do you offer?**
-A: Competitive low-rate financing is available, for example 1.4% for 24 months on select new models. See [financing.md](financing.md).
+A: Competitive low-rate financing is available, for example 1.4% for 24 months on select new models. See [financing.md](mercedes-benz-of-caldwell-okf/datasets/financing.md).
 
 **Q: Can I apply for financing online?**
 A: Yes, online pre-approval is available on our website.
@@ -46,7 +46,7 @@ A: Yes, use our online trade-in valuation tool.
 ## Service
 
 **Q: What services does your center provide?**
-A: Factory-trained service, genuine OEM parts, and a collision center. See [service-center.md](service-center.md).
+A: Factory-trained service, genuine OEM parts, and a collision center. See [service-center.md](mercedes-benz-of-caldwell-okf/datasets/service-center.md).
 
 **Q: Do you offer pickup and drop-off service?**
 A: Yes, no-contact pickup and drop-off options are available.
@@ -60,7 +60,7 @@ A: Yes, we have a dedicated Mercedes-Benz collision center.
 ## General
 
 **Q: Where is Mercedes-Benz of Caldwell located?**
-A: Caldwell (West Caldwell), New Jersey. See [company.md](company.md).
+A: Caldwell (West Caldwell), New Jersey. See [company.md](mercedes-benz-of-caldwell-okf/datasets/company.md).
 
 **Q: What areas do you serve?**
 A: Montclair, Livingston, Wayne, Morristown, Fairfield, and greater North Jersey.

@@ -35,4 +35,4 @@ Select maintenance services performed at your home or office by factory-trained 
 
 - **Service Phone**: (702) 799-9734
 
-See [dealership.md](dealership.md) for dealership profile and hours.
+See [dealership.md](friendly-lincoln-las-vegas-okf/datasets/dealership.md) for dealership profile and hours.

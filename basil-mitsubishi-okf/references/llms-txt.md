@@ -99,5 +99,5 @@ The PromptGraph API exposes 64 structured prompt/response pairs covering:
 - **Warranty:** CPO repairs (no deductible), 10-year powertrain, roadside assistance, maintenance packages
 - **Dealership:** Family-owned history, serving WNY, walk-in policy, staff expertise, shuttle service, referral bonuses
 
-See [ai-discovery-page.md](ai-discovery-page.md) for structured semantic endpoints and AI manifest details.
-See [prompts.md](prompts.md) for the complete PromptGraph prompt library.
+See [ai-discovery-page.md](basil-mitsubishi-okf/references/ai-discovery-page.md) for structured semantic endpoints and AI manifest details.
+See [prompts.md](basil-mitsubishi-okf/references/prompts.md) for the complete PromptGraph prompt library.

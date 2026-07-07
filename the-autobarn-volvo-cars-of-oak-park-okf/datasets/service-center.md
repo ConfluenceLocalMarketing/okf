@@ -41,4 +41,4 @@ Only genuine OEM Volvo parts are used in all service and repair work.
 - **Phone:** (708) 786-6560
 - **Location:** 1140 Garfield Street, Oak Park, IL
 
-See [company.md](company.md) for full dealership information.
+See [company.md](the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for full dealership information.

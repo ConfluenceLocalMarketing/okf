@@ -55,4 +55,4 @@ Qualifying vehicles qualify for free home delivery up to 150 miles, making it ea
 
 The dealership offers a 7-day money-back guarantee on qualifying vehicle purchases.
 
-See [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) for new Hyundai inventory.
+See [dealership.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/new-vehicles.md) for new Hyundai inventory.

@@ -77,5 +77,5 @@ All-electric full-size pickup truck. Available in Denali trim. Up to 440 miles e
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.
 
-See [dealership.md](dealership.md) for contact information and current programs.
-See [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](haselwood-gmc-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](haselwood-gmc-okf/tables/model-comparison.md) for side-by-side model specifications.

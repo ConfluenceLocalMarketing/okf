@@ -79,6 +79,6 @@ From `https://api.promptgraph.ai/api/v1/kruse-motors/business`:
 - **Aggregate Rating:** 4.6/5.0 (1,259 reviews)
 - **Date Modified:** 2026-02-03T15:05:04.755Z
 
-See [dealership.md](/datasets/dealership.md) for the full business profile.
-See [llms-txt.md](llms-txt.md) for the complete llms.txt directive.
-See [testimonials.md](testimonials.md) for customer reviews.
+See [dealership.md](kruse-motors-okf/datasets/dealership.md) for the full business profile.
+See [llms-txt.md](kruse-motors-okf/references/llms-txt.md) for the complete llms.txt directive.
+See [testimonials.md](kruse-motors-okf/references/testimonials.md) for customer reviews.

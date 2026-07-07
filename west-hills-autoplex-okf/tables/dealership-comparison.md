@@ -78,10 +78,10 @@ All dealerships follow the same sales hours:
 
 All five dealerships are owned and operated by the **Haselwood Auto Group** and are part of the **West Hills Auto Plex** campus in Bremerton, WA.
 
-See [autoplex.md](/datasets/autoplex.md) for the full group profile.
+See [autoplex.md](west-hills-autoplex-okf/datasets/autoplex.md) for the full group profile.
 See individual dealership files for detailed profiles:
-- [west-hills-honda.md](/datasets/west-hills-honda.md)
-- [west-hills-chrysler-jeep-dodge-ram.md](/datasets/west-hills-chrysler-jeep-dodge-ram.md)
-- [west-hills-ford.md](/datasets/west-hills-ford.md)
-- [west-hills-kia.md](/datasets/west-hills-kia.md)
-- [west-hills-mazda.md](/datasets/west-hills-mazda.md)
+- [west-hills-honda.md](west-hills-autoplex-okf/datasets/west-hills-honda.md)
+- [west-hills-chrysler-jeep-dodge-ram.md](west-hills-autoplex-okf/datasets/west-hills-chrysler-jeep-dodge-ram.md)
+- [west-hills-ford.md](west-hills-autoplex-okf/datasets/west-hills-ford.md)
+- [west-hills-kia.md](west-hills-autoplex-okf/datasets/west-hills-kia.md)
+- [west-hills-mazda.md](west-hills-autoplex-okf/datasets/west-hills-mazda.md)

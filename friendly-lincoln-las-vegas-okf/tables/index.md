@@ -1,3 +1,3 @@
 # Tables
 
-- [model-comparison.md](model-comparison.md) - Comparison table of Lincoln model specifications.
+- [model-comparison.md](friendly-lincoln-las-vegas-okf/tables/model-comparison.md) - Comparison table of Lincoln model specifications.

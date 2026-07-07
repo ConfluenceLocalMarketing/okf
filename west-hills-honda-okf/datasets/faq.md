@@ -77,4 +77,4 @@ A: The West Hills Advantage includes a Lifetime Powertrain Warranty on new vehic
 **Q: Does the dealership offer home delivery?**
 A: Yes, home delivery is available through the Click-N-Drive online purchasing program.
 
-See [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](west-hills-honda-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

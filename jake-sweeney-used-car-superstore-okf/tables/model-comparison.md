@@ -70,5 +70,5 @@ The PromptGraph inventory sitemap lists 100+ individual vehicles including:
 - **Performance:** 2021/2023 Chevrolet Corvette, 2023 Chevrolet Camaro, 2023 Ford Mustang, 2023 BMW M3
 - **Budget-Friendly:** 2019 Toyota RAV4, 2022 Honda Accord, 2023 Hyundai Elantra, 2024 Kia Forte
 
-See [used-vehicles.md](/datasets/used-vehicles.md) for full inventory details.
-See [dealership.md](/datasets/dealership.md) for current offers and promotions.
+See [used-vehicles.md](jake-sweeney-used-car-superstore-okf/datasets/used-vehicles.md) for full inventory details.
+See [dealership.md](jake-sweeney-used-car-superstore-okf/datasets/dealership.md) for current offers and promotions.

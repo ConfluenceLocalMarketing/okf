@@ -35,4 +35,4 @@ timestamp: 2026-07-03
 
 - **Frank Delgado** — Parts Manager
 
-See [company.md](company.md) for the full dealership profile.
+See [company.md](valley-hi-kia-okf/datasets/company.md) for the full dealership profile.

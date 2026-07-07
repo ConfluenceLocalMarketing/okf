@@ -8,15 +8,15 @@ This bundle documents Weathercraft Garden, a roofing and exterior solutions cont
 
 ## Datasets
 
-- [company.md](datasets/company.md) - Full business profile: location, services, certifications, history.
+- [company.md](weathercraft-garden-okf/datasets/company.md) - Full business profile: location, services, certifications, history.
 
 ## References
 
-- [llms-txt.md](references/llms-txt.md) - Structured AI context for the roofing contractor.
-- [prompts.md](references/prompts.md) - Curated AI prompts for service inquiries and support.
-- [ai-discovery-page.md](references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](weathercraft-garden-okf/references/llms-txt.md) - Structured AI context for the roofing contractor.
+- [prompts.md](weathercraft-garden-okf/references/prompts.md) - Curated AI prompts for service inquiries and support.
+- [ai-discovery-page.md](weathercraft-garden-okf/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 
-- [index.md](tables/index.md) - (No structured tables yet.)
+- [index.md](weathercraft-garden-okf/tables/index.md) - (No structured tables yet.)
 

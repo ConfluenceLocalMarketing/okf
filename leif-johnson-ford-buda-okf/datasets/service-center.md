@@ -56,4 +56,4 @@ The dealership operates a [Collision Center](https://www.leifjohnsonfordofbuda.c
 
 View current [Service & Parts Specials](https://www.leifjohnsonfordofbuda.com/service-parts-specials/) for discounted maintenance packages.
 
-See [staff.md](staff.md) for the service team directory and [dealership.md](dealership.md) for general business information.
+See [staff.md](leif-johnson-ford-buda-okf/datasets/staff.md) for the service team directory and [dealership.md](leif-johnson-ford-buda-okf/datasets/dealership.md) for general business information.

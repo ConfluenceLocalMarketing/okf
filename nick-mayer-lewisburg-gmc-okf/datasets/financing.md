@@ -61,4 +61,4 @@ Online payment calculators allow customers to estimate monthly payments based on
 
 The Finance Department can be reached at **931-246-6369** during business hours.
 
-See [dealership.md](dealership.md) for full business profile and hours.
+See [dealership.md](nick-mayer-lewisburg-gmc-okf/datasets/dealership.md) for full business profile and hours.

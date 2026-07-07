@@ -43,4 +43,4 @@ Frank Leta Buick GMC offers a complete lineup of new Buick and GMC vehicles, inc
 
 ---
 
-For complete dealership information, see [company.md](company.md).
+For complete dealership information, see [company.md](frank-leta-buick-gmc-okf/datasets/company.md).

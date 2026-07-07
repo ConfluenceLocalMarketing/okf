@@ -83,4 +83,4 @@ A: Yes, some locations offer on-site rental car agencies and loaner vehicles.
 **Q: Do you serve military customers?**
 A: Yes, the group has dedicated military appreciation programs given its proximity to Naval Base Kitsap.
 
-See [autoplex.md](autoplex.md) for the group overview and individual dealership profiles.
+See [autoplex.md](west-hills-autoplex-okf/datasets/autoplex.md) for the group overview and individual dealership profiles.

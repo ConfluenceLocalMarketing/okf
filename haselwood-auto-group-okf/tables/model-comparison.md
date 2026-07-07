@@ -109,5 +109,5 @@ timestamp: 2026-07-01
 | Ford | 3-year / 36,000-mile | 5-year / 60,000-mile | 5-year / Unlimited | 5-year / 60,000-mile |
 | Chrysler / Jeep / Dodge / Ram | 3-year / 36,000-mile | 5-year / 60,000-mile | 5-year / Unlimited | 5-year / 60,000-mile |
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed model descriptions by member franchise.
-See [dealership.md](/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](haselwood-auto-group-okf/datasets/new-vehicles.md) for detailed model descriptions by member franchise.
+See [dealership.md](haselwood-auto-group-okf/datasets/dealership.md) for current offers and promotions.

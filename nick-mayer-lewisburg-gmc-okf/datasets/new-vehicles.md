@@ -47,5 +47,5 @@ Mid-size pickup truck seating 5 passengers. Available in Elevation, AT4, and Den
 ### Hummer EV
 All-electric supertruck. Up to 1,000 hp from three-motor e4WD drive system. Features include CrabWalk diagonal driving, Extract Mode air suspension, and Ultium battery platform. Available as SUV or SUT (pickup) body styles.
 
-See [dealership.md](dealership.md) for full dealership profile.
-See [model-comparison.md](/tables/model-comparison.md) for detailed model specifications.
+See [dealership.md](nick-mayer-lewisburg-gmc-okf/datasets/dealership.md) for full dealership profile.
+See [model-comparison.md](nick-mayer-lewisburg-gmc-okf/tables/model-comparison.md) for detailed model specifications.

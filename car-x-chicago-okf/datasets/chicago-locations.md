@@ -39,4 +39,4 @@ Car-X also serves the following Chicago suburbs and nearby communities:
 
 Hours vary by location. Contact individual stores or visit [carx.com/chicago/](https://www.carx.com/chicago/) for specific location hours.
 
-See [car-x-tire-auto.md](car-x-tire-auto.md) for the full franchise profile and service menu.
+See [car-x-tire-auto.md](car-x-chicago-okf/datasets/car-x-tire-auto.md) for the full franchise profile and service menu.

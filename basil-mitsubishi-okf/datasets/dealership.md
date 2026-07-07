@@ -98,7 +98,7 @@ Prominent offers include:
 - **Eric Macchiaroli** - Parts Manager
 - **Alex Luciano** - Service Advisor
 
-See [staff.md](staff.md) for full directory.
+See [staff.md](basil-mitsubishi-okf/datasets/staff.md) for full directory.
 
 ## Social & Reviews
 

@@ -51,4 +51,4 @@ The service center at Petersen CDJR is staffed by factory-trained Mopar technici
 - **Address:** 5801 E Gate Blvd, Nampa, ID 83687
 - **Text:** (208) 962-6129
 
-See [company.md](company.md) for full dealership profile.
+See [company.md](petersen-chrysler-dodge-jeep-ram-okf/datasets/company.md) for full dealership profile.

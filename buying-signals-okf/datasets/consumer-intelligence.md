@@ -26,6 +26,6 @@ Analytics platform that captures and interprets buyer behavior across digital ch
 
 ## Related
 
-See [insight-pixel.md](insight-pixel.md) for website visitor identification.
-See [geo-signals.md](geo-signals.md) for location-based behavioral data.
-See [company.md](company.md) for the full product ecosystem.
+See [insight-pixel.md](buying-signals-okf/datasets/insight-pixel.md) for website visitor identification.
+See [geo-signals.md](buying-signals-okf/datasets/geo-signals.md) for location-based behavioral data.
+See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.

@@ -36,4 +36,4 @@ timestamp: 2026-07-01
 - Competitive trade-in valuations
 - Positive interactions with sales team (Andre, Dawn, Bryan, Ron Masters)
 
-See [staff.md](../datasets/staff.md) for staff profiles.
+See [staff.md](ron-marhofer-chevrolet-okf/datasets/staff.md) for staff profiles.

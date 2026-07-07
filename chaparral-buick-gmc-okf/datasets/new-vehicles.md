@@ -38,4 +38,4 @@ Large selection of new cars, trucks, SUVs, and vans. Visit the dealership on the
 
 ---
 
-For complete dealership information, see [company.md](company.md).
+For complete dealership information, see [company.md](chaparral-buick-gmc-okf/datasets/company.md).

@@ -1,3 +1,3 @@
 # References
 
-- [llms-txt.md](llms-txt.md) - LLMs.txt reference for CC Communications AI context.
+- [llms-txt.md](cc-communications-okf/references/llms-txt.md) - LLMs.txt reference for CC Communications AI context.

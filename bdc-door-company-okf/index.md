@@ -8,13 +8,13 @@ This bundle documents BDC Door Company, a manufacturer of commercial and industr
 
 ## Datasets
 
-- [company.md](datasets/company.md) - Full business profile: products, services, industries served.
+- [company.md](bdc-door-company-okf/datasets/company.md) - Full business profile: products, services, industries served.
 
 ## References
 
-- [llms-txt.md](references/llms-txt.md) - Structured AI context.
-- [prompts.md](references/prompts.md) - Curated AI prompts for client consultations.
-- [ai-discovery-page.md](references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](bdc-door-company-okf/references/llms-txt.md) - Structured AI context.
+- [prompts.md](bdc-door-company-okf/references/prompts.md) - Curated AI prompts for client consultations.
+- [ai-discovery-page.md](bdc-door-company-okf/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

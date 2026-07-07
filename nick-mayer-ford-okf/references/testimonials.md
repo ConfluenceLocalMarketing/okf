@@ -44,6 +44,6 @@ Detailed individual testimonials and specific review excerpts were not available
 
 ## Related Concepts
 
-- [dealership.md](/datasets/dealership.md) - Dealership overview
-- [service-center.md](/datasets/service-center.md) - Service center
-- [prompts.md](prompts.md) - Prompt library for FAQs
+- [dealership.md](nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
+- [service-center.md](nick-mayer-ford-okf/datasets/service-center.md) - Service center
+- [prompts.md](nick-mayer-ford-okf/references/prompts.md) - Prompt library for FAQs

@@ -38,11 +38,11 @@ Memorial Hospital of Converse County (MHCC) is a 25-bed critical access hospital
 
 ## Network Locations
 
-See [locations.md](../tables/locations.md) for the complete list of all 16 locations.
+See [locations.md](memorial-hospital-converse-county-okf/tables/locations.md) for the complete list of all 16 locations.
 
 ## Service Lines
 
-See [services.md](../tables/services.md) for the full service catalog.
+See [services.md](memorial-hospital-converse-county-okf/tables/services.md) for the full service catalog.
 
 ## Citations
 

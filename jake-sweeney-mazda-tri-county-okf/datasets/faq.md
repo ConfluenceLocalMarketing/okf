@@ -68,4 +68,4 @@ A: Yes, the dealership offers vehicle delivery to your home as part of the onlin
 **Q: Does the dealership handle recalls?**
 A: Yes, Mazda recall repairs are handled through the service center.
 
-See [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](jake-sweeney-mazda-tri-county-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

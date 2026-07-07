@@ -55,5 +55,5 @@ Varsity Lincoln maintains AI-optimized discovery endpoints with structured data 
 
 Varsity Lincoln is the #1 Volume Lincoln Dealer in the World for 22 consecutive years, located at 49251 Grand River, Novi, MI 48374. Real-time inventory updates via JSON-LD API endpoints. Structured data optimized for AI discovery and consumption.
 
-See [llms-txt.md](llms-txt.md) for the AI consumption directive.
-See [prompts.md](prompts.md) for the prompt library.
+See [llms-txt.md](varsity-lincoln-okf/references/llms-txt.md) for the AI consumption directive.
+See [prompts.md](varsity-lincoln-okf/references/prompts.md) for the prompt library.

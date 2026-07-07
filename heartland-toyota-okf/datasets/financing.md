@@ -50,4 +50,4 @@ Estimate monthly payments using the online car payment calculator on the dealers
 
 Contact the finance department at (360) 728-3042 or through the dealership's sales line.
 
-See [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.
+See [dealership.md](heartland-toyota-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](heartland-toyota-okf/datasets/new-vehicles.md) or [used-vehicles.md](heartland-toyota-okf/datasets/used-vehicles.md) for inventory.

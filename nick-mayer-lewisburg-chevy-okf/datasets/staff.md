@@ -27,5 +27,5 @@ Service advisors coordinate maintenance and repair appointments through the Chev
 
 Finance managers guide customers through financing, leasing, warranty, and protection product options.
 
-For service-related inquiries, see [service-center.md](service-center.md).
-For general dealership information, see [dealership.md](dealership.md).
+For service-related inquiries, see [service-center.md](nick-mayer-lewisburg-chevy-okf/datasets/service-center.md).
+For general dealership information, see [dealership.md](nick-mayer-lewisburg-chevy-okf/datasets/dealership.md).

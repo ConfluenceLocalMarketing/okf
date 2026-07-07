@@ -26,5 +26,5 @@ Conversational AI agents that engage website visitors, qualify leads, and drive 
 
 ## Integration
 
-See [connect-suite.md](connect-suite.md) for platform connectivity details.
-See [company.md](company.md) for the full product ecosystem.
+See [connect-suite.md](buying-signals-okf/datasets/connect-suite.md) for platform connectivity details.
+See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.

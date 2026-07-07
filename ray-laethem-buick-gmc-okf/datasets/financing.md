@@ -50,4 +50,4 @@ Get an instant online valuation through the dealership's trade-in appraisal tool
 **Sales (New Cars)**: (313) 886-1700 / (313) 631-7768
 **Used Car Sales**: (313) 825-5772
 
-See [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.
+See [dealership.md](ray-laethem-buick-gmc-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](ray-laethem-buick-gmc-okf/datasets/new-vehicles.md) or [used-vehicles.md](ray-laethem-buick-gmc-okf/datasets/used-vehicles.md) for inventory.

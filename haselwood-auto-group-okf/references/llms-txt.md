@@ -63,4 +63,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 - [Sitemap](https://api.promptgraph.ai/api/v1/haselwood-auto-group/sitemap.xml) - XML sitemap for search engine and AI crawler discovery
 - [Configuration](https://api.promptgraph.ai/api/v1/haselwood-auto-group/config.json) - System configuration and metadata
 
-See [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](haselwood-auto-group-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

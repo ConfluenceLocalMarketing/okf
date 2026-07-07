@@ -75,11 +75,11 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data (950 items) fe
 
 ## Q&A Prompt Library (10+ Prompts)
 
-The `/prompts` endpoint exposes 10+ structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library.
+The `/prompts` endpoint exposes 10+ structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](ron-marhofer-buick-gmc-okf/references/prompts.md) for the full library.
 
 ## Testimonials Endpoint
 
-The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](testimonials.md) for details.
+The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](ron-marhofer-buick-gmc-okf/references/testimonials.md) for details.
 
 ## LLM-Accessible Actions (ReadAction)
 
@@ -107,6 +107,6 @@ The PromptGraph API defines structured ReadAction entries covering:
 
 This page exists to give AI agents direct access to structured knowledge about Ron Marhofer Buick GMC without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
-See [prompts.md](prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](testimonials.md) for customer review data.
+See [llms-txt.md](ron-marhofer-buick-gmc-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](ron-marhofer-buick-gmc-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](ron-marhofer-buick-gmc-okf/references/testimonials.md) for customer review data.

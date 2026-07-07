@@ -36,4 +36,4 @@ Customized preventive maintenance and repair programs for commercial fleets with
 - Oil change coupons and specials
 - Seasonal promotions
 
-See [company.md](company.md) for more information about our shop, history, and full service offerings.
+See [company.md](champs-auto-service-okf/datasets/company.md) for more information about our shop, history, and full service offerings.

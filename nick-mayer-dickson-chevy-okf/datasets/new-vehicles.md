@@ -14,7 +14,7 @@ timestamp: 2026-07-02
 
 # New Chevrolet Inventory
 
-Nick Mayer Chevrolet of Dickson carries a full lineup of new Chevrolet vehicles. See [dealership.md](dealership.md) for contact and location information.
+Nick Mayer Chevrolet of Dickson carries a full lineup of new Chevrolet vehicles. See [dealership.md](nick-mayer-dickson-chevy-okf/datasets/dealership.md) for contact and location information.
 
 ## Chevrolet Models
 
@@ -37,4 +37,4 @@ Nick Mayer Chevrolet of Dickson carries a full lineup of new Chevrolet vehicles.
 
 Current manufacturer incentives, lease offers, and financing specials are available on select models. Contact the sales department at 615-570-4106 for current offers.
 
-See [model-comparison.md](/tables/model-comparison.md) for detailed specifications.
+See [model-comparison.md](nick-mayer-dickson-chevy-okf/tables/model-comparison.md) for detailed specifications.

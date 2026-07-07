@@ -55,5 +55,5 @@ timestamp: 2026-07-03
 | Greg Nakamura | Parts Manager |
 | Ryan Mitchell | Parts Specialist |
 
-See [dealership.md](dealership.md) for business profile.
-See [service-center.md](service-center.md) for service department details.
+See [dealership.md](friendly-lincoln-las-vegas-okf/datasets/dealership.md) for business profile.
+See [service-center.md](friendly-lincoln-las-vegas-okf/datasets/service-center.md) for service department details.

@@ -57,4 +57,4 @@ Estimate monthly payments using the payment calculator before visiting the deale
 
 Contact the finance department through the dealership's sales line at (716) 631-0404.
 
-See [dealership.md](dealership.md) for full business profile and [used-vehicles.md](used-vehicles.md), [new-vehicles.md](new-vehicles.md), or [commercial-trucks.md](commercial-trucks.md) for inventory.
+See [dealership.md](basil-resale-okf/datasets/dealership.md) for full business profile and [used-vehicles.md](basil-resale-okf/datasets/used-vehicles.md), [new-vehicles.md](basil-resale-okf/datasets/new-vehicles.md), or [commercial-trucks.md](basil-resale-okf/datasets/commercial-trucks.md) for inventory.

@@ -28,5 +28,5 @@ timestamp: 2026-07-03
 
 ## Citations
 
-- See [dealership.md](../datasets/dealership.md) for full dealership profile
-- See [contact.md](contact.md) for department contact information
+- See [dealership.md](ray-laethem-buick-gmc-okf/datasets/dealership.md) for full dealership profile
+- See [contact.md](ray-laethem-buick-gmc-okf/tables/contact.md) for department contact information

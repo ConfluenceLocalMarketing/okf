@@ -51,4 +51,4 @@ CDJR certified pre-owned vehicles come with:
 - Online pre-approval
 - No-haggle pricing on used inventory too
 
-See [company.md](company.md) for dealership location and contact information.
+See [company.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for dealership location and contact information.

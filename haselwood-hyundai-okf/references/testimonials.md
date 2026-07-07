@@ -66,4 +66,4 @@ Haselwood Hyundai has collected customer testimonials through the PromptGraph pl
 - **Comfortable facility** - Clean waiting area, Wi-Fi, coffee, snacks
 - **Fair pricing** - Willing to match competitor pricing on service
 
-See [staff.md](/datasets/staff.md) for the full staff directory.
+See [staff.md](haselwood-hyundai-okf/datasets/staff.md) for the full staff directory.

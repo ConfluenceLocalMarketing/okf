@@ -40,4 +40,4 @@ timestamp: 2026-07-03
 
 - **Doug Nelson** — Parts Manager
 
-See [company.md](company.md) for the full dealership profile.
+See [company.md](willis-chevrolet-of-granger-okf/datasets/company.md) for the full dealership profile.

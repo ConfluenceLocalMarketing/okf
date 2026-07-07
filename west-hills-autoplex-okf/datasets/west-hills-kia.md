@@ -88,4 +88,4 @@ Kia's industry-leading 10-Year/100,000-Mile Limited Powertrain Warranty and 5-Ye
 
 - Aggregate rating: 4.6 / 5.0 (1,277 reviews)
 
-See [autoplex.md](autoplex.md) for the group overview.
+See [autoplex.md](west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.

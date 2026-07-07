@@ -40,4 +40,4 @@ timestamp: 2026-07-03
 - **Ronnie Cooper** — Parts Manager
 - **Dustin Cole** — Parts Counter Associate
 
-See [company.md](company.md) for the full dealership profile.
+See [company.md](tuscaloosa-chevrolet-okf/datasets/company.md) for the full dealership profile.

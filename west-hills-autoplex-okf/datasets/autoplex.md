@@ -84,4 +84,4 @@ The West Hills Auto Plex supports local Kitsap County organizations including:
 - **PromptGraph** — AI platform powering AI Discovery Pages and structured data endpoints
 - **KBB** — Kelley Blue Book trade-in valuation partner
 
-See [west-hills-honda.md](west-hills-honda.md), [west-hills-chrysler-jeep-dodge-ram.md](west-hills-chrysler-jeep-dodge-ram.md), [west-hills-ford.md](west-hills-ford.md), [west-hills-kia.md](west-hills-kia.md), and [west-hills-mazda.md](west-hills-mazda.md) for individual dealership profiles.
+See [west-hills-honda.md](west-hills-autoplex-okf/datasets/west-hills-honda.md), [west-hills-chrysler-jeep-dodge-ram.md](west-hills-autoplex-okf/datasets/west-hills-chrysler-jeep-dodge-ram.md), [west-hills-ford.md](west-hills-autoplex-okf/datasets/west-hills-ford.md), [west-hills-kia.md](west-hills-autoplex-okf/datasets/west-hills-kia.md), and [west-hills-mazda.md](west-hills-autoplex-okf/datasets/west-hills-mazda.md) for individual dealership profiles.

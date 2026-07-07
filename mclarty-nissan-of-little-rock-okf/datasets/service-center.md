@@ -49,4 +49,4 @@ The service center at McLarty Nissan of Little Rock is staffed by certified Niss
 - **Sales Phone:** (501) 322-6510
 - **Address:** 1 Colonel Glenn Plaza Dr, Little Rock, AR 72210
 
-See [company.md](company.md) for full dealership information.
+See [company.md](mclarty-nissan-of-little-rock-okf/datasets/company.md) for full dealership information.

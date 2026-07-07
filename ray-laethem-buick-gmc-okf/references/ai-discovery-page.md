@@ -38,4 +38,4 @@ Ray Laethem Buick GMC provides structured endpoints optimized for LLM and AI cra
 - Offer
 - CreativeWork (prompts/FAQs)
 
-See [llms-txt.md](llms-txt.md) for the AI consumption directive and [prompts.md](prompts.md) for the prompt library.
+See [llms-txt.md](ray-laethem-buick-gmc-okf/references/llms-txt.md) for the AI consumption directive and [prompts.md](ray-laethem-buick-gmc-okf/references/prompts.md) for the prompt library.

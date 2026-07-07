@@ -55,6 +55,6 @@ Customers can apply for financing directly through the dealership website with a
 
 Situated on N Ellington Parkway (US-31A) in Lewisburg, the dealership is easily accessible from I-65 via US-412.
 
-See [new-vehicles.md](new-vehicles.md) for detailed model information.
-See [service-center.md](service-center.md) for service department details.
-See [faq.md](faq.md) for frequently asked questions.
+See [new-vehicles.md](nick-mayer-lewisburg-chevy-okf/datasets/new-vehicles.md) for detailed model information.
+See [service-center.md](nick-mayer-lewisburg-chevy-okf/datasets/service-center.md) for service department details.
+See [faq.md](nick-mayer-lewisburg-chevy-okf/datasets/faq.md) for frequently asked questions.

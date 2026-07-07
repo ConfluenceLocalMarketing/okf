@@ -37,4 +37,4 @@ Genuine Mopar parts and accessories available.
 
 ---
 
-For complete dealership information, see [company.md](company.md).
+For complete dealership information, see [company.md](capital-city-cdjr-okf/datasets/company.md).

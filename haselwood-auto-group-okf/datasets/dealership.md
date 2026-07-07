@@ -142,4 +142,4 @@ Founded by **Chuck Haselwood** (1923-). After serving in WWII under General Patt
 - Aggregate rating: 3.5 / 5.0 (52 reviews) across major platforms
 - Reviews predominantly positive with strong service themes
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](haselwood-auto-group-okf/references/testimonials.md) for detailed customer reviews.

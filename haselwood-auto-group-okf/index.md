@@ -6,24 +6,24 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [dealership.md](datasets/dealership.md) - Multi-franchise auto group business profile, history by Chuck Haselwood, member dealerships, hours, contact, services, community involvement, and awards for Haselwood Auto Group in Bremerton, WA
-- [new-vehicles.md](datasets/new-vehicles.md) - New vehicle lineup across member franchises representing Chevrolet, Buick, GMC, Hyundai, Volkswagen, Toyota, Ford, Honda, Kia, Mazda, Chrysler, Jeep, Dodge, and Ram brands
-- [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory across the West Hills Autoplex with multi-brand selection, West Hills warranty, and online buying tools
-- [staff.md](datasets/staff.md) - Staff directory including executive leadership, management, sales consultants, and service team compiled from the group website and customer reviews
-- [service-center.md](datasets/service-center.md) - Multi-brand service centers across the West Hills Autoplex offering routine maintenance, diagnostics, major repairs, and genuine OEM parts
-- [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and auto group operations
-- [financing.md](datasets/financing.md) - Vehicle financing and leasing options across the West Hills Autoplex including online credit application and trade-in valuation
+- [dealership.md](haselwood-auto-group-okf/datasets/dealership.md) - Multi-franchise auto group business profile, history by Chuck Haselwood, member dealerships, hours, contact, services, community involvement, and awards for Haselwood Auto Group in Bremerton, WA
+- [new-vehicles.md](haselwood-auto-group-okf/datasets/new-vehicles.md) - New vehicle lineup across member franchises representing Chevrolet, Buick, GMC, Hyundai, Volkswagen, Toyota, Ford, Honda, Kia, Mazda, Chrysler, Jeep, Dodge, and Ram brands
+- [used-vehicles.md](haselwood-auto-group-okf/datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory across the West Hills Autoplex with multi-brand selection, West Hills warranty, and online buying tools
+- [staff.md](haselwood-auto-group-okf/datasets/staff.md) - Staff directory including executive leadership, management, sales consultants, and service team compiled from the group website and customer reviews
+- [service-center.md](haselwood-auto-group-okf/datasets/service-center.md) - Multi-brand service centers across the West Hills Autoplex offering routine maintenance, diagnostics, major repairs, and genuine OEM parts
+- [faq.md](haselwood-auto-group-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and auto group operations
+- [financing.md](haselwood-auto-group-okf/datasets/financing.md) - Vehicle financing and leasing options across the West Hills Autoplex including online credit application and trade-in valuation
 
 ## References
 
-- [ai-discovery-page.md](references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, MCP server, business profile, vehicle inventory, and LLM actions
-- [llms-txt.md](references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
-- [testimonials.md](references/testimonials.md) - Customer reviews with predominantly 5-star ratings, praised staff, and notable excerpts from PromptGraph
-- [prompts.md](references/prompts.md) - Complete PromptGraph prompt library covering vehicles, financing, service, parts, and auto group info
+- [ai-discovery-page.md](haselwood-auto-group-okf/references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, MCP server, business profile, vehicle inventory, and LLM actions
+- [llms-txt.md](haselwood-auto-group-okf/references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
+- [testimonials.md](haselwood-auto-group-okf/references/testimonials.md) - Customer reviews with predominantly 5-star ratings, praised staff, and notable excerpts from PromptGraph
+- [prompts.md](haselwood-auto-group-okf/references/prompts.md) - Complete PromptGraph prompt library covering vehicles, financing, service, parts, and auto group info
 
 ## Tables
 
-- [model-comparison.md](tables/model-comparison.md) - Side-by-side comparison of popular vehicle models across member brands including body type, seating, drivetrain, features, and warranty
+- [model-comparison.md](haselwood-auto-group-okf/tables/model-comparison.md) - Side-by-side comparison of popular vehicle models across member brands including body type, seating, drivetrain, features, and warranty
 
 ## Relationships
 

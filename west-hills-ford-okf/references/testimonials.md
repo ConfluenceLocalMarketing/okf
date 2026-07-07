@@ -80,4 +80,4 @@ West Hills Ford has collected customer testimonials through the PromptGraph plat
 - **Free shuttle service** - Appreciated local shuttle while vehicle is being serviced
 - **Convenient amenities** - Coffee, snacks, indoor playground, comfortable waiting area
 
-See [staff.md](/datasets/staff.md) for the full staff directory.
+See [staff.md](west-hills-ford-okf/datasets/staff.md) for the full staff directory.

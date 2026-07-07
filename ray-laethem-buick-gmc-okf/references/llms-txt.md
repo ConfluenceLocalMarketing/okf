@@ -47,4 +47,4 @@ The llms.txt file provides AI systems with structured discovery and consumption 
 
 Ray Laethem Buick GMC, family-owned since 1940, specializes in Buick and GMC automotive sales and service in the Detroit metropolitan area. Real-time inventory updates via JSON-LD API endpoints. Structured data optimized for AI discovery and consumption.
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](prompts.md) for the prompt library.
+See [ai-discovery-page.md](ray-laethem-buick-gmc-okf/references/ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](ray-laethem-buick-gmc-okf/references/prompts.md) for the prompt library.

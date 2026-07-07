@@ -73,7 +73,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data featuring new 
 
 ## Q&A Prompt Library (40 Prompts)
 
-The `/prompts` endpoint exposes 40 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 40 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](haselwood-gmc-okf/references/prompts.md) for the full library. Topics include:
 
 - Vehicle shopping and model-specific inquiries
 - Financing, leasing, and trade-in questions
@@ -84,7 +84,7 @@ The `/prompts` endpoint exposes 40 structured Q&A prompt/response pairs serving 
 
 ## Testimonials Endpoint
 
-The `/testimonials` endpoint exposes customer review data. The PromptGraph testimonials collection is currently empty. See [testimonials.md](testimonials.md) for details from Google Business Profile.
+The `/testimonials` endpoint exposes customer review data. The PromptGraph testimonials collection is currently empty. See [testimonials.md](haselwood-gmc-okf/references/testimonials.md) for details from Google Business Profile.
 
 ## Global AI Directives
 
@@ -100,6 +100,6 @@ The `/testimonials` endpoint exposes customer review data. The PromptGraph testi
 
 This page exists to give AI agents direct access to structured knowledge about Haselwood GMC without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
-See [prompts.md](prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](testimonials.md) for customer review data.
+See [llms-txt.md](haselwood-gmc-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](haselwood-gmc-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](haselwood-gmc-okf/references/testimonials.md) for customer review data.

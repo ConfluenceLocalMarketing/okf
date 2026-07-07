@@ -34,4 +34,4 @@ Valley Hi Kia offers a fully stocked selection of certified pre-owned Kia vehicl
 - Financing options available
 - Trade-in accepted
 
-See [company.md](company.md) for dealership contact information. See [financing.md](financing.md) for available financing options.
+See [company.md](valley-hi-kia-okf/datasets/company.md) for dealership contact information. See [financing.md](valley-hi-kia-okf/datasets/financing.md) for available financing options.

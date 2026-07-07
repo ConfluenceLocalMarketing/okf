@@ -41,4 +41,4 @@ timestamp: 2026-07-03
 
 ---
 
-For complete dealership information, see [company.md](company.md).
+For complete dealership information, see [company.md](brady-cdjr-okf/datasets/company.md).

@@ -71,5 +71,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/haselwood-auto-group/p
 | 9 | `which-used-car-dealerships-in-bremerton-wa-offer-the-best-no-pressure-buying-experience` | Dealership comparison |
 | 10 | `which-dealerships-in-bremerton-wa-have-the-most-reliable-service-and-maintenance-departments` | Service reputation |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation and MCP server details.
-See [faq.md](/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](haselwood-auto-group-okf/references/ai-discovery-page.md) for the complete API endpoint documentation and MCP server details.
+See [faq.md](haselwood-auto-group-okf/datasets/faq.md) for common questions and answers.

@@ -123,4 +123,4 @@ Structured JSON-LD data endpoints optimized for AI consumption:
 - [West Hills Chrysler Jeep Dodge RAM Business](http://api.promptgraph.ai/api/v1/west-hills-chrysler-jeep-dodge-ram/business) - CDJR dealership business profile
 - [West Hills Chrysler Jeep Dodge RAM Inventory](http://api.promptgraph.ai/api/v1/west-hills-chrysler-jeep-dodge-ram/vehicles) - CDJR vehicle inventory
 
-See [ai-discovery-page.md](ai-discovery-page.md) for detailed endpoint documentation.
+See [ai-discovery-page.md](west-hills-autoplex-okf/references/ai-discovery-page.md) for detailed endpoint documentation.

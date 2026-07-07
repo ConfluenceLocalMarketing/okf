@@ -29,4 +29,4 @@ timestamp: 2026-07-02
 | Corvette | Sports Car | 2 | RWD | 6.2L V8, 490+ hp |
 | Bolt EV/EUV | Electric Car | 5 | FWD | 259 mi range |
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed descriptions of each model.
+See [new-vehicles.md](nick-mayer-dickson-chevy-okf/datasets/new-vehicles.md) for detailed descriptions of each model.

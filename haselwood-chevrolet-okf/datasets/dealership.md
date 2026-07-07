@@ -91,7 +91,7 @@ Chevrolet, Buick, and GMC models available include:
 
 ## Staff
 
-See [staff.md](staff.md) for full directory.
+See [staff.md](haselwood-chevrolet-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
@@ -100,7 +100,7 @@ See [staff.md](staff.md) for full directory.
 - DealerRater: 4.7 stars (766+ reviews)
 - Multiple dealer awards including state and consumer awards
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](haselwood-chevrolet-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

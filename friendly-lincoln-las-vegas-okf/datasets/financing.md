@@ -56,5 +56,5 @@ Monday–Saturday 8:00 AM to 8:00 PM. Sunday closed.
 
 **Finance/Sales**: (702) 790-8429
 
-See [dealership.md](dealership.md) for full business profile.
-See [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for current inventory.
+See [dealership.md](friendly-lincoln-las-vegas-okf/datasets/dealership.md) for full business profile.
+See [new-vehicles.md](friendly-lincoln-las-vegas-okf/datasets/new-vehicles.md) or [used-vehicles.md](friendly-lincoln-las-vegas-okf/datasets/used-vehicles.md) for current inventory.

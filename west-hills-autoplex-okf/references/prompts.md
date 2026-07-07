@@ -89,5 +89,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-autoplex/pr
 | 7 | `new-mazda-models-in-bremerton` | Mazda vehicle lineup |
 | 8 | `west-hills-online-purchasing` | Click-N-Drive and home delivery |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](west-hills-autoplex-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](west-hills-autoplex-okf/datasets/faq.md) for common questions and answers.

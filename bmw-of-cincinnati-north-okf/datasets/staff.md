@@ -47,5 +47,5 @@ BMW of Cincinnati North operates as part of the Jake Sweeney Company, a 4th gene
 - **Parts Manager** - Parts department operations
 - **Marketing Manager** - Dealership marketing and digital presence
 
-See [testimonials.md](/references/testimonials.md) for customer reviews that may reference staff members.
-See [dealership.md](dealership.md) for contact information.
+See [testimonials.md](bmw-of-cincinnati-north-okf/references/testimonials.md) for customer reviews that may reference staff members.
+See [dealership.md](bmw-of-cincinnati-north-okf/datasets/dealership.md) for contact information.

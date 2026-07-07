@@ -56,4 +56,4 @@ WyHy Federal Credit Union is a not-for-profit, member-owned financial cooperativ
 
 ## Related Concepts
 
-- See [company.md](../datasets/company.md) for full credit union profile.
+- See [company.md](wyhy-federal-credit-union-okf/datasets/company.md) for full credit union profile.

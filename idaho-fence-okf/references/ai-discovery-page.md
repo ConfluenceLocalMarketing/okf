@@ -65,7 +65,7 @@ The AI Manifest (v1.0) provides a machine-readable directory of all AI resources
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes 3 structured Q&A prompt/response pairs. See [prompts.md](prompts.md) for the full library.
+The `/prompts` endpoint exposes 3 structured Q&A prompt/response pairs. See [prompts.md](idaho-fence-okf/references/prompts.md) for the full library.
 
 ## LLM-Accessible Actions
 
@@ -73,5 +73,5 @@ The `/prompts` endpoint exposes 3 structured Q&A prompt/response pairs. See [pro
 2. **Idaho Fence Company Commercial Fencing** — Security fence installation and asset protection
 3. **Idaho Fence Company Farm Fencing** — Agricultural and livestock fencing solutions
 
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
-See [prompts.md](prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](idaho-fence-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](idaho-fence-okf/references/prompts.md) for the complete Q&A prompt library.

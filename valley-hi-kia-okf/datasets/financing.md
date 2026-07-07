@@ -31,4 +31,4 @@ The Finance Center at Valley Hi Kia provides flexible financing solutions for ne
 
 Finance specialists are available during dealership hours. Call (760) 983-7146 or visit the dealership at 14644 Valley Center Drive, Victorville, CA.
 
-See [company.md](company.md) for the full dealership profile.
+See [company.md](valley-hi-kia-okf/datasets/company.md) for the full dealership profile.

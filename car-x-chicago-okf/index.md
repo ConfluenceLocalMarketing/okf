@@ -8,13 +8,13 @@ Locally owned and operated auto repair franchise with 23 locations across Chicag
 
 ## Datasets
 
-- [car-x-tire-auto.md](datasets/car-x-tire-auto.md) - Profile of the Car-X Tire & Auto franchise chain.
-- [chicago-locations.md](datasets/chicago-locations.md) - Chicago-area Car-X locations with contact details and hours.
+- [car-x-tire-auto.md](car-x-chicago-okf/datasets/car-x-tire-auto.md) - Profile of the Car-X Tire & Auto franchise chain.
+- [chicago-locations.md](car-x-chicago-okf/datasets/chicago-locations.md) - Chicago-area Car-X locations with contact details and hours.
 
 ## References
 
-- [car-x-guarantee.md](references/car-x-guarantee.md) - The Car-X Guarantee covering parts, labor, and service.
+- [car-x-guarantee.md](car-x-chicago-okf/references/car-x-guarantee.md) - The Car-X Guarantee covering parts, labor, and service.
 
 ## Tables
 
-- [services-pricing.md](tables/services-pricing.md) - Service categories and pricing overview for Car-X Chicago.
+- [services-pricing.md](car-x-chicago-okf/tables/services-pricing.md) - Service categories and pricing overview for Car-X Chicago.

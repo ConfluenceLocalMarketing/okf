@@ -56,4 +56,4 @@ Every new Mercedes-Benz includes:
 - 4-Year/50,000-Mile Limited Warranty
 - 4-Year/50,000-Mile Roadside Assistance
 
-See [company.md](company.md) for dealership location and contact information.
+See [company.md](mercedes-benz-of-caldwell-okf/datasets/company.md) for dealership location and contact information.

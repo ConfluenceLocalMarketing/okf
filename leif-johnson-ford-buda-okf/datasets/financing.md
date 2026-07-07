@@ -59,4 +59,4 @@ Estimate monthly payments using the [Payment Calculators](https://www.leifjohnso
 
 **Finance/Sales**: (737)-414-6598
 
-See [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.
+See [dealership.md](leif-johnson-ford-buda-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](leif-johnson-ford-buda-okf/datasets/new-vehicles.md) or [used-vehicles.md](leif-johnson-ford-buda-okf/datasets/used-vehicles.md) for inventory.

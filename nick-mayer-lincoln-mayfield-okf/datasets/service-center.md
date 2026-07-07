@@ -53,4 +53,4 @@ The service center at Nick Mayer Lincoln Mayfield provides factory-authorized ma
 
 Same as dealership hours: Monday through Saturday, closed Sunday.
 
-See [dealership.md](dealership.md) for full contact and hours information.
+See [dealership.md](nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for full contact and hours information.

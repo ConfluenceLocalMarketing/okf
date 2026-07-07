@@ -34,4 +34,4 @@ The official website for Friendly Ford Las Vegas is located at [https://www.frie
 - Twitter: https://twitter.com/friendlyfordvega
 - YouTube: https://www.youtube.com/@FriendlyFordVegas
 
-See [friendly-ford-las-vegas.md](/datasets/friendly-ford-las-vegas.md) for the full dealership profile.
+See [friendly-ford-las-vegas.md](friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for the full dealership profile.

@@ -60,4 +60,4 @@ Estimate monthly payments using the payment calculator before visiting the deale
 
 Contact the finance department through the group's sales line at (360) 362-4410.
 
-See [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.
+See [dealership.md](haselwood-auto-group-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](haselwood-auto-group-okf/datasets/new-vehicles.md) or [used-vehicles.md](haselwood-auto-group-okf/datasets/used-vehicles.md) for inventory.

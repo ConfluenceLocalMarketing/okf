@@ -43,5 +43,5 @@ This document describes the LLM consumption guidelines and structured data endpo
 
 ## Related
 
-- See [ai-discovery-page.md](ai-discovery-page.md) for full endpoint documentation.
-- See [prompts.md](prompts.md) for the Q&A prompt library.
+- See [ai-discovery-page.md](ron-marhofer-hyundai-of-green-okf/references/ai-discovery-page.md) for full endpoint documentation.
+- See [prompts.md](ron-marhofer-hyundai-of-green-okf/references/prompts.md) for the Q&A prompt library.

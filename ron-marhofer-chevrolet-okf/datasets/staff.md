@@ -36,4 +36,4 @@ timestamp: 2026-07-01
 - Tailored solutions for various credit profiles
 - Trade-in valuation and appraisal support
 
-See [service-center.md](service-center.md) for service department details.
+See [service-center.md](ron-marhofer-chevrolet-okf/datasets/service-center.md) for service department details.

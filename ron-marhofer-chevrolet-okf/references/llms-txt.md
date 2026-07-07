@@ -55,4 +55,4 @@ It provides a structured, AI-optimized directory of all available data endpoints
 
 Ron Marhofer Chevrolet proudly services Stow, OH, and the surrounding communities including Akron and Kent. The Chevrolet lineup includes iconic new Chevrolet models such as the Camaro and Corvette, Colorado and Silverado, and the Equinox and Traverse. The dealership offers certified Chevrolet service for all vehicle maintenance and repair needs.
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the AI manifest details.
+See [ai-discovery-page.md](ron-marhofer-chevrolet-okf/references/ai-discovery-page.md) for the AI manifest details.

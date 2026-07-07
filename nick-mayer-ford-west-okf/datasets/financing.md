@@ -46,4 +46,4 @@ Online appraisal and in-person valuation.
 
 Through sales line at 440-961-5090.
 
-See [dealership.md](dealership.md) for full profile.
+See [dealership.md](nick-mayer-ford-west-okf/datasets/dealership.md) for full profile.

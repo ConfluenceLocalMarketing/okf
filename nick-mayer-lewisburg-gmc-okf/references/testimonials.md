@@ -25,4 +25,4 @@ The dealership maintains an active presence on major review platforms. Prospecti
 - Responsive service department
 - Fair pricing on new and pre-owned vehicles
 
-See [dealership.md](/datasets/dealership.md) for full dealership profile.
+See [dealership.md](nick-mayer-lewisburg-gmc-okf/datasets/dealership.md) for full dealership profile.

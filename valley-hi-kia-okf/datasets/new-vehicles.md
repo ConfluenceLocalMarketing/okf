@@ -47,4 +47,4 @@ Valley Hi Kia offers the complete Kia lineup of sedans, SUVs, and the Carnival m
 |-------|-------------|
 | Carnival | Minivan reimagined with SUV-inspired design, seating for up to eight |
 
-See [company.md](company.md) for dealership contact and location.
+See [company.md](valley-hi-kia-okf/datasets/company.md) for dealership contact and location.

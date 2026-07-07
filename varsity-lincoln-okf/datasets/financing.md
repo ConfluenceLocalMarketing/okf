@@ -62,5 +62,5 @@ Estimate monthly payments using the payment calculator on the Varsity Lincoln we
 
 **Sales/Finance**: (800) 240-8685
 
-See [dealership.md](dealership.md) for full business profile.
-See [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.
+See [dealership.md](varsity-lincoln-okf/datasets/dealership.md) for full business profile.
+See [new-vehicles.md](varsity-lincoln-okf/datasets/new-vehicles.md) or [used-vehicles.md](varsity-lincoln-okf/datasets/used-vehicles.md) for inventory.

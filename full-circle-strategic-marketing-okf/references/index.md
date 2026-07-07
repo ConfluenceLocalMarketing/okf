@@ -1,3 +1,3 @@
 # References
 
-- [llms-txt.md](llms-txt.md) - LLMs.txt reference for Full Circle Strategic Marketing AI context.
+- [llms-txt.md](full-circle-strategic-marketing-okf/references/llms-txt.md) - LLMs.txt reference for Full Circle Strategic Marketing AI context.

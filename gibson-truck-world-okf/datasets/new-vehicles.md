@@ -54,4 +54,4 @@ Multi-make selection complementing the truck inventory:
 
 Nationwide delivery available on all vehicle purchases.
 
-See [company.md](company.md) for full dealership profile.
+See [company.md](gibson-truck-world-okf/datasets/company.md) for full dealership profile.

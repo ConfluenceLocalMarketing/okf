@@ -70,7 +70,7 @@ timestamp: 2026-07-03
 
 ## Related Concepts
 
-See [company.md](../datasets/company.md) for full business profile.
-See [departments.md](../tables/departments.md) for detailed department breakdown.
-See [services.md](../tables/services.md) for service descriptions.
-See [brands.md](../tables/brands.md) for brand partner details.
+See [company.md](bare-bones-furniture-mattress-okf/datasets/company.md) for full business profile.
+See [departments.md](bare-bones-furniture-mattress-okf/tables/departments.md) for detailed department breakdown.
+See [services.md](bare-bones-furniture-mattress-okf/tables/services.md) for service descriptions.
+See [brands.md](bare-bones-furniture-mattress-okf/tables/brands.md) for brand partner details.

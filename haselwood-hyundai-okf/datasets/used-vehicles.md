@@ -63,4 +63,4 @@ Special program offering safety-checked, affordable pre-owned options for first-
 - Competitive trade-in values
 - Vehicle Upgrade Program
 
-See [dealership.md](dealership.md) for current financing and trade-in programs.
+See [dealership.md](haselwood-hyundai-okf/datasets/dealership.md) for current financing and trade-in programs.

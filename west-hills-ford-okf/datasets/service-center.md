@@ -75,5 +75,5 @@ Genuine Ford OEM parts and Motorcraft components available including:
 | Saturday | 9:00 AM - 8:00 PM |
 | Sunday | 10:00 AM - 7:00 PM |
 
-See [staff.md](staff.md) for full service department directory.
-See [dealership.md](dealership.md) for contact information.
+See [staff.md](west-hills-ford-okf/datasets/staff.md) for full service department directory.
+See [dealership.md](west-hills-ford-okf/datasets/dealership.md) for contact information.

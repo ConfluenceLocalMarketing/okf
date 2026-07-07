@@ -64,4 +64,4 @@ One notable review described an initial negative experience that was fully resol
 
 > "Upon several discrepancies - my family and I walked away from a deal. Luckily, the entirety of Haselwood Auto Group came together to rectify the issues. They saw the situation as a retraining opportunity, offered appropriate compensation, were extremely respectful, accountable, apologetic, and kind." - Madison R. Hayes
 
-See [staff.md](/datasets/staff.md) for the full staff directory.
+See [staff.md](haselwood-auto-group-okf/datasets/staff.md) for the full staff directory.

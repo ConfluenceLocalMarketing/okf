@@ -120,5 +120,5 @@ Email (customer service): basilcares@basilresale.com
 - Site Content: `/site-content` (plain-text mirror)
 - GBP Context: `/gbp-context` (Google Business Profile data)
 
-See [staff.md](staff.md) for full staff directory.
-See [ai-discovery-page.md](/references/ai-discovery-page.md) for structured AI endpoints.
+See [staff.md](basil-resale-okf/datasets/staff.md) for full staff directory.
+See [ai-discovery-page.md](basil-resale-okf/references/ai-discovery-page.md) for structured AI endpoints.

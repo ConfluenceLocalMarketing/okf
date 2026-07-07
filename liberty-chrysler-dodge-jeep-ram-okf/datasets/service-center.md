@@ -48,4 +48,4 @@ The service center at Liberty CDJR is staffed by Mopar-certified technicians usi
 
 - **Phone:** (224) 424-3318
 
-See [company.md](company.md) for full location details.
+See [company.md](liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for full location details.

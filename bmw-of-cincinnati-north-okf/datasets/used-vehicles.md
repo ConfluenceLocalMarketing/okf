@@ -55,4 +55,4 @@ The BMW Certified Pre-Owned program offers exceptional value with comprehensive 
 - Competitive trade-in values
 - On-the-spot trade evaluation at the dealership
 
-See [dealership.md](dealership.md) for current financing and trade-in programs.
+See [dealership.md](bmw-of-cincinnati-north-okf/datasets/dealership.md) for current financing and trade-in programs.

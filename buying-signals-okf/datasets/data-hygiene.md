@@ -36,5 +36,5 @@ Comprehensive data quality services including data appending, verification, enri
 
 ## Related
 
-See [insight-pixel.md](insight-pixel.md) for website visitor identity resolution.
-See [company.md](company.md) for the full product ecosystem.
+See [insight-pixel.md](buying-signals-okf/datasets/insight-pixel.md) for website visitor identity resolution.
+See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.

@@ -48,4 +48,4 @@ The llms.txt file provides AI systems with structured discovery and consumption 
 
 Friendly Lincoln Las Vegas (listed as Team Lincoln Las Vegas in client records) specializes in Lincoln luxury vehicle sales and factory-trained service. Located at 5445 Drexel Rd, Las Vegas, NV 89130. Licensed AutoDealer with full inventory and service capabilities.
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](prompts.md) for the prompt library.
+See [ai-discovery-page.md](friendly-lincoln-las-vegas-okf/references/ai-discovery-page.md) for the full AI Discovery Hub overview and [prompts.md](friendly-lincoln-las-vegas-okf/references/prompts.md) for the prompt library.

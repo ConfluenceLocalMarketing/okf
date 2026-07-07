@@ -29,4 +29,4 @@ No structured AI discovery endpoints (such as PromptGraph API) were found during
 - DealerOn content management system for page editing
 - Standard HTML forms for lead capture and service scheduling
 
-See [llms-txt.md](llms-txt.md) for site structure overview.
+See [llms-txt.md](nick-mayer-lincoln-westlake-okf/references/llms-txt.md) for site structure overview.

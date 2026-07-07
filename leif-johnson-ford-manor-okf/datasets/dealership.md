@@ -55,4 +55,4 @@ Approximately 179 vehicles in current inventory mix (new and pre-owned).
 
 Leif Johnson Automotive Group - family-owned, over 65 years in business. Operates 3 Ford franchise dealerships and 3 pre-owned locations in and around Austin, plus Chevrolet, GMC, and CDJR franchises in Monahans, TX.
 
-See [new-vehicles.md](new-vehicles.md) and [used-vehicles.md](used-vehicles.md) for current inventory. See [service-center.md](service-center.md) for service department details, [financing.md](financing.md) for finance options, and [staff.md](staff.md) for team directory.
+See [new-vehicles.md](leif-johnson-ford-manor-okf/datasets/new-vehicles.md) and [used-vehicles.md](leif-johnson-ford-manor-okf/datasets/used-vehicles.md) for current inventory. See [service-center.md](leif-johnson-ford-manor-okf/datasets/service-center.md) for service department details, [financing.md](leif-johnson-ford-manor-okf/datasets/financing.md) for finance options, and [staff.md](leif-johnson-ford-manor-okf/datasets/staff.md) for team directory.

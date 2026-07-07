@@ -48,4 +48,4 @@ timestamp: 2026-07-03
 - **Mike Petersen** — Dealer Principal
 - **Doug Hansen** — General Manager
 
-See [company.md](company.md) for dealership location and contact information.
+See [company.md](petersen-chrysler-dodge-jeep-ram-okf/datasets/company.md) for dealership location and contact information.

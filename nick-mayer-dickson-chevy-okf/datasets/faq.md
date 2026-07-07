@@ -18,7 +18,7 @@ timestamp: 2026-07-02
 A: Nick Mayer Chevrolet of Dickson sells new Chevrolet vehicles plus a wide selection of pre-owned makes and models.
 
 **Q: What is CarBravo?**
-A: CarBravo is GM's certified pre-owned program offering inspected and warranted used vehicles. See [used-vehicles.md](used-vehicles.md) for more details.
+A: CarBravo is GM's certified pre-owned program offering inspected and warranted used vehicles. See [used-vehicles.md](nick-mayer-dickson-chevy-okf/datasets/used-vehicles.md) for more details.
 
 **Q: Can I browse inventory online?**
 A: Yes, the dealership website features full searchable inventory with photos, specifications, and vehicle history.
@@ -34,7 +34,7 @@ A: Financing, leasing, and special manufacturer APR offers are available. The fi
 ## Service
 
 **Q: Do I need an appointment for service?**
-A: Appointments are recommended but walk-in service is available. See [service-center.md](service-center.md) for full details.
+A: Appointments are recommended but walk-in service is available. See [service-center.md](nick-mayer-dickson-chevy-okf/datasets/service-center.md) for full details.
 
 **Q: What brands can you service?**
 A: The service center primarily services Chevrolet vehicles but can work on most makes and models.

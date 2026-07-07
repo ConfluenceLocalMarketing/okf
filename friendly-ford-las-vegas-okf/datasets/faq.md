@@ -75,4 +75,4 @@ A: 1650 N Decatur Blvd, Las Vegas, NV 89107.
 **Q: What social media platforms are you on?**
 A: Friendly Ford is active on Facebook, TikTok, Instagram, Twitter, and YouTube.
 
-See [friendly-ford-las-vegas.md](friendly-ford-las-vegas.md) for full business profile.
+See [friendly-ford-las-vegas.md](friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for full business profile.

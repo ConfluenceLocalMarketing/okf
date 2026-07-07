@@ -102,7 +102,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data:
 
 ## Q&A Prompt Library (10 Prompts)
 
-The `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 10 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](jake-sweeney-mazda-tri-county-okf/references/prompts.md) for the full library. Topics include:
 
 - Dealership positioning and reputation
 - Online and modern car buying experience
@@ -122,7 +122,7 @@ The `/testimonials` endpoint exposes customer review data:
 - **Most-cited staff:** Hallie Abbott, Jason Vaughn, Roman (Romyl), Emilio Perez, Terry, Joe Collins, Chris Car, Xavier, David, Jeff
 - Common themes: stress-free buying, no-pressure sales, patient staff, online purchasing, service video inspections
 
-See [testimonials.md](testimonials.md) for customer review data.
+See [testimonials.md](jake-sweeney-mazda-tri-county-okf/references/testimonials.md) for customer review data.
 
 ## LLM-Accessible Actions
 
@@ -143,6 +143,6 @@ The AI Discovery Page defines structured content that agents can reference:
 
 This page exists to give AI agents direct access to structured knowledge about Jake Sweeney Mazda Tri-County without requiring web scraping, form navigation, or human-readable page parsing. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
-See [prompts.md](prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](testimonials.md) for customer review data.
+See [llms-txt.md](jake-sweeney-mazda-tri-county-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](jake-sweeney-mazda-tri-county-okf/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](jake-sweeney-mazda-tri-county-okf/references/testimonials.md) for customer review data.

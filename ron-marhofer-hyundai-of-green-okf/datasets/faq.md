@@ -36,17 +36,17 @@ Yes, free home delivery is available up to 150 miles.
 
 ### What new Hyundai models are available?
 
-The dealership carries the full Hyundai lineup including Elantra, Sonata, Tucson, Santa Fe, Palisade, Kona, Venue, IONIQ 5, IONIQ 9, Santa Cruz, and hybrid/electric variants. See [new-vehicles.md](new-vehicles.md) for the complete list.
+The dealership carries the full Hyundai lineup including Elantra, Sonata, Tucson, Santa Fe, Palisade, Kona, Venue, IONIQ 5, IONIQ 9, Santa Cruz, and hybrid/electric variants. See [new-vehicles.md](ron-marhofer-hyundai-of-green-okf/datasets/new-vehicles.md) for the complete list.
 
 ### Do you have used vehicles?
 
-Yes, a wide selection of pre-owned cars, SUVs, and trucks from various manufacturers. See [used-vehicles.md](used-vehicles.md) for details.
+Yes, a wide selection of pre-owned cars, SUVs, and trucks from various manufacturers. See [used-vehicles.md](ron-marhofer-hyundai-of-green-okf/datasets/used-vehicles.md) for details.
 
 ## Service Questions
 
 ### What services does the service center offer?
 
-Oil changes, tire rotations, brake inspections, diagnostics, parts replacement, multi-point inspections, and collision center repairs. See [service-center.md](service-center.md) for details.
+Oil changes, tire rotations, brake inspections, diagnostics, parts replacement, multi-point inspections, and collision center repairs. See [service-center.md](ron-marhofer-hyundai-of-green-okf/datasets/service-center.md) for details.
 
 ### Do you offer free brake inspections?
 
@@ -68,5 +68,5 @@ Yes, online credit applications are accepted through the dealership website.
 
 ## Related
 
-- See [dealership.md](dealership.md) for full business profile.
-- See [prompts.md](../references/prompts.md) for the AI Q&A prompt library.
+- See [dealership.md](ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for full business profile.
+- See [prompts.md](ron-marhofer-hyundai-of-green-okf/references/prompts.md) for the AI Q&A prompt library.

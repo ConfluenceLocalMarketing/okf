@@ -55,10 +55,10 @@ Pre-owned lifted trucks with aftermarket modifications available in stock.
 
 ## Financing
 
-Nationwide financing available with delivery. See [financing.md](financing.md).
+Nationwide financing available with delivery. See [financing.md](gibson-truck-world-okf/datasets/financing.md).
 
 ## Delivery
 
 Nationwide delivery available on all purchases.
 
-See [company.md](company.md) for location, hours, and full profile.
+See [company.md](gibson-truck-world-okf/datasets/company.md) for location, hours, and full profile.

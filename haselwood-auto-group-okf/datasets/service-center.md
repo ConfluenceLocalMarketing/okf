@@ -85,4 +85,4 @@ Genuine OEM parts and accessories available at each brand-specific parts counter
 | Saturday | 9:00 AM - 8:00 PM |
 | Sunday | 10:00 AM - 7:00 PM |
 
-See [dealership.md](dealership.md) for complete contact information and locations.
+See [dealership.md](haselwood-auto-group-okf/datasets/dealership.md) for complete contact information and locations.

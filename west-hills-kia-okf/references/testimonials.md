@@ -64,4 +64,4 @@ West Hills Kia has collected customer testimonials through the PromptGraph platf
 - **Thorough explanations** - Advisors explain what needs immediate attention vs what can wait
 - **Efficient turnaround** - Service completed in a timely manner
 
-See [staff.md](/datasets/staff.md) for the full staff directory.
+See [staff.md](west-hills-kia-okf/datasets/staff.md) for the full staff directory.

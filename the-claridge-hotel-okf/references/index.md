@@ -1,3 +1,3 @@
 # References
 
-- [llms-txt.md](llms-txt.md) - LLMs.txt reference for The Claridge Hotel AI context.
+- [llms-txt.md](the-claridge-hotel-okf/references/llms-txt.md) - LLMs.txt reference for The Claridge Hotel AI context.

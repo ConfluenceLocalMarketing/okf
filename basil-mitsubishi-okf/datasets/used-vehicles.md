@@ -68,5 +68,5 @@ Finance department works with multiple lenders to find competitive rates and fle
 - $200 Sales Referral Program
 - On the Spot Delivery
 
-See [dealership.md](dealership.md) for full business profile and contact information.
-See [testimonials.md](/references/testimonials.md) for customer reviews and experiences.
+See [dealership.md](basil-mitsubishi-okf/datasets/dealership.md) for full business profile and contact information.
+See [testimonials.md](basil-mitsubishi-okf/references/testimonials.md) for customer reviews and experiences.

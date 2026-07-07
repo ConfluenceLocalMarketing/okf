@@ -100,5 +100,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-ford/prompt
 | 19 | `which-local-dealerships-offer-the-highest-trade-in-values-toward-a-new-truck` | Trade-in values |
 | 20 | `where-should-i-go-around-here-if-i-want-to-test-drive-a-new-ford-bronco` | Bronco test drive |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](west-hills-ford-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](west-hills-ford-okf/datasets/faq.md) for common questions and answers.

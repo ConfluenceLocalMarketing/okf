@@ -44,10 +44,10 @@ The following key site areas are available for programmatic access:
 
 ## AI Accessibility
 
-The site does not currently expose dedicated AI/LLM endpoints. AI agents should rely on standard web scraping of the visible site structure. See [llms-txt.md](llms-txt.md) for additional guidance.
+The site does not currently expose dedicated AI/LLM endpoints. AI agents should rely on standard web scraping of the visible site structure. See [llms-txt.md](nick-mayer-ford-west-okf/references/llms-txt.md) for additional guidance.
 
 ## Related Concepts
 
-- [llms-txt.md](llms-txt.md) - LLMs.txt guidance
-- [prompts.md](prompts.md) - Prompt library
-- [dealership.md](/datasets/dealership.md) - Dealership overview
+- [llms-txt.md](nick-mayer-ford-west-okf/references/llms-txt.md) - LLMs.txt guidance
+- [prompts.md](nick-mayer-ford-west-okf/references/prompts.md) - Prompt library
+- [dealership.md](nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview

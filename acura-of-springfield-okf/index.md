@@ -8,19 +8,19 @@ Acura of Springfield is a full-service Acura dealership in Springfield, MO, offe
 
 ## Datasets
 
-- [company.md](datasets/company.md) — Full-service Acura dealership in Springfield, MO
-- [faq.md](datasets/faq.md) — Frequently asked questions about Acura of Springfield
-- [financing.md](datasets/financing.md) — Finance center with credit application and leasing options
-- [new-vehicles.md](datasets/new-vehicles.md) — Full new Acura vehicle lineup
-- [service-center.md](datasets/service-center.md) — Certified Acura service center
-- [staff.md](datasets/staff.md) — Key dealership staff members
-- [used-vehicles.md](datasets/used-vehicles.md) — Certified pre-owned and used vehicle inventory
+- [company.md](acura-of-springfield-okf/datasets/company.md) — Full-service Acura dealership in Springfield, MO
+- [faq.md](acura-of-springfield-okf/datasets/faq.md) — Frequently asked questions about Acura of Springfield
+- [financing.md](acura-of-springfield-okf/datasets/financing.md) — Finance center with credit application and leasing options
+- [new-vehicles.md](acura-of-springfield-okf/datasets/new-vehicles.md) — Full new Acura vehicle lineup
+- [service-center.md](acura-of-springfield-okf/datasets/service-center.md) — Certified Acura service center
+- [staff.md](acura-of-springfield-okf/datasets/staff.md) — Key dealership staff members
+- [used-vehicles.md](acura-of-springfield-okf/datasets/used-vehicles.md) — Certified pre-owned and used vehicle inventory
 
 ## References
 
-- [llms-txt.md](references/llms-txt.md) — AI discovery and API documentation via PromptGraph
-- [prompts.md](references/prompts.md) — AI-ready prompt library (58 prompts)
-- [ai-discovery-page.md](references/ai-discovery-page.md) — Structured business data for AI consumption
+- [llms-txt.md](acura-of-springfield-okf/references/llms-txt.md) — AI discovery and API documentation via PromptGraph
+- [prompts.md](acura-of-springfield-okf/references/prompts.md) — AI-ready prompt library (58 prompts)
+- [ai-discovery-page.md](acura-of-springfield-okf/references/ai-discovery-page.md) — Structured business data for AI consumption
 
 ## Tables
 

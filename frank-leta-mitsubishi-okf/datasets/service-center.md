@@ -50,4 +50,4 @@ Mitsubishi factory warranty repairs performed by certified technicians. The 10-y
 - **Service Phone:** (314) 597-9221
 - **Location:** 12101 St Charles Rock Rd, Bridgeton, MO 63044
 
-See [company.md](company.md) for full dealership details.
+See [company.md](frank-leta-mitsubishi-okf/datasets/company.md) for full dealership details.

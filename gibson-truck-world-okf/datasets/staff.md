@@ -46,4 +46,4 @@ timestamp: 2026-07-03
 - **Yves Belanger** — Owner / Dealer Principal
 - **Stephane Fournier** — General Manager
 
-See [company.md](company.md) for dealership location and contact information.
+See [company.md](gibson-truck-world-okf/datasets/company.md) for dealership location and contact information.

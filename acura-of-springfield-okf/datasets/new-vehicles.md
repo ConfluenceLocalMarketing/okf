@@ -36,4 +36,4 @@ Visit the dealership at 3130 S Campbell Ave, Springfield, MO, or call (417) 427-
 
 ---
 
-For complete dealership information, see [company.md](company.md).
+For complete dealership information, see [company.md](acura-of-springfield-okf/datasets/company.md).

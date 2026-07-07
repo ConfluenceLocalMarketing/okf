@@ -56,4 +56,4 @@ Tire sales, mounting, balancing, rotation, and pressure maintenance.
 
 Vehicle towing and recovery services.
 
-See [company.md](company.md) for our certifications, amenities, warranties, and contact information.
+See [company.md](montclare-auto-repair-okf/datasets/company.md) for our certifications, amenities, warranties, and contact information.

@@ -81,10 +81,10 @@ Detroit, Grosse Pointe, St. Clair Shores, Warren, Eastpointe, Dearborn, Southfie
 ## Citations
 
 - [Official Website](https://www.laethemgm.com/)
-- See [contact.md](../tables/contact.md) for full department contact details
-- See [hours.md](../tables/hours.md) for operating hours
-- See [new-vehicles.md](new-vehicles.md) for Buick and GMC model lineup
-- See [used-vehicles.md](used-vehicles.md) for pre-owned inventory
-- See [service-center.md](service-center.md) for service department details
-- See [financing.md](financing.md) for finance options
-- See [staff.md](staff.md) for team directory
+- See [contact.md](ray-laethem-buick-gmc-okf/tables/contact.md) for full department contact details
+- See [hours.md](ray-laethem-buick-gmc-okf/tables/hours.md) for operating hours
+- See [new-vehicles.md](ray-laethem-buick-gmc-okf/datasets/new-vehicles.md) for Buick and GMC model lineup
+- See [used-vehicles.md](ray-laethem-buick-gmc-okf/datasets/used-vehicles.md) for pre-owned inventory
+- See [service-center.md](ray-laethem-buick-gmc-okf/datasets/service-center.md) for service department details
+- See [financing.md](ray-laethem-buick-gmc-okf/datasets/financing.md) for finance options
+- See [staff.md](ray-laethem-buick-gmc-okf/datasets/staff.md) for team directory

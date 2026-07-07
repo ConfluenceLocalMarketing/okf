@@ -17,7 +17,7 @@ timestamp: 2026-07-03
 ## General
 
 ### What type of dealership is Tuscaloosa Chevrolet?
-It is the largest Chevrolet dealer in Central Alabama, located at 6500 Interstate Pkwy, Cottondale, AL, offering new and pre-owned Chevy vehicles, certified service, and commercial fleet sales. See [company.md](company.md) for the full profile.
+It is the largest Chevrolet dealer in Central Alabama, located at 6500 Interstate Pkwy, Cottondale, AL, offering new and pre-owned Chevy vehicles, certified service, and commercial fleet sales. See [company.md](tuscaloosa-chevrolet-okf/datasets/company.md) for the full profile.
 
 ### What area does the dealership serve?
 Cottondale, Tuscaloosa, Hoover, Bessemer, Birmingham, AL and Columbus, MS.

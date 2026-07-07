@@ -18,7 +18,7 @@ resource: https://www.westhillskia.com/finance/
 
 The West Hills Kia Finance Center offers comprehensive financing solutions for new and pre-owned Kia vehicles, serving customers throughout Kitsap County, Silverdale, Port Orchard, Poulsbo, and the greater Seattle area.
 
-See [dealership.md](dealership.md) for full business profile.
+See [dealership.md](west-hills-kia-okf/datasets/dealership.md) for full business profile.
 
 ## Financing Options
 

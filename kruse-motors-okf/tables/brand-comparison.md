@@ -61,5 +61,5 @@ timestamp: 2026-06-26
 | Buick | 3 years / 36,000 miles | 5 years / 60,000 miles |
 | GMC | 3 years / 36,000 miles | 5 years / 60,000 miles |
 
-See [new-vehicles.md](/datasets/new-vehicles.md) for detailed model information.
-See [dealership.md](/datasets/dealership.md) for the full business profile.
+See [new-vehicles.md](kruse-motors-okf/datasets/new-vehicles.md) for detailed model information.
+See [dealership.md](kruse-motors-okf/datasets/dealership.md) for the full business profile.

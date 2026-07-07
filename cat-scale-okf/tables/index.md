@@ -1,3 +1,3 @@
 # Tables
 
-- [products-services.md](products-services.md) - CAT Scale products and services comparison matrix.
+- [products-services.md](cat-scale-okf/tables/products-services.md) - CAT Scale products and services comparison matrix.

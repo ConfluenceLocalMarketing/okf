@@ -58,4 +58,4 @@ Leif Johnson Automotive Group - family-owned, over 65 years in business. Operate
 
 Supports local programs including Earning by Learning, Responsible Parenting, and Toys for Tots.
 
-See [new-vehicles.md](new-vehicles.md) and [used-vehicles.md](used-vehicles.md) for current inventory. See [service-center.md](service-center.md) for service department details, [financing.md](financing.md) for finance options, and [staff.md](staff.md) for team directory.
+See [new-vehicles.md](leif-johnson-ford-buda-okf/datasets/new-vehicles.md) and [used-vehicles.md](leif-johnson-ford-buda-okf/datasets/used-vehicles.md) for current inventory. See [service-center.md](leif-johnson-ford-buda-okf/datasets/service-center.md) for service department details, [financing.md](leif-johnson-ford-buda-okf/datasets/financing.md) for finance options, and [staff.md](leif-johnson-ford-buda-okf/datasets/staff.md) for team directory.

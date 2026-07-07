@@ -6,24 +6,24 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [dealership.md](datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for West Hills Kia in Bremerton, WA
-- [new-vehicles.md](datasets/new-vehicles.md) - New Kia model lineup including EV9, EV6, Niro EV, Sportage, Sorento, Telluride, Seltos, K4, K5, Carnival, and hybrid variants
-- [used-vehicles.md](datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
-- [staff.md](datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
-- [service-center.md](datasets/service-center.md) - Kia-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Kia parts department
-- [faq.md](datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
-- [financing.md](datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators
+- [dealership.md](west-hills-kia-okf/datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for West Hills Kia in Bremerton, WA
+- [new-vehicles.md](west-hills-kia-okf/datasets/new-vehicles.md) - New Kia model lineup including EV9, EV6, Niro EV, Sportage, Sorento, Telluride, Seltos, K4, K5, Carnival, and hybrid variants
+- [used-vehicles.md](west-hills-kia-okf/datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
+- [staff.md](west-hills-kia-okf/datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
+- [service-center.md](west-hills-kia-okf/datasets/service-center.md) - Kia-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Kia parts department
+- [faq.md](west-hills-kia-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](west-hills-kia-okf/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators
 
 ## References
 
-- [ai-discovery-page.md](references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
-- [llms-txt.md](references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
-- [testimonials.md](references/testimonials.md) - Customer reviews with predominantly 5-star ratings, most-praised staff, and notable excerpts
-- [prompts.md](references/prompts.md) - Complete PromptGraph library of structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
+- [ai-discovery-page.md](west-hills-kia-okf/references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
+- [llms-txt.md](west-hills-kia-okf/references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
+- [testimonials.md](west-hills-kia-okf/references/testimonials.md) - Customer reviews with predominantly 5-star ratings, most-praised staff, and notable excerpts
+- [prompts.md](west-hills-kia-okf/references/prompts.md) - Complete PromptGraph library of structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
 
 ## Tables
 
-- [model-comparison.md](tables/model-comparison.md) - Side-by-side comparison of all new Kia models including body type, drivetrain, seating, features, trims, towing, and warranty
+- [model-comparison.md](west-hills-kia-okf/tables/model-comparison.md) - Side-by-side comparison of all new Kia models including body type, drivetrain, seating, features, trims, towing, and warranty
 
 ## Relationships
 

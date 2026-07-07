@@ -88,5 +88,5 @@ Full-size cargo vans. Available in 1500, 2500, and 3500 roof and wheelbase confi
 
 West Hills CJDR offers the **No Dealer Mark-up Program** (excludes Grand Wagoneer Series II). Promotions vary and include low APR financing, lease specials, and rebates. Monthly specials available through Chrysler Capital and other lenders.
 
-See [dealership.md](dealership.md) for contact information and current programs.
-See [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](west-hills-chrysler-jeep-dodge-ram-okf/tables/model-comparison.md) for side-by-side model specifications.

@@ -74,5 +74,5 @@ Basil Mobility's service center features BraunAbility-certified technicians trai
 - Installing power lift systems into customer vehicles
 - Custom interior modifications for wheelchair accommodation
 
-See [dealership.md](dealership.md) for full business profile and contact information.
-See [mobility-vehicles.md](mobility-vehicles.md) for vehicle details.
+See [dealership.md](basil-mobility-okf/datasets/dealership.md) for full business profile and contact information.
+See [mobility-vehicles.md](basil-mobility-okf/datasets/mobility-vehicles.md) for vehicle details.

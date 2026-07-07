@@ -109,6 +109,6 @@ BraunAbility Financial Services and Basil Mobility can assist customers in explo
 - Short and long-term accessible van rentals available
 - Rear-entry and side-entry rental options
 
-See [new-vehicles.md](new-vehicles.md) for new BraunAbility conversions.
-See [dealership.md](dealership.md) for contact and hours.
-See [model-comparison.md](/tables/model-comparison.md) for conversion comparison.
+See [new-vehicles.md](basil-mobility-okf/datasets/new-vehicles.md) for new BraunAbility conversions.
+See [dealership.md](basil-mobility-okf/datasets/dealership.md) for contact and hours.
+See [model-comparison.md](basil-mobility-okf/tables/model-comparison.md) for conversion comparison.

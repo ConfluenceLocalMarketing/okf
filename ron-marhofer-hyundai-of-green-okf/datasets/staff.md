@@ -34,6 +34,6 @@ All departments can be reached at (234) 260-4235.
 
 ## Related
 
-- See [dealership.md](dealership.md) for the full business profile.
-- See [service-center.md](service-center.md) for service department details.
-- See [testimonials.md](../references/testimonials.md) for customer reviews of staff members.
+- See [dealership.md](ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the full business profile.
+- See [service-center.md](ron-marhofer-hyundai-of-green-okf/datasets/service-center.md) for service department details.
+- See [testimonials.md](ron-marhofer-hyundai-of-green-okf/references/testimonials.md) for customer reviews of staff members.

@@ -66,4 +66,4 @@ A: Yes, Deal Reveal technology provides instant online pricing transparency with
 **Q: Is there an Economy Vehicle Program?**
 A: Yes, the dealership offers safety-checked, affordable pre-owned options for first-time buyers and budget-conscious customers.
 
-See [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](haselwood-hyundai-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

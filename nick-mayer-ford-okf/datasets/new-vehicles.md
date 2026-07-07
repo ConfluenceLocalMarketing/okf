@@ -59,7 +59,7 @@ Nick Mayer Ford in Mayfield Heights, OH carries a complete lineup of new Ford ve
 
 ## Related Concepts
 
-- [dealership.md](dealership.md) - Dealership overview
-- [model-comparison.md](/tables/model-comparison.md) - Side-by-side model comparison
-- [used-vehicles.md](used-vehicles.md) - Pre-owned inventory
-- [faq.md](faq.md) - FAQs about inventory
+- [dealership.md](nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
+- [model-comparison.md](nick-mayer-ford-okf/tables/model-comparison.md) - Side-by-side model comparison
+- [used-vehicles.md](nick-mayer-ford-okf/datasets/used-vehicles.md) - Pre-owned inventory
+- [faq.md](nick-mayer-ford-okf/datasets/faq.md) - FAQs about inventory

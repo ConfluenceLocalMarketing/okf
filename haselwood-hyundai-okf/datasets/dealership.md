@@ -85,7 +85,7 @@ Hyundai models available include:
 
 ## Staff
 
-See [staff.md](staff.md) for full directory.
+See [staff.md](haselwood-hyundai-okf/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
@@ -93,7 +93,7 @@ See [staff.md](staff.md) for full directory.
 - **SureCritic:** 4.6 / 5.0 (1,209 reviews)
 - **DealerRater:** 4.6 / 5.0 (976 reviews)
 
-See [testimonials.md](/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](haselwood-hyundai-okf/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

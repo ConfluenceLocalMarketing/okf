@@ -16,7 +16,7 @@ timestamp: 2026-07-03
 ## Vehicles
 
 ### What new Buick and GMC models does Chaparral offer?
-Chaparral Buick GMC offers the full Buick SUV lineup and GMC Sierra trucks, Terrain, Acadia, and Yukon. See [new-vehicles.md](new-vehicles.md) for the full lineup.
+Chaparral Buick GMC offers the full Buick SUV lineup and GMC Sierra trucks, Terrain, Acadia, and Yukon. See [new-vehicles.md](chaparral-buick-gmc-okf/datasets/new-vehicles.md) for the full lineup.
 
 ### What is the "No Bull" philosophy?
 Chaparral operates with a "No Bull" philosophy focused on pricing transparency and low-pressure sales, making the car-buying experience straightforward and honest.
@@ -27,7 +27,7 @@ Yes, a wide variety of used cars, trucks, and SUVs with accurate inventory detai
 ## Financing
 
 ### What financing options are available?
-Chaparral offers flexible financing with multiple lending partners. See [financing.md](financing.md) for full details.
+Chaparral offers flexible financing with multiple lending partners. See [financing.md](chaparral-buick-gmc-okf/datasets/financing.md) for full details.
 
 ### Can I apply for financing online?
 Yes, an online credit application is available.
@@ -35,7 +35,7 @@ Yes, an online credit application is available.
 ## Service
 
 ### What services does Chaparral offer?
-Chaparral is the only full-service repair shop on the Motor Mile, featuring a service center, parts department, detail building, and full-service body and paint repair shop. See [service-center.md](service-center.md) for details.
+Chaparral is the only full-service repair shop on the Motor Mile, featuring a service center, parts department, detail building, and full-service body and paint repair shop. See [service-center.md](chaparral-buick-gmc-okf/datasets/service-center.md) for details.
 
 ### Do you have a body shop?
 Yes, a full-service body and paint repair shop is available.
@@ -53,4 +53,4 @@ Call (423) 282-3871 or email info@carsnobull.com.
 
 ---
 
-For more information, see [company.md](company.md).
+For more information, see [company.md](chaparral-buick-gmc-okf/datasets/company.md).

@@ -51,5 +51,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-mazda/promp
 | 9 | `do-people-like-working-with-west-hills-mazda` | Workplace culture |
 | 10 | `whats-it-actually-like-dealing-with-west-hills-mazda` | Customer experience |
 
-See [ai-discovery-page.md](ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](west-hills-mazda-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](west-hills-mazda-okf/datasets/faq.md) for common questions and answers.

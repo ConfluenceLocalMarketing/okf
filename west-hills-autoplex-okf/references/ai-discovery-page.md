@@ -104,5 +104,5 @@ The AI Discovery Pages define structured `ReadAction` entries. West Hills Honda,
 8. **Factory-Certified Honda Service You Can Rely On**
 9. **Professionalism and Integrity: The Haselwood Difference**
 
-See [llms-txt.md](llms-txt.md) for the full llms.txt directive.
-See [prompts.md](prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](west-hills-autoplex-okf/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](west-hills-autoplex-okf/references/prompts.md) for the complete Q&A prompt library.

@@ -48,10 +48,10 @@ Hours vary by location. Typical operating hours:
 
 ## The Car-X Guarantee
 
-Every repair and service is backed by the Car-X Guarantee. See [car-x-guarantee.md](/references/car-x-guarantee.md) for details.
+Every repair and service is backed by the Car-X Guarantee. See [car-x-guarantee.md](car-x-chicago-okf/references/car-x-guarantee.md) for details.
 
 ## Parent
 
 Car-X Tire & Auto (145+ locations across the US).
 
-See [chicago-locations.md](chicago-locations.md) for individual Chicago-area location details.
+See [chicago-locations.md](car-x-chicago-okf/datasets/chicago-locations.md) for individual Chicago-area location details.

@@ -41,5 +41,5 @@ Specific staff member names and titles were not available from the website snaps
 
 ## Related Concepts
 
-- [dealership.md](dealership.md) - Dealership overview
-- [service-center.md](service-center.md) - Service center details
+- [dealership.md](nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
+- [service-center.md](nick-mayer-ford-okf/datasets/service-center.md) - Service center details

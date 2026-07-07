@@ -27,4 +27,4 @@ The Friendly Lincoln dealership operates its online presence at https://www.team
 - Special offers and incentives
 - Lincoln model research and comparison
 
-See [dealership.md](/datasets/dealership.md) for full dealership profile.
+See [dealership.md](friendly-lincoln-las-vegas-okf/datasets/dealership.md) for full dealership profile.

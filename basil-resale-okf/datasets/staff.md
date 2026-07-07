@@ -30,4 +30,4 @@ Sales and finance teams available at both locations. Contact the Sheridan locati
 
 Service and parts departments staffed with certified technicians. Contact Sheridan service at (716) 631-0405.
 
-See [dealership.md](dealership.md) for full business profile and locations.
+See [dealership.md](basil-resale-okf/datasets/dealership.md) for full business profile and locations.

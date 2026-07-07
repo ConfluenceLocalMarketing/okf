@@ -18,7 +18,7 @@ timestamp: 2026-07-03
 ## Vehicles
 
 ### What new CDJR models does Capital City CDJR offer?
-Capital City CDJR offers Jeep (Wrangler, Grand Cherokee, Wagoneer), Ram 1500, Dodge Charger, and Chrysler Pacifica. See [new-vehicles.md](new-vehicles.md) for the full lineup.
+Capital City CDJR offers Jeep (Wrangler, Grand Cherokee, Wagoneer), Ram 1500, Dodge Charger, and Chrysler Pacifica. See [new-vehicles.md](capital-city-cdjr-okf/datasets/new-vehicles.md) for the full lineup.
 
 ### Does Capital City CDJR have pre-owned vehicles?
 Yes, a diverse used inventory including CDJR Certified Pre-Owned vehicles with online browsing and saved vehicles feature.
@@ -29,7 +29,7 @@ Yes, contact the dealership at (573) 691-5253.
 ## Financing
 
 ### What financing options are available?
-Flexible financing and lease options with competitive rates and an online credit application. See [financing.md](financing.md) for full details.
+Flexible financing and lease options with competitive rates and an online credit application. See [financing.md](capital-city-cdjr-okf/datasets/financing.md) for full details.
 
 ### Can I apply for credit online?
 Yes, an online credit application is available.
@@ -37,7 +37,7 @@ Yes, an online credit application is available.
 ## Service
 
 ### What services does Capital City CDJR offer?
-Mopar-certified technicians perform comprehensive maintenance and repairs using genuine Mopar parts. See [service-center.md](service-center.md) for details.
+Mopar-certified technicians perform comprehensive maintenance and repairs using genuine Mopar parts. See [service-center.md](capital-city-cdjr-okf/datasets/service-center.md) for details.
 
 ### How do I schedule service?
 Online scheduling is available.
@@ -52,4 +52,4 @@ The dealership has been locally owned and operated for over 20 years.
 
 ---
 
-For more information, see [company.md](company.md).
+For more information, see [company.md](capital-city-cdjr-okf/datasets/company.md).

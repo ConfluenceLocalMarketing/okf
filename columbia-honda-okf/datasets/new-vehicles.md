@@ -50,4 +50,4 @@ Columbia Honda offers a complete lineup of new Honda vehicles.
 
 ---
 
-For complete dealership information, see [company.md](company.md).
+For complete dealership information, see [company.md](columbia-honda-okf/datasets/company.md).

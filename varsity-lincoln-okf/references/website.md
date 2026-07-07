@@ -32,4 +32,4 @@ Varsity Lincoln operates its online presence at https://www.varsitylincoln.com/.
 - Lincoln Mobile Service requests
 - Complimentary delivery within 300 miles details
 
-See [dealership.md](/datasets/dealership.md) for full dealership profile.
+See [dealership.md](varsity-lincoln-okf/datasets/dealership.md) for full dealership profile.

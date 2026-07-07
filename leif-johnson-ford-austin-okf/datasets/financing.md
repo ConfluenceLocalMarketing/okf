@@ -65,4 +65,4 @@ Estimate monthly payments using the [Payment Calculators](https://www.leifjohnso
 
 Commercial fleet and business customers can apply through the [Commercial Finance Application](https://www.leifjohnsonford.com/commercial-finance-application/).
 
-See [dealership.md](dealership.md) for full business profile and [new-vehicles.md](new-vehicles.md) or [used-vehicles.md](used-vehicles.md) for inventory.
+See [dealership.md](leif-johnson-ford-austin-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](leif-johnson-ford-austin-okf/datasets/new-vehicles.md) or [used-vehicles.md](leif-johnson-ford-austin-okf/datasets/used-vehicles.md) for inventory.

@@ -48,5 +48,5 @@ Staff members recognized for customer service include:
 
 The Haselwood Auto Group has received multiple awards recognizing community service and philanthropy, reflecting the dealership's commitment to the Kitsap County community.
 
-See [staff.md](/datasets/staff.md) for the full staff directory.
-See [dealership.md](/datasets/dealership.md) for community involvement details.
+See [staff.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/staff.md) for the full staff directory.
+See [dealership.md](west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for community involvement details.

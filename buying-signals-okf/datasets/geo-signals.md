@@ -26,6 +26,6 @@ Location intelligence platform that uses geo-framing technology and Location IQ 
 
 ## Related
 
-See [marketing-suite.md](marketing-suite.md) for omnichannel campaign execution.
-See [consumer-intelligence.md](consumer-intelligence.md) for behavioral insights.
-See [company.md](company.md) for the full product ecosystem.
+See [marketing-suite.md](buying-signals-okf/datasets/marketing-suite.md) for omnichannel campaign execution.
+See [consumer-intelligence.md](buying-signals-okf/datasets/consumer-intelligence.md) for behavioral insights.
+See [company.md](buying-signals-okf/datasets/company.md) for the full product ecosystem.

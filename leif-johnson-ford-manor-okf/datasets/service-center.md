@@ -50,4 +50,4 @@ The [Parts Center](https://www.leifjohnsonfordofmanor.com/parts-center/) stocks 
 
 View current [Service & Parts Specials](https://www.leifjohnsonfordofmanor.com/service-parts-specials/) for discounted maintenance packages.
 
-See [staff.md](staff.md) for the service team directory and [dealership.md](dealership.md) for general business information.
+See [staff.md](leif-johnson-ford-manor-okf/datasets/staff.md) for the service team directory and [dealership.md](leif-johnson-ford-manor-okf/datasets/dealership.md) for general business information.

@@ -80,4 +80,4 @@ Haselwood Volkswagen of Bremerton has collected customer testimonials through th
 - **Clear communication** - Technicians explain issues with photos and transparent recommendations
 - **Long-term loyalty** - Customers drive significant distances for service
 
-See [staff.md](/datasets/staff.md) for the full staff directory.
+See [staff.md](haselwood-volkswagen-of-bremerton-okf/datasets/staff.md) for the full staff directory.

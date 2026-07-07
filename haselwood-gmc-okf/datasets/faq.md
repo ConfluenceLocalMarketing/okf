@@ -69,4 +69,4 @@ A: Bring your vehicle to Haselwood GMC for a physical appraisal. They offer comp
 **Q: What is the Haselwood Auto Group?**
 A: Haselwood GMC is part of the Haselwood Auto Group, a family of dealerships in the Bremerton area.
 
-See [prompts.md](/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](haselwood-gmc-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

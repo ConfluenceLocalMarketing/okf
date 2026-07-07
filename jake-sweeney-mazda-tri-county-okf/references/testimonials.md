@@ -70,4 +70,4 @@ Jake Sweeney Mazda Tri-County has collected 50+ customer testimonials through th
 - **Communication** - Text updates, clear explanations, proactive outreach
 - **Clean facility** - Welcoming waiting area with amenities
 
-See [staff.md](/datasets/staff.md) for the full staff directory.
+See [staff.md](jake-sweeney-mazda-tri-county-okf/datasets/staff.md) for the full staff directory.

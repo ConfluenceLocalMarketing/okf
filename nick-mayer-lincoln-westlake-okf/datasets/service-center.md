@@ -53,4 +53,4 @@ The service center at Nick Mayer Lincoln Westlake provides factory-authorized ma
 
 Monday through Friday 9:00 AM - 6:00 PM, closed Saturday and Sunday.
 
-See [dealership.md](dealership.md) for full contact and hours information.
+See [dealership.md](nick-mayer-lincoln-westlake-okf/datasets/dealership.md) for full contact and hours information.

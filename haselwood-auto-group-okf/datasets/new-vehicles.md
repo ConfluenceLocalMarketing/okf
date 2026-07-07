@@ -118,5 +118,5 @@ Available across the group:
 
 Promotions vary by brand and model including low APR financing, lease specials, and rebates. Contact individual member dealerships for current offers.
 
-See [dealership.md](dealership.md) for member dealership contact information.
-See [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](haselwood-auto-group-okf/datasets/dealership.md) for member dealership contact information.
+See [model-comparison.md](haselwood-auto-group-okf/tables/model-comparison.md) for side-by-side model specifications.

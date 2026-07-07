@@ -16,7 +16,7 @@ timestamp: 2026-07-03
 ## Vehicles
 
 ### What new Buick and GMC models does Frank Leta offer?
-Frank Leta Buick GMC offers Buick Encore GX, Envision, Enclave and GMC Terrain, Acadia, Yukon, Sierra 1500/HD, Canyon, HUMMER EV, and Sierra EV. See [new-vehicles.md](new-vehicles.md) for the full lineup.
+Frank Leta Buick GMC offers Buick Encore GX, Envision, Enclave and GMC Terrain, Acadia, Yukon, Sierra 1500/HD, Canyon, HUMMER EV, and Sierra EV. See [new-vehicles.md](frank-leta-buick-gmc-okf/datasets/new-vehicles.md) for the full lineup.
 
 ### Does Frank Leta offer electric vehicles?
 Yes, the GMC HUMMER EV and Sierra EV are available.
@@ -35,12 +35,12 @@ Contact the dealership for warranty transfer details.
 ## Financing
 
 ### What financing options are available?
-Flexible financing options with multiple lending partners. See [financing.md](financing.md) for full details.
+Flexible financing options with multiple lending partners. See [financing.md](frank-leta-buick-gmc-okf/datasets/financing.md) for full details.
 
 ## Service
 
 ### What services does Frank Leta offer?
-Certified technicians provide comprehensive maintenance and repairs using genuine Buick/GMC parts, plus a full-service body and paint repair shop. See [service-center.md](service-center.md) for details.
+Certified technicians provide comprehensive maintenance and repairs using genuine Buick/GMC parts, plus a full-service body and paint repair shop. See [service-center.md](frank-leta-buick-gmc-okf/datasets/service-center.md) for details.
 
 ## Dealership Operations
 
@@ -55,4 +55,4 @@ Call (573) 837-4191 or visit the dealership website.
 
 ---
 
-For more information, see [company.md](company.md).
+For more information, see [company.md](frank-leta-buick-gmc-okf/datasets/company.md).

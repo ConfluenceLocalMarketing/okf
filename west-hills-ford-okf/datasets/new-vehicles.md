@@ -89,5 +89,5 @@ All-electric cargo van for commercial use. Available in 3 roof heights, 3 body l
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.
 
-See [dealership.md](dealership.md) for contact information and current programs.
-See [model-comparison.md](/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](west-hills-ford-okf/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](west-hills-ford-okf/tables/model-comparison.md) for side-by-side model specifications.

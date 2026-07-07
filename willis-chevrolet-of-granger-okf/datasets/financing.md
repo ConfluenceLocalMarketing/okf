@@ -39,4 +39,4 @@ The Finance Center at Willis Chevrolet Of Granger provides financing and lease s
 
 Finance specialists are available during dealership hours. Call (833) 591-1798 or visit the dealership in Granger, IA.
 
-See [company.md](company.md) for the full dealership profile.
+See [company.md](willis-chevrolet-of-granger-okf/datasets/company.md) for the full dealership profile.

@@ -110,4 +110,4 @@ The 2026 Walcott Truckers Jamboree is scheduled for July 9–11, 2026.
 
 Located on the property, the Iowa 80 Trucking Museum showcases the history of trucking with a collection of antique trucks, memorabilia, and interactive exhibits.
 
-See [website.md](../references/website.md) for the official website.
+See [website.md](iowa-80-truckstop-okf/references/website.md) for the official website.

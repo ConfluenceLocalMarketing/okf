@@ -8,13 +8,13 @@ This bundle documents Full Circle News, a technology company partnering with new
 
 ## Datasets
 
-- [company.md](datasets/company.md) - Business profile: offerings, mission, and technology solutions.
+- [company.md](full-circle-news-okf/datasets/company.md) - Business profile: offerings, mission, and technology solutions.
 
 ## References
 
-- [llms-txt.md](references/llms-txt.md) - Structured AI context.
-- [prompts.md](references/prompts.md) - Curated AI prompts for publisher consultations.
-- [ai-discovery-page.md](references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](full-circle-news-okf/references/llms-txt.md) - Structured AI context.
+- [prompts.md](full-circle-news-okf/references/prompts.md) - Curated AI prompts for publisher consultations.
+- [ai-discovery-page.md](full-circle-news-okf/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

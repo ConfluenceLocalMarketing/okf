@@ -1,3 +1,3 @@
 # Datasets
 
-- [company.md](company.md) - Manufacturer and supplier of commercial and industrial door systems.
+- [company.md](bdc-door-company-okf/datasets/company.md) - Manufacturer and supplier of commercial and industrial door systems.

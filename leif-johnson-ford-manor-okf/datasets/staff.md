@@ -59,4 +59,4 @@ timestamp: 2026-06-29
 | Juan Avalos | Parts Counter Associate | javalos@leifjohnsonfordofmanor.com |
 | Alex Ortiz | Parts Counter Associate | aortiz@leifjohnsonfordofmanor.com |
 
-See [dealership.md](dealership.md) for business profile and [service-center.md](service-center.md) for service department details.
+See [dealership.md](leif-johnson-ford-manor-okf/datasets/dealership.md) for business profile and [service-center.md](leif-johnson-ford-manor-okf/datasets/service-center.md) for service department details.
