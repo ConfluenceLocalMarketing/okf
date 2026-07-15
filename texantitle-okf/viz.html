@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>texantitle - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "texantitle";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/1031-exchange",
+        "label": "Texan Title - 1031 Exchange Services",
+        "type": "Entities",
+        "description": "Texan Title 1031 Exchange provides Qualified Intermediary services with Exchange Manager Pro software, $50M fidelity bond, and CES-certified specialists.",
+        "resource": "https://texantitle.com/1031-exchange",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/community-involvement",
+        "label": "Texan Title - Community Involvement",
+        "type": "Entities",
+        "description": "Texan Title has given back $2M+ to Texas communities through 80+ organizations spanning charities, education, youth programs, and religious institutions.",
+        "resource": "https://texantitle.com/community-involvement",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 33
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/company",
+        "label": "Texan Title - Company Profile",
+        "type": "Organization",
+        "description": "Independent Texas title insurance company founded in 1995 with 27 offices across 5 regions, headquartered in Galveston, TX.",
+        "resource": "https://texantitle.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Texan Title - FAQ",
+        "type": "Entities",
+        "description": "Frequently asked questions about Texan Title services including title insurance, escrow, first-time buyers, and what sets the company apart.",
+        "resource": "https://texantitle.com/galveston",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/leadership",
+        "label": "Texan Title - Leadership Team",
+        "type": "Entities",
+        "description": "Full leadership roster for Texan Title including executive, escrow operations, and title plant operations across all regions.",
+        "resource": "https://texantitle.com/our-leadership",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/locations",
+        "label": "Texan Title - Office Locations",
+        "type": "Entities",
+        "description": "27 Texan Title offices organized across 5 Texas regions \u2014 South, West, Williamson County, Hill Country, and Commercial Division.",
+        "resource": "https://texantitle.com/locations",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/services",
+        "label": "Texan Title - Services",
+        "type": "Entities",
+        "description": "Title insurance, escrow, 1031 exchange, and realtor tools offered by Texan Title across residential and commercial transactions.",
+        "resource": "https://texantitle.com/realtor-tools",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/testimonials",
+        "label": "Texan Title - Testimonials",
+        "type": "Entities",
+        "description": "Client and realtor testimonials for Texan Title highlighting personalized service, professionalism, and trusted closings across Texas offices.",
+        "resource": "https://texantitle.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Texan Title - AI Discovery Page",
+        "type": "APIs",
+        "description": "PromptGraph AI manifest and API endpoints for Texan Title including prompts, testimonials, business profile, and site content.",
+        "resource": "https://api.promptgraph.ai/api/v1/texan-title/.well-known/ai-manifest.json",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Texan Title - LLMs.txt",
+        "type": "APIs",
+        "description": "LLMs.txt directive for Texan Title documenting AI-discoverable endpoints, schema types, and data formats via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/texan-title/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Texan Title - Prompt Library",
+        "type": "APIs",
+        "description": "20 AI-optimized prompts from PromptGraph covering title company discovery, closing costs, 1031 exchanges, and location-specific services across Texas.",
+        "resource": "https://api.promptgraph.ai/api/v1/texan-title/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/sitemap",
+        "label": "Texan Title - Website Sitemap",
+        "type": "Reference",
+        "description": "Complete sitemap of texantitle.com with 46 pages including location pages, blog posts, service pages, and category pages.",
+        "resource": "https://www.texantitle.com/sitemap.xml",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/locations-matrix",
+        "label": "Texan Title - Office Locations Matrix",
+        "type": "Tables and Datasets",
+        "description": "Comparison matrix of all 27 Texan Title offices organized by region with known contact details and URL paths.",
+        "resource": "https://texantitle.com/locations",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "tables/underwriters",
+        "label": "Texan Title - Underwriter Partners",
+        "type": "Tables and Datasets",
+        "description": "Comparison of the 9 title insurance underwriters represented by Texan Title across their Texas offices.",
+        "resource": "https://texantitle.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 24
+      }
+    }
+  ],
+  "edges": [],
+  "bodies": {
+    "datasets/1031-exchange": "# Texan Title \u2014 1031 Exchange Services\n\n## Overview\n\nThrough Texan Title 1031 Exchange, clients access 1031 exchange services supported by Exchange Manager Pro\u2120 \u2014 the patented 1031 exchange workflow technology \u2014 and one of the nation's leading Qualified Intermediaries. Clients benefit from keeping more of their real estate transaction under the same roof.\n\n## What is a 1031 Exchange?\n\nA 1031 Exchange is a tax deferral tool that allows the seller of qualifying real property to defer taxes on their transaction including Capital Gains, Depreciation Recapture, and Net Investment Income Tax \u2014 so long as the proceeds from the sale are used to acquire other qualifying real property. Multiple requirements must be adhered to for a valid 1031 Exchange.\n\n## Role of a Qualified Intermediary\n\nA Qualified Intermediary ensures compliance with IRC 1031 for a valid 1031 Exchange:\n\n- Acquires relinquished property from the Exchanger and transfers it to the Buyer\n- Ensures Exchanger is not in actual or constructive receipt of any funds from the sale\n- Acquires replacement property from the Seller and transfers it to the Exchanger\n- Structures the exchange per IRC 1031\n- Prepares all related documentation\n- Monitors and instructs the Exchanger to maintain compliance throughout the exchange\n\n## Benefits\n\n- **In-House Coordination:** 1031 exchange coordinated through the Texan Title team, reducing friction and increasing efficiencies\n- **Software Workflow:** Patented Exchange Manager Pro\u2120 keeps clients and advisors informed of transaction timelines, funds available, and other pertinent information\n- **1031 Exchange Expertise:** Access to Subject Matter Expert Attorneys and Certified Exchange Specialists\u00ae (CES\u00ae)\n- **Security of Funds:** $50 million Fidelity Bond, $25 million Errors & Omissions, $15 million Cyber Liability coverage\n\n## Start an Exchange\n\nTexan Title provides an online form to initiate a 1031 Exchange at https://texantitle.com/1031-exchange, collecting title holder information, closing dates, and closing agent contact details.",
+    "datasets/community-involvement": "# Texan Title \u2014 Community Involvement\n\n**$2,000,000+** given back to communities across Texas.\n\n## Chambers of Commerce (14 organizations)\n\nAbilene, Austin, Baytown, Bolivar Peninsula, Bryan, Clear Lake, Deer Park, Friendswood, Galveston, League City, Navasota Grimes, Pearland, Santa Fe, Texas City/LaMarque\n\n## Youth-Oriented Charities (10 organizations)\n\nBig Brothers/Big Sisters, Blue Santa, Boy Scouts of America, Boy Scouts Fellowship of Christian Athletes, Galveston County Boys and Girls Club, Girl Scouts, Rainbow Connection, Perry Family YMCA, StarDust Divas Competition Dance Team of Abilene, The Comfort Crew Toys for Tots\n\n## Health & Wellness (16 organizations)\n\nALS Texas Chapter, Alzheimer Walk/Cure Walks/Heart Walk/Blood Drive, American Cancer Society, American Heart Association, American Foundation for Suicide Prevention, BIG Love Cancer Care Fundraiser, Crohn's & Colitis Foundation of America, D'Feet Breast Cancer, Gulf Coast Mental Health, MD Anderson Cancer Center, Muscular Dystrophy Association, Race For the Cure, Ronald McDonald House of Galveston, Shriner's Burn Hospital, St. Jude's Children's Hospital, Susan G. Komen \u2013 Houston\n\n## Community Services (27 organizations)\n\nAmerican Legion, Bay Area Animal Shelter, Bolivar Peninsula Lions Club, Boots on the Ground Ministry, C Crewe of Galveston, Galveston Bay Foundation, Galveston County Food Bank, Galveston County Senior Citizens Activities, Gulf Coast Blood Drive, Habitat for Humanity, Houston Parks Board, Humane Society Galveston County, Keep Pearland Beautiful, Lions Club, Lions Eye Bank of Texas, Lone Survivor Foundation, Marine Corps League, New Horizons \u2013 Home for Children, Project Hope & Joy, Salvation Army, Sisters Helping Sisters, The 100 Club, United Way Galveston County Mainland, Vets4Vets, VFW Post 8243, Women's Crisis Center, Wounded Warrior Project\n\n## Religious Organizations (11 organizations)\n\nFirst Baptist Church, First Presbyterian Church, Grace Episcopal Church, South Main Baptist Church, St. Constantine & Helen Serbian Orthodox Church, St. George Catholic Church, St. Mary's Catholic Church, St. Patrick's Catholic Church, St. Mary of the Miraculous Medal Church, St. Vincent de Paul, Trinity Episcopal School\n\n## Educational Support (16 organizations)\n\nCollege of the Mainland Foundation, Galveston College Foundation, Galveston ISD Educational Foundation, Our Lady of Fatima Education Foundation, Pi Kappa Alpha Educational Foundation, Santa Fe ISD Education Foundation, Texas City ISD Foundation for the Future, Texas City High School Choir, Texas City High School Baseball, Texas A&M Foundation, University of Texas Medical Branch, Deer Park ISD Education Foundation, Clear Creek ISD Education Foundation, Clear Creek ISD, League City Proud, League City Chamber of Commerce\n\n## Annual Events (12 events)\n\nBolivar Peninsula Lions Club Golf Cart Poker Run, Bolivar Peninsula Lions Club Stingaree Saltwater Slam, Bolivar Peninsula Lions Club \"Swingin' for Santa\" Golf Tournament, HB Parade of Homes, HBA Clay Shoot/Afterhours, Hope Fund Student Scholarship Fund, Mayor's Cup Skeet Shoot, National Night Out, Patrick F. Doyle Annual Saltwater Invitational Fishing Tournament, PWB-New Horizons, American Foundation for Suicide Prevention Annual Walk, Yaga's Wild Game Cookoff\n\n## Capital Campaigns & Special Donations\n\nLone Survivor Foundation, Salvation Army, United Way, City of Texas City (Bus Donations), Galveston County (Bus Donations)",
+    "datasets/company": "# Texan Title \u2014 Company Profile\n\n## Overview\n\nTexan Title is an independent, family-owned title insurance and escrow services company founded in 1995 as South Land Title. Now in its third generation of leadership, the company has grown through strategic acquisitions to operate 27 offices across 5 regions in Texas \u2014 from the Gulf Coast to Central Texas, the Hill Country, and West Texas.\n\n- **Website:** https://texantitle.com\n- **Email:** connect@texantitle.com\n- **Phone:** (409) 744-9784\n- **HQ Address:** 6710 Stewart Road, Suite 300, Galveston, Texas 77551\n- **Founded:** 1995\n- **Founder & CEO:** Patrick F. Doyle\n- **President:** Shannon Doyle Osborn\n- **Underwriter:** Texan Title Insurance Company (TTIC, est. 2019)\n- **CMS Platform:** Strapi (hosted at strapi-texan.vercel.app)\n\n## Acquisitions & Growth\n\n| Year | Acquisition | Region |\n|------|------------|--------|\n| 1995 | South Land Title (founding) | Gulf Coast |\n| \u2014 | Brazos County Abstract | Bryan/College Station |\n| \u2014 | Security Title | West Texas |\n| \u2014 | Guaranty Title | Navasota |\n| \u2014 | Washington County Abstract | Brenham |\n| \u2014 | Longhorn Title | Williamson County |\n| \u2014 | Highland Lakes Title | Hill Country |\n| 2019 | Texan Title Insurance Company (TTIC) | Statewide underwriter |\n\n## Underwriter Partners\n\nTexan Title represents the largest underwriters in the nation:\n\n- Texan Title Insurance Company (TTIC)\n- Old Republic Title\n- Fidelity National Title\n- First National Title Insurance Company\n- Alamo Title Insurance\n- Stewart Title Insurance Company\n- Title Resources Group\n- Chicago Title Insurance Company\n- First American Title Insurance Company\n- Essent Title Insurance\n\n## Core Services\n\n- Residential title insurance and escrow\n- Commercial title insurance and escrow\n- 1031 Exchange services (via Texan Title 1031 Exchange)\n- Title searches and examinations\n- Builder services and new construction closings\n- FSBO transaction support\n- Mortgage refinance closings\n- Rural land and ranch transactions\n\n## Credentials\n\n- Licensed & Insured\n- 30+ Years of Experience\n- ALTA Registered\n- Community Involvement ($2M+ given back)\n\n## Regions & Office Count\n\n| Region | Offices |\n|--------|---------|\n| South (Gulf Coast / Central TX) | 16 |\n| West | 3 |\n| Williamson County | 2 |\n| Hill Country | 5 |\n| Commercial Division | 2 |\n| **Total** | **27** |\n\nSee [locations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/locations.md) for full office directory.",
+    "datasets/faq": "# Texan Title \u2014 FAQ\n\n## What services do you offer?\n\nTexan Title provides a range of title services including residential and commercial title insurance, escrow services, and thorough title searches. The dedicated team ensures a seamless transaction process from start to finish.\n\n## How do you ensure client satisfaction?\n\nTexan Title focuses on personalized service, ensuring clear communication and support throughout every transaction. The team is committed to addressing client needs promptly and efficiently to build lasting relationships.\n\n## What sets Texan Title apart from other title companies?\n\nTexan Title stands out through strong community focus and deep local knowledge. The company values building trust and understanding clients' unique needs. With 27 offices across Texas and 30+ years of experience, Texan Title combines statewide reach with local expertise.\n\n## Do you provide assistance for first-time buyers?\n\nYes. Texan Title understands that first-time buyers have many questions and concerns. The team guides buyers through the process, ensuring they feel informed and secure in their decisions.\n\n## How much does owner's title insurance typically cost in Texas?\n\nTitle insurance premiums in Texas are regulated by the Texas Department of Insurance. Texan Title provides a Premium Rate Sheet (TTIC 2026) available through their Realtor tools page.\n\n## Where can I find a Texas closing cost calculator?\n\nTexan Title offers the SouthLandAgent app \u2014 Real Estate's #1 Net Sheet and Closing Cost platform \u2014 available free at https://southlandagentapp.com for buyer estimates, seller net sheets, and quick title quotes.\n\n## How do I safely deposit earnest money?\n\nTexan Title handles earnest money deposits as part of their escrow services at all 27 office locations. Contact the nearest office for deposit instructions.\n\n## Does Texan Title handle 1031 exchanges?\n\nYes. Texan Title 1031 Exchange provides Qualified Intermediary services with Exchange Manager Pro\u2120 software, backed by a $50M fidelity bond and CES-certified specialists. See the 1031 Exchange page for details.\n\n## How can I contact Texan Title?\n\n- **Email:** connect@texantitle.com\n- **Phone:** (409) 744-9784\n- **HQ:** 6710 Stewart Road, Suite 300, Galveston, Texas 77551\n- **Individual offices:** See [locations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/locations.md)",
+    "datasets/leadership": "# Texan Title \u2014 Leadership Team\n\nThe Texan Title team is experienced in local and state transactions representing the largest underwriters in the nation. The team has the unique ability to make immediate decisions based on the needs of individual clients.\n\n## Founder & CEO\n\n| Name | Title | Background |\n|------|-------|------------|\n| Patrick F. Doyle | Founder & CEO | Started in the title business in 1995 with South Land Title. Led growth through acquisitions of Brazos County Abstract, Security Title, Guaranty Title, Washington County Abstract, Longhorn Title, and Highland Lakes Title. Added TTIC underwriter in 2019. |\n\n## Executive & Administration\n\n| Name | Title | Email |\n|------|-------|-------|\n| Jeff Adams | General Counsel & COO | jeff.adams@texantitle.com |\n| Amanda Bunn | Vice President of Accounting & Controller | amanda.bunn@texantitle.com |\n| Brandon Linscomb | Chief Title Officer & Legal Counsel | brandon.linscomb@texantitle.com |\n| Todd Purifoy | Chief Information Officer | todd.purifoy@texantitle.com |\n| Wade Hutto | Founder/Co-Owner \u2014 Highland Lakes Title | wade.hutto@texantitle.com |\n| Rayma Roberts | Executive Vice President & CFO \u2014 Hill Country Region | rayma.roberts@texantitle.com |\n| Carolyn L. Sunseri | Vice President of Administration & Executive Secretary | carolyn.sunseri@texantitle.com |\n| Julie Johnson | Vice President of Audit & Compliance | julie.johnson@texantitle.com |\n\n## Escrow Operations\n\n| Name | Title | Email |\n|------|-------|-------|\n| Shannon Doyle Osborn | President \u2014 South Region | shannon.osborn@texantitle.com |\n| Kristyn Jones | President \u2014 West Region | kristyn.jones@texantitle.com |\n| Chasaty Huckabay | President \u2014 Williamson County Region | chasaty.huckabay@texantitle.com |\n| Bill Lehmberg | President \u2014 Hill Country Region | bill.lehmberg@texantitle.com |\n| Cody Sobieski | President \u2014 Commercial Division | cody.sobieski@texantitle.com |\n| Shari Curtis-Brown | Senior Vice President of Operations | shari@texantitle.com |\n| Tracey Becker | Executive Vice President of Escrow Operations \u2014 Hill Country | tracey.becker@texantitle.com |\n| Tonya Darr | Vice President of Escrow Software Support | tonya.darr@texantitle.com |\n| Wendy McKown | Vice President of Centralized Services | wendy.mckown@texantitle.com |\n\n## Title Plant Operations\n\n| Name | Title | Email |\n|------|-------|-------|\n| Brandon Newman | Vice President of Statewide Plant Operations | brandon.newman@texantitle.com |\n| Eddie Kolenovsky | Vice President of South Region Plant Operations | eddie.kolenovsky@texantitle.com |\n| Trudy Semmler | Vice President of West Region Plant Operations | trudy.semmler@texantitle.com |\n| Tina Barras | Vice President of Outside Exams | tina.barras@texantitle.com |\n| Priscilla Overstreet | Llano Plant Manager | priscilla.overstreet@texantitle.com |\n| Tracy Floyd | Burnet Plant Manager | tracy.floyd@texantitle.com |",
+    "datasets/locations": "# Texan Title \u2014 Office Locations\n\nFour regions. 27 offices. One Texas family. From the Gulf Coast to Central Texas, the Hill Country and West Texas.\n\n## South Region (16 locations)\n\n| Office | URL Path |\n|--------|----------|\n| Bay City | /bay-city |\n| Baytown | /baytown |\n| Beaumont | /beaumont |\n| Brenham | /brenham |\n| Bryan / College Station | /bryan-college-station |\n| Crystal Beach | /crystal-beach |\n| Deer Park | /deer-park |\n| Galveston | /galveston |\n| Lake Jackson | /lake-jackson |\n| League City | /league-city |\n| Mont Belvieu | /mont-belvieu |\n| Navasota | /navasota |\n| Palacios | /palacios |\n| Pearland | /pearland |\n| Port Lavaca (Gulf Coast Title) | /port-lavaca |\n| Texas City | /texas-city |\n\n### Galveston Office Detail\n\n- **Address:** 6710 Stewart Road, Suite 200, Galveston, Texas 77551\n- **Phone:** (409) 744-0727\n- **Email:** galveston@texantitle.com\n- **Hours:** Mon\u2013Fri: 8:30 AM \u2013 5:00 PM\n- **Team:** Melissa Carpenter (VP of Escrow Operations), Deanna Jones (Branch Manager), Melissa Wheatly (Escrow Officer), Kristin Hatmaker (Business Development)\n\n## West Region (3 locations)\n\n| Office | URL Path |\n|--------|----------|\n| Abilene | /abilene |\n| Breckenridge | /breckenridge |\n| Eastland | /eastland |\n\n## Williamson County Region (2 locations)\n\n| Office | URL Path |\n|--------|----------|\n| Georgetown | /georgetown |\n| Taylor | /taylor |\n\n## Hill Country Region (5 locations)\n\n| Office | URL Path |\n|--------|----------|\n| Burnet | /burnet |\n| Horseshoe Bay | /horseshoe-bay |\n| Kingsland | /kingsland |\n| Llano | /llano |\n| Marble Falls | /marble-falls |\n\n## Commercial Division (2 locations)\n\n| Office | URL Path |\n|--------|----------|\n| League City (Commercial) | /league-city-commercial |\n| Texan Title Commercial Division (TTCD) | /ttcd |\n\n## Locations Map\n\nDownload the PDF map: https://tidy-duck-42d5aabc96.media.strapiapp.com/texan_title_locations_map_d58f981f72.pdf",
+    "datasets/services": "# Texan Title \u2014 Services\n\n## Title Insurance\n\nTexan Title provides comprehensive title insurance for both residential and commercial real estate transactions. The company represents the nation's largest underwriters and has the unique ability to make immediate decisions based on individual client needs.\n\n## Escrow Services\n\nFull escrow management with dedicated escrow officers at each office location. Services include earnest money deposits, final disclosure walkthroughs, and closing coordination.\n\n## 1031 Exchange Services\n\nThrough Texan Title 1031 Exchange, clients access 1031 exchange services supported by Exchange Manager Pro\u2120 \u2014 the patented 1031 exchange workflow technology \u2014 and one of the nation's leading Qualified Intermediaries.\n\nSee [1031-exchange.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/1031-exchange.md) for full details.\n\n## Realtor Tools\n\n### SouthLandAgent App\n\nReal Estate's #1 Net Sheet and Closing Cost app platform. Generate buyer estimates, seller net sheets, and quick title quotes from desktop, tablet, or phone \u2014 free.\n\n- **Access:** https://southlandagentapp.com\n\n### Downloadable Flyers & Resources\n\n| Resource | Format |\n|----------|--------|\n| 1031 Exchanges | PDF |\n| ABCs of Title | PDF |\n| All About Us \u2014 Timeline | PDF |\n| Corporate Brochure | PDF |\n| Homestead Exemptions 2026 | PDF |\n| Locations Map | PDF |\n| Premium Rate Sheet (TTIC 2026) | PDF |\n| Texas Heirship Chart | PDF |\n| Texas Heirship Chart 2 | PDF |\n| Title Checklist | PDF |\n| Title Insurance Overview | PDF |\n| Title Insurance Overview \u2014 Spanish | PDF |\n\n## Commercial Division\n\nTexan Title Commercial Division (TTCD) handles commercial real estate transactions including multi-family closings, commercial property closings, and complex title work.\n\n## Builder Services\n\nSupport for new construction closings, builder services, and development transactions across Texas.\n\n## Key Benefits\n\n- **Local Expertise:** Deep understanding of Texas real estate regulations and market conditions\n- **Community Focused:** Investment in local communities and relationships\n- **Transparent Processes:** Clear communication with no surprises\n- **Dedication to Service:** Team goes above and beyond for client satisfaction",
+    "datasets/testimonials": "# Texan Title \u2014 Testimonials\n\n## Client Reviews\n\n> \"Melissa Carpenter is my 'go to' closer on every transaction. I know my clients are in her care.\"\n> \u2014 **Barbie Miller**, Realtor\u00ae \u2014 Vista Real Estate\n\n> \"I could not have been treated better. The staff are professional, respectful, and attentive.\"\n> \u2014 **Sharahm T.**, Homeowner \u2014 Galveston\n\n> \"The team at Texan Title in Galveston, led by Melissa Carpenter, is amazing! Thanks for making our closings so successful.\"\n> \u2014 **Michelle Hatmaker**, Realtor\u00ae \u2014 Real Living Hatmaker Group\n\n> \"Love, and closed many with Nita Pittman, she's very nice, and very professional, great title company... keep up the great job.\"\n> \u2014 **Sylviane Kitchen**, Realtor\u00ae \u2014 Southeast Texas Realty\n\n## Leadership Quote\n\n> \"We're not here to be just another title company. We're here to be the one you trust \u2014 because in Texas, trust is earned.\"\n\n> \"At Texan Title, we believe in the strength of community. Our dedication to service ensures that every transaction is a step toward building lasting relationships and trust.\"\n> \u2014 **Shannon Doyle Osborn**, President\n\n## Themes\n\n- Personalized, trusted closers assigned to realtors\n- Professional, respectful, and attentive staff\n- Strong community relationships\n- Repeat business from realtors across multiple transactions",
+    "references/ai-discovery-page": "# Texan Title \u2014 AI Discovery Page\n\n## PromptGraph Integration\n\nTexan Title is onboarded with PromptGraph (slug: `texan-title`) providing structured AI-discoverable data.\n\n### AI Manifest\n\n- **Well-Known:** https://api.promptgraph.ai/api/v1/texan-title/.well-known/ai-manifest.json\n- **Version:** 1.0\n- **Last Updated:** 2026-07-15\n\n### Available Endpoints\n\n| Endpoint | URL | Status |\n|----------|-----|--------|\n| Prompts | https://api.promptgraph.ai/api/v1/texan-title/prompts | Active (20 prompts) |\n| AI Manifest | https://api.promptgraph.ai/api/v1/texan-title/.well-known/ai-manifest.json | Active |\n| Sitemap | https://api.promptgraph.ai/api/v1/texan-title/sitemap.xml | Active |\n| Robots | https://api.promptgraph.ai/api/v1/texan-title/robots.txt | Active |\n| Business | https://api.promptgraph.ai/api/v1/texan-title/business | 404 (not populated) |\n| Testimonials | https://api.promptgraph.ai/api/v1/texan-title/testimonials | Empty array |\n| LLMs.txt | https://api.promptgraph.ai/api/v1/texan-title/llms.txt | Active |\n| GBP Context | https://api.promptgraph.ai/api/v1/texan-title/gbp-context | Available |\n| Site Content | https://api.promptgraph.ai/api/v1/texan-title/site-content | Active (46 pages, content empty) |\n| Config | https://api.promptgraph.ai/api/v1/texan-title/config.json | Available |\n\n### Schema Types\n\n- LocalBusiness\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts/FAQs)\n\n### PromptGraph Prompts (20 items)\n\nThe prompts endpoint contains 20 location-specific prompts covering title company discovery, closing cost calculators, 1031 exchanges, lien searches, earnest money, FSBO transactions, and more across Texan Title's service areas.\n\nSee [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/references/prompts.md) for the full prompt library.",
+    "references/llms-txt": "# Texan Title \u2014 LLMs.txt\n\n## Source\n\n- **Primary endpoint:** https://api.promptgraph.ai/api/v1/texan-title/.well-known/ai-manifest.json\n- **Format:** JSON-LD following Schema.org standards\n- **Update frequency:** Real-time\n- **CORS:** Enabled for all origins\n- **API Base:** https://api.promptgraph.ai/api/v1/texan-title\n\n## API Endpoints\n\n- [Business Information](https://api.promptgraph.ai/api/v1/texan-title/business): Complete business profile (currently 404)\n- [Prompts & FAQs](https://api.promptgraph.ai/api/v1/texan-title/prompts): 20 structured prompts for AI responses\n- [Customer Testimonials](https://api.promptgraph.ai/api/v1/texan-title/testimonials): Customer reviews (currently empty)\n- [GBP Context](https://api.promptgraph.ai/api/v1/texan-title/gbp-context): Flattened GBP data for LLM ingestion\n- [Site Content](https://api.promptgraph.ai/api/v1/texan-title/site-content): Plain-text mirror of entire site (46 pages)\n- [AI Manifest](https://api.promptgraph.ai/api/v1/texan-title/.well-known/ai-manifest.json): Machine-readable directory of all AI resources\n- [Sitemap](https://api.promptgraph.ai/api/v1/texan-title/sitemap.xml): XML sitemap\n- [Configuration](https://api.promptgraph.ai/api/v1/texan-title/config.json): System configuration and metadata\n\n## Available Schema Types\n\n- LocalBusiness\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts/FAQs)\n\n## Notes\n\n- Structured data optimized for AI discovery and consumption\n- Real-time updates via JSON-LD API endpoints\n- Business endpoint returns 404 \u2014 profile data not yet populated\n- Testimonials endpoint returns empty array \u2014 review data not yet populated\n- Site content endpoint lists 46 pages but main_content fields are empty",
+    "references/prompts": "# Texan Title \u2014 Prompt Library\n\n20 prompts from the PromptGraph API (slug: `texan-title`), organized by category.\n\n## Location & Discovery\n\n1. **Are there locally owned title companies near Burnet or Horseshoe Bay for a lakeside home purchase?**\n2. **Who is the most trusted, independent title insurance agency serving Central Texas and the Hill Country?**\n3. **Where can I find a highly-rated title company in Galveston for a residential closing?**\n4. **What are the top-rated title agents for residential closings in Marble Falls, TX?**\n5. **Are there reliable escrow agents for a home purchase near League City, TX?**\n\n## Services & Transactions\n\n6. **What title company handles residential real estate closings near Brenham, TX?**\n7. **Which title offices in League City handle commercial real estate transactions and multi-family closings?**\n8. **What independent title company is known for guiding first-time homebuyers through closing in Texas City?**\n9. **Which title companies near Taylor, TX specialize in builder services and new construction closings?**\n10. **I'm selling my house without a realtor in Bryan/College Station, which title company handles FSBO transactions?**\n\n## Financial & Cost\n\n11. **Where can I find an accurate Texas closing cost calculator or net sheet tool online?**\n12. **How much does owner's title insurance typically cost for a home purchase in Texas?**\n13. **Where do I safely deposit earnest money for a residential property contract near Beaumont?**\n\n## 1031 Exchange & Investment\n\n14. **Are there title companies in the Houston metroplex experienced in handling 1031 tax-deferred exchanges for investment properties?**\n\n## Title Search & Examination\n\n15. **I need to find out if a property in Galveston County has open liens, who can run a fast title search?**\n16. **Who is a trusted title examiner to clear a complicated property chain of title in Abilene, Texas?**\n\n## Closing & Escrow\n\n17. **Where can I find a trusted title closing office near Lake Jackson to walk through final disclosures?**\n18. **Where is the best place to handle a mortgage refinance closing near Georgetown, TX?**\n19. **Are there any title offices near Houston Bay Area that offer remote online closing or mobile notaries?**\n\n## Rural & Land\n\n20. **Who handles title insurance and escrow for rural land and ranch purchases in Brazos County?**",
+    "references/sitemap": "# Texan Title \u2014 Website Sitemap\n\n## CMS Platform\n\nTexan Title uses **Strapi** as their headless CMS, hosted at `strapi-texan.vercel.app`. The production site is at `texantitle.com`.\n\n## Priority 1.0 \u2014 Homepage\n\n| URL | Description |\n|-----|-------------|\n| https://texantitle.com/ | Homepage \u2014 hero, locations map, testimonials, underwriter logos |\n\n## Priority 0.7 \u2014 Key Pages\n\n| URL | Description |\n|-----|-------------|\n| /our-story | Company history, timeline (1995\u2013present), core benefits |\n| /our-leadership | Full leadership roster across all departments |\n| /locations | All 27 offices organized by 5 regions with map |\n| /contact | Contact form, email, phone, HQ address |\n| /1031-exchange | 1031 Exchange services, QI role, benefits, start form |\n| /community-involvement | $2M+ in charitable giving, 80+ organizations |\n| /realtor-tools | SouthLandAgent app, downloadable flyers, resources |\n| /tech-tips | Technology tips for realtors |\n| /policy | Privacy policy |\n| /blog | News & Updates |\n\n## Priority 0.6 \u2014 Location Pages (28)\n\n| Region | Locations |\n|--------|-----------|\n| South | /bay-city, /baytown, /beaumont, /brenham, /bryan-college-station, /crystal-beach, /deer-park, /galveston, /lake-jackson, /league-city, /mont-belvieu, /navasota, /palacios, /pearland, /port-lavaca, /texas-city |\n| West | /abilene, /breckenridge, /eastland |\n| Williamson Co. | /georgetown, /taylor |\n| Hill Country | /burnet, /horseshoe-bay, /kingsland, /llano, /marble-falls |\n| Commercial | /league-city-commercial, /ttcd |\n\n## Priority 0.6 \u2014 Blog Posts (4)\n\n| URL | Topic |\n|-----|-------|\n| /blog/ttcdrecordsales | TTCD record sales |\n| /blog/hill-country-flood-relief | Hill Country flood relief |\n| /blog/texan-title-expands-commercial-division | Commercial division expansion |\n| /blog/local-title-company-benefit | Benefits of local title companies |\n\n## Priority 0.5 \u2014 Blog Categories (3)\n\n| URL | Category |\n|-----|----------|\n| /blog/category/commercial | Commercial |\n| /blog/category/community | Community |\n| /blog/category/company-news | Company News |",
+    "tables/locations-matrix": "# Texan Title \u2014 Office Locations Matrix\n\n## South Region (16 offices)\n\n| Office | URL Path | Phone | Email |\n|--------|----------|-------|-------|\n| Bay City | /bay-city | \u2014 | \u2014 |\n| Baytown | /baytown | \u2014 | \u2014 |\n| Beaumont | /beaumont | \u2014 | \u2014 |\n| Brenham | /brenham | \u2014 | \u2014 |\n| Bryan / College Station | /bryan-college-station | \u2014 | \u2014 |\n| Crystal Beach | /crystal-beach | \u2014 | \u2014 |\n| Deer Park | /deer-park | \u2014 | \u2014 |\n| Galveston | /galveston | (409) 744-0727 | galveston@texantitle.com |\n| Lake Jackson | /lake-jackson | \u2014 | \u2014 |\n| League City | /league-city | \u2014 | \u2014 |\n| Mont Belvieu | /mont-belvieu | \u2014 | \u2014 |\n| Navasota | /navasota | \u2014 | \u2014 |\n| Palacios | /palacios | \u2014 | \u2014 |\n| Pearland | /pearland | \u2014 | \u2014 |\n| Port Lavaca (Gulf Coast Title) | /port-lavaca | \u2014 | \u2014 |\n| Texas City | /texas-city | \u2014 | \u2014 |\n\n## West Region (3 offices)\n\n| Office | URL Path | Phone | Email |\n|--------|----------|-------|-------|\n| Abilene | /abilene | \u2014 | \u2014 |\n| Breckenridge | /breckenridge | \u2014 | \u2014 |\n| Eastland | /eastland | \u2014 | \u2014 |\n\n## Williamson County Region (2 offices)\n\n| Office | URL Path | Phone | Email |\n|--------|----------|-------|-------|\n| Georgetown | /georgetown | \u2014 | \u2014 |\n| Taylor | /taylor | \u2014 | \u2014 |\n\n## Hill Country Region (5 offices)\n\n| Office | URL Path | Phone | Email |\n|--------|----------|-------|-------|\n| Burnet | /burnet | \u2014 | \u2014 |\n| Horseshoe Bay | /horseshoe-bay | \u2014 | \u2014 |\n| Kingsland | /kingsland | \u2014 | \u2014 |\n| Llano | /llano | \u2014 | \u2014 |\n| Marble Falls | /marble-falls | \u2014 | \u2014 |\n\n## Commercial Division (2 offices)\n\n| Office | URL Path | Phone | Email |\n|--------|----------|-------|-------|\n| League City (Commercial) | /league-city-commercial | \u2014 | \u2014 |\n| TTCD | /ttcd | \u2014 | \u2014 |\n\n## Corporate HQ\n\n| Office | Address | Phone | Email |\n|--------|---------|-------|-------|\n| Corporate | 6710 Stewart Road, Suite 300, Galveston, TX 77551 | (409) 744-9784 | connect@texantitle.com |",
+    "tables/underwriters": "# Texan Title \u2014 Underwriter Partners\n\nTexan Title represents the largest title insurance underwriters in the nation, plus their own underwriter entity.\n\n| Underwriter | Type | Notes |\n|-------------|------|-------|\n| Texan Title Insurance Company (TTIC) | In-house | Established 2019, own underwriter entity |\n| Old Republic Title | National | One of the largest title insurers in the US |\n| Fidelity National Title | National | Part of Fidelity National Financial |\n| First National Title Insurance Company | National | Major national underwriter |\n| Alamo Title Insurance | Regional/National | Texas-based national underwriter |\n| Stewart Title Insurance Company | National | One of the largest title insurance companies |\n| Title Resources Group | National | Stewart-affiliated |\n| Chicago Title Insurance Company | National | Part of Fidelity National Financial |\n| First American Title Insurance Company | National | One of the largest title insurers in the US |\n| Essent Title Insurance | National | Mortgage insurance and title services |\n\n## Rate Sheet\n\nThe TTIC 2026 Premium Rate Sheet is available through the Realtor Tools page at https://texantitle.com/realtor-tools."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Organization",
+    "Reference",
+    "Tables and Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "Organization": "#8b5cf6",
+    "APIs": "#10b981",
+    "Reference": "#10b981",
+    "Tables and Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/references/ai-discovery-page.md) - PromptGraph AI manifest and API endpoints for Texan Title.
+- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/references/llms-txt.md) - LLMs.txt directive documenting AI-discoverable endpoints via PromptGraph.
+- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/references/prompts.md) - 20 AI-optimized prompts covering title company discovery, closing costs, and 1031 exchanges.
+- [sitemap.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/references/sitemap.md) - Complete sitemap of texantitle.com with 46 pages across locations, blog, and services.

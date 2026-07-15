@@ -1,0 +1,8 @@
+- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/company.md) - Independent Texas title insurance company founded in 1995 with 27 offices across 5 regions, headquartered in Galveston, TX.
+- [leadership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/leadership.md) - Full leadership roster for Texan Title including executive, escrow operations, and title plant operations across all regions.
+- [locations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/locations.md) - 27 Texan Title offices organized across 5 Texas regions.
+- [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/services.md) - Title insurance, escrow, 1031 exchange, and realtor tools offered by Texan Title.
+- [1031-exchange.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/1031-exchange.md) - Qualified Intermediary services with Exchange Manager Pro software and CES-certified specialists.
+- [community-involvement.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/community-involvement.md) - $2M+ given back to Texas communities through 80+ organizations.
+- [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/testimonials.md) - Client and realtor testimonials highlighting personalized service and trusted closings.
+- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/faq.md) - Frequently asked questions about title insurance, escrow, closing costs, and 1031 exchanges.
