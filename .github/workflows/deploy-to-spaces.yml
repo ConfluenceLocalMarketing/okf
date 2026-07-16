@@ -1,0 +1,49 @@
+name: Deploy to DigitalOcean Spaces
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: spaces-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Sync content to Spaces
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      # The Space stores dealer folders without the "-okf" suffix
+      # (repo: jake-sweeney-chevrolet-okf/ -> Space: OKF/jake-sweeney-chevrolet/),
+      # so stage a renamed copy before syncing.
+      - name: Stage content with Space folder names
+        run: |
+          mkdir -p /tmp/stage
+          for dir in */; do
+            name="${dir%/}"
+            case "$name" in
+              # the Space serves this dealer under the hyphenated name
+              texantitle-okf) dest="texan-title" ;;
+              *-okf)          dest="${name%-okf}" ;;
+              *)              dest="$name" ;;
+            esac
+            cp -r "$name" "/tmp/stage/$dest"
+          done
+          echo "Staged $(ls /tmp/stage | wc -l) folders"
+
+      - name: Sync to Spaces (OKF folder)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: nyc3
+        run: |
+          aws s3 sync /tmp/stage/ s3://promptgraph/OKF/ \
+            --endpoint-url https://nyc3.digitaloceanspaces.com \
+            --delete \
+            --acl public-read
+
+      - name: Summary
+        run: echo "Synced $(git rev-parse --short HEAD) to s3://promptgraph/OKF/"
