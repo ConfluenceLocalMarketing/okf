@@ -16,16 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      # The Space stores dealer folders without the "-okf" suffix
-      # (repo: jake-sweeney-chevrolet-okf/ -> Space: OKF/jake-sweeney-chevrolet/),
-      # so stage a renamed copy before syncing.
       - name: Stage content with Space folder names
         run: |
           mkdir -p /tmp/stage
           for dir in */; do
             name="${dir%/}"
             case "$name" in
-              # the Space serves this dealer under the hyphenated name
               texantitle-okf) dest="texan-title" ;;
               *-okf)          dest="${name%-okf}" ;;
               *)              dest="$name" ;;
