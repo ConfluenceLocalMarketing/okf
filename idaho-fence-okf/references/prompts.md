@@ -16,12 +16,12 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/idaho-fence-company/pr
 
 ## Residential Fencing
 
-- **Idaho Fence Company Residential Fencing** — Privacy, security, and aesthetic fencing solutions for Idaho homes. Services include wood and vinyl privacy fences, chain link security fencing, and ornamental iron decorative fencing.
+- **Idaho Fence Company Residential Fencing** - Privacy, security, and aesthetic fencing solutions for Idaho homes. Services include wood and vinyl privacy fences, chain link security fencing, and ornamental iron decorative fencing.
 
 ## Commercial Fencing
 
-- **Idaho Fence Company Commercial Fencing** — Security fencing and asset protection for Idaho businesses. High-security chain link and steel perimeter fencing for commercial properties, equipment yards, and industrial sites.
+- **Idaho Fence Company Commercial Fencing** - Security fencing and asset protection for Idaho businesses. High-security chain link and steel perimeter fencing for commercial properties, equipment yards, and industrial sites.
 
 ## Farm Fencing
 
-- **Idaho Fence Company Farm Fencing** — Agricultural and livestock fencing for Idaho farms. Field fence, barbed wire, and high-tensile fencing solutions for livestock containment, pasture division, and large acreage operations.
+- **Idaho Fence Company Farm Fencing** - Agricultural and livestock fencing for Idaho farms. Field fence, barbed wire, and high-tensile fencing solutions for livestock containment, pasture division, and large acreage operations.

@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Daner Law Firm — LLMs.txt
+# Daner Law Firm - LLMs.txt
 
 ## About
 
@@ -17,12 +17,12 @@ Daner Law is a law firm founded by Adam M. Daner specializing in estate planning
 
 ## Offices
 
-- **Twin Falls, ID**: 250 2nd Ave. South, Suite G, Twin Falls, ID 83301 — (208) 398-4828
-- **Atascadero, CA**: 4555 El Camino Real STE J, Atascadero, CA 93422 — (805) 464-5003
+- **Twin Falls, ID**: 250 2nd Ave. South, Suite G, Twin Falls, ID 83301 - (208) 398-4828
+- **Atascadero, CA**: 4555 El Camino Real STE J, Atascadero, CA 93422 - (805) 464-5003
 
 ## Hours
 
-Monday–Friday 8:00 AM – 5:00 PM. Closed Saturday and Sunday.
+Monday-Friday 8:00 AM - 5:00 PM. Closed Saturday and Sunday.
 
 ## Services
 
@@ -32,7 +32,7 @@ Monday–Friday 8:00 AM – 5:00 PM. Closed Saturday and Sunday.
 
 ## Attorney
 
-**Adam M. Daner** — BA Occidental College (1991), JD University of San Diego School of Law (1994). Licensed in California (1994), Nevada (2000), Idaho (2024). 30+ years of experience.
+**Adam M. Daner** - BA Occidental College (1991), JD University of San Diego School of Law (1994). Licensed in California (1994), Nevada (2000), Idaho (2024). 30+ years of experience.
 
 ## Website
 

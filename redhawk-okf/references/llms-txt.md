@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Redhawk Gastropub — llms.txt
+title: Redhawk Gastropub - llms.txt
 description: AI context file for Redhawk Gastropub in Twin Falls, Idaho. (synthesized)
 tags:
   - llms-txt
@@ -22,8 +22,8 @@ timestamp: 2026-07-02
 - **Reservations**: toasttab.com
 
 ## Hours
-Mon–Thu: 11–9, Fri–Sat: 11–10, Sun: Closed
-Happy Hour: Mon–Thu 2–6, Fri–Sat 2–6 & 9–10
+Mon-Thu: 11-9, Fri-Sat: 11-10, Sun: Closed
+Happy Hour: Mon-Thu 2-6, Fri-Sat 2-6 & 9-10
 
 ## Menus
 Lunch, Dinner, Happy Hour, Kids, Dessert, Cocktail

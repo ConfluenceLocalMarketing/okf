@@ -92,7 +92,7 @@ Yes - the service department works on all makes and models, not just Mitsubishis
 
 **How often should I get an oil change?**
 
-Mitsubishi recommends following the maintenance schedule in your owner's manual, typically every 5,000–7,500 miles for full synthetic oil.
+Mitsubishi recommends following the maintenance schedule in your owner's manual, typically every 5,000-7,500 miles for full synthetic oil.
 
 **Do you perform state inspections?**
 
@@ -102,12 +102,12 @@ Yes - the service center handles state inspections, tire rotations, battery repl
 
 **What area does Basil Mitsubishi serve?**
 
-Basil Mitsubishi serves Buffalo, Williamsville, Amherst, Clarence, Lockport, Tonawanda, Depew, Cheektowaga, Kenmore, Lackawanna, and West Seneca. Out-of-town buyers regularly travel 1–5+ hours to purchase from the dealership.
+Basil Mitsubishi serves Buffalo, Williamsville, Amherst, Clarence, Lockport, Tonawanda, Depew, Cheektowaga, Kenmore, Lackawanna, and West Seneca. Out-of-town buyers regularly travel 1-5+ hours to purchase from the dealership.
 
 **What are the dealership hours?**
 
-Sales: Mon–Tue 9–7, Wed 9–6, Thu 9–7, Fri 9–6, Sat 9–5, Sun closed.
-Service & Parts: Mon–Fri 8–5, Sat 9–2, Sun closed.
+Sales: Mon-Tue 9-7, Wed 9-6, Thu 9-7, Fri 9-6, Sat 9-5, Sun closed.
+Service & Parts: Mon-Fri 8-5, Sat 9-2, Sun closed.
 
 **Is Basil Mitsubishi part of a larger group?**
 
@@ -123,8 +123,8 @@ The Basil Difference refers to the dealership's commitment to customer-first ser
 
 ## Related
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/dealership.md) for full business profile and contact information.
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/new-vehicles.md) for the Mitsubishi model lineup.
-See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/used-vehicles.md) for pre-owned and CPO inventory.
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/staff.md) for full staff directory.
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/testimonials.md) for customer reviews.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/dealership.md) for full business profile and contact information.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/new-vehicles.md) for the Mitsubishi model lineup.
+See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/used-vehicles.md) for pre-owned and CPO inventory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/staff.md) for full staff directory.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/references/testimonials.md) for customer reviews.

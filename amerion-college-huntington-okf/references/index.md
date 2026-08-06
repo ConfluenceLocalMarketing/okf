@@ -1,3 +1,3 @@
 # References
 
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/amerion-college-huntington-okf/references/llms-txt.md) - LLMs.txt reference for Amerion College AI context.
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/amerion-college-huntington/references/llms-txt.md) - LLMs.txt reference for Amerion College AI context.

@@ -48,4 +48,4 @@ Ron Marhofer Buick GMC maintains a substantial pre-owned vehicle inventory in th
 - Competitive trade-in values
 - Cash offers for trade-ins
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-buick-gmc/datasets/dealership.md) for current financing and trade-in programs.

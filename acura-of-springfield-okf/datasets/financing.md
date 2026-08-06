@@ -16,9 +16,9 @@ Acura of Springfield offers flexible financing options to help you drive home in
 
 ## Financing Options
 
-- **Online Credit Application** — Apply from home for fast pre-approval
-- **Multiple Lending Partners** — Competitive rates through a network of lenders
-- **Flexible Terms** — Custom payment plans to fit your budget
+- **Online Credit Application** - Apply from home for fast pre-approval
+- **Multiple Lending Partners** - Competitive rates through a network of lenders
+- **Flexible Terms** - Custom payment plans to fit your budget
 
 ## Leasing
 
@@ -28,7 +28,7 @@ Acura offers attractive lease programs through Acura Financial Services. Benefit
 |--------|--------|---------|
 | Monthly Payment | Higher | Lower |
 | Ownership | You own the vehicle | Return at lease end |
-| Mileage Limits | None | Typical 10,000–15,000 mi/year |
+| Mileage Limits | None | Typical 10,000-15,000 mi/year |
 | End of Term | Trade or keep | Return or purchase |
 
 ## Trade-In
@@ -41,4 +41,4 @@ Use online payment calculators to estimate monthly payments based on down paymen
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/acura-of-springfield-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/acura-of-springfield/datasets/company.md).

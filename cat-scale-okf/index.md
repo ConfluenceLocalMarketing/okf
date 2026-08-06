@@ -6,13 +6,13 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [cat-scale-company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/cat-scale-okf/datasets/cat-scale-company.md) - World's leading truck scale network providing guaranteed accurate certified weights at over 2,275 locations across the United States and Canada.
+- [cat-scale-company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/cat-scale/datasets/cat-scale-company.md) - World's leading truck scale network providing guaranteed accurate certified weights at over 2,275 locations across the United States and Canada.
 
 ## References
 
-- [cat-scale-website.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/cat-scale-okf/references/cat-scale-website.md) - Official CAT Scale Company website with scale locator, Weigh My Truck app, company info, and industry news.
-- [weigh-my-truck.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/cat-scale-okf/references/weigh-my-truck.md) - Official Weigh My Truck mobile application allowing drivers to weigh and pay from their smartphone.
+- [cat-scale-website.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/cat-scale/references/cat-scale-website.md) - Official CAT Scale Company website with scale locator, Weigh My Truck app, company info, and industry news.
+- [weigh-my-truck.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/cat-scale/references/weigh-my-truck.md) - Official Weigh My Truck mobile application allowing drivers to weigh and pay from their smartphone.
 
 ## Tables
 
-- [products-services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/cat-scale-okf/tables/products-services.md) - CAT Scale products and services comparison matrix.
+- [products-services.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/cat-scale/tables/products-services.md) - CAT Scale products and services comparison matrix.

@@ -55,4 +55,4 @@ Online payment calculator tools allow customers to estimate monthly payments bas
 **Finance Department**: (360) 842-2413
 **Online Application**: https://www.westhillsford.com/finance/
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-ford-okf/datasets/dealership.md) for full business profile and hours.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-ford/datasets/dealership.md) for full business profile and hours.

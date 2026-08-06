@@ -27,5 +27,5 @@ Service advisors coordinate maintenance and repair appointments through the GMC 
 
 Finance managers guide customers through financing, leasing, warranty, and protection product options.
 
-For service-related inquiries, see [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/service-center.md).
-For general dealership information, see [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/dealership.md).
+For service-related inquiries, see [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/service-center.md).
+For general dealership information, see [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/dealership.md).

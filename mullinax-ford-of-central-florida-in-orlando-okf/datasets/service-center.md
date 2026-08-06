@@ -64,5 +64,5 @@ The Mullinax Ford of Central Florida service department performs factory-trained
 
 - See [mullinax-ford-of-central-florida-in-orlando.md](mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
 - See [faq.md](faq.md) for Ford Protect plan coverage questions.
-- See [hours.md](../tables/hours.md) for service and Quick Lane hours.
-- See [contact.md](../tables/contact.md) for service and parts phone numbers.
+- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/hours.md) for service and Quick Lane hours.
+- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/contact.md) for service and parts phone numbers.

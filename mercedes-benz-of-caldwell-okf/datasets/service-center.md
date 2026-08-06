@@ -20,16 +20,16 @@ The service center at Mercedes-Benz of Caldwell is staffed by factory-trained te
 
 ## Services Offered
 
-- **Oil Changes** — Mercedes-Benz approved synthetic oil
-- **Tire Services** — Rotation, balance, replacement, alignment
-- **Brake Service** — Pad replacement, rotor resurfacing, fluid flush
-- **Engine Diagnostics** — Factory Star Diagnostic system
-- **Transmission Service** — Fluid change, filter, adaptation
-- **Air Conditioning** — Inspection, recharge, repair
-- **Battery & Electrical** — Testing, replacement, coding
-- **Scheduled Maintenance** — Service A, Service B, and intervals
-- **Collision Repair** — Factory-certified body shop
-- **Sprinter Van Service** — Cargo and passenger van maintenance
+- **Oil Changes** - Mercedes-Benz approved synthetic oil
+- **Tire Services** - Rotation, balance, replacement, alignment
+- **Brake Service** - Pad replacement, rotor resurfacing, fluid flush
+- **Engine Diagnostics** - Factory Star Diagnostic system
+- **Transmission Service** - Fluid change, filter, adaptation
+- **Air Conditioning** - Inspection, recharge, repair
+- **Battery & Electrical** - Testing, replacement, coding
+- **Scheduled Maintenance** - Service A, Service B, and intervals
+- **Collision Repair** - Factory-certified body shop
+- **Sprinter Van Service** - Cargo and passenger van maintenance
 
 ## Service Convenience
 
@@ -59,4 +59,4 @@ The service center at Mercedes-Benz of Caldwell is staffed by factory-trained te
 - **Phone:** (973) 227-3600
 - **Location:** Caldwell (West Caldwell), NJ
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mercedes-benz-of-caldwell-okf/datasets/company.md) for full dealership information.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mercedes-benz-of-caldwell/datasets/company.md) for full dealership information.

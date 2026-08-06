@@ -24,10 +24,10 @@ Gibson Truck World provides financing solutions for truck buyers across the coun
 - Nationwide financing available
 
 ### All-Credit Programs
-- **Excellent Credit** — Best rates and terms
-- **Good Credit** — Competitive standard financing
-- **Fair Credit** — Flexible approval with reasonable terms
-- **Bad Credit / No Credit** — Special programs to help get approved
+- **Excellent Credit** - Best rates and terms
+- **Good Credit** - Competitive standard financing
+- **Fair Credit** - Flexible approval with reasonable terms
+- **Bad Credit / No Credit** - Special programs to help get approved
 
 ### Commercial Financing
 - Business vehicle loans for work trucks
@@ -54,4 +54,4 @@ Gibson Truck World provides financing solutions for truck buyers across the coun
 
 Online payment calculator on the Gibson Truck World website for estimating monthly payments.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/gibson-truck-world-okf/datasets/company.md) for location and contact information.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/gibson-truck-world/datasets/company.md) for location and contact information.

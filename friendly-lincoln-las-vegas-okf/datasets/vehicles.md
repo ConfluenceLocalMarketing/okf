@@ -43,5 +43,5 @@ Every Lincoln Certified Pre-Owned vehicle includes:
 
 Quality used luxury vehicles from multiple brands, each subject to a multi-point inspection.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/dealership.md) for dealership profile.
-See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/tables/model-comparison.md) for detailed specifications.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln-las-vegas/datasets/dealership.md) for dealership profile.
+See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln-las-vegas/tables/model-comparison.md) for detailed specifications.

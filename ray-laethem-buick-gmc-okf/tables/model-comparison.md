@@ -47,4 +47,4 @@ timestamp: 2026-07-03
 | HUMMER EV Pickup | All-Electric |
 | HUMMER EV SUV | All-Electric |
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/new-vehicles.md) for detailed new vehicle inventory.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/new-vehicles.md) for detailed new vehicle inventory.

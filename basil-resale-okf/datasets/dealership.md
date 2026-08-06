@@ -52,10 +52,10 @@ Email (customer service): basilcares@basilresale.com
 
 | Day | Sales | Service |
 |---|---|---|
-| Mon–Thu | 9:00 AM – 7:00 PM | 7:30 AM – 5:00 PM |
-| Fri | 9:00 AM – 6:00 PM | 7:30 AM – 5:00 PM |
-| Sat | 9:00 AM – 5:00 PM | 7:30 AM – 3:30 PM |
-| Sun | 10:00 AM – 3:00 PM | Closed |
+| Mon-Thu | 9:00 AM - 7:00 PM | 7:30 AM - 5:00 PM |
+| Fri | 9:00 AM - 6:00 PM | 7:30 AM - 5:00 PM |
+| Sat | 9:00 AM - 5:00 PM | 7:30 AM - 3:30 PM |
+| Sun | 10:00 AM - 3:00 PM | Closed |
 
 ## Services
 
@@ -120,5 +120,5 @@ Email (customer service): basilcares@basilresale.com
 - Site Content: `/site-content` (plain-text mirror)
 - GBP Context: `/gbp-context` (Google Business Profile data)
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/staff.md) for full staff directory.
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/references/ai-discovery-page.md) for structured AI endpoints.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/staff.md) for full staff directory.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/references/ai-discovery-page.md) for structured AI endpoints.

@@ -1,6 +1,6 @@
 ---
 type: APIs
-title: Texan Title — AI Discovery Page
+title: Texan Title - AI Discovery Page
 description: PromptGraph AI manifest and API endpoints for Texan Title including prompts, testimonials, business profile, and site content.
 resource: https://api.promptgraph.ai/api/v1/texan-title/.well-known/ai-manifest.json
 tags:
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — AI Discovery Page
+# Texan Title - AI Discovery Page
 
 ## PromptGraph Integration
 
@@ -50,4 +50,4 @@ Texan Title is onboarded with PromptGraph (slug: `texan-title`) providing struct
 
 The prompts endpoint contains 20 location-specific prompts covering title company discovery, closing cost calculators, 1031 exchanges, lien searches, earnest money, FSBO transactions, and more across Texan Title's service areas.
 
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/references/prompts.md) for the full prompt library.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/references/prompts.md) for the full prompt library.

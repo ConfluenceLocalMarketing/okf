@@ -37,10 +37,10 @@ Mullinax Ford of Central Florida maintains a strong online reputation. Aggregate
 
 ## Staff Ratings
 
-Individual sales staff are publicly rated on the dealership website (e.g. 5-star ratings with review counts on the sales-team page). See [staff.md](../datasets/staff.md) for the staff directory.
+Individual sales staff are publicly rated on the dealership website (e.g. 5-star ratings with review counts on the sales-team page). See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/staff.md) for the staff directory.
 
 ## Related Concepts
 
-- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile and rating summary.
+- See [mullinax-ford-of-central-florida-in-orlando.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile and rating summary.
 - See [ai-discovery-page.md](ai-discovery-page.md) for the testimonials endpoint status.
 - See [prompts.md](prompts.md) for prompt #19 (Top Ford Dealer Reputation).

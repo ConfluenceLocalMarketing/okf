@@ -14,28 +14,28 @@ timestamp: 2026-07-03
 
 # Staff Directory - Logan Square Auto Repair
 
-## Tony Martino — Owner
+## Tony Martino - Owner
 
 Tony owns both Logan Square Auto Repair and Avondale Auto Repair. He founded the Logan Square location in 1997 and has built a reputation for honest, quality service over more than 25 years.
 
-## Frank DeLuca — Shop Manager
+## Frank DeLuca - Shop Manager
 
 Frank manages daily operations at Logan Square Auto Repair. He has been with the shop for over 15 years and ensures every customer receives prompt, professional service.
 
-## Elena Vasquez — Master Technician (ASE Certified)
+## Elena Vasquez - Master Technician (ASE Certified)
 
 Elena holds multiple ASE certifications in engine repair, brakes, suspension, electrical systems, and A/C. 20 years of experience specializing in European and luxury vehicles.
 
-## Marcus Johnson — Senior Technician (ASE Certified)
+## Marcus Johnson - Senior Technician (ASE Certified)
 
 Marcus specializes in transmission repair, diagnostics, and emissions systems. ASE Certified with 14 years of experience. ATRA affiliated.
 
-## Kevin Park — Technician
+## Kevin Park - Technician
 
 Kevin performs general maintenance, tire services, oil changes, and brake repairs. 8 years of experience.
 
-## Rachel Green — Service Advisor
+## Rachel Green - Service Advisor
 
 Rachel handles customer intake, explains repair recommendations, and coordinates service scheduling. She helps customers understand their vehicle's needs.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/datasets/company.md) for shop information, certifications, and contact details.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/logan-square-auto-repair/datasets/company.md) for shop information, certifications, and contact details.

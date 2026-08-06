@@ -1,6 +1,6 @@
 ---
 type: Prompts
-title: Bare Bones Furniture & Mattress — AI Prompt Templates
+title: Bare Bones Furniture & Mattress - AI Prompt Templates
 description: Curated prompt templates for AI interactions with Bare Bones Furniture & Mattress business data.
 resource: https://www.barebonesfurn.com/
 tags:
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Bare Bones Furniture & Mattress — AI Prompt Templates
+# Bare Bones Furniture & Mattress - AI Prompt Templates
 
 ## Prompt 1: Product Recommendation
 

@@ -48,15 +48,15 @@ Estimate monthly payments using the payment calculator before visiting the deale
 
 | Day | Hours |
 |---|---|
-| Mon | 9:00 AM – 7:00 PM |
-| Tue–Wed | 9:00 AM – 6:00 PM |
-| Thu | 9:00 AM – 7:00 PM |
-| Fri | 9:00 AM – 6:00 PM |
-| Sat | 9:00 AM – 5:00 PM |
+| Mon | 9:00 AM - 7:00 PM |
+| Tue-Wed | 9:00 AM - 6:00 PM |
+| Thu | 9:00 AM - 7:00 PM |
+| Fri | 9:00 AM - 6:00 PM |
+| Sat | 9:00 AM - 5:00 PM |
 | Sun | Closed |
 
 ## Contact
 
 Contact the finance department through the dealership's sales line at (716) 206-5266.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/new-vehicles.md), [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/used-vehicles.md), or [mobility-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/mobility-vehicles.md) for inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/dealership.md) for full business profile and [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/new-vehicles.md), [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/used-vehicles.md), or [mobility-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/mobility-vehicles.md) for inventory.

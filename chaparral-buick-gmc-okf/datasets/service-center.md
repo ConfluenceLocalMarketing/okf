@@ -41,4 +41,4 @@ Contact the service department for current specials and maintenance offers.
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/chaparral-buick-gmc-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/chaparral-buick-gmc/datasets/company.md).

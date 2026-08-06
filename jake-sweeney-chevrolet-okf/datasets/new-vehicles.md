@@ -107,5 +107,5 @@ All-electric commercial vans designed for last-mile delivery and fleet operation
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. Contact the dealership for current offers.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/dealership.md) for contact information and current programs.
-See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/tables/model-comparison.md) for side-by-side model specifications.

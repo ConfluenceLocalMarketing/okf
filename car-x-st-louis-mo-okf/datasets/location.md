@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — St Louis, MO
+title: Car-X Tire & Auto - St Louis, MO
 description: "Car-X Tire & Auto location in St Louis, MO: address, hours, contact, 4.2-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/st-louis-mo/business
 tags:
@@ -14,9 +14,9 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — St Louis, MO
+# Car-X Tire & Auto - St Louis, MO
 
-At Car-X on Kingshighway, our ASE-certified technicians treat every car as if it were their own, delivering honest diagnostics, expert repairs, and budget-friendly pricing. Whether you're stopping in for a quick oil change, precision brake work, or top-quality tire service, expect the personal attention and reliability that have made our shop a beacon of trust in the city. Experience auto care with a hometown touch—right here on Kingsway.
+At Car-X on Kingshighway, our ASE-certified technicians treat every car as if it were their own, delivering honest diagnostics, expert repairs, and budget-friendly pricing. Whether you're stopping in for a quick oil change, precision brake work, or top-quality tire service, expect the personal attention and reliability that have made our shop a beacon of trust in the city. Experience auto care with a hometown touch-right here on Kingsway.
 
 ## Contact Information
 
@@ -50,7 +50,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -59,4 +59,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-st-louis-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-st-louis-mo/tables/coupons.md) for details.

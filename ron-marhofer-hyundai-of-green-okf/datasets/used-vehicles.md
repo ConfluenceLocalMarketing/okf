@@ -35,10 +35,10 @@ Ron Marhofer Hyundai of Green offers a wide selection of quality pre-owned vehic
 
 ## Financing
 
-Pre-owned vehicle financing is available with straightforward terms. See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for contact information and hours.
+Pre-owned vehicle financing is available with straightforward terms. See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/datasets/dealership.md) for contact information and hours.
 
 ## Related
 
-- See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/dealership.md) for the full business profile.
-- See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/new-vehicles.md) for new Hyundai model lineup.
-- See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/faq.md) for frequently asked questions about used vehicle purchasing.
+- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/datasets/dealership.md) for the full business profile.
+- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/datasets/new-vehicles.md) for new Hyundai model lineup.
+- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/datasets/faq.md) for frequently asked questions about used vehicle purchasing.

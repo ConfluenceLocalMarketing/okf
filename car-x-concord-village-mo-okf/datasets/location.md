@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Concord Village, MO
+title: Car-X Tire & Auto - Concord Village, MO
 description: "Car-X Tire & Auto location in Concord Village, MO: address, hours, contact, 4.7-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/concord-village-mo/business
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Concord Village, MO
+# Car-X Tire & Auto - Concord Village, MO
 
 Car-X Tire & Auto in Concord Village conveniently located near the suburban corridor in South St. Louis County. It’s situated directly on Tesson Ferry Road (Route 21). This location is just minutes from Gravois Road (Route 30) and within a short drive of I-270. As a local cornerstone, we pride ourselves on delivering dependable, friendly, and tailored service to each valued customer.
 
@@ -50,7 +50,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -59,4 +59,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-concord-village-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-concord-village-mo/tables/coupons.md) for details.

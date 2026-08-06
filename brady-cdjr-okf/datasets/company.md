@@ -33,11 +33,11 @@ Brady Chrysler Dodge Jeep Ram is a full-service automotive dealership located in
 
 ## Hours
 
-| Department | Mon–Fri | Sat | Sun |
+| Department | Mon-Fri | Sat | Sun |
 |------------|---------|-----|-----|
-| Sales | 9:00 AM – 7:00 PM | 9:00 AM – 6:00 PM | Closed |
-| Service | 7:00 AM – 6:00 PM | 8:00 AM – 2:00 PM | Closed |
-| Parts | 7:00 AM – 6:00 PM | 8:00 AM – 2:00 PM | Closed |
+| Sales | 9:00 AM - 7:00 PM | 9:00 AM - 6:00 PM | Closed |
+| Service | 7:00 AM - 6:00 PM | 8:00 AM - 2:00 PM | Closed |
+| Parts | 7:00 AM - 6:00 PM | 8:00 AM - 2:00 PM | Closed |
 
 ## Inventory
 

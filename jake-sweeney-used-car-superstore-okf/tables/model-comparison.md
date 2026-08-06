@@ -21,16 +21,16 @@ timestamp: 2026-07-01
 
 | Segment | Example Models | Typical Years | Typical Price Range |
 |---|---|---|---|
-| **Compact Sedan** | Honda Civic, Toyota Corolla, Hyundai Elantra, Chevrolet Cruze | 2018–2025 | $12,000 – $25,000 |
-| **Mid-Size Sedan** | Honda Accord, Toyota Camry, Chevrolet Malibu, Nissan Altima | 2018–2025 | $15,000 – $32,000 |
-| **Compact SUV** | Honda CR-V, Toyota RAV4, Chevrolet Equinox, Mazda CX-5 | 2019–2025 | $18,000 – $35,000 |
-| **Mid-Size SUV** | Toyota Highlander, Ford Explorer, Chevrolet Traverse, Jeep Grand Cherokee | 2019–2025 | $22,000 – $45,000 |
-| **Full-Size SUV** | Chevrolet Tahoe, GMC Yukon, Ford Expedition, Toyota Sequoia | 2019–2025 | $35,000 – $70,000 |
-| **Luxury SUV** | BMW X3/X5/X7, Mercedes-Benz GLE/GLS, Lexus RX, Cadillac Escalade | 2019–2025 | $28,000 – $90,000+ |
-| **Mid-Size Pickup** | Toyota Tacoma, Ford Ranger, Chevrolet Colorado, GMC Canyon | 2019–2025 | $22,000 – $42,000 |
-| **Full-Size Pickup** | Ford F-150, Chevrolet Silverado 1500, Ram 1500, GMC Sierra 1500 | 2019–2025 | $25,000 – $60,000 |
-| **Sports Car** | Chevrolet Corvette, Ford Mustang, BMW M Series, Dodge Challenger | 2018–2025 | $25,000 – $100,000+ |
-| **Luxury Sedan** | BMW 5/7 Series, Mercedes-Benz E/S-Class, Lexus ES | 2018–2025 | $20,000 – $60,000+ |
+| **Compact Sedan** | Honda Civic, Toyota Corolla, Hyundai Elantra, Chevrolet Cruze | 2018-2025 | $12,000 - $25,000 |
+| **Mid-Size Sedan** | Honda Accord, Toyota Camry, Chevrolet Malibu, Nissan Altima | 2018-2025 | $15,000 - $32,000 |
+| **Compact SUV** | Honda CR-V, Toyota RAV4, Chevrolet Equinox, Mazda CX-5 | 2019-2025 | $18,000 - $35,000 |
+| **Mid-Size SUV** | Toyota Highlander, Ford Explorer, Chevrolet Traverse, Jeep Grand Cherokee | 2019-2025 | $22,000 - $45,000 |
+| **Full-Size SUV** | Chevrolet Tahoe, GMC Yukon, Ford Expedition, Toyota Sequoia | 2019-2025 | $35,000 - $70,000 |
+| **Luxury SUV** | BMW X3/X5/X7, Mercedes-Benz GLE/GLS, Lexus RX, Cadillac Escalade | 2019-2025 | $28,000 - $90,000+ |
+| **Mid-Size Pickup** | Toyota Tacoma, Ford Ranger, Chevrolet Colorado, GMC Canyon | 2019-2025 | $22,000 - $42,000 |
+| **Full-Size Pickup** | Ford F-150, Chevrolet Silverado 1500, Ram 1500, GMC Sierra 1500 | 2019-2025 | $25,000 - $60,000 |
+| **Sports Car** | Chevrolet Corvette, Ford Mustang, BMW M Series, Dodge Challenger | 2018-2025 | $25,000 - $100,000+ |
+| **Luxury Sedan** | BMW 5/7 Series, Mercedes-Benz E/S-Class, Lexus ES | 2018-2025 | $20,000 - $60,000+ |
 
 ## Luxury Brands Available
 
@@ -52,7 +52,7 @@ timestamp: 2026-07-01
 
 | Feature | Compact SUV | Mid-Size SUV | Full-Size Pickup | Luxury SUV |
 |---|---|---|---|---|
-| Passenger Capacity | 5 | 5–8 | 5–6 | 5–7 |
+| Passenger Capacity | 5 | 5-8 | 5-6 | 5-7 |
 | Towing Capacity | 1,500 lbs | 5,000 lbs | 13,000+ lbs | 7,000+ lbs |
 | AWD/4WD Available | Yes | Yes | Yes | Yes |
 | Third Row Available | No | Yes | N/A | Yes |
@@ -70,5 +70,5 @@ The PromptGraph inventory sitemap lists 100+ individual vehicles including:
 - **Performance:** 2021/2023 Chevrolet Corvette, 2023 Chevrolet Camaro, 2023 Ford Mustang, 2023 BMW M3
 - **Budget-Friendly:** 2019 Toyota RAV4, 2022 Honda Accord, 2023 Hyundai Elantra, 2024 Kia Forte
 
-See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/used-vehicles.md) for full inventory details.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/dealership.md) for current offers and promotions.
+See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/used-vehicles.md) for full inventory details.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/dealership.md) for current offers and promotions.

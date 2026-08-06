@@ -8,16 +8,16 @@ Locally owned and family-operated furniture and mattress retailer offering livin
 
 ## Datasets
 
-- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/datasets/company.md) - Full business profile of Bare Bones Furniture & Mattress.
+- [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/datasets/company.md) - Full business profile of Bare Bones Furniture & Mattress.
 
 ## References
 
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/references/llms-txt.md) - LLM-friendly summary of the business.
-- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/references/prompts.md) - Prompt templates for AI interactions.
-- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/references/ai-discovery-page.md) - AI discovery page for automated knowledge retrieval.
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/references/llms-txt.md) - LLM-friendly summary of the business.
+- [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/references/prompts.md) - Prompt templates for AI interactions.
+- [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/references/ai-discovery-page.md) - AI discovery page for automated knowledge retrieval.
 
 ## Tables
 
-- [departments.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/tables/departments.md) - Product departments and categories offered.
-- [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/tables/services.md) - Customer services available.
-- [brands.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/tables/brands.md) - Brand partners carried.
+- [departments.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/tables/departments.md) - Product departments and categories offered.
+- [services.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/tables/services.md) - Customer services available.
+- [brands.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/tables/brands.md) - Brand partners carried.

@@ -63,7 +63,7 @@ A: Yes. Use the online service scheduling tool on the Varsity Lincoln website.
 ## Dealership
 
 **Q: What are your sales hours?**
-A: Monday–Saturday 9:00 AM – 6:00 PM, Sunday Closed.
+A: Monday-Saturday 9:00 AM - 6:00 PM, Sunday Closed.
 
 **Q: Where is the dealership located?**
 A: 49251 Grand River, Novi, MI 48374.
@@ -77,4 +77,4 @@ A: Yes. Varsity Lincoln has been the #1 Volume Lincoln Dealer in the World for 2
 **Q: Do you offer complimentary vehicle delivery?**
 A: Yes. Complimentary delivery within 300 miles on qualifying vehicles.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/dealership.md) for full business profile.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/dealership.md) for full business profile.

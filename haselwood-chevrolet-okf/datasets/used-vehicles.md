@@ -61,4 +61,4 @@ CarBravo is Chevrolet's certified pre-owned program offering:
 - Cash offers for trade-ins (even without vehicle purchase)
 - Competitive trade-in values
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/datasets/dealership.md) for current financing and trade-in programs.

@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: CC Communications — llms.txt
+title: CC Communications - llms.txt
 description: AI context file for CC Communications. (synthesized)
 tags:
   - llms-txt

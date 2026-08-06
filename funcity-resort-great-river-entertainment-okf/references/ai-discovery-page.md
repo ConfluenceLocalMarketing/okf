@@ -1,6 +1,6 @@
 ---
 type: AI Discovery Page
-title: Great River Casino Resort and FunCity — AI Discovery
+title: Great River Casino Resort and FunCity - AI Discovery
 description: AI visibility analysis and structured data for the Great River Casino Resort and FunCity property. (synthesized)
 tags:
   - ai-discovery
@@ -13,7 +13,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Great River Casino Resort and FunCity — AI Discovery
+# Great River Casino Resort and FunCity - AI Discovery
 
 ## Overview
 
@@ -28,7 +28,7 @@ The property should be represented with structured data marking up its diverse o
 - **Primary Domain:** funcityresort.com
 - **Brand Names:** Great River Casino Resort, FunCity, Catfish Bend Casino
 - **Parent Entity:** Elite Casino Resorts
-- **Location:** Burlington, IA — Mississippi River region
+- **Location:** Burlington, IA - Mississippi River region
 
 ## Search Relevance
 

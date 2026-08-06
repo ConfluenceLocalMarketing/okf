@@ -75,4 +75,4 @@ A: Contact the dealership for accepted payment methods.
 **Q: Do you offer free home delivery?**
 A: Yes. Free home delivery up to 150 miles is available on qualifying purchases.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/dealership.md) for full business profile.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-cuyahoga-falls/datasets/dealership.md) for full business profile.

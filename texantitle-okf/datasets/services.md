@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Texan Title — Services
+title: Texan Title - Services
 description: Title insurance, escrow, 1031 exchange, and realtor tools offered by Texan Title across residential and commercial transactions.
 resource: https://texantitle.com/realtor-tools
 tags:
@@ -12,7 +12,7 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — Services
+# Texan Title - Services
 
 ## Title Insurance
 
@@ -24,15 +24,15 @@ Full escrow management with dedicated escrow officers at each office location. S
 
 ## 1031 Exchange Services
 
-Through Texan Title 1031 Exchange, clients access 1031 exchange services supported by Exchange Manager Pro℠ — the patented 1031 exchange workflow technology — and one of the nation's leading Qualified Intermediaries.
+Through Texan Title 1031 Exchange, clients access 1031 exchange services supported by Exchange Manager Pro℠ - the patented 1031 exchange workflow technology - and one of the nation's leading Qualified Intermediaries.
 
-See [1031-exchange.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/1031-exchange.md) for full details.
+See [1031-exchange.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/datasets/1031-exchange.md) for full details.
 
 ## Realtor Tools
 
 ### SouthLandAgent App
 
-Real Estate's #1 Net Sheet and Closing Cost app platform. Generate buyer estimates, seller net sheets, and quick title quotes from desktop, tablet, or phone — free.
+Real Estate's #1 Net Sheet and Closing Cost app platform. Generate buyer estimates, seller net sheets, and quick title quotes from desktop, tablet, or phone - free.
 
 - **Access:** https://southlandagentapp.com
 
@@ -42,7 +42,7 @@ Real Estate's #1 Net Sheet and Closing Cost app platform. Generate buyer estimat
 |----------|--------|
 | 1031 Exchanges | PDF |
 | ABCs of Title | PDF |
-| All About Us — Timeline | PDF |
+| All About Us - Timeline | PDF |
 | Corporate Brochure | PDF |
 | Homestead Exemptions 2026 | PDF |
 | Locations Map | PDF |
@@ -51,7 +51,7 @@ Real Estate's #1 Net Sheet and Closing Cost app platform. Generate buyer estimat
 | Texas Heirship Chart 2 | PDF |
 | Title Checklist | PDF |
 | Title Insurance Overview | PDF |
-| Title Insurance Overview — Spanish | PDF |
+| Title Insurance Overview - Spanish | PDF |
 
 ## Commercial Division
 

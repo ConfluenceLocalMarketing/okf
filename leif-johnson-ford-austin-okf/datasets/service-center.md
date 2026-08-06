@@ -30,12 +30,12 @@ The Leif Johnson Ford of Austin Service Department provides factory-authorized m
 
 | Day | Hours |
 |---|---|
-| Monday | 7:00 am – 7:00 pm |
-| Tuesday | 7:00 am – 7:00 pm |
-| Wednesday | 7:00 am – 7:00 pm |
-| Thursday | 7:00 am – 7:00 pm |
-| Friday | 7:00 am – 7:00 pm |
-| Saturday | 8:00 am – 5:00 pm |
+| Monday | 7:00 am - 7:00 pm |
+| Tuesday | 7:00 am - 7:00 pm |
+| Wednesday | 7:00 am - 7:00 pm |
+| Thursday | 7:00 am - 7:00 pm |
+| Friday | 7:00 am - 7:00 pm |
+| Saturday | 8:00 am - 5:00 pm |
 | Sunday | Closed |
 
 ## Contact
@@ -44,7 +44,7 @@ The Leif Johnson Ford of Austin Service Department provides factory-authorized m
 
 ## Parts Department
 
-The [Parts Center](https://www.leifjohnsonford.com/parts-center/) stocks OEM Ford parts and accessories with options for online ordering and in-store pickup. **Parts Hours**: Monday–Friday 7:00am–7:00pm, Saturday 8:00am–5:00pm. **Parts Phone**: (512)-614-7740.
+The [Parts Center](https://www.leifjohnsonford.com/parts-center/) stocks OEM Ford parts and accessories with options for online ordering and in-store pickup. **Parts Hours**: Monday-Friday 7:00am-7:00pm, Saturday 8:00am-5:00pm. **Parts Phone**: (512)-614-7740.
 
 ## Collision Center
 
@@ -54,4 +54,4 @@ The dealership operates a [Collision Center](https://www.leifjohnsonford.com/col
 
 View current [Service & Parts Specials](https://www.leifjohnsonford.com/service-parts-specials/) for discounted maintenance packages.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/staff.md) for the service team directory and [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/dealership.md) for general business information.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/staff.md) for the service team directory and [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/dealership.md) for general business information.

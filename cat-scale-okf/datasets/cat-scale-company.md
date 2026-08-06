@@ -25,9 +25,9 @@ Bill Moon installed the first CAT Scale in 1977 in South Holland, Illinois, revo
 
 ## Products
 
-- **CAT Scale Weighing Service** — Certified, accurate weighing of trucks and trailers at automated locations nationwide.
-- **Weigh My Truck App** — Mobile application allowing drivers to weigh and pay from their smartphone, with emailed PDF scale tickets.
-- **CAT Scale Locator App** — Mobile app to find nearby CAT Scale locations, plan routes, and save favorites.
+- **CAT Scale Weighing Service** - Certified, accurate weighing of trucks and trailers at automated locations nationwide.
+- **Weigh My Truck App** - Mobile application allowing drivers to weigh and pay from their smartphone, with emailed PDF scale tickets.
+- **CAT Scale Locator App** - Mobile app to find nearby CAT Scale locations, plan routes, and save favorites.
 
 ## Guarantee
 
@@ -46,7 +46,7 @@ CAT Scale Company is part of the Iowa 80 Group, the same family that owns Iowa 8
 
 ## Leadership
 
-- **Delia Moon Meier** — Senior Vice President
+- **Delia Moon Meier** - Senior Vice President
 
 ## Contact
 

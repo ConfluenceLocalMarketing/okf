@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Full Circle Strategic Marketing — AI Prompts
+title: Full Circle Strategic Marketing - AI Prompts
 description: Curated AI prompts for client consultations and internal use at Full Circle Strategic Marketing. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Full Circle Strategic Marketing — AI Prompts
+# Full Circle Strategic Marketing - AI Prompts
 
 ## Client Consultation
 

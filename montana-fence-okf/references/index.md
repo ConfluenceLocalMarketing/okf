@@ -1,3 +1,3 @@
 # References
 
-- [website.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montana-fence-okf/references/website.md) - Source data extracted from the Montana Fence website.
+- [website.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montana-fence/references/website.md) - Source data extracted from the Montana Fence website.

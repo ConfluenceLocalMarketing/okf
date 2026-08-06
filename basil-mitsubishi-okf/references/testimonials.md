@@ -39,7 +39,7 @@ timestamp: 2026-06-24
 - **"Best car buying experience in 40+ years"** - Multiple long-time car buyers
 - **No-pressure sales environment** - Consistently mentioned across reviews
 - **Credit-challenged approvals** - Several customers praised help with credit issues
-- **Out-of-town buyers** - Customers drove 1–5+ hours to purchase
+- **Out-of-town buyers** - Customers drove 1-5+ hours to purchase
 - **Service excellence** - Fast oil changes, recalls handled promptly, loaner vehicles
 - **Cost savings** - Saved customers $1,000+ vs. other dealerships
 
@@ -58,5 +58,5 @@ timestamp: 2026-06-24
 
 No pressure, transparent, professional, went above and beyond, customer for life, honest, efficient, knowledgeable, friendly, stress-free.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/dealership.md) for full business profile.
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/staff.md) for staff directory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/dealership.md) for full business profile.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/staff.md) for staff directory.

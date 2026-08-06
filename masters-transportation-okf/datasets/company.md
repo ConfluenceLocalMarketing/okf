@@ -21,18 +21,18 @@ Master's Transportation, headquartered in Kansas City, Missouri, is one of the a
 
 ## Products
 
-- **Shuttle Buses** — New and used models for hospitality, corporate, church, and public transport
-- **School Buses** — Mini buses, full-size options, multi-function activity buses
-- **Passenger Vans** — Ford Transit, E-Series, and other commercial vans
-- **Wheelchair Accessible Vehicles** — ADA-compliant with ramps, lifts, securement systems
-- **Electric Vehicles** — Eco-friendly and ZEVX integrated options
+- **Shuttle Buses** - New and used models for hospitality, corporate, church, and public transport
+- **School Buses** - Mini buses, full-size options, multi-function activity buses
+- **Passenger Vans** - Ford Transit, E-Series, and other commercial vans
+- **Wheelchair Accessible Vehicles** - ADA-compliant with ramps, lifts, securement systems
+- **Electric Vehicles** - Eco-friendly and ZEVX integrated options
 
 ## Services
 
-- **Rentals** — Short-term and long-term bus and van rentals nationwide
-- **Repair and Maintenance** — Certified technicians, genuine parts, refurbishing
-- **Financing** — Flexible options for businesses, schools, and organizations
-- **Nationwide Delivery** — Vehicles delivered across the United States
+- **Rentals** - Short-term and long-term bus and van rentals nationwide
+- **Repair and Maintenance** - Certified technicians, genuine parts, refurbishing
+- **Financing** - Flexible options for businesses, schools, and organizations
+- **Nationwide Delivery** - Vehicles delivered across the United States
 
 ## Locations
 
@@ -49,7 +49,7 @@ The company operates across 12+ national service locations with a new $72M headq
 | **Cave Springs, AR** | 164 Grading Ln, Ste 403, Cave Springs, AR 72718 | Service Location |
 | **Lincoln, NE** | Service area (15-passenger van rentals) | Rental Location |
 
-### Headquarters Expansion (2025–2026)
+### Headquarters Expansion (2025-2026)
 
 The new Kansas City headquarters campus includes:
 - 32,000 sq ft service building (Phase 1, operational)

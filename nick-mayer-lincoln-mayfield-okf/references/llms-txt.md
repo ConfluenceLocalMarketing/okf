@@ -1,6 +1,6 @@
 ---
 type: APIs
-title: LLMs.txt — Site Discovery
+title: LLMs.txt - Site Discovery
 description: Site structure and discovery endpoints for Nick Mayer Lincoln Mayfield.
 resource: https://www.nickmayerlincolnmayfield.com/
 tags:
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# LLMs.txt — Site Discovery
+# LLMs.txt - Site Discovery
 
 ## Key Pages
 
@@ -31,4 +31,4 @@ timestamp: 2026-07-02
 
 No structured API endpoints (OpenAPI, GraphQL, PromptGraph) were found during site analysis. Inventory is served through the FordDirect platform integration within the DealerOn CMS framework.
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/references/ai-discovery-page.md) for platform details.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-mayfield/references/ai-discovery-page.md) for platform details.

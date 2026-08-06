@@ -44,7 +44,7 @@ BMW Value Service provides competitively priced maintenance for select BMW model
 
 ## Service Specials
 
-The dealership offers rotating service specials. See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/dealership.md) for current offers.
+The dealership offers rotating service specials. See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/dealership.md) for current offers.
 
 ## Parts Department
 
@@ -55,5 +55,5 @@ Genuine BMW Original Parts and accessories available:
 - **M Performance Parts** - Performance upgrades for M and M Sport vehicles
 - **BMW Accessories** - Genuine BMW accessories including floor liners, roof racks, and more
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/staff.md) for service department roles.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/dealership.md) for contact and hours.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/staff.md) for service department roles.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/dealership.md) for contact and hours.

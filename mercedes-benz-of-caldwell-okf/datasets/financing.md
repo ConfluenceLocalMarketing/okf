@@ -39,11 +39,11 @@ The finance center at Mercedes-Benz of Caldwell provides tailored purchase and l
 | Aspect | Buying | Leasing |
 |--------|--------|---------|
 | Monthly Payment | Higher | Lower |
-| Term | 36–72 months | 24–48 months |
+| Term | 36-72 months | 24-48 months |
 | Ownership at End | Full ownership | Return or buyout |
-| Mileage Limit | Unlimited | 7,500–15,000/year |
+| Mileage Limit | Unlimited | 7,500-15,000/year |
 | Maintenance | Owner responsibility | Usually covered under warranty |
-| New Model Frequency | Every few years | Every 2–3 years |
+| New Model Frequency | Every few years | Every 2-3 years |
 
 ## Trade-In Program
 
@@ -59,4 +59,4 @@ The finance center at Mercedes-Benz of Caldwell provides tailored purchase and l
 - College graduate program
 - Loyalty and conquest programs
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mercedes-benz-of-caldwell-okf/datasets/company.md) for dealership location and contact.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mercedes-benz-of-caldwell/datasets/company.md) for dealership location and contact.

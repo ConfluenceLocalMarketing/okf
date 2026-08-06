@@ -38,4 +38,4 @@ Structured prompts for Friendly Ford Las Vegas, covering vehicle features, finan
 
 Endpoint: Available via the Friendly Ford Las Vegas website.
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/references/ai-discovery-page.md) for API access details and [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/faq.md) for common customer questions.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/references/ai-discovery-page.md) for API access details and [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/faq.md) for common customer questions.

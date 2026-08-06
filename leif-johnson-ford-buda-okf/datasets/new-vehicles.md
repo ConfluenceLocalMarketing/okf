@@ -69,4 +69,4 @@ Leif Johnson Ford of Buda offers a dedicated Work Trucks program through [Work T
 
 Browse online at the [new vehicle inventory page](https://www.leifjohnsonfordofbuda.com/inventory/new-vehicles/) and [new specials](https://www.leifjohnsonfordofbuda.com/inventory/new-specials/).
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/dealership.md) for full business profile and [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/financing.md) for purchase/lease options.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/dealership.md) for full business profile and [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/financing.md) for purchase/lease options.

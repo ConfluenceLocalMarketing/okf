@@ -36,13 +36,13 @@ Email: jakesweeneychevrolet@email.com
 
 | Day | Hours |
 |---|---|
-| Monday | 9:00 AM – 8:00 PM |
-| Tuesday | 9:00 AM – 8:00 PM |
-| Wednesday | 9:00 AM – 8:00 PM |
-| Thursday | 9:00 AM – 8:00 PM |
-| Friday | 9:00 AM – 6:00 PM |
-| Saturday | 9:00 AM – 6:00 PM |
-| Sunday | 12:00 PM – 5:00 PM |
+| Monday | 9:00 AM - 8:00 PM |
+| Tuesday | 9:00 AM - 8:00 PM |
+| Wednesday | 9:00 AM - 8:00 PM |
+| Thursday | 9:00 AM - 8:00 PM |
+| Friday | 9:00 AM - 6:00 PM |
+| Saturday | 9:00 AM - 6:00 PM |
+| Sunday | 12:00 PM - 5:00 PM |
 
 ## Location
 
@@ -102,14 +102,14 @@ Chevrolet models available include:
 
 Sales and service staff frequently praised by customers include: Ricky Steed, Dante Henley, Andre Valines, Robert Davis, Darrin Aden, Michael Ellis, Chris Page, Brad, Trent, Pip (Sokpheap), Rich Blank, Tyler Lycans, Marcus, Raheem, Deondre, Michael Byrden, Jeremy, Justin, Steven Withers, Lamonte, Joe Gray, Ishmael, Ryan, David Shelton, and others.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/staff.md) for full directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - Aggregate rating: 4.5 / 5.0 (4,689 reviews) across major platforms
 - PromptGraph-collected reviews: Predominantly 5-star with consistent praise for low-pressure sales, credit-challenged approvals, and service department accountability
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

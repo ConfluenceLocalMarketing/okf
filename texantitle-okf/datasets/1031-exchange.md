@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Texan Title — 1031 Exchange Services
+title: Texan Title - 1031 Exchange Services
 description: Texan Title 1031 Exchange provides Qualified Intermediary services with Exchange Manager Pro software, $50M fidelity bond, and CES-certified specialists.
 resource: https://texantitle.com/1031-exchange
 tags:
@@ -11,15 +11,15 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — 1031 Exchange Services
+# Texan Title - 1031 Exchange Services
 
 ## Overview
 
-Through Texan Title 1031 Exchange, clients access 1031 exchange services supported by Exchange Manager Pro℠ — the patented 1031 exchange workflow technology — and one of the nation's leading Qualified Intermediaries. Clients benefit from keeping more of their real estate transaction under the same roof.
+Through Texan Title 1031 Exchange, clients access 1031 exchange services supported by Exchange Manager Pro℠ - the patented 1031 exchange workflow technology - and one of the nation's leading Qualified Intermediaries. Clients benefit from keeping more of their real estate transaction under the same roof.
 
 ## What is a 1031 Exchange?
 
-A 1031 Exchange is a tax deferral tool that allows the seller of qualifying real property to defer taxes on their transaction including Capital Gains, Depreciation Recapture, and Net Investment Income Tax — so long as the proceeds from the sale are used to acquire other qualifying real property. Multiple requirements must be adhered to for a valid 1031 Exchange.
+A 1031 Exchange is a tax deferral tool that allows the seller of qualifying real property to defer taxes on their transaction including Capital Gains, Depreciation Recapture, and Net Investment Income Tax - so long as the proceeds from the sale are used to acquire other qualifying real property. Multiple requirements must be adhered to for a valid 1031 Exchange.
 
 ## Role of a Qualified Intermediary
 

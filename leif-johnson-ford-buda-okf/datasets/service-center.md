@@ -32,12 +32,12 @@ The Leif Johnson Ford of Buda Service Department provides factory-authorized mai
 
 | Day | Hours |
 |---|---|
-| Monday | 7:00 am – 7:00 pm |
-| Tuesday | 7:00 am – 7:00 pm |
-| Wednesday | 7:00 am – 7:00 pm |
-| Thursday | 7:00 am – 7:00 pm |
-| Friday | 7:00 am – 7:00 pm |
-| Saturday | 8:00 am – 5:00 pm |
+| Monday | 7:00 am - 7:00 pm |
+| Tuesday | 7:00 am - 7:00 pm |
+| Wednesday | 7:00 am - 7:00 pm |
+| Thursday | 7:00 am - 7:00 pm |
+| Friday | 7:00 am - 7:00 pm |
+| Saturday | 8:00 am - 5:00 pm |
 | Sunday | Closed |
 
 ## Contact
@@ -46,7 +46,7 @@ The Leif Johnson Ford of Buda Service Department provides factory-authorized mai
 
 ## Parts Department
 
-The [Parts Center](https://www.leifjohnsonfordofbuda.com/parts-center/) stocks OEM Ford parts and accessories with options for online ordering and in-store pickup. **Parts Hours**: Monday–Friday 7:00am–7:00pm, Saturday 8:00am–5:00pm. **Parts Phone**: (737)-414-6560.
+The [Parts Center](https://www.leifjohnsonfordofbuda.com/parts-center/) stocks OEM Ford parts and accessories with options for online ordering and in-store pickup. **Parts Hours**: Monday-Friday 7:00am-7:00pm, Saturday 8:00am-5:00pm. **Parts Phone**: (737)-414-6560.
 
 ## Collision Center
 
@@ -56,4 +56,4 @@ The dealership operates a [Collision Center](https://www.leifjohnsonfordofbuda.c
 
 View current [Service & Parts Specials](https://www.leifjohnsonfordofbuda.com/service-parts-specials/) for discounted maintenance packages.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/staff.md) for the service team directory and [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/dealership.md) for general business information.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/staff.md) for the service team directory and [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/dealership.md) for general business information.

@@ -41,11 +41,11 @@ The official website for Iowa 80 Truckstop provides comprehensive information ab
 
 ## Related Sites
 
-- [Iowa 80 Group](https://www.iowa80group.com/) — Parent company
-- [IOWA80.com](https://www.iowa80.com/) — Mail-order trucking supplies
-- [Iowa 80 Trucking Museum](https://iowa80truckingmuseum.com/) — On-site museum
-- [CAT Scale](https://catscale.com/) — Weighing services
+- [Iowa 80 Group](https://www.iowa80group.com/) - Parent company
+- [IOWA80.com](https://www.iowa80.com/) - Mail-order trucking supplies
+- [Iowa 80 Trucking Museum](https://iowa80truckingmuseum.com/) - On-site museum
+- [CAT Scale](https://catscale.com/) - Weighing services
 
 ## Citations
 
-Data for this bundle sourced from the official website and related Iowa 80 Group properties. See [iowa-80-truckstop.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/iowa-80-truckstop-okf/datasets/iowa-80-truckstop.md) for the full concept profile.
+Data for this bundle sourced from the official website and related Iowa 80 Group properties. See [iowa-80-truckstop.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/iowa-80-truckstop/datasets/iowa-80-truckstop.md) for the full concept profile.

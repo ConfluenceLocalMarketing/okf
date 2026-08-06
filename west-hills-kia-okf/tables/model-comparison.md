@@ -113,5 +113,5 @@ Standard or available across most Kia models:
 - Safe Exit Assist
 - Surround View Monitor
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/datasets/dealership.md) for current offers and promotions.

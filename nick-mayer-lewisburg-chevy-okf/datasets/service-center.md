@@ -44,9 +44,9 @@ The parts department stocks genuine OEM Chevrolet parts, accessories, and fluids
 
 | Day | Hours |
 |---|---|
-| Monday – Friday | 9:00 AM – 7:00 PM |
-| Saturday | 9:00 AM – 6:00 PM |
+| Monday - Friday | 9:00 AM - 7:00 PM |
+| Saturday | 9:00 AM - 6:00 PM |
 | Sunday | Closed |
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-chevy-okf/datasets/dealership.md) for full dealership profile.
-See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-chevy-okf/datasets/faq.md) for service-related questions.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-chevy/datasets/dealership.md) for full dealership profile.
+See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-chevy/datasets/faq.md) for service-related questions.

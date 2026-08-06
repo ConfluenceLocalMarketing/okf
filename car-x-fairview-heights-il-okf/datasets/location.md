@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Fairview Heights, IL
+title: Car-X Tire & Auto - Fairview Heights, IL
 description: "Car-X Tire & Auto location in Fairview Heights, IL: address, hours, contact, 4.4-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/fairview-heights-il/business
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Fairview Heights, IL
+# Car-X Tire & Auto - Fairview Heights, IL
 
 Discover exceptional automotive service at Car-X Tire & Auto in Fairview Heights, conveniently located just south of St. Clair Square Shopping Center.   As a trusted community business, we’re dedicated to providing reliable, friendly care to every customer who brings their vehicle to us.
 
@@ -50,7 +50,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -59,4 +59,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-fairview-heights-il-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-fairview-heights-il/tables/coupons.md) for details.

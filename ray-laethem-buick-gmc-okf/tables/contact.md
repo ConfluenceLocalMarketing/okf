@@ -1,6 +1,6 @@
 ---
 type: Contact Table
-title: Ray Laethem Buick GMC — Contact Information
+title: Ray Laethem Buick GMC - Contact Information
 description: Contact information including addresses, phone numbers, and department lines for Ray Laethem Buick GMC.
 resource: https://www.laethemgm.com/
 tags:
@@ -27,5 +27,5 @@ timestamp: 2026-07-03
 
 ## Citations
 
-- See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for full dealership profile
-- See [hours.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/tables/hours.md) for operating hours
+- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/dealership.md) for full dealership profile
+- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/tables/hours.md) for operating hours

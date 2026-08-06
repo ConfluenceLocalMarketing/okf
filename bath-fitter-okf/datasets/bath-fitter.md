@@ -22,14 +22,14 @@ Family owned and operated for over 30 years, Bath Fitter Metro Detroit specializ
 
 - **Address:** 30000 Ryan Rd Suite B, Warren, MI 48092
 - **Phone:** (586) 200-1237
-- **Hours:** Mon–Fri 8:30 AM – 4:30 PM
+- **Hours:** Mon-Fri 8:30 AM - 4:30 PM
 
 ## Services
 
-- **Bathtub Liners** — Custom-fitted acrylic liner installed directly over existing tubs.
-- **Shower Conversions** — Convert existing tub to a walk-in shower.
-- **Walk-in Shower Conversions** — Barrier-free shower access with custom acrylic walls and base.
-- **PermaFit Systems** — Custom-fitted acrylic bath and shower systems.
+- **Bathtub Liners** - Custom-fitted acrylic liner installed directly over existing tubs.
+- **Shower Conversions** - Convert existing tub to a walk-in shower.
+- **Walk-in Shower Conversions** - Barrier-free shower access with custom acrylic walls and base.
+- **PermaFit Systems** - Custom-fitted acrylic bath and shower systems.
 
 ## Features
 
@@ -41,7 +41,7 @@ Family owned and operated for over 30 years, Bath Fitter Metro Detroit specializ
 
 ## Service Area
 
-See [service-area.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bath-fitter-okf/datasets/service-area.md) for the full list of municipalities served.
+See [service-area.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bath-fitter/datasets/service-area.md) for the full list of municipalities served.
 
 ## Citations
 

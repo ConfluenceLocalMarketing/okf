@@ -63,4 +63,4 @@ HondaTrue Certified Pre-Owned vehicles undergo rigorous inspection and include:
 
 West Hills Honda will buy your vehicle whether you purchase from them or not. Fast, complimentary appraisal through KBB Instant Cash Offer.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-honda-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-honda/datasets/dealership.md) for current financing and trade-in programs.

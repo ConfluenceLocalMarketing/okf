@@ -1,6 +1,6 @@
 ---
 type: References
-title: AI Discovery Page — Nick Mayer GMC Lewisburg
+title: AI Discovery Page - Nick Mayer GMC Lewisburg
 description: DealerOn platform with standard AI discovery page and no PromptGraph API integration.
 resource: https://www.nickmayergmcoflewisburg.com/
 tags:
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Nick Mayer GMC Lewisburg
+# AI Discovery Page - Nick Mayer GMC Lewisburg
 
 Nick Mayer GMC Lewisburg operates on the **DealerOn** dealership platform.
 
@@ -34,4 +34,4 @@ No structured AI discovery endpoints (such as a PromptGraph API) were identified
 - Parts: https://www.nickmayergmcoflewisburg.com/parts/
 - Financing: https://www.nickmayergmcoflewisburg.com/finance/
 
-See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/references/llms-txt.md) for the LLM discovery reference.
+See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/references/llms-txt.md) for the LLM discovery reference.

@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Texan Title — Community Involvement
+title: Texan Title - Community Involvement
 description: Texan Title has given back $2M+ to Texas communities through 80+ organizations spanning charities, education, youth programs, and religious institutions.
 resource: https://texantitle.com/community-involvement
 tags:
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — Community Involvement
+# Texan Title - Community Involvement
 
 **$2,000,000+** given back to communities across Texas.
 
@@ -25,11 +25,11 @@ Big Brothers/Big Sisters, Blue Santa, Boy Scouts of America, Boy Scouts Fellowsh
 
 ## Health & Wellness (16 organizations)
 
-ALS Texas Chapter, Alzheimer Walk/Cure Walks/Heart Walk/Blood Drive, American Cancer Society, American Heart Association, American Foundation for Suicide Prevention, BIG Love Cancer Care Fundraiser, Crohn's & Colitis Foundation of America, D'Feet Breast Cancer, Gulf Coast Mental Health, MD Anderson Cancer Center, Muscular Dystrophy Association, Race For the Cure, Ronald McDonald House of Galveston, Shriner's Burn Hospital, St. Jude's Children's Hospital, Susan G. Komen – Houston
+ALS Texas Chapter, Alzheimer Walk/Cure Walks/Heart Walk/Blood Drive, American Cancer Society, American Heart Association, American Foundation for Suicide Prevention, BIG Love Cancer Care Fundraiser, Crohn's & Colitis Foundation of America, D'Feet Breast Cancer, Gulf Coast Mental Health, MD Anderson Cancer Center, Muscular Dystrophy Association, Race For the Cure, Ronald McDonald House of Galveston, Shriner's Burn Hospital, St. Jude's Children's Hospital, Susan G. Komen - Houston
 
 ## Community Services (27 organizations)
 
-American Legion, Bay Area Animal Shelter, Bolivar Peninsula Lions Club, Boots on the Ground Ministry, C Crewe of Galveston, Galveston Bay Foundation, Galveston County Food Bank, Galveston County Senior Citizens Activities, Gulf Coast Blood Drive, Habitat for Humanity, Houston Parks Board, Humane Society Galveston County, Keep Pearland Beautiful, Lions Club, Lions Eye Bank of Texas, Lone Survivor Foundation, Marine Corps League, New Horizons – Home for Children, Project Hope & Joy, Salvation Army, Sisters Helping Sisters, The 100 Club, United Way Galveston County Mainland, Vets4Vets, VFW Post 8243, Women's Crisis Center, Wounded Warrior Project
+American Legion, Bay Area Animal Shelter, Bolivar Peninsula Lions Club, Boots on the Ground Ministry, C Crewe of Galveston, Galveston Bay Foundation, Galveston County Food Bank, Galveston County Senior Citizens Activities, Gulf Coast Blood Drive, Habitat for Humanity, Houston Parks Board, Humane Society Galveston County, Keep Pearland Beautiful, Lions Club, Lions Eye Bank of Texas, Lone Survivor Foundation, Marine Corps League, New Horizons - Home for Children, Project Hope & Joy, Salvation Army, Sisters Helping Sisters, The 100 Club, United Way Galveston County Mainland, Vets4Vets, VFW Post 8243, Women's Crisis Center, Wounded Warrior Project
 
 ## Religious Organizations (11 organizations)
 

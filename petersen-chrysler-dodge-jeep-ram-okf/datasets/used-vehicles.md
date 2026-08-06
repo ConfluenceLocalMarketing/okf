@@ -53,10 +53,10 @@ CDJR certified pre-owned vehicles available with:
 
 ## Financing
 
-All-credit financing, first-time buyer programs, and commercial financing available. See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/financing.md).
+All-credit financing, first-time buyer programs, and commercial financing available. See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/financing.md).
 
 ## Express Lane Service
 
-Quick basic maintenance for all vehicles including pre-owned. See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/service-center.md).
+Quick basic maintenance for all vehicles including pre-owned. See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/service-center.md).
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/company.md) for location and contact.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/company.md) for location and contact.

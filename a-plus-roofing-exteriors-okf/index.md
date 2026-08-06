@@ -8,19 +8,19 @@ Professional roofing and exterior renovation company serving residential and com
 
 ## Datasets
 
-- [company-profile.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/company-profile.md) - Full business profile for A Plus Roofing & Exteriors, including services, roofing types, special programs, and incident response capabilities.
-- [service-areas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/service-areas.md) - Geographic coverage area spanning midwest and northeast US regions with multi-state service availability.
+- [company-profile.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/datasets/company-profile.md) - Full business profile for A Plus Roofing & Exteriors, including services, roofing types, special programs, and incident response capabilities.
+- [service-areas.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/datasets/service-areas.md) - Geographic coverage area spanning midwest and northeast US regions with multi-state service availability.
 
 ## References
 
-- [website.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/references/website.md) - Official company website at aplusroofingandexteriors.com providing service details, portfolio, and contact information.
+- [website.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/references/website.md) - Official company website at aplusroofingandexteriors.com providing service details, portfolio, and contact information.
 
 ## Tables
 
-- [services-pricing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/tables/services-pricing.md) - Comprehensive service catalog including roofing, siding, gutter, window, and storm damage restoration services with descriptions and key features.
+- [services-pricing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/tables/services-pricing.md) - Comprehensive service catalog including roofing, siding, gutter, window, and storm damage restoration services with descriptions and key features.
 
 ## Cross-References
 
-- See [company-profile.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/company-profile.md) for business details and service descriptions.
-- See [service-areas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/service-areas.md) for geographic coverage and availability.
-- See [services-pricing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/tables/services-pricing.md) for a structured breakdown of all offered services.
+- See [company-profile.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/datasets/company-profile.md) for business details and service descriptions.
+- See [service-areas.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/datasets/service-areas.md) for geographic coverage and availability.
+- See [services-pricing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/tables/services-pricing.md) for a structured breakdown of all offered services.

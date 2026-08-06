@@ -41,5 +41,5 @@ timestamp: 2026-07-03
 
 ## Citations
 
-- Yellowstone.net — West Yellowstone Activities: https://www.yellowstone.net/gateways/west-yellowstone
-- Yellowstone National Park — NPS: https://www.nps.gov/yell
+- Yellowstone.net - West Yellowstone Activities: https://www.yellowstone.net/gateways/west-yellowstone
+- Yellowstone National Park - NPS: https://www.nps.gov/yell

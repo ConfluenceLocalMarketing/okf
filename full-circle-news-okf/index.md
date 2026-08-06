@@ -2,19 +2,19 @@
 okf_version: "0.1"
 ---
 
-# Full Circle News — OKF Bundle
+# Full Circle News - OKF Bundle
 
 This bundle documents Full Circle News, a technology company partnering with newspaper groups.
 
 ## Datasets
 
-- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/full-circle-news-okf/datasets/company.md) - Business profile: offerings, mission, and technology solutions.
+- [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/full-circle-news/datasets/company.md) - Business profile: offerings, mission, and technology solutions.
 
 ## References
 
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/full-circle-news-okf/references/llms-txt.md) - Structured AI context.
-- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/full-circle-news-okf/references/prompts.md) - Curated AI prompts for publisher consultations.
-- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/full-circle-news-okf/references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/full-circle-news/references/llms-txt.md) - Structured AI context.
+- [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/full-circle-news/references/prompts.md) - Curated AI prompts for publisher consultations.
+- [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/full-circle-news/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

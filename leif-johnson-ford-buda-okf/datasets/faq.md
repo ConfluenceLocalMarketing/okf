@@ -61,7 +61,7 @@ A: Yes. The dealership operates a full collision center for body repair and pain
 ## Dealership
 
 **Q: What are your sales hours?**
-A: Monday–Thursday 8:30am–8:00pm, Friday–Saturday 8:30am–7:00pm, Sunday closed.
+A: Monday-Thursday 8:30am-8:00pm, Friday-Saturday 8:30am-7:00pm, Sunday closed.
 
 **Q: Where is the dealership located?**
 A: 15301 South IH-35, Buda, TX 78610.
@@ -75,4 +75,4 @@ A: Yes. The Leif Johnson Automotive Group has been family-owned and operated for
 **Q: What community programs do you support?**
 A: The dealership supports Earning by Learning, Responsible Parenting, Toys for Tots, and other local initiatives.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/dealership.md) for full business profile.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/dealership.md) for full business profile.

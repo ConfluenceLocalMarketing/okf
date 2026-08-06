@@ -31,10 +31,10 @@ Petersen CDJR provides comprehensive financing solutions including commercial ve
 - Certified pre-owned financing
 
 ### All-Credit Programs
-- **Excellent Credit** — Premier rates
-- **Good Credit** — Standard financing
-- **Fair Credit** — Flexible terms
-- **Bad Credit / No Credit** — First-time buyer programs and credit-building options
+- **Excellent Credit** - Premier rates
+- **Good Credit** - Standard financing
+- **Fair Credit** - Flexible terms
+- **Bad Credit / No Credit** - First-time buyer programs and credit-building options
 
 ### Commercial Financing
 - Business vehicle loans and leases
@@ -64,4 +64,4 @@ Petersen CDJR provides comprehensive financing solutions including commercial ve
 - All makes and models accepted
 - Trade equity applied toward purchase
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/company.md) for location and contact information.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/company.md) for location and contact information.

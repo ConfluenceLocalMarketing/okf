@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — BDC Door Company
+title: AI Discovery Page - BDC Door Company
 description: Overview of AI visibility for BDC Door Company. (synthesized)
 tags:
   - ai-discovery
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — BDC Door Company
+# AI Discovery Page - BDC Door Company
 
 ## Overview
 BDC Door Company has no AI-specific discovery files. An llms.txt and prompts.txt have been synthesized.

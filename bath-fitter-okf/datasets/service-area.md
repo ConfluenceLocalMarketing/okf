@@ -37,4 +37,4 @@ The franchise primarily serves Southeast Michigan with extended coverage into th
 
 ## Citations
 
-- [Bath Fitter Metro Detroit — Service Area](https://www.localbathfitter.com/)
+- [Bath Fitter Metro Detroit - Service Area](https://www.localbathfitter.com/)

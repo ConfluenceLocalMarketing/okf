@@ -18,10 +18,10 @@ Nick Mayer Lincoln Mayfield employs a team of sales, service, and management pro
 
 ## Departments
 
-- **Sales Team** — New and pre-owned vehicle specialists
-- **Finance Team** — Financing and leasing professionals
-- **Service Team** — Certified Lincoln technicians
-- **Parts Team** — Genuine Lincoln parts specialists
-- **Management** — Dealership leadership and operations
+- **Sales Team** - New and pre-owned vehicle specialists
+- **Finance Team** - Financing and leasing professionals
+- **Service Team** - Certified Lincoln technicians
+- **Parts Team** - Genuine Lincoln parts specialists
+- **Management** - Dealership leadership and operations
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-mayfield-okf/datasets/dealership.md) for dealership information.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-mayfield/datasets/dealership.md) for dealership information.

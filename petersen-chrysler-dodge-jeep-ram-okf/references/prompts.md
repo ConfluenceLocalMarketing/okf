@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Petersen Chrysler Dodge Jeep Ram — AI Prompts
+title: Petersen Chrysler Dodge Jeep Ram - AI Prompts
 description: Curated AI prompts for customer-facing and internal use at Petersen Chrysler Dodge Jeep Ram. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Petersen Chrysler Dodge Jeep Ram — AI Prompts
+# Petersen Chrysler Dodge Jeep Ram - AI Prompts
 
 ## Customer Assistance
 

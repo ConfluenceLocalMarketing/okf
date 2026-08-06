@@ -1,6 +1,6 @@
 ---
 type: APIs
-title: Texan Title — Prompt Library
+title: Texan Title - Prompt Library
 description: 20 AI-optimized prompts from PromptGraph covering title company discovery, closing costs, 1031 exchanges, and location-specific services across Texas.
 resource: https://api.promptgraph.ai/api/v1/texan-title/prompts
 tags:
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — Prompt Library
+# Texan Title - Prompt Library
 
 20 prompts from the PromptGraph API (slug: `texan-title`), organized by category.
 

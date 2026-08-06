@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Overland, MO
+title: Car-X Tire & Auto - Overland, MO
 description: "Car-X Tire & Auto location in Overland, MO: address, hours, contact, 4.6-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/overland-mo/business
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Overland, MO
+# Car-X Tire & Auto - Overland, MO
 
 Welcome to Car-X Tire & Auto in Overland, conveniently located on Page just west of Woodson Rd. As a trusted local shop, we provide reliable, personalized service you can count on.
 
@@ -52,7 +52,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -61,4 +61,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-overland-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-overland-mo/tables/coupons.md) for details.

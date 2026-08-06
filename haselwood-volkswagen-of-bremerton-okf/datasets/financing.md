@@ -49,4 +49,4 @@ Estimate monthly payments using the online payment calculator on the dealership 
 
 Contact the finance department at (360) 842-2521 or through the dealership's sales line.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/datasets/used-vehicles.md) for inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/datasets/dealership.md) for full business profile and [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/datasets/new-vehicles.md) or [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/datasets/used-vehicles.md) for inventory.

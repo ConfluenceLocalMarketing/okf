@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Weathercraft Roofing Company of North Platte
+title: AI Discovery Page - Weathercraft Roofing Company of North Platte
 description: Overview of AI visibility for Weathercraft. (synthesized)
 tags:
   - ai-discovery
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# AI Discovery Page — Weathercraft Roofing Company of North Platte
+# AI Discovery Page - Weathercraft Roofing Company of North Platte
 
 ## Overview
 Weathercraft has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.

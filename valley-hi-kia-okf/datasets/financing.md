@@ -17,10 +17,10 @@ The Finance Center at Valley Hi Kia provides flexible financing solutions for ne
 
 ## Financing Options
 
-- **New Vehicle Loans** — Competitive rates on new Kia models
-- **Certified Pre-Owned Financing** — Special rates on CPO vehicles
-- **Lease Programs** — Kia lease plans with flexible terms
-- **First-Time Buyer Programs** — Designed for buyers with limited credit history
+- **New Vehicle Loans** - Competitive rates on new Kia models
+- **Certified Pre-Owned Financing** - Special rates on CPO vehicles
+- **Lease Programs** - Kia lease plans with flexible terms
+- **First-Time Buyer Programs** - Designed for buyers with limited credit history
 
 ## Online Services
 
@@ -31,4 +31,4 @@ The Finance Center at Valley Hi Kia provides flexible financing solutions for ne
 
 Finance specialists are available during dealership hours. Call (760) 983-7146 or visit the dealership at 14644 Valley Center Drive, Victorville, CA.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/valley-hi-kia-okf/datasets/company.md) for the full dealership profile.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/valley-hi-kia/datasets/company.md) for the full dealership profile.

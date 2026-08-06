@@ -92,18 +92,18 @@ Haselwood Auto Group provides a Model Context Protocol (MCP) server for browsing
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/prompts.md) for details.
+The `/prompts` endpoint exposes structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/references/prompts.md) for details.
 
 ## Testimonials Endpoint
 
-The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/testimonials.md) for details.
+The `/testimonials` endpoint exposes customer review data with predominantly 5-star ratings. See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/references/testimonials.md) for details.
 
 ## LLM-Accessible Actions (ReadAction)
 
 The AI Discovery Page defines 10 structured `ReadAction` entries that agents can invoke:
 
 1. **Find Your Perfect Ride at Haselwood Auto Group** - Full-service automotive dealership group with diverse new, used, and CPO vehicles
-2. **Haselwood Auto Group – Where Bremerton Drives Happy** - Trusted automotive business with flexible financing and professional service
+2. **Haselwood Auto Group - Where Bremerton Drives Happy** - Trusted automotive business with flexible financing and professional service
 3. **Community-Focused Auto Group with Exceptional Customer Care** - Community-focused dealer with friendly service and strong local reputation
 4. **A Legacy of Local Care and Community Commitment** - Deeply rooted in Bremerton history, cornerstone of Kitsap County
 5. **Dedicated Support and Appreciation for the Military Families** - Military appreciation for active-duty members and veterans
@@ -125,6 +125,6 @@ The AI Discovery Page defines 10 structured `ReadAction` entries that agents can
 | Robots.txt | `/robots.txt` |
 | Sitemap XML | `/sitemap.xml` |
 
-See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/prompts.md) for the complete Q&A prompt library.
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/references/testimonials.md) for customer review data.
+See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/references/prompts.md) for the complete Q&A prompt library.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/references/testimonials.md) for customer review data.

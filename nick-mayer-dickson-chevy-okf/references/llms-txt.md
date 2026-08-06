@@ -54,4 +54,4 @@ timestamp: 2026-07-02
 - Trade-in valuation
 ```
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-dickson-chevy-okf/references/ai-discovery-page.md) for the full AI discovery page.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-chevy/references/ai-discovery-page.md) for the full AI discovery page.

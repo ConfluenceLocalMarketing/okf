@@ -1,7 +1,7 @@
 ---
 type: Entities
 title: West Hills Auto Plex
-description: Multi-franchise automotive group in Bremerton, WA operating five brand-specific dealerships — Honda, Chrysler Jeep Dodge RAM, Ford, Kia, and Mazda — as part of the Haselwood Auto Group.
+description: Multi-franchise automotive group in Bremerton, WA operating five brand-specific dealerships - Honda, Chrysler Jeep Dodge RAM, Ford, Kia, and Mazda - as part of the Haselwood Auto Group.
 resource: https://www.westhillsautoplex.com/
 tags:
   - auto-group
@@ -21,13 +21,13 @@ The West Hills Auto Plex is a multi-franchise automotive group located in Bremer
 
 ## History
 
-- **1940s** — Charles "Chuck" Haselwood hitchhiked from Ellensburg, WA to Bremerton after WWII service under General Patton, worked at Speed Service gas station downtown
-- **1950s** — Chuck opened his own gas station and began selling used cars on the side with a pioneering 30-Day Warranty
-- **1960s** — Opened first dedicated used car dealership on 6th Street in downtown Bremerton
-- **1970s-1980s** — Expanded into new-car franchises including Buick, GMC, and Toyota; became one of the first 25 Buick dealerships nationally
-- **1990s** — Rick Wiler (Chuck's stepson) joined and became President/Owner; built standalone Toyota facility and Chrysler Jeep Dodge facility; over 200 staff by 1994
-- **2015** — Purchased the Parr Dealership Group, adding Hyundai, Volkswagen, Ford, and Mazda brands
-- **Present** — Five franchise-branded dealerships covering Honda, Ford, Kia, Mazda, and Chrysler/Jeep/Dodge/RAM under the West Hills name; additional Haselwood-branded Chevrolet, GMC, Hyundai, Volkswagen, and Toyota stores in the group
+- **1940s** - Charles "Chuck" Haselwood hitchhiked from Ellensburg, WA to Bremerton after WWII service under General Patton, worked at Speed Service gas station downtown
+- **1950s** - Chuck opened his own gas station and began selling used cars on the side with a pioneering 30-Day Warranty
+- **1960s** - Opened first dedicated used car dealership on 6th Street in downtown Bremerton
+- **1970s-1980s** - Expanded into new-car franchises including Buick, GMC, and Toyota; became one of the first 25 Buick dealerships nationally
+- **1990s** - Rick Wiler (Chuck's stepson) joined and became President/Owner; built standalone Toyota facility and Chrysler Jeep Dodge facility; over 200 staff by 1994
+- **2015** - Purchased the Parr Dealership Group, adding Hyundai, Volkswagen, Ford, and Mazda brands
+- **Present** - Five franchise-branded dealerships covering Honda, Ford, Kia, Mazda, and Chrysler/Jeep/Dodge/RAM under the West Hills name; additional Haselwood-branded Chevrolet, GMC, Hyundai, Volkswagen, and Toyota stores in the group
 
 ## Member Dealerships
 
@@ -53,9 +53,9 @@ The West Hills Auto Plex is a multi-franchise automotive group located in Bremer
 
 ## Leadership
 
-- **Rick Wiler** — Owner/President, Haselwood Auto Group
-- **David Gandel** — General Manager, West Hills Honda
-- **Clayton Crittenden** — General Manager, West Hills Ford
+- **Rick Wiler** - Owner/President, Haselwood Auto Group
+- **David Gandel** - General Manager, West Hills Honda
+- **Clayton Crittenden** - General Manager, West Hills Ford
 
 See individual dealership files for full staff directories.
 
@@ -79,9 +79,9 @@ The West Hills Auto Plex supports local Kitsap County organizations including:
 
 ## Affiliations
 
-- **Haselwood Auto Group** — Parent organization; also operates Haselwood Chevrolet GMC, Haselwood Hyundai, Haselwood Volkswagen of Bremerton, Heartland Toyota
-- **Dealer.com** — Website platform for all member dealerships
-- **PromptGraph** — AI platform powering AI Discovery Pages and structured data endpoints
-- **KBB** — Kelley Blue Book trade-in valuation partner
+- **Haselwood Auto Group** - Parent organization; also operates Haselwood Chevrolet GMC, Haselwood Hyundai, Haselwood Volkswagen of Bremerton, Heartland Toyota
+- **Dealer.com** - Website platform for all member dealerships
+- **PromptGraph** - AI platform powering AI Discovery Pages and structured data endpoints
+- **KBB** - Kelley Blue Book trade-in valuation partner
 
-See [west-hills-honda.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-honda.md), [west-hills-chrysler-jeep-dodge-ram.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-chrysler-jeep-dodge-ram.md), [west-hills-ford.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-ford.md), [west-hills-kia.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-kia.md), and [west-hills-mazda.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-mazda.md) for individual dealership profiles.
+See [west-hills-honda.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-honda.md), [west-hills-chrysler-jeep-dodge-ram.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-chrysler-jeep-dodge-ram.md), [west-hills-ford.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-ford.md), [west-hills-kia.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-kia.md), and [west-hills-mazda.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-mazda.md) for individual dealership profiles.

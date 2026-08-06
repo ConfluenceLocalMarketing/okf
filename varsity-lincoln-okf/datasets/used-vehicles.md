@@ -50,6 +50,6 @@ The dealership offers trade-in evaluation through:
 
 Complimentary vehicle delivery within 300 miles on qualifying vehicles.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/dealership.md) for full business profile.
-See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/financing.md) for financing options on pre-owned vehicles.
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/new-vehicles.md) for the new Lincoln lineup.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/dealership.md) for full business profile.
+See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/financing.md) for financing options on pre-owned vehicles.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/new-vehicles.md) for the new Lincoln lineup.

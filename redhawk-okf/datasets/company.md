@@ -28,13 +28,13 @@ Redhawk Gastropub is a one-of-a-kind restaurant located on the Snake River Canyo
 
 | Day | Hours |
 |-----|-------|
-| Monday–Thursday | 11:00 AM – 9:00 PM |
-| Friday–Saturday | 11:00 AM – 10:00 PM |
+| Monday-Thursday | 11:00 AM - 9:00 PM |
+| Friday-Saturday | 11:00 AM - 10:00 PM |
 | Sunday | Closed |
 
 ### Happy Hour
-- Monday–Thursday: 2:00 PM – 6:00 PM
-- Friday–Saturday: 2:00 PM – 6:00 PM & 9:00 PM – 10:00 PM
+- Monday-Thursday: 2:00 PM - 6:00 PM
+- Friday-Saturday: 2:00 PM - 6:00 PM & 9:00 PM - 10:00 PM
 
 ## Menus
 

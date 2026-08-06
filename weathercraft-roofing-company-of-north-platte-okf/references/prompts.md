@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Weathercraft Roofing Company of North Platte — AI Prompts
+title: Weathercraft Roofing Company of North Platte - AI Prompts
 description: Curated AI prompts for customer inquiries and internal use at Weathercraft. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Weathercraft Roofing Company of North Platte — AI Prompts
+# Weathercraft Roofing Company of North Platte - AI Prompts
 
 ## Customer Inquiries
 

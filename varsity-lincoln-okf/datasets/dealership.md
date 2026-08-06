@@ -43,10 +43,10 @@ Novi, Ann Arbor, Wixom, Farmington Hills, and the Metro Detroit area.
 
 ## Lincoln Models
 
-- **Corsair** — Compact luxury SUV (available plug-in hybrid)
-- **Nautilus** — Mid-size luxury SUV
-- **Aviator** — Mid-size three-row luxury SUV (available plug-in hybrid)
-- **Navigator / Navigator L** — Full-size luxury SUV
+- **Corsair** - Compact luxury SUV (available plug-in hybrid)
+- **Nautilus** - Mid-size luxury SUV
+- **Aviator** - Mid-size three-row luxury SUV (available plug-in hybrid)
+- **Navigator / Navigator L** - Full-size luxury SUV
 
 ## Awards & Recognition
 
@@ -60,19 +60,19 @@ Novi, Ann Arbor, Wixom, Farmington Hills, and the Metro Detroit area.
 
 ## Special Programs
 
-- **Lincoln Black Label** — Premium ownership experience with curated service, complimentary maintenance, and vehicle exchange privileges. Varsity Lincoln is one of only a few Lincoln Black Label dealers nationwide.
-- **Lincoln Electrified** — Hybrid and plug-in hybrid electric vehicle options including Aviator Grand Touring PHEV and Corsair PHEV.
-- **Lincoln Certified Pre-Owned** — Comprehensive warranty with 200-point inspection, 24/7 roadside assistance, and complimentary Lincoln Pickup & Delivery for covered repairs.
+- **Lincoln Black Label** - Premium ownership experience with curated service, complimentary maintenance, and vehicle exchange privileges. Varsity Lincoln is one of only a few Lincoln Black Label dealers nationwide.
+- **Lincoln Electrified** - Hybrid and plug-in hybrid electric vehicle options including Aviator Grand Touring PHEV and Corsair PHEV.
+- **Lincoln Certified Pre-Owned** - Comprehensive warranty with 200-point inspection, 24/7 roadside assistance, and complimentary Lincoln Pickup & Delivery for covered repairs.
 
 ## Unique Services
 
-- **Lincoln Pickup & Delivery** — Complimentary vehicle pick-up and drop-off for service appointments.
-- **Lincoln Mobile Service** — Factory-trained technicians dispatched to your home or office for select maintenance.
-- **Complimentary Loaner** — Courtesy vehicle provided during service appointments.
-- **Genuine OEM Parts** — Factory-original Lincoln parts for all repairs.
-- **Complimentary Delivery** — Free vehicle delivery within 300 miles.
-- **Customer Lounge** — Complimentary WiFi and refreshments while you wait.
-- **Online Service Scheduling** — Schedule appointments through the dealership website.
+- **Lincoln Pickup & Delivery** - Complimentary vehicle pick-up and drop-off for service appointments.
+- **Lincoln Mobile Service** - Factory-trained technicians dispatched to your home or office for select maintenance.
+- **Complimentary Loaner** - Courtesy vehicle provided during service appointments.
+- **Genuine OEM Parts** - Factory-original Lincoln parts for all repairs.
+- **Complimentary Delivery** - Free vehicle delivery within 300 miles.
+- **Customer Lounge** - Complimentary WiFi and refreshments while you wait.
+- **Online Service Scheduling** - Schedule appointments through the dealership website.
 
 ## Online Tools
 
@@ -88,7 +88,7 @@ Novi, Ann Arbor, Wixom, Farmington Hills, and the Metro Detroit area.
 
 Personalized luxury leasing, competitive APRs, online credit application and pre-approval, trade-in estimator, payment calculator, and vehicle protection plans available.
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/new-vehicles.md) for new Lincoln inventory.
-See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/used-vehicles.md) for pre-owned inventory.
-See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/service-center.md) for service offerings.
-See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/financing.md) for financing and leasing options.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/new-vehicles.md) for new Lincoln inventory.
+See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/used-vehicles.md) for pre-owned inventory.
+See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/service-center.md) for service offerings.
+See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/financing.md) for financing and leasing options.

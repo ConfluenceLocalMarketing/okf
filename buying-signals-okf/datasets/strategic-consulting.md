@@ -31,5 +31,5 @@ Every engagement starts with understanding goals and existing data, identifying 
 
 ## Related
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.
-See [business-intelligence.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/business-intelligence.md) for measurement and analytics.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/company.md) for the full product ecosystem.
+See [business-intelligence.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/business-intelligence.md) for measurement and analytics.

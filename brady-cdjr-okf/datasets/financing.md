@@ -19,9 +19,9 @@ Brady CDJR offers flexible financing solutions to help you drive home in your ne
 
 ## Financing Options
 
-- **Online Credit Application** — Apply from home for fast pre-approval
-- **Loan and Lease Options** — Purchase or lease to fit your lifestyle
-- **New and Pre-Owned Specials** — Current incentives and manufacturer offers
+- **Online Credit Application** - Apply from home for fast pre-approval
+- **Loan and Lease Options** - Purchase or lease to fit your lifestyle
+- **New and Pre-Owned Specials** - Current incentives and manufacturer offers
 
 ## Leasing
 
@@ -31,7 +31,7 @@ Chrysler Capital and Stellantis Financial offer competitive lease programs on CD
 |--------|--------|---------|
 | Monthly Payment | Higher | Lower |
 | Ownership | You own the vehicle | Return at lease end |
-| Mileage Limits | None | Typical 10,000–15,000 mi/year |
+| Mileage Limits | None | Typical 10,000-15,000 mi/year |
 | End of Term | Trade or keep | Return or purchase |
 
 ## Trade-In Appraisal
@@ -44,4 +44,4 @@ Use online payment calculators to estimate monthly payments based on down paymen
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/brady-cdjr-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/brady-cdjr/datasets/company.md).

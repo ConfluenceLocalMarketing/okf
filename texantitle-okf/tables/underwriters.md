@@ -1,6 +1,6 @@
 ---
 type: Tables and Datasets
-title: Texan Title — Underwriter Partners
+title: Texan Title - Underwriter Partners
 description: Comparison of the 9 title insurance underwriters represented by Texan Title across their Texas offices.
 resource: https://texantitle.com/
 tags:
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — Underwriter Partners
+# Texan Title - Underwriter Partners
 
 Texan Title represents the largest title insurance underwriters in the nation, plus their own underwriter entity.
 

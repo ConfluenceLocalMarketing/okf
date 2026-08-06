@@ -47,16 +47,16 @@ Estimate monthly payments using the [Payment Calculators](https://www.leifjohnso
 
 | Day | Hours |
 |---|---|
-| Monday | 8:30 am – 8:00 pm |
-| Tuesday | 8:30 am – 8:00 pm |
-| Wednesday | 8:30 am – 8:00 pm |
-| Thursday | 8:30 am – 8:00 pm |
-| Friday | 8:30 am – 7:00 pm |
-| Saturday | 8:30 am – 7:00 pm |
+| Monday | 8:30 am - 8:00 pm |
+| Tuesday | 8:30 am - 8:00 pm |
+| Wednesday | 8:30 am - 8:00 pm |
+| Thursday | 8:30 am - 8:00 pm |
+| Friday | 8:30 am - 7:00 pm |
+| Saturday | 8:30 am - 7:00 pm |
 | Sunday | Closed |
 
 ## Contact
 
 **Finance/Sales**: (737)-414-6598
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/used-vehicles.md) for inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/dealership.md) for full business profile and [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/new-vehicles.md) or [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/used-vehicles.md) for inventory.

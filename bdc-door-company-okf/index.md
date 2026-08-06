@@ -2,19 +2,19 @@
 okf_version: "0.1"
 ---
 
-# BDC Door Company — OKF Bundle
+# BDC Door Company - OKF Bundle
 
 This bundle documents BDC Door Company, a manufacturer of commercial and industrial door systems.
 
 ## Datasets
 
-- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bdc-door-company-okf/datasets/company.md) - Full business profile: products, services, industries served.
+- [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bdc-door-company/datasets/company.md) - Full business profile: products, services, industries served.
 
 ## References
 
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bdc-door-company-okf/references/llms-txt.md) - Structured AI context.
-- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bdc-door-company-okf/references/prompts.md) - Curated AI prompts for client consultations.
-- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bdc-door-company-okf/references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bdc-door-company/references/llms-txt.md) - Structured AI context.
+- [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bdc-door-company/references/prompts.md) - Curated AI prompts for client consultations.
+- [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bdc-door-company/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

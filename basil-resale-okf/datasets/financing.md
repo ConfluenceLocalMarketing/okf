@@ -48,13 +48,13 @@ Estimate monthly payments using the payment calculator before visiting the deale
 
 | Day | Hours |
 |---|---|
-| Mon–Thu | 9:00 AM – 7:00 PM |
-| Fri | 9:00 AM – 6:00 PM |
-| Sat | 9:00 AM – 5:00 PM |
-| Sun | 10:00 AM – 3:00 PM |
+| Mon-Thu | 9:00 AM - 7:00 PM |
+| Fri | 9:00 AM - 6:00 PM |
+| Sat | 9:00 AM - 5:00 PM |
+| Sun | 10:00 AM - 3:00 PM |
 
 ## Contact
 
 Contact the finance department through the dealership's sales line at (716) 631-0404.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile and [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/used-vehicles.md), [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/new-vehicles.md), or [commercial-trucks.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/commercial-trucks.md) for inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/dealership.md) for full business profile and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/used-vehicles.md), [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/new-vehicles.md), or [commercial-trucks.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/commercial-trucks.md) for inventory.

@@ -48,40 +48,40 @@ West Hills Chrysler Jeep Dodge RAM is a multi-franchise dealership located at **
 ## Available Models
 
 ### Chrysler
-- **Pacifica / Pacifica Hybrid** — Minivan with available plug-in hybrid
-- **Voyager** — Value-oriented minivan
-- **300** — Full-size sedan
+- **Pacifica / Pacifica Hybrid** - Minivan with available plug-in hybrid
+- **Voyager** - Value-oriented minivan
+- **300** - Full-size sedan
 
 ### Jeep
-- **Wrangler / Wrangler 4xe** — Iconic off-road SUV with plug-in hybrid option
-- **Grand Cherokee / Grand Cherokee 4xe** — Mid-size premium SUV with plug-in hybrid
-- **Grand Cherokee L** — 3-row extended Grand Cherokee
-- **Cherokee** — Compact SUV
-- **Compass** — Subcompact SUV
-- **Renegade** — Subcompact off-road capable SUV
-- **Gladiator** — Mid-size pickup truck with open-air off-road capability
-- **Wagoneer / Wagoneer L / Grand Wagoneer / Grand Wagoneer L** — Full-size luxury SUVs
-- **Wagoneer S** — All-electric luxury SUV
-- **Hornet** — Compact performance SUV
+- **Wrangler / Wrangler 4xe** - Iconic off-road SUV with plug-in hybrid option
+- **Grand Cherokee / Grand Cherokee 4xe** - Mid-size premium SUV with plug-in hybrid
+- **Grand Cherokee L** - 3-row extended Grand Cherokee
+- **Cherokee** - Compact SUV
+- **Compass** - Subcompact SUV
+- **Renegade** - Subcompact off-road capable SUV
+- **Gladiator** - Mid-size pickup truck with open-air off-road capability
+- **Wagoneer / Wagoneer L / Grand Wagoneer / Grand Wagoneer L** - Full-size luxury SUVs
+- **Wagoneer S** - All-electric luxury SUV
+- **Hornet** - Compact performance SUV
 
 ### Dodge
-- **Charger** — Full-size sedan, available in high-performance variants
-- **Durango** — Mid-size 3-row SUV with available V8 power
-- **Hornet** — Compact performance SUV
+- **Charger** - Full-size sedan, available in high-performance variants
+- **Durango** - Mid-size 3-row SUV with available V8 power
+- **Hornet** - Compact performance SUV
 
 ### RAM
-- **1500** — Light-duty pickup truck
-- **2500 / 3500** — Heavy-duty pickup trucks
-- **4500 / 5500 Chassis Cab** — Commercial chassis cabs
-- **ProMaster 1500 / 2500 / 3500** — Commercial cargo vans
-- **ProMaster 3500 EV** — All-electric commercial van
-- **ProMaster City** — Compact cargo van
+- **1500** - Light-duty pickup truck
+- **2500 / 3500** - Heavy-duty pickup trucks
+- **4500 / 5500 Chassis Cab** - Commercial chassis cabs
+- **ProMaster 1500 / 2500 / 3500** - Commercial cargo vans
+- **ProMaster 3500 EV** - All-electric commercial van
+- **ProMaster City** - Compact cargo van
 
 ## Services
 
-- **Finance Center** — Online credit application, payment calculator, trade-in valuation
-- **Service Center** — Mopar-certified technicians, diagnostics, maintenance, major repairs, all makes and models
-- **Parts Department** — Genuine Mopar parts, performance parts, accessories
+- **Finance Center** - Online credit application, payment calculator, trade-in valuation
+- **Service Center** - Mopar-certified technicians, diagnostics, maintenance, major repairs, all makes and models
+- **Parts Department** - Genuine Mopar parts, performance parts, accessories
 
 ## Amenities
 
@@ -96,4 +96,4 @@ West Hills Chrysler Jeep Dodge RAM is a multi-franchise dealership located at **
 
 - Aggregate rating: 4.5 / 5.0 (2,660 reviews)
 
-See [autoplex.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.
+See [autoplex.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/autoplex.md) for the group overview.

@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — University City, MO
+title: Car-X Tire & Auto - University City, MO
 description: "Car-X Tire & Auto location in University City, MO: address, hours, contact, 4.6-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/university-city-mo/business
 tags:
@@ -14,11 +14,11 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — University City, MO
+# Car-X Tire & Auto - University City, MO
 
 Car-X Tire & Auto in University City is your trusted neighborhood auto care center at Olive Blvd and North and South Rd. Locally owned and community-focused, we deliver service tailored to your vehicle and peace of mind.
 
-Looking for affordable, reliable auto repair? Visit Car-X at 7720 Olive Blvd, University City, MO 63130. Family-operated and trusted for nearly 50 years, we handle everything from mystery noises to new tires and tune-ups—keeping you confidently on the road.
+Looking for affordable, reliable auto repair? Visit Car-X at 7720 Olive Blvd, University City, MO 63130. Family-operated and trusted for nearly 50 years, we handle everything from mystery noises to new tires and tune-ups-keeping you confidently on the road.
 
 ## Contact Information
 
@@ -52,7 +52,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -61,4 +61,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-university-city-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-university-city-mo/tables/coupons.md) for details.

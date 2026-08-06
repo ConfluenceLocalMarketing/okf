@@ -1,6 +1,6 @@
 ---
 type: Table
-title: Bare Bones Furniture & Mattress — Departments
+title: Bare Bones Furniture & Mattress - Departments
 description: Complete list of product departments and their subcategories.
 resource: https://www.barebonesfurn.com/collections/furniture
 tags:

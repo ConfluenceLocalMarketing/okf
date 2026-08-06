@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Weathercraft Garden
+title: AI Discovery Page - Weathercraft Garden
 description: Overview of AI visibility and discovery for Weathercraft Garden. (synthesized)
 tags:
   - ai-discovery
@@ -12,7 +12,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# AI Discovery Page — Weathercraft Garden
+# AI Discovery Page - Weathercraft Garden
 
 ## Overview
 Weathercraft Garden has an `/ai-discovery-page` route on its website providing basic AI-facing content. An llms.txt and prompts.txt have been synthesized for this bundle.

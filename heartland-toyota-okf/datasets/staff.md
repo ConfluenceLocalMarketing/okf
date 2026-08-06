@@ -81,4 +81,4 @@ Staff directory compiled from the dealership website and customer reviews.
 - **Austin** - Finance Manager; supportive, helpful
 - **Christian** - Finance Representative; helpful, knowledgeable
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/heartland-toyota/references/testimonials.md) for detailed customer reviews referencing specific staff members.

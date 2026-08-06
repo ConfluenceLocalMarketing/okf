@@ -32,6 +32,6 @@ Yellowstone.net provides a comprehensive visitor guide for West Yellowstone, cov
 
 ## Related Concepts
 
-- See [west-yellowstone.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-yellowstone-okf/datasets/west-yellowstone.md) for the complete town profile.
-- See [lodging-accommodations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-yellowstone-okf/tables/lodging-accommodations.md) for a structured comparison of lodging properties.
-- See [seasonal-activities.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-yellowstone-okf/tables/seasonal-activities.md) for a seasonal activity matrix.
+- See [west-yellowstone.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/datasets/west-yellowstone.md) for the complete town profile.
+- See [lodging-accommodations.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/tables/lodging-accommodations.md) for a structured comparison of lodging properties.
+- See [seasonal-activities.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/tables/seasonal-activities.md) for a seasonal activity matrix.

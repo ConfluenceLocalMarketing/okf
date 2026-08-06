@@ -22,8 +22,8 @@ The Jake Sweeney Used Car Superstore Service Center provides maintenance and rep
 
 | Day | Hours |
 |---|---|
-| Monday – Friday | 7:30 AM – 6:00 PM |
-| Saturday | 8:00 AM – 2:00 PM |
+| Monday - Friday | 7:30 AM - 6:00 PM |
+| Saturday | 8:00 AM - 2:00 PM |
 | Sunday | Closed |
 
 ## Service Capabilities
@@ -44,8 +44,8 @@ Customer reviews highlight strong service department operations:
 
 ## Parts Department
 
-- **Hours:** Monday – Friday 7:30 AM – 6:00 PM, Saturday 8:00 AM – 2:00 PM, Sunday Closed
+- **Hours:** Monday - Friday 7:30 AM - 6:00 PM, Saturday 8:00 AM - 2:00 PM, Sunday Closed
 - Genuine OEM and quality aftermarket replacement parts
 - Parts available for all makes and models
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/staff.md) for service department directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/staff.md) for service department directory.

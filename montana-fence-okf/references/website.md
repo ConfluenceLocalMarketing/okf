@@ -28,12 +28,12 @@ The following data was extracted from the Montana Fence website:
 
 | Location | Phone | Address | Hours |
 |---|---|---|---|
-| Kalispell | 406-755-7650 | — | Mon-Fri 8-5, Sat 8-2 |
-| Belgrade | 406-924-4802 | — | Mon-Fri 8-5, Sat 8-2 |
-| Great Falls | 406-727-3661 | — | Mon-Fri 8-5, Sat 8-2 |
+| Kalispell | 406-755-7650 | - | Mon-Fri 8-5, Sat 8-2 |
+| Belgrade | 406-924-4802 | - | Mon-Fri 8-5, Sat 8-2 |
+| Great Falls | 406-727-3661 | - | Mon-Fri 8-5, Sat 8-2 |
 | Billings | 406-259-6511 | 7403 Entryway Dr | Mon-Fri 8-5, Sat 8-2 |
 
-All locations closed Sunday. Hours vary by location — confirm with local branch.
+All locations closed Sunday. Hours vary by location - confirm with local branch.
 
 ## Citations
 

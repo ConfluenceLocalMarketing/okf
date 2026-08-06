@@ -27,5 +27,5 @@ While the Used Car Superstore focuses on high-quality pre-owned inventory, custo
 
 The superstore's inventory of 900+ vehicles spans multiple makes and models, providing a new-car-like experience with certified pre-owned options, comprehensive inspections, and warranty coverage.
 
-See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/used-vehicles.md) for the full pre-owned inventory.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/dealership.md) for full profile.
+See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/used-vehicles.md) for the full pre-owned inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/dealership.md) for full profile.

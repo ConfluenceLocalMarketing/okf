@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Ballwin, MO
+title: Car-X Tire & Auto - Ballwin, MO
 description: "Car-X Tire & Auto location in Ballwin, MO: address, hours, contact, 4.7-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/ballwin-mo/business
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Ballwin, MO
+# Car-X Tire & Auto - Ballwin, MO
 
 Car-X Tire & Auto in Ballwin represents the highest standards of automotive care. Centrally located in Ballwin, our community-focused shop is dedicated to delivering reliable, welcoming, and exceptional service to every valued customer who visits us.
 
@@ -52,7 +52,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -61,4 +61,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-ballwin-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-ballwin-mo/tables/coupons.md) for details.

@@ -23,7 +23,7 @@ West Hills Chrysler Jeep Dodge RAM emphasizes customer satisfaction as a core va
 ## Dealership Reputation
 
 - **Mission-driven** service with guiding principles of Professionalism, Integrity, Commitment, Humility, Generosity, and Respect
-- **Car Shopping Made Easy** philosophy — transparent, no-pressure sales process
+- **Car Shopping Made Easy** philosophy - transparent, no-pressure sales process
 - Commitment to getting customers "out the door in as little as 15 minutes"
 - Focus on exceptional customer care and service with a smile
 
@@ -48,5 +48,5 @@ Staff members recognized for customer service include:
 
 The Haselwood Auto Group has received multiple awards recognizing community service and philanthropy, reflecting the dealership's commitment to the Kitsap County community.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/staff.md) for the full staff directory.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) for community involvement details.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/staff.md) for the full staff directory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/dealership.md) for community involvement details.

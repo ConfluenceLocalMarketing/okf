@@ -22,9 +22,9 @@ Basil Resale Sheridan features a state-of-the-art service center equipped with a
 
 | Day | Hours |
 |---|---|
-| Mon–Thu | 7:30 AM – 5:00 PM |
-| Fri | 7:30 AM – 5:00 PM |
-| Sat | 7:30 AM – 3:30 PM |
+| Mon-Thu | 7:30 AM - 5:00 PM |
+| Fri | 7:30 AM - 5:00 PM |
+| Sat | 7:30 AM - 3:30 PM |
 | Sun | Closed |
 
 **Phone:** (716) 631-0405
@@ -70,5 +70,5 @@ Full collision repair services for all makes and models:
 - Free shuttle service
 - Online scheduling
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile and contact information.
-See [commercial-trucks.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/commercial-trucks.md) for commercial vehicle service.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/dealership.md) for full business profile and contact information.
+See [commercial-trucks.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/commercial-trucks.md) for commercial vehicle service.

@@ -111,7 +111,7 @@ Yes - a two-way courtesy shuttle is available during service appointments.
 
 **What are the service hours?**
 
-Service is open Mon–Thu 7:30 AM – 5:00 PM, Fri 7:30 AM – 5:00 PM, Sat 7:30 AM – 3:30 PM, closed Sunday.
+Service is open Mon-Thu 7:30 AM - 5:00 PM, Fri 7:30 AM - 5:00 PM, Sat 7:30 AM - 3:30 PM, closed Sunday.
 
 **Can you diagnose a check engine light?**
 
@@ -138,7 +138,7 @@ Yes - professional auto detailing and cleaning services are available.
 
 **What are the sales hours?**
 
-Sales: Mon–Thu 9–7, Fri 9–6, Sat 9–5, Sun 10–3. Basil Resale is open on Sundays!
+Sales: Mon-Thu 9-7, Fri 9-6, Sat 9-5, Sun 10-3. Basil Resale is open on Sundays!
 
 **What area does Basil Resale serve?**
 
@@ -162,7 +162,7 @@ Yes - customer loyalty programs and repeat buyer benefits are available.
 
 ## Related
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile, hours, and contact information.
-See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/used-vehicles.md) for the pre-owned inventory details.
-See [commercial-trucks.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/commercial-trucks.md) for commercial vehicle inventory.
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/references/prompts.md) for the full 77-prompt PromptGraph library.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/dealership.md) for full business profile, hours, and contact information.
+See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/used-vehicles.md) for the pre-owned inventory details.
+See [commercial-trucks.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/commercial-trucks.md) for commercial vehicle inventory.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/references/prompts.md) for the full 77-prompt PromptGraph library.

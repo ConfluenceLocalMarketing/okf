@@ -37,7 +37,7 @@ Mullinax Ford of Central Florida carries a full line of new Ford vehicles, inclu
 
 ## Features of Shopping with Mullinax
 
-- No dealer fees — price plus tax and tag only.
+- No dealer fees - price plus tax and tag only.
 - Transparent internet pricing viewable online.
 - Trade-in valuation applied toward a new purchase.
 - Financing and leasing through the finance center; see [financing.md](financing.md).
@@ -50,4 +50,4 @@ The dealership highlights 2026 model-year vehicles in current promotions, includ
 
 - See [mullinax-ford-of-central-florida-in-orlando.md](mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
 - See [used-vehicles.md](used-vehicles.md) for pre-owned inventory.
-- See [model-comparison.md](../tables/model-comparison.md) for a model-by-model comparison table.
+- See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/model-comparison.md) for a model-by-model comparison table.

@@ -17,10 +17,10 @@ The Finance Center at Autobarn Volvo Cars of Oak Park provides tailored financin
 
 ## Financing Options
 
-- **New Vehicle Loans** — Competitive rates on new Volvo models
-- **Certified Pre-Owned Financing** — Special rates on CPO vehicles
-- **Lease Programs** — Volvo lease plans with flexible terms
-- **Volvo Recharge Financing** — Incentives for plug-in hybrid and EV models
+- **New Vehicle Loans** - Competitive rates on new Volvo models
+- **Certified Pre-Owned Financing** - Special rates on CPO vehicles
+- **Lease Programs** - Volvo lease plans with flexible terms
+- **Volvo Recharge Financing** - Incentives for plug-in hybrid and EV models
 
 ## Online Pre-Approval
 
@@ -37,4 +37,4 @@ Customers can complete a credit application online and receive pre-approval befo
 
 Finance specialists are available during dealership hours. Call (708) 786-6560 or visit the dealership at 1140 Garfield Street, Oak Park, IL.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for the full dealership profile.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-autobarn-volvo-cars-of-oak-park/datasets/company.md) for the full dealership profile.

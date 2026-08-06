@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — The Claridge Hotel
+title: AI Discovery Page - The Claridge Hotel
 description: Overview of AI visibility for The Claridge Hotel. (synthesized)
 tags:
   - ai-discovery
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — The Claridge Hotel
+# AI Discovery Page - The Claridge Hotel
 
 ## Overview
 The Claridge Hotel has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.

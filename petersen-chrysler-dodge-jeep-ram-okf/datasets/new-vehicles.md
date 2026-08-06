@@ -58,4 +58,4 @@ Petersen CDJR offers the complete Chrysler, Dodge, Jeep, and RAM lineup with ove
 
 Every new CDJR vehicle includes standard factory warranty coverage with roadside assistance.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/company.md) for location and contact.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/company.md) for location and contact.

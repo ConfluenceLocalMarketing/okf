@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: BDC Door Company — AI Prompts
+title: BDC Door Company - AI Prompts
 description: Curated AI prompts for client consultations and internal use at BDC Door Company. (synthesized)
 tags:
   - prompts
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# BDC Door Company — AI Prompts
+# BDC Door Company - AI Prompts
 
 ## Client Consultation
 

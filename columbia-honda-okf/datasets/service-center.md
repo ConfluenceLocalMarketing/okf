@@ -35,4 +35,4 @@ Genuine OEM Honda parts and accessories available.
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/columbia-honda-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/columbia-honda/datasets/company.md).

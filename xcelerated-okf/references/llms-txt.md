@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Xcelerated Data — llms.txt
+title: Xcelerated Data - llms.txt
 description: AI context file for Xcelerated Data consumer data platform. (synthesized)
 tags:
   - llms-txt

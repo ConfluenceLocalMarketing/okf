@@ -58,14 +58,14 @@ Yes, the parts department stocks genuine Ford OEM parts for all repairs and main
 33450 Lake Road, Avon Lake, OH 44012.
 
 **What are your hours?**
-Monday through Thursday 9:00 AM – 7:00 PM (Mon/Thu), 9:00 AM – 6:00 PM (Tue/Wed/Fri), Saturday 9:00 AM – 5:00 PM, closed Sunday.
+Monday through Thursday 9:00 AM - 7:00 PM (Mon/Thu), 9:00 AM - 6:00 PM (Tue/Wed/Fri), Saturday 9:00 AM - 5:00 PM, closed Sunday.
 
 **Do you have a service shuttle?**
 Contact the dealership for shuttle or loaner vehicle availability.
 
 ## Related Concepts
 
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview
-- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/new-vehicles.md) - New Ford models
-- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/used-vehicles.md) - Pre-owned inventory
-- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/service-center.md) - Service center
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/dealership.md) - Dealership overview
+- [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/new-vehicles.md) - New Ford models
+- [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/used-vehicles.md) - Pre-owned inventory
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/service-center.md) - Service center

@@ -55,4 +55,4 @@ Online payment calculator tools allow customers to estimate monthly payments bas
 **Finance Department**: 360-728-3071
 **Online Application**: https://www.westhillshonda.com/finance/
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-honda-okf/datasets/dealership.md) for full business profile and hours.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-honda/datasets/dealership.md) for full business profile and hours.

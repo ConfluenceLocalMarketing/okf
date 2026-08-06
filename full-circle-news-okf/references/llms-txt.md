@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Full Circle News — llms.txt
+title: Full Circle News - llms.txt
 description: AI context file for Full Circle News. (synthesized)
 tags:
   - llms-txt

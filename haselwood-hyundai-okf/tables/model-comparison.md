@@ -94,5 +94,5 @@ Standard across most Hyundai models:
 - Driver Attention Warning
 - Smart Cruise Control
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-hyundai-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-hyundai-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-hyundai/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-hyundai/datasets/dealership.md) for current offers and promotions.

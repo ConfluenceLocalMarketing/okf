@@ -35,8 +35,8 @@ timestamp: 2026-07-03
 
 | Model | Electrification | EPA Range (est.) |
 |---|---|---|
-| F-150 Lightning | All-Electric | 240–320 miles |
-| Mustang Mach-E | All-Electric | 250–310 miles |
-| E-Transit-350 | All-Electric | 108–126 miles |
+| F-150 Lightning | All-Electric | 240-320 miles |
+| Mustang Mach-E | All-Electric | 250-310 miles |
+| E-Transit-350 | All-Electric | 108-126 miles |
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/new-vehicles.md) for detailed new vehicle inventory.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/new-vehicles.md) for detailed new vehicle inventory.

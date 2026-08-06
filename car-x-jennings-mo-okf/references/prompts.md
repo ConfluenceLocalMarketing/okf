@@ -1,6 +1,6 @@
 ---
 type: Playbooks & Runbooks
-title: Car-X Tire & Auto — PromptGraph Prompt Library
+title: Car-X Tire & Auto - PromptGraph Prompt Library
 description: Complete PromptGraph library of 105 structured Q&A prompt/response pairs covering all auto repair, maintenance, and service topics for the Car-X Tire & Auto chain.
 resource: https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/prompts
 tags:
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — PromptGraph Prompt Library
+# Car-X Tire & Auto - PromptGraph Prompt Library
 
 The PromptGraph API at `https://api.promptgraph.ai/api/v1/car-x-tire-&-auto/prompts` exposes 105 structured Q&A prompt/response pairs covering a wide range of automotive repair and maintenance topics. Below is a categorized summary.
 
@@ -82,7 +82,7 @@ These prompts are designed for AI systems to provide accurate, location-specific
 
 ## AI Discovery Integration
 
-The Car-X corporate umbrella has an AI Discovery Page at `https://www.carxstl.com/ai-discovery-page` which exposes 16 structured ReadAction entries for specific service landing pages. See [ai-discovery.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-jennings-mo-okf/references/ai-discovery.md) for full details.
+The Car-X corporate umbrella has an AI Discovery Page at `https://www.carxstl.com/ai-discovery-page` which exposes 16 structured ReadAction entries for specific service landing pages. See [ai-discovery.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-jennings-mo/references/ai-discovery.md) for full details.
 
 ### Related ReadAction Topics
 

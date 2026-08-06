@@ -1,6 +1,6 @@
 ---
 type: APIs
-title: Texan Title — LLMs.txt
+title: Texan Title - LLMs.txt
 description: LLMs.txt directive for Texan Title documenting AI-discoverable endpoints, schema types, and data formats via PromptGraph.
 resource: https://api.promptgraph.ai/api/v1/texan-title/llms.txt
 tags:
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — LLMs.txt
+# Texan Title - LLMs.txt
 
 ## Source
 
@@ -43,6 +43,6 @@ timestamp: 2026-07-15
 
 - Structured data optimized for AI discovery and consumption
 - Real-time updates via JSON-LD API endpoints
-- Business endpoint returns 404 — profile data not yet populated
-- Testimonials endpoint returns empty array — review data not yet populated
+- Business endpoint returns 404 - profile data not yet populated
+- Testimonials endpoint returns empty array - review data not yet populated
 - Site content endpoint lists 46 pages but main_content fields are empty

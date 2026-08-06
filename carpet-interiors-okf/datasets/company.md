@@ -21,13 +21,13 @@ Carpet Interiors is a family-owned flooring and home improvement retailer in Orl
 
 ## Products
 
-- **Carpet** — Broad selection of styles, colors, and fibers with professional installation
-- **Luxury Vinyl** — LVT (Luxury Vinyl Tile) and LVP (Luxury Vinyl Plank)
-- **Hardwood** — Solid and engineered hardwood flooring
-- **Tile** — Ceramic, porcelain, and stone tile
-- **Laminate** — Durable laminate flooring options
-- **Area Rugs** — Ready-made and custom area rugs
-- **Window Treatments** — Custom blinds and shades
+- **Carpet** - Broad selection of styles, colors, and fibers with professional installation
+- **Luxury Vinyl** - LVT (Luxury Vinyl Tile) and LVP (Luxury Vinyl Plank)
+- **Hardwood** - Solid and engineered hardwood flooring
+- **Tile** - Ceramic, porcelain, and stone tile
+- **Laminate** - Durable laminate flooring options
+- **Area Rugs** - Ready-made and custom area rugs
+- **Window Treatments** - Custom blinds and shades
 
 ## Services
 
@@ -45,4 +45,4 @@ Carries major flooring brands through the Carpet One Floor & Home network.
 
 - **Address:** 50 Orland Square, Orland Park, IL 60462
 - **Phone:** (708) 364-6100
-- **Hours:** Mon–Thu 9:30 am – 7:00 pm, Fri 9:30 am – 5:30 pm, Sat 9:30 am – 5:30 pm, Sun closed
+- **Hours:** Mon-Thu 9:30 am - 7:00 pm, Fri 9:30 am - 5:30 pm, Sat 9:30 am - 5:30 pm, Sun closed

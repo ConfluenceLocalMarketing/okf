@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Weathercraft Garden — AI Prompts
+title: Weathercraft Garden - AI Prompts
 description: Curated AI prompts for roofing service inquiries and customer support at Weathercraft Garden. (synthesized)
 tags:
   - prompts
@@ -12,7 +12,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Weathercraft Garden — AI Prompts
+# Weathercraft Garden - AI Prompts
 
 ## Service Inquiry
 

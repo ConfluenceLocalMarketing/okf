@@ -43,5 +43,5 @@ This document describes the LLM consumption guidelines and structured data endpo
 
 ## Related
 
-- See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/references/ai-discovery-page.md) for full endpoint documentation.
-- See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/references/prompts.md) for the Q&A prompt library.
+- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/references/ai-discovery-page.md) for full endpoint documentation.
+- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/references/prompts.md) for the Q&A prompt library.

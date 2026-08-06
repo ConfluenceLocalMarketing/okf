@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Petersen Chrysler Dodge Jeep Ram — llms.txt
+title: Petersen Chrysler Dodge Jeep Ram - llms.txt
 description: AI context file for Petersen Chrysler Dodge Jeep Ram dealership. (synthesized)
 tags:
   - llms-txt

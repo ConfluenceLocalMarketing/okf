@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Gibson Truck World — AI Prompts
+title: Gibson Truck World - AI Prompts
 description: Curated AI prompts for customer-facing and internal use at Gibson Truck World. (synthesized)
 tags:
   - prompts
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Gibson Truck World — AI Prompts
+# Gibson Truck World - AI Prompts
 
 ## Sales Assistance
 

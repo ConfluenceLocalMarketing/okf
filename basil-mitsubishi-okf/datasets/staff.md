@@ -48,5 +48,5 @@ timestamp: 2026-06-24
 
 Staff members most frequently praised in customer testimonials: **Dennis Crispin**, **Andre Wilson**, **Lauren Allison**, **Matt Harrison**, **Rob Monaco**, **Kire Gjorgievski** (finance), and **Andrew H.**
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/dealership.md) for full business profile.
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/testimonials.md) for customer reviews mentioning staff.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/dealership.md) for full business profile.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/references/testimonials.md) for customer reviews mentioning staff.

@@ -81,7 +81,7 @@ Multi-franchise inventory spanning four brands:
 - **Dodge** - Charger, Durango
 - **RAM** - 1500, 2500, 3500, 4500, 5500 trucks, ProMaster cargo vans
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/new-vehicles.md) for detailed model lineup.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/new-vehicles.md) for detailed model lineup.
 
 ## Services
 
@@ -101,7 +101,7 @@ See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/
 
 ## Staff
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/staff.md) for full directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/staff.md) for full directory.
 
 ## Special Programs
 

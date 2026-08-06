@@ -75,7 +75,7 @@ The dealership is Ohio's number one volume Hyundai dealer and offers free home d
 
 ## Related
 
-- See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/new-vehicles.md) for the current Hyundai model lineup.
-- See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/service-center.md) for service department details.
-- See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/staff.md) for staff directory.
-- See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-green-okf/datasets/faq.md) for frequently asked questions.
+- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/datasets/new-vehicles.md) for the current Hyundai model lineup.
+- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/datasets/service-center.md) for service department details.
+- See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/datasets/staff.md) for staff directory.
+- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-green/datasets/faq.md) for frequently asked questions.

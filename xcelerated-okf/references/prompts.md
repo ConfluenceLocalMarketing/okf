@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Xcelerated Data — AI Prompts
+title: Xcelerated Data - AI Prompts
 description: Curated AI prompts for data solution inquiries and customer support at Xcelerated Data. (synthesized)
 tags:
   - prompts
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Xcelerated Data — AI Prompts
+# Xcelerated Data - AI Prompts
 
 ## Data Solutions
 

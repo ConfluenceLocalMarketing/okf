@@ -96,5 +96,5 @@ Multi-purpose passenger van. Available in LX, EX, SX, and SX Prestige trims. Pow
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. Kia offers national and regional incentives. Contact the dealership for current offers.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/datasets/dealership.md) for contact information and current programs.
-See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/tables/model-comparison.md) for side-by-side model specifications.

@@ -58,4 +58,4 @@ Automatic and manual transmission service, diagnostics, fluid changes, and repai
 
 State-of-the-art diagnostic equipment for accurate and efficient problem identification across all vehicle systems.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/datasets/company.md) for our certifications, vehicle coverage, and contact information.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/logan-square-auto-repair/datasets/company.md) for our certifications, vehicle coverage, and contact information.

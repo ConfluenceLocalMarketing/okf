@@ -97,7 +97,7 @@ The `/prompts` endpoint exposes 77 structured Q&A prompt/response pairs serving 
 9. **Collision Center Services** - Full collision repair capabilities
 10. **Commercial Truck Inventory** - Dedicated work-ready commercial vehicles
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile.
-See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/used-vehicles.md) for pre-owned inventory.
-See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/references/prompts.md) for the complete Q&A prompt library.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/dealership.md) for full business profile.
+See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/used-vehicles.md) for pre-owned inventory.
+See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/references/prompts.md) for the complete Q&A prompt library.

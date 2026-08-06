@@ -17,25 +17,25 @@ timestamp: 2026-07-03
 
 ## Management
 
-- **General Manager** — [Name]
-- **Sales Manager** — [Name]
-- **Finance Manager** — [Name]
+- **General Manager** - [Name]
+- **Sales Manager** - [Name]
+- **Finance Manager** - [Name]
 
 ## Sales Team
 
-- **Sales Consultant** — [Name]
-- **Sales Consultant** — [Name]
+- **Sales Consultant** - [Name]
+- **Sales Consultant** - [Name]
 
 ## Service Department
 
-- **Service Manager** — [Name]
-- **Service Advisor** — [Name]
-- **Certified Technician** — [Name]
+- **Service Manager** - [Name]
+- **Service Advisor** - [Name]
+- **Certified Technician** - [Name]
 
 ## Parts Department
 
-- **Parts Manager** — [Name]
+- **Parts Manager** - [Name]
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/capital-city-cdjr-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/capital-city-cdjr/datasets/company.md).

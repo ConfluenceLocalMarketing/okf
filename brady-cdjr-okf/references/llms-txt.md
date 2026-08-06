@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Brady Chrysler Dodge Jeep Ram — llms.txt
+title: Brady Chrysler Dodge Jeep Ram - llms.txt
 description: AI context file for Brady CDJR dealership. (synthesized)
 tags:
   - llms-txt
@@ -30,5 +30,5 @@ timestamp: 2026-07-02
 - Online financing, trade-in, payment calculator
 
 ## Hours
-- Sales: Mon–Fri 9–7, Sat 9–6, Sun closed
-- Service/Parts: Mon–Fri 7–6, Sat 8–2, Sun closed
+- Sales: Mon-Fri 9-7, Sat 9-6, Sun closed
+- Service/Parts: Mon-Fri 7-6, Sat 8-2, Sun closed

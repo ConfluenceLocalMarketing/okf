@@ -26,4 +26,4 @@ Leif Johnson Ford of Austin employs a dedicated team across management, sales, s
 
 For specific staff listings, visit the [staff page](https://www.leifjohnsonford.com/staff/) on the dealership website.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/dealership.md) for business profile and [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/service-center.md) for service department details.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/dealership.md) for business profile and [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/service-center.md) for service department details.

@@ -54,4 +54,4 @@ timestamp: 2026-07-01
 - Flexible financing with online pre-approval
 - Trade-in evaluations accepted
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-chevrolet-okf/datasets/dealership.md) for hours and contact.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-chevrolet/datasets/dealership.md) for hours and contact.

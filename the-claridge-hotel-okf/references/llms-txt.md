@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: The Claridge Hotel — llms.txt
+title: The Claridge Hotel - llms.txt
 description: AI context file for The Claridge Hotel. (synthesized)
 tags:
   - llms-txt
@@ -26,4 +26,4 @@ timestamp: 2026-07-02
 - On-site dining
 
 ## Location
-Downtown Claremore, OK — near Will Rogers Memorial Museum.
+Downtown Claremore, OK - near Will Rogers Memorial Museum.

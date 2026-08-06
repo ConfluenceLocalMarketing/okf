@@ -30,17 +30,17 @@ timestamp: 2026-07-01
 | **CX-50 Hybrid** | Mid-size Hybrid SUV | 5 | AWD | $34,750 | 17 |
 | **MX-5 Miata** | Convertible | 2 | RWD | $30,430 | 4 |
 | **MX-5 Miata RF** | Retractable Hardtop | 2 | RWD | $38,450 | 4 |
-| **CX-90** | Full-size SUV | 7–8 | AWD | $39,300 | 33 |
+| **CX-90** | Full-size SUV | 7-8 | AWD | $39,300 | 33 |
 | **CX-70 PHEV** | Mid-size PHEV SUV | 5 | AWD | $44,450 | 5 |
 | **CX-70** | Mid-size SUV | 5 | AWD | $46,780 | 7 |
-| **CX-90 PHEV** | Full-size PHEV SUV | 7–8 | AWD | $50,695 | 5 |
+| **CX-90 PHEV** | Full-size PHEV SUV | 7-8 | AWD | $50,695 | 5 |
 
 ## Key Feature Comparison
 
 | Feature | CX-30 | CX-5 | CX-50 | CX-70 | CX-90 | MX-5 Miata | Mazda3 |
 |---|---|---|---|---|---|---|---|
 | Engine | 2.5L I4 | 2.5L I4/Turbo | 2.5L I4 | 3.3L I6 Turbo | 3.3L I6 Turbo | 2.0L I4 | 2.5L I4/Turbo |
-| Horsepower | 191 hp | 187–256 hp | 187 hp | 280–340 hp | 280–340 hp | 181 hp | 191–250 hp |
+| Horsepower | 191 hp | 187-256 hp | 187 hp | 280-340 hp | 280-340 hp | 181 hp | 191-250 hp |
 | AWD Available | Yes | Yes | Standard | Standard | Standard | No | Available |
 | 3rd Row | No | No | No | No | Yes | No | No |
 | Premium Interior | Available | Available | Standard | Standard | Standard | Available | Available |
@@ -71,5 +71,5 @@ All new Mazda models include:
 - **Mazda CX-90** - Multiple automotive awards for premium interior and driving dynamics
 - **Mazda3** - IIHS Top Safety Pick+
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/dealership.md) for current offers and promotions.

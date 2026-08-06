@@ -33,12 +33,12 @@ Leif Johnson Ford of Austin is a full-service Ford dealership located at 501 Eas
 
 | Day | Sales | Service | Parts |
 |---|---|---|---|
-| Monday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Tuesday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Wednesday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Thursday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Friday | 8:30 am – 7:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Saturday | 8:30 am – 7:00 pm | 8:00 am – 5:00 pm | 8:00 am – 5:00 pm |
+| Monday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Tuesday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Wednesday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Thursday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Friday | 8:30 am - 7:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Saturday | 8:30 am - 7:00 pm | 8:00 am - 5:00 pm | 8:00 am - 5:00 pm |
 | Sunday | Closed | Closed | Closed |
 
 ## Ratings
@@ -69,4 +69,4 @@ Recognized by Ford Motor Company for many achievements.
 - Instagram: https://www.instagram.com/leifjohnsonford/
 - X/Twitter: https://twitter.com/leifjohnsonford
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/new-vehicles.md) and [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/used-vehicles.md) for current inventory. See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/service-center.md) for service department details, [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/financing.md) for finance options, and [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/staff.md) for team directory.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/new-vehicles.md) and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/used-vehicles.md) for current inventory. See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/service-center.md) for service department details, [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/financing.md) for finance options, and [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/staff.md) for team directory.

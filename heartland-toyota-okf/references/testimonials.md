@@ -53,7 +53,7 @@ Heartland Toyota has collected customer testimonials through the PromptGraph pla
 
 > "We had a great, non-stressful car buying experience at Bremerton, Heartland Toyota... This was our best experience. Our salesman, Joshua was very knowledgeable and smoothly steered us through all the steps." - Lori Hammond
 
-> "Parker is a true professional—knowledgeable, trustworthy, and genuinely dedicated to helping us find the perfect vehicle... This is our third car we've bought from him, and there's a reason we keep coming back." - Juan Trevino
+> "Parker is a true professional-knowledgeable, trustworthy, and genuinely dedicated to helping us find the perfect vehicle... This is our third car we've bought from him, and there's a reason we keep coming back." - Juan Trevino
 
 > "This is the first time I've purchased a brand new vehicle and Christopher made it a smooth and enjoyable experience. I greatly appreciate his depth of knowledge and patience." - Tamara Harlow
 
@@ -84,4 +84,4 @@ Heartland Toyota has collected customer testimonials through the PromptGraph pla
 - **Competitive rates** - Multiple lenders, ability to beat pre-approvals
 - **Thorough explanations** - Customers appreciate clear walkthroughs of paperwork
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/datasets/staff.md) for the full staff directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/heartland-toyota/datasets/staff.md) for the full staff directory.

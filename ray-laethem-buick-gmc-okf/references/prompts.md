@@ -34,4 +34,4 @@ Ray Laethem Buick GMC provides structured prompts covering vehicle features, fin
 | Service | Maintenance scheduling, Test Drive To Go, OEM parts availability |
 | Electric Vehicles | Charging guidance, EV ownership, HUMMER EV model details |
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/references/ai-discovery-page.md) for API access details and [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/faq.md) for common customer questions.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/references/ai-discovery-page.md) for API access details and [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/faq.md) for common customer questions.

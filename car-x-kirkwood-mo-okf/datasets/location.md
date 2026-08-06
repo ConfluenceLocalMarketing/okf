@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Kirkwood, MO
+title: Car-X Tire & Auto - Kirkwood, MO
 description: "Car-X Tire & Auto location in Kirkwood, MO: address, hours, contact, 4.7-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/kirkwood-mo/business
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Kirkwood, MO
+# Car-X Tire & Auto - Kirkwood, MO
 
 Car-X Kirkwood, MO is your one stop shop for oil changes, tires and complete auto repair. Car-X Kirkwood, MO is part of the Car-X Tire & Auto family, providing quality, reliable automotive service at a great price. Our team of expert technicians is here to help with everything from routine maintenance and brake repairs to exhaust work and complex engine diagnostics.
 
@@ -52,7 +52,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -61,4 +61,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-kirkwood-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-kirkwood-mo/tables/coupons.md) for details.

@@ -31,11 +31,11 @@ timestamp: 2026-07-03
 
 ## Process
 
-1. **Free In-Home Consultation** — Measure and design
-2. **Custom Fabrication** — Acrylic pieces precision-molded to fit
-3. **One-Day Installation** — Installed over existing surfaces, no demolition
-4. **Same-Day Use** — Ready to use immediately after installation
+1. **Free In-Home Consultation** - Measure and design
+2. **Custom Fabrication** - Acrylic pieces precision-molded to fit
+3. **One-Day Installation** - Installed over existing surfaces, no demolition
+4. **Same-Day Use** - Ready to use immediately after installation
 
 ## Citations
 
-- [Bath Fitter Metro Detroit — Services](https://www.localbathfitter.com/)
+- [Bath Fitter Metro Detroit - Services](https://www.localbathfitter.com/)

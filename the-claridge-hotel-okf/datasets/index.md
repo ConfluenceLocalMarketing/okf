@@ -1,3 +1,3 @@
 # Datasets
 
-- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/the-claridge-hotel-okf/datasets/company.md) - Historic boutique hotel in Claremore, Oklahoma.
+- [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-claridge-hotel/datasets/company.md) - Historic boutique hotel in Claremore, Oklahoma.

@@ -2,19 +2,19 @@
 okf_version: "0.1"
 ---
 
-# Xcelerated Data — OKF Bundle
+# Xcelerated Data - OKF Bundle
 
 This bundle documents Xcelerated Data, a consumer data platform delivering identified, verified, and enriched consumer records.
 
 ## Datasets
 
-- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/xcelerated-okf/datasets/company.md) - Full business profile: location, data platform, solutions, compliance.
+- [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/xcelerated/datasets/company.md) - Full business profile: location, data platform, solutions, compliance.
 
 ## References
 
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/xcelerated-okf/references/llms-txt.md) - Structured AI context for the data platform.
-- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/xcelerated-okf/references/prompts.md) - Curated AI prompts for solution inquiries.
-- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/xcelerated-okf/references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/xcelerated/references/llms-txt.md) - Structured AI context for the data platform.
+- [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/xcelerated/references/prompts.md) - Curated AI prompts for solution inquiries.
+- [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/xcelerated/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

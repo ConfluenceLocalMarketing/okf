@@ -26,9 +26,9 @@ Gibson Truck World is the largest used truck dealership in Florida, located on a
 
 | Day | Hours |
 |-----|-------|
-| Mon–Fri | 9:00 AM – 7:00 PM |
-| Sat | 9:00 AM – 6:00 PM |
-| Sun | 10:00 AM – 5:00 PM |
+| Mon-Fri | 9:00 AM - 7:00 PM |
+| Sat | 9:00 AM - 6:00 PM |
+| Sun | 10:00 AM - 5:00 PM |
 
 ## Inventory
 

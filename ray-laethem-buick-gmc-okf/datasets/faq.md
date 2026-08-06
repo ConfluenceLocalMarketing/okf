@@ -58,7 +58,7 @@ A: A convenient service where the dealership brings a vehicle to your home or of
 ## Dealership
 
 **Q: What are your sales hours?**
-A: Monday through Saturday 9am–7pm, closed Sunday. Hours may vary by location.
+A: Monday through Saturday 9am-7pm, closed Sunday. Hours may vary by location.
 
 **Q: Where is the dealership located?**
 A: The main showroom is at 17677 Mack Ave, Detroit, MI 48224, with a service center at 22711 Van Dyke Ave, Warren, MI.
@@ -69,4 +69,4 @@ A: Yes. Founded in 1940, the dealership has been family-owned and operated for t
 **Q: What special programs do you offer?**
 A: The dealership offers Buick GMC Military Offer, First Responder Discount, and various lease and purchase specials.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for full business profile.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/dealership.md) for full business profile.

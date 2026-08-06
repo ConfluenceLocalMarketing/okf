@@ -34,4 +34,4 @@ The dealership is connected to Google Business Profile via OAuth with synced fie
 - **Seamless car buying** - Customers praise seamless buying experiences
 - **Superb service department** - The service department is noted for exceptional customer care
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-gmc-okf/datasets/staff.md) for the full staff directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/datasets/staff.md) for the full staff directory.

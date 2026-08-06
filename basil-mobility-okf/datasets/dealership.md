@@ -34,11 +34,11 @@ Email: basilcares@basilresale.com
 
 | Day | Sales | Service & Parts |
 |---|---|---|
-| Mon | 9:00 AM – 7:00 PM | 8:00 AM – 5:00 PM |
-| Tue–Wed | 9:00 AM – 6:00 PM | 8:00 AM – 5:00 PM |
-| Thu | 9:00 AM – 7:00 PM | 8:00 AM – 5:00 PM |
-| Fri | 9:00 AM – 6:00 PM | 8:00 AM – 5:00 PM |
-| Sat | 9:00 AM – 5:00 PM | 8:00 AM – 5:00 PM |
+| Mon | 9:00 AM - 7:00 PM | 8:00 AM - 5:00 PM |
+| Tue-Wed | 9:00 AM - 6:00 PM | 8:00 AM - 5:00 PM |
+| Thu | 9:00 AM - 7:00 PM | 8:00 AM - 5:00 PM |
+| Fri | 9:00 AM - 6:00 PM | 8:00 AM - 5:00 PM |
+| Sat | 9:00 AM - 5:00 PM | 8:00 AM - 5:00 PM |
 | Sun | Closed | Closed |
 
 ## Services
@@ -74,5 +74,5 @@ BraunAbility is the leading mobility conversion manufacturer, preferred 15:1 by 
 
 - Facebook: https://www.facebook.com/people/Basil-Mobility/61577505262817/
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/staff.md) for staff directory.
-See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/service-center.md) for service department details.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/staff.md) for staff directory.
+See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/service-center.md) for service department details.

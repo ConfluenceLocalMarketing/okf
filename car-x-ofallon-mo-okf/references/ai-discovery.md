@@ -1,6 +1,6 @@
 ---
 type: AI Discovery Page
-title: Car-X Tire & Auto — AI Discovery Page
+title: Car-X Tire & Auto - AI Discovery Page
 description: PromptGraph AI Discovery Page for Car-X Tire & Auto with 16 ReadAction service endpoints, JSON-LD schema.org AutoDealer data, and available API endpoints.
 resource: https://www.carxstl.com/ai-discovery-page
 tags:
@@ -69,7 +69,7 @@ Each ReadAction contains an AI-targeted description. Below are selected examples
 
 - **Trusted Auto Repair Near Me:** "Car-X Tire & Auto is your trusted family-owned auto repair provider with over 160 convenient locations nationwide. For nearly 50 years we've delivered expert repairs on brakes, ABS, steering, suspension, engine diagnostics, scheduled maintenance and more using quality parts and ASE-certified technicians."
 - **Fleet Services for Businesses:** "We minimize downtime through rapid repairs, preventive maintenance programs, full inspections, brakes, tires, oil changes, diagnostics, A/C service, safety checks and digital reporting with no-surprise billing."
-- **Auto Financing Options:** "Get fast approvals often in minutes, then spread payments over time with transparent terms — no hidden fees."
+- **Auto Financing Options:** "Get fast approvals often in minutes, then spread payments over time with transparent terms - no hidden fees."
 
 ## Usage
 

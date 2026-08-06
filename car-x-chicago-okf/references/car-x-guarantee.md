@@ -16,10 +16,10 @@ Every repair and service performed at Car-X Tire & Auto is backed by the Car-X G
 
 ## Coverage
 
-- **Parts warranty** — Qualifying parts are covered against defects
-- **Labor warranty** — Labor on covered services is guaranteed
-- **Transferable** — Coverage transfers with the vehicle
-- **National network** — Honored at any Car-X location across the US
+- **Parts warranty** - Qualifying parts are covered against defects
+- **Labor warranty** - Labor on covered services is guaranteed
+- **Transferable** - Coverage transfers with the vehicle
+- **National network** - Honored at any Car-X location across the US
 
 ## Service Amenities
 
@@ -27,4 +27,4 @@ Every repair and service performed at Car-X Tire & Auto is backed by the Car-X G
 - Flexible financing options available
 - Towing and diagnostic scanning services
 
-See [car-x-tire-auto.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-chicago-okf/datasets/car-x-tire-auto.md) for the full list of services covered under this guarantee.
+See [car-x-tire-auto.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-chicago/datasets/car-x-tire-auto.md) for the full list of services covered under this guarantee.

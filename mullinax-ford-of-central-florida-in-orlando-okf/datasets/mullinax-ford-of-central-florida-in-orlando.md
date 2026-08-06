@@ -42,7 +42,7 @@ Mullinax Ford of Central Florida is a full-line Ford dealership located at 1551 
 - Service: Mon-Fri 7:30a-6:00p, Sat 8:00a-4:00p, Sun Closed
 - Quick Lane: Mon-Fri 7:00a-6:00p, Sat 7:00a-5:00p, Sun Closed
 
-See [hours.md](../tables/hours.md) for the full operating hours table.
+See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/hours.md) for the full operating hours table.
 
 ## Up Front Pricing
 
@@ -60,12 +60,12 @@ See [new-vehicles.md](new-vehicles.md) and [used-vehicles.md](used-vehicles.md) 
 
 ## Departments
 
-- **New Vehicle Sales** — full Ford lineup plus 2026 models; see [new-vehicles.md](new-vehicles.md).
-- **Used Vehicle Sales** — pre-owned inventory and Ford Blue Advantage; see [used-vehicles.md](used-vehicles.md).
-- **Commercial / Work Trucks** — fleet and work-truck solutions via mullinaxford.com/commercial and mullinaxfordfleet.com.
-- **Financing** — online credit application, lease and finance options, trade-in valuation; see [financing.md](financing.md).
-- **Service Center** — Ford-trained technicians, OEM parts, mobile service, pickup & delivery; see [service-center.md](service-center.md).
-- **Quick Lane** — express maintenance for all makes and models.
+- **New Vehicle Sales** - full Ford lineup plus 2026 models; see [new-vehicles.md](new-vehicles.md).
+- **Used Vehicle Sales** - pre-owned inventory and Ford Blue Advantage; see [used-vehicles.md](used-vehicles.md).
+- **Commercial / Work Trucks** - fleet and work-truck solutions via mullinaxford.com/commercial and mullinaxfordfleet.com.
+- **Financing** - online credit application, lease and finance options, trade-in valuation; see [financing.md](financing.md).
+- **Service Center** - Ford-trained technicians, OEM parts, mobile service, pickup & delivery; see [service-center.md](service-center.md).
+- **Quick Lane** - express maintenance for all makes and models.
 
 ## Ratings & Reputation
 
@@ -89,5 +89,5 @@ See [new-vehicles.md](new-vehicles.md) and [used-vehicles.md](used-vehicles.md) 
 
 - See [staff.md](staff.md) for the sales, internet sales, and commercial team directory.
 - See [faq.md](faq.md) for Ford Protect and dealership FAQs.
-- See [ai-discovery-page.md](../references/ai-discovery-page.md) for machine-readable discovery endpoints.
-- See [contact.md](../tables/contact.md) for a consolidated phone directory.
+- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/references/ai-discovery-page.md) for machine-readable discovery endpoints.
+- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/contact.md) for a consolidated phone directory.

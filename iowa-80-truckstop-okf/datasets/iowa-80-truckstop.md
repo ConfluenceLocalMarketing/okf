@@ -20,7 +20,7 @@ timestamp: 2026-07-03
 
 ## Overview
 
-Iowa 80 Truckstop is the world's largest truckstop, located in Walcott, Iowa at I-80 Exit 284. Established in 1964 by Bill Moon, it has never closed — operating 24 hours a day, 365 days a year. The facility spans 220 acres and serves over 5,000 customers daily. It is the flagship property of the Iowa 80 Group.
+Iowa 80 Truckstop is the world's largest truckstop, located in Walcott, Iowa at I-80 Exit 284. Established in 1964 by Bill Moon, it has never closed - operating 24 hours a day, 365 days a year. The facility spans 220 acres and serves over 5,000 customers daily. It is the flagship property of the Iowa 80 Group.
 
 ## Location
 
@@ -36,11 +36,11 @@ Founded in 1964 by Bill Moon at the intersection of Interstate 80 and Highway 6 
 
 Iowa 80 Truckstop is part of the Iowa 80 Group, which also owns:
 
-- **CAT Scale Company** — Weighing services for trucks
-- **Joplin 44 Petro** — Truckstop in Joplin, Missouri
-- **Kenly 95 Petro** — Truckstop in Kenly, North Carolina
-- **Effingham Chrome Shop** — Custom chrome accessories
-- **IOWA80.com** — Mail-order trucking supply catalog
+- **CAT Scale Company** - Weighing services for trucks
+- **Joplin 44 Petro** - Truckstop in Joplin, Missouri
+- **Kenly 95 Petro** - Truckstop in Kenly, North Carolina
+- **Effingham Chrome Shop** - Custom chrome accessories
+- **IOWA80.com** - Mail-order trucking supply catalog
 
 ## Parking
 
@@ -55,41 +55,41 @@ Iowa 80 Truckstop is part of the Iowa 80 Group, which also owns:
 
 The truckstop offers seven dining options:
 
-- **Iowa 80 Kitchen** — 300-seat full-service restaurant
-- **Wendy's** — Fast food
-- **Pizza Hut** — Pizza by the slice or whole
-- **Taco Bell** — Mexican fast food
-- **Dairy Queen / Orange Julius** — Ice cream and beverages
-- **Blimpie** — Sandwiches and subs
-- **Convenience Store** — Grab-and-go items and snacks
+- **Iowa 80 Kitchen** - 300-seat full-service restaurant
+- **Wendy's** - Fast food
+- **Pizza Hut** - Pizza by the slice or whole
+- **Taco Bell** - Mexican fast food
+- **Dairy Queen / Orange Julius** - Ice cream and beverages
+- **Blimpie** - Sandwiches and subs
+- **Convenience Store** - Grab-and-go items and snacks
 
 ## Amenities
 
-- **Super Truck Showroom** — Custom truck and accessory showcase
-- **Gift Store** — Massive retail selection
-- **Barber Shop** — Haircuts for drivers and travelers
-- **Interstate Dental** — On-site dental services
-- **Chiropractor** — On-site chiropractic care
-- **Movie Theatre** — In-house cinema
-- **Workout Room** — Fitness facilities
-- **Private Showers** — 24 private shower units
-- **Laundry Center** — Washer and dryer facilities
-- **Library** — Reading materials for drivers
-- **Driver Den** — Lounge area
-- **Dogomat Pet Wash** — Self-service pet washing station
-- **Dog Stop Dog Park** — Outdoor pet area
-- **Truckomat Truck Wash** — Automated truck washing
-- **EV Charging** — Electric vehicle charging stations
-- **Custom Embroidery Shop** — Personalized apparel and accessories
+- **Super Truck Showroom** - Custom truck and accessory showcase
+- **Gift Store** - Massive retail selection
+- **Barber Shop** - Haircuts for drivers and travelers
+- **Interstate Dental** - On-site dental services
+- **Chiropractor** - On-site chiropractic care
+- **Movie Theatre** - In-house cinema
+- **Workout Room** - Fitness facilities
+- **Private Showers** - 24 private shower units
+- **Laundry Center** - Washer and dryer facilities
+- **Library** - Reading materials for drivers
+- **Driver Den** - Lounge area
+- **Dogomat Pet Wash** - Self-service pet washing station
+- **Dog Stop Dog Park** - Outdoor pet area
+- **Truckomat Truck Wash** - Automated truck washing
+- **EV Charging** - Electric vehicle charging stations
+- **Custom Embroidery Shop** - Personalized apparel and accessories
 
 ## Fleet Services
 
-- **CAT Scale** — Certified truck weighing
-- **Fuel Center** — Diesel and fuel services
-- **Truck Service Center** — ASE-certified, 24-hour roadside repair
-- **Fleet Fuel Program** — Discounted fuel for fleet operators
-- **Fleet Wash Program** — Regular washing plans for fleets
-- **Truck Parking** — Secured 900-space lot with security patrol
+- **CAT Scale** - Certified truck weighing
+- **Fuel Center** - Diesel and fuel services
+- **Truck Service Center** - ASE-certified, 24-hour roadside repair
+- **Fleet Fuel Program** - Discounted fuel for fleet operators
+- **Fleet Wash Program** - Regular washing plans for fleets
+- **Truck Parking** - Secured 900-space lot with security patrol
 
 ## Annual Events
 
@@ -104,10 +104,10 @@ A three-day event held annually in July celebrating America's truckers. Establis
 - Food vendors
 - Family-friendly activities
 
-The 2026 Walcott Truckers Jamboree is scheduled for July 9–11, 2026.
+The 2026 Walcott Truckers Jamboree is scheduled for July 9-11, 2026.
 
 ## Iowa 80 Trucking Museum
 
 Located on the property, the Iowa 80 Trucking Museum showcases the history of trucking with a collection of antique trucks, memorabilia, and interactive exhibits.
 
-See [website.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/iowa-80-truckstop-okf/references/website.md) for the official website.
+See [website.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/iowa-80-truckstop/references/website.md) for the official website.

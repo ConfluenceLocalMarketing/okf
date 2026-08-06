@@ -40,8 +40,8 @@ Varsity Lincoln is a Lincoln Black Label dealer, offering an exclusive ownership
 
 ## Electrified Models
 
-- **Corsair PHEV** — Plug-in hybrid compact SUV
-- **Aviator Grand Touring** — Plug-in hybrid three-row SUV with 3.0L twin-turbo V6 + electric motor
+- **Corsair PHEV** - Plug-in hybrid compact SUV
+- **Aviator Grand Touring** - Plug-in hybrid three-row SUV with 3.0L twin-turbo V6 + electric motor
 - Additional Lincoln electrified models as released
 
 ## Commercial and Fleet
@@ -52,6 +52,6 @@ Varsity Lincoln serves commercial and fleet customers with Lincoln vehicles suit
 
 Browse online at the Varsity Lincoln website for current new vehicle inventory and special offers.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/dealership.md) for full business profile.
-See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/financing.md) for purchase and lease options.
-See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/tables/model-comparison.md) for detailed specifications.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/dealership.md) for full business profile.
+See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/financing.md) for purchase and lease options.
+See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/tables/model-comparison.md) for detailed specifications.

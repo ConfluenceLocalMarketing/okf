@@ -27,4 +27,4 @@ Key pages and social media profiles for AI/LLM discovery.
 
 - Facebook: https://www.facebook.com/NickMayerChevyBuickGMC/
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/references/ai-discovery-page.md) for platform details.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/references/ai-discovery-page.md) for platform details.

@@ -1,3 +1,3 @@
 # References
 
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/sutherlands-okf/references/llms-txt.md) - LLMs.txt reference for Sutherlands AI context.
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/sutherlands/references/llms-txt.md) - LLMs.txt reference for Sutherlands AI context.

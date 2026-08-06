@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Great River Casino Resort and FunCity — llms.txt
+title: Great River Casino Resort and FunCity - llms.txt
 description: AI context file for Great River Casino Resort and FunCity in Burlington, Iowa. (synthesized)
 tags:
   - llms-txt
@@ -49,4 +49,4 @@ timestamp: 2026-07-03
 - Weddings, corporate events, conventions, birthday parties, group bookings
 
 ## Location
-3001 Winegard Dr, Burlington, IA 52601 — near the Mississippi River.
+3001 Winegard Dr, Burlington, IA 52601 - near the Mississippi River.

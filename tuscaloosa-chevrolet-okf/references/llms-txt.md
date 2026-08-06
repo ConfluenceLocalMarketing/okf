@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Tuscaloosa Chevrolet, Inc. — llms.txt
+title: Tuscaloosa Chevrolet, Inc. - llms.txt
 description: AI context file for Tuscaloosa Chevrolet, Inc. dealership. (synthesized)
 tags:
   - llms-txt
@@ -18,7 +18,7 @@ timestamp: 2026-07-02
 - **Location**: 6500 Interstate Pkwy, Cottondale, AL 35453
 - **Website**: https://www.tuscaloosachevrolet.com/
 - **Main**: (205) 758-4451 | **Sales**: (205) 409-3095 | **Service**: (205) 409-3085 | **Parts**: (205) 523-4346
-- **BBB**: Accredited since 1985 — A+ rating
+- **BBB**: Accredited since 1985 - A+ rating
 
 ## Inventory
 - New Chevrolet: Silverado, Tahoe, Suburban, Traverse, Equinox, Blazer, Trax, Corvette, Colorado, EV models
@@ -31,5 +31,5 @@ timestamp: 2026-07-02
 - Online credit application, trade-in appraisal, fleet financing
 
 ## Hours
-- Sales: Mon–Fri 8–7, Sat 8–6, Sun closed
-- Service/Parts: Mon–Fri 7–6, Sat–Sun closed
+- Sales: Mon-Fri 8-7, Sat 8-6, Sun closed
+- Service/Parts: Mon-Fri 7-6, Sat-Sun closed

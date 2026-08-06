@@ -71,5 +71,5 @@ Lincoln Black Label is an exclusive ownership program that includes:
 - Complimentary Lincoln Pickup & Delivery
 - Unique interior themes and materials
 
-See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/tables/model-comparison.md) for detailed specification comparison.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/dealership.md) for full dealership information.
+See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/tables/model-comparison.md) for detailed specification comparison.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/dealership.md) for full dealership information.

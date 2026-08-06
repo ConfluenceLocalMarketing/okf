@@ -40,5 +40,5 @@ The Lincoln Certified Pre-Owned program provides:
 - Appraisal appointments available
 - Trade-in equity can be applied to new or pre-owned purchases
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/new-vehicles.md) for the Lincoln new vehicle lineup.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/dealership.md) for dealership contact information.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/new-vehicles.md) for the Lincoln new vehicle lineup.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/dealership.md) for dealership contact information.

@@ -49,16 +49,16 @@ Estimate monthly payments using the payment calculator before visiting the deale
 
 | Day | Hours |
 |---|---|
-| Monday | 9:00 AM – 8:00 PM |
-| Tuesday | 9:00 AM – 8:00 PM |
-| Wednesday | 9:00 AM – 8:00 PM |
-| Thursday | 9:00 AM – 8:00 PM |
-| Friday | 9:00 AM – 6:00 PM |
-| Saturday | 9:00 AM – 6:00 PM |
+| Monday | 9:00 AM - 8:00 PM |
+| Tuesday | 9:00 AM - 8:00 PM |
+| Wednesday | 9:00 AM - 8:00 PM |
+| Thursday | 9:00 AM - 8:00 PM |
+| Friday | 9:00 AM - 6:00 PM |
+| Saturday | 9:00 AM - 6:00 PM |
 | Sunday | Closed |
 
 ## Contact
 
 Contact the finance department through the dealership's sales line at (513) 782-1122.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/used-vehicles.md) for inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/dealership.md) for full business profile and [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/new-vehicles.md) or [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/used-vehicles.md) for inventory.

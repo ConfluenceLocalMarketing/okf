@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Frequently Asked Questions — Nick Mayer GMC Lewisburg
+title: Frequently Asked Questions - Nick Mayer GMC Lewisburg
 description: Common questions about GMC inventory, CarBravo, financing, and service at Nick Mayer GMC Lewisburg.
 resource: https://www.nickmayergmcoflewisburg.com/
 tags:
@@ -12,12 +12,12 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Frequently Asked Questions — Nick Mayer GMC Lewisburg
+# Frequently Asked Questions - Nick Mayer GMC Lewisburg
 
 ## General
 
 **What are the dealership hours?**
-Monday–Friday 9:00 AM – 7:00 PM, Saturday 9:00 AM – 6:00 PM, Sunday Closed.
+Monday-Friday 9:00 AM - 7:00 PM, Saturday 9:00 AM - 6:00 PM, Sunday Closed.
 
 **What areas do you serve?**
 Lewisburg, Columbia, Franklin, Fayetteville, and surrounding Middle Tennessee communities.
@@ -54,6 +54,6 @@ Appointments are recommended but walk-ins are welcome. Call 931-246-6354.
 **Do you use genuine OEM parts?**
 Yes. The parts department stocks genuine GM and ACDelco parts. Call 931-903-2374.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/dealership.md) for full contact information.
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/new-vehicles.md) for model details.
-See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/service-center.md) for service information.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/dealership.md) for full contact information.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/new-vehicles.md) for model details.
+See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/service-center.md) for service information.

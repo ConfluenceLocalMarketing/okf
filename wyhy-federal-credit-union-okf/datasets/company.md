@@ -34,11 +34,11 @@ WyHy Digital is the credit union's online banking platform, providing account ag
 
 ## Branch Locations
 
-- **Cheyenne (Main)** — 1715 Stillwater Avenue, Cheyenne, WY 82009
-- **Casper** — 5070 CY Avenue, Casper, WY 82604
-- **Green River** — 120 Commerce Drive, Green River, WY 82935
-- **Lyman** — 100 E. Sage Street, Lyman, WY 82937
-- **Rock Springs** — 300 Stanley Avenue, Rock Springs, WY 82901
+- **Cheyenne (Main)** - 1715 Stillwater Avenue, Cheyenne, WY 82009
+- **Casper** - 5070 CY Avenue, Casper, WY 82604
+- **Green River** - 120 Commerce Drive, Green River, WY 82935
+- **Lyman** - 100 E. Sage Street, Lyman, WY 82937
+- **Rock Springs** - 300 Stanley Avenue, Rock Springs, WY 82901
 
 ## Products
 
@@ -85,19 +85,19 @@ WyHy Digital is the credit union's online banking platform, providing account ag
 
 ## Services
 
-- **Online Banking** — Full account management via web browser
-- **Mobile Banking** — Smartphone and tablet access
-- **Bill Pay** — Online payment processing
-- **Remote Deposit Capture** — Deposit checks via mobile device
-- **eStatements** — Paperless monthly statements
-- **Card Controls & Alerts** — Real-time transaction monitoring and card management
-- **Wire Transfers** — Domestic and international wire services
-- **Notary Services** — Available at branch locations
-- **Foreign Currency Exchange** — Currency ordering and exchange
-- **Courtesy Pay / Overdraft Protection** — Overdraft coverage services
-- **Skip-A-Pay** — Eligible loan payment deferral option
-- **SmartPoints Rewards** — Debit and credit card rewards program
-- **Scholarships** — Annual member scholarship program
+- **Online Banking** - Full account management via web browser
+- **Mobile Banking** - Smartphone and tablet access
+- **Bill Pay** - Online payment processing
+- **Remote Deposit Capture** - Deposit checks via mobile device
+- **eStatements** - Paperless monthly statements
+- **Card Controls & Alerts** - Real-time transaction monitoring and card management
+- **Wire Transfers** - Domestic and international wire services
+- **Notary Services** - Available at branch locations
+- **Foreign Currency Exchange** - Currency ordering and exchange
+- **Courtesy Pay / Overdraft Protection** - Overdraft coverage services
+- **Skip-A-Pay** - Eligible loan payment deferral option
+- **SmartPoints Rewards** - Debit and credit card rewards program
+- **Scholarships** - Annual member scholarship program
 
 ## Digital Banking
 

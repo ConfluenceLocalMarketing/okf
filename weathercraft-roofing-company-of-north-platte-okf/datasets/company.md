@@ -26,7 +26,7 @@ Weathercraft Roofing Company of North Platte is a full-service roofing, siding, 
 - **Phone**: (308) 534-3480
 - **Toll Free**: (800) 662-2981
 - **Email**: sales@roofwcohd.com
-- **Hours**: Mon–Fri 8:00 AM – 5:00 PM, Sat 9:00 AM – 12:00 PM, Sun Closed
+- **Hours**: Mon-Fri 8:00 AM - 5:00 PM, Sat 9:00 AM - 12:00 PM, Sun Closed
 
 ## History
 

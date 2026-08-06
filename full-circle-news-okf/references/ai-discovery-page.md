@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Full Circle News
+title: AI Discovery Page - Full Circle News
 description: Overview of AI visibility for Full Circle News. (synthesized)
 tags:
   - ai-discovery
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Full Circle News
+# AI Discovery Page - Full Circle News
 
 ## Overview
 Full Circle News has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.

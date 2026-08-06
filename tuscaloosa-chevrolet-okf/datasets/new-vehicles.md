@@ -62,4 +62,4 @@ Tuscaloosa Chevrolet offers the complete Chevrolet lineup of trucks, SUVs, cars,
 - Silverado Chassis Cab (4500/5500/6500 HD)
 - Low Cab Forward
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/tuscaloosa-chevrolet-okf/datasets/company.md) for dealership contact and location.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/tuscaloosa-chevrolet/datasets/company.md) for dealership contact and location.

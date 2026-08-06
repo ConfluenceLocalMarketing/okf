@@ -23,7 +23,7 @@ Over The Top Roofing LLC is a premier roofing and construction contractor based 
 
 - **Address:** 1024 State Route 48, Fulton, NY 13069
 - **Phone:** (315) 297-4084
-- **Hours:** Monday–Friday 7:00 AM – 4:00 PM, Saturday–Sunday Closed
+- **Hours:** Monday-Friday 7:00 AM - 4:00 PM, Saturday-Sunday Closed
 - **Website:** https://www.ottrcny.com/
 
 ## Services
@@ -53,9 +53,9 @@ Over The Top Roofing LLC is a premier roofing and construction contractor based 
 
 ## Certifications and Credentials
 
-- **GAF Certified TM** — top ~5% of roofing contractors in North America
-- **GAF Weather Stopper System Plus Ltd. Warranty** — authorized to offer
-- **A+ BBB Rating** — BBB Accredited
+- **GAF Certified TM** - top ~5% of roofing contractors in North America
+- **GAF Weather Stopper System Plus Ltd. Warranty** - authorized to offer
+- **A+ BBB Rating** - BBB Accredited
 - **Licensed & Fully Insured**
 - **Lifetime Workmanship Warranty**
 - 25+ years in business

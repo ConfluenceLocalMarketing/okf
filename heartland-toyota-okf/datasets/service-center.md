@@ -80,5 +80,5 @@ Genuine Toyota OEM parts and accessories available including:
 | Saturday | 8:00 AM - 4:00 PM |
 | Sunday | Closed |
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/datasets/staff.md) for full service department directory.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/datasets/dealership.md) for contact information.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/heartland-toyota/datasets/staff.md) for full service department directory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/heartland-toyota/datasets/dealership.md) for contact information.

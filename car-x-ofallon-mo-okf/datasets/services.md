@@ -1,6 +1,6 @@
 ---
 type: Service Menu
-title: Car-X Tire & Auto — Services
+title: Car-X Tire & Auto - Services
 description: Complete auto repair and maintenance service menu including brakes, tires, scheduled maintenance, steering and suspension, diagnostics, inspections, and fleet services.
 resource: https://www.carxstl.com/
 tags:

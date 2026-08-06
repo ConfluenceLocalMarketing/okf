@@ -17,9 +17,9 @@ Columbia Honda offers competitive financing solutions to help you drive home in 
 
 ## Financing Options
 
-- **Online Credit Pre-Approval** — Apply from home for fast pre-approval
-- **Competitive Financing Options** — Through a network of lenders
-- **Lease and Purchase Plans** — Flexible terms to fit your lifestyle
+- **Online Credit Pre-Approval** - Apply from home for fast pre-approval
+- **Competitive Financing Options** - Through a network of lenders
+- **Lease and Purchase Plans** - Flexible terms to fit your lifestyle
 
 ## Leasing
 
@@ -29,7 +29,7 @@ Honda Financial Services offers competitive lease programs on Honda vehicles.
 |--------|--------|---------|
 | Monthly Payment | Higher | Lower |
 | Ownership | You own the vehicle | Return at lease end |
-| Mileage Limits | None | Typical 10,000–15,000 mi/year |
+| Mileage Limits | None | Typical 10,000-15,000 mi/year |
 | End of Term | Trade or keep | Return or purchase |
 
 ## Trade-In
@@ -38,4 +38,4 @@ Get a value assessment for your current vehicle.
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/columbia-honda-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/columbia-honda/datasets/company.md).

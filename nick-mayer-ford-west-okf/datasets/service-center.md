@@ -61,8 +61,8 @@ The parts department stocks genuine Ford OEM parts including:
 
 | Day | Hours |
 |---|---|
-| Monday – Friday | 7:00 AM – 6:00 PM |
-| Saturday | 8:00 AM – 4:00 PM |
+| Monday - Friday | 7:00 AM - 6:00 PM |
+| Saturday | 8:00 AM - 4:00 PM |
 | Sunday | Closed |
 
 ## Online Scheduling
@@ -71,6 +71,6 @@ Customers can schedule service appointments online through the dealership websit
 
 ## Related Concepts
 
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview
-- [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/staff.md) - Service and parts staff
-- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/faq.md) - Service FAQs
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/dealership.md) - Dealership overview
+- [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/staff.md) - Service and parts staff
+- [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/faq.md) - Service FAQs

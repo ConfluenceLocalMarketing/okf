@@ -85,4 +85,4 @@ Founded in 1917 by Robert R. Sutherland, Sutherlands has grown from a single lum
 
 - **Harrisonville, MO (Corporate)**: 2200 S Commercial Ave, Harrisonville, MO 64701
   - Phone: (816) 380-2800
-  - Hours: Mon–Fri 7:30–9, Sat 7:30–4, Sun 9–5
+  - Hours: Mon-Fri 7:30-9, Sat 7:30-4, Sun 9-5

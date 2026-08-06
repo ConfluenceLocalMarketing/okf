@@ -22,8 +22,8 @@ Friendly Lincoln's service center is staffed by Lincoln factory-trained technici
 - Routine maintenance (oil changes, tire rotations, fluid checks)
 - Complex diagnostics and engine/transmission repair
 - Genuine OEM Lincoln parts
-- Lincoln Pickup & Delivery — complimentary vehicle pick-up and drop-off
-- Lincoln Mobile Service — factory-trained technicians dispatched to your home or office
+- Lincoln Pickup & Delivery - complimentary vehicle pick-up and drop-off
+- Lincoln Mobile Service - factory-trained technicians dispatched to your home or office
 - Lincoln Certified Pre-Owned warranty repairs
 - Online service scheduling
 
@@ -35,4 +35,4 @@ Select maintenance services performed at your home or office by factory-trained 
 
 - **Service Phone**: (702) 799-9734
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/dealership.md) for dealership profile and hours.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln-las-vegas/datasets/dealership.md) for dealership profile and hours.

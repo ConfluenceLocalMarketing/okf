@@ -52,7 +52,7 @@ A: Yes. The dealership provides vehicle pickup and delivery service for service 
 ## Dealership
 
 **Q: What are your sales hours?**
-A: Monday–Thursday 8:30am–8:00pm, Friday–Saturday 8:30am–7:00pm, Sunday closed.
+A: Monday-Thursday 8:30am-8:00pm, Friday-Saturday 8:30am-7:00pm, Sunday closed.
 
 **Q: Do you serve Spanish-speaking customers?**
 A: Yes. The dealership offers Spanish-language support - ¡Hablamos español!
@@ -60,4 +60,4 @@ A: Yes. The dealership offers Spanish-language support - ¡Hablamos español!
 **Q: Is Leif Johnson Ford family-owned?**
 A: Yes. The Leif Johnson Automotive Group has been family-owned and operated for over 65 years.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/dealership.md) for full business profile.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/dealership.md) for full business profile.

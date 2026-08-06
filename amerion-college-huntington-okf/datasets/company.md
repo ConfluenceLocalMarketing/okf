@@ -1,6 +1,6 @@
 ---
 type: Career Training School
-title: Amerion College — Huntington
+title: Amerion College - Huntington
 description: Career training school in Huntington, WV offering diploma programs in dental assisting, medical assisting, phlebotomy, EKG, patient care tech, and clinical medical assistant.
 resource: https://amerion.edu/campuses/huntington-wv/
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Amerion College — Huntington
+# Amerion College - Huntington
 
 Amerion College Huntington is a career training school located in Huntington, West Virginia, offering focused diploma programs in healthcare fields. The campus provides hands-on training designed to prepare students for entry-level positions in the medical and dental fields.
 

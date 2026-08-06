@@ -74,4 +74,4 @@ Staff directory compiled from customer testimonials and dealership information.
 - **Reggie** - Sales Manager
 - **Ray** - Finance Manager
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/references/testimonials.md) for detailed customer reviews referencing specific staff members.

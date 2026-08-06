@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Gibson Truck World
+title: AI Discovery Page - Gibson Truck World
 description: Overview of AI visibility and discovery for Gibson Truck World. (synthesized)
 tags:
   - ai-discovery
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Gibson Truck World
+# AI Discovery Page - Gibson Truck World
 
 ## Overview
 Gibson Truck World has no AI-specific discovery files (llms.txt, prompts.txt) on its website. An llms.txt and prompts.txt have been synthesized.

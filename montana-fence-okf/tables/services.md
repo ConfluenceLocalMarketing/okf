@@ -22,7 +22,7 @@ timestamp: 2026-07-03
 | Material | Typical Uses | Durability | Maintenance |
 |---|---|---|---|
 | Chain Link | Security, commercial, pet enclosures | High | Low |
-| Wood | Privacy fencing, residential | Medium | Moderate — requires staining/sealing |
+| Wood | Privacy fencing, residential | Medium | Moderate - requires staining/sealing |
 | Vinyl | Residential privacy, decorative | High | Low |
 | Ornamental Steel/Iron | Decorative, commercial, residential | Very High | Low |
 | Aluminum | Decorative, pool enclosures | High | Low |

@@ -93,5 +93,5 @@ Standard across most Mazda models:
 - High Beam Control
 - 360-Degree View Monitor (select trims)
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/datasets/dealership.md) for current offers and promotions.

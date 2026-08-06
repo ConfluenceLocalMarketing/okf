@@ -25,7 +25,7 @@ Kruse Motors is a family-owned dealership serving Marshall and Southwest Minneso
 1651-61 East College Drive, Marshall, MN 56258.
 
 **What are the showroom hours?**
-Monday–Thursday 8:00 AM–7:00 PM, Friday 8:00 AM–6:00 PM, Saturday 8:00 AM–4:00 PM.
+Monday-Thursday 8:00 AM-7:00 PM, Friday 8:00 AM-6:00 PM, Saturday 8:00 AM-4:00 PM.
 
 **What brands does Kruse Motors sell?**
 New: Ford, Lincoln, Buick, and GMC. Used: All makes and models.
@@ -74,6 +74,6 @@ Yes. The We Buy Cars program allows you to sell your vehicle directly with no ob
 **Does Kruse match KBB values?**
 Kruse partners with Kelley Blue Book to provide transparent, fair-market offers through the KBB Instant Cash Offer program.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/dealership.md) for the full business profile.
-See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/financing.md) for detailed financing information.
-See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/service-center.md) for service department details.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/dealership.md) for the full business profile.
+See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/financing.md) for detailed financing information.
+See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/service-center.md) for service department details.

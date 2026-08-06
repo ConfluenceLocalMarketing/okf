@@ -55,4 +55,4 @@ The dealership offers a [7-Day Money-Back Guarantee](https://www.leifjohnsonford
 - **Remote Purchase**: Buy without visiting the dealership
 - **Pre-Loved Program**: Marketing term for pre-owned vehicle selection
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/dealership.md) for full business profile and [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/financing.md) for financing options on pre-owned vehicles.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/dealership.md) for full business profile and [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/financing.md) for financing options on pre-owned vehicles.

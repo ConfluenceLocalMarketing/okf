@@ -1,6 +1,6 @@
 ---
 type: Amenities Matrix
-title: Great River Casino Resort and FunCity — Amenities
+title: Great River Casino Resort and FunCity - Amenities
 description: Complete amenities matrix across all resort facilities at the Burlington, Iowa property. (synthesized)
 tags:
   - amenities

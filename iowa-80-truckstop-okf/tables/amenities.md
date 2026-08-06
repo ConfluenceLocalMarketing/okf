@@ -87,8 +87,8 @@ timestamp: 2026-07-03
 | Hours | 24 hours / 365 days (never closed since 1964) |
 | Daily customers | 5,000+ |
 | Parent company | Iowa 80 Group |
-| Annual event | Walcott Truckers Jamboree (July 9–11, 2026) |
+| Annual event | Walcott Truckers Jamboree (July 9-11, 2026) |
 
 ## Citations
 
-Data sourced from the official Iowa 80 Truckstop website ([iowa80truckstop.com](https://iowa80truckstop.com/)). See [iowa-80-truckstop.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/iowa-80-truckstop-okf/datasets/iowa-80-truckstop.md) for the full concept profile.
+Data sourced from the official Iowa 80 Truckstop website ([iowa80truckstop.com](https://iowa80truckstop.com/)). See [iowa-80-truckstop.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/iowa-80-truckstop/datasets/iowa-80-truckstop.md) for the full concept profile.

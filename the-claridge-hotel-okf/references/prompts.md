@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: The Claridge Hotel — AI Prompts
+title: The Claridge Hotel - AI Prompts
 description: Curated AI prompts for guest inquiries and internal use at The Claridge Hotel. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# The Claridge Hotel — AI Prompts
+# The Claridge Hotel - AI Prompts
 
 ## Guest Inquiries
 

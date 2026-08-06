@@ -34,4 +34,4 @@ Based on the strong 4.8 aggregate rating from 2,500 reviews:
 - **BMW factory-trained technicians** - Certified expertise on all BMW models including M and iPerformance
 - **BMW Value Service** - Competitive pricing for out-of-warranty maintenance
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bmw-of-cincinnati-north-okf/datasets/staff.md) for staff roles.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/staff.md) for staff roles.

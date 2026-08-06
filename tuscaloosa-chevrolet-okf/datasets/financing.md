@@ -17,11 +17,11 @@ The Finance Center at Tuscaloosa Chevrolet provides financing and lease solution
 
 ## Financing Options
 
-- **New Vehicle Loans** — Competitive rates on new Chevrolet models
-- **Certified Pre-Owned Financing** — Special rates on CPO vehicles
-- **Lease Programs** — Chevrolet lease plans with flexible terms
-- **Commercial Fleet Financing** — Tailored for business customers
-- **EV Incentives** — Financing programs for Silverado EV, Equinox EV, Blazer EV, and Bolt EV
+- **New Vehicle Loans** - Competitive rates on new Chevrolet models
+- **Certified Pre-Owned Financing** - Special rates on CPO vehicles
+- **Lease Programs** - Chevrolet lease plans with flexible terms
+- **Commercial Fleet Financing** - Tailored for business customers
+- **EV Incentives** - Financing programs for Silverado EV, Equinox EV, Blazer EV, and Bolt EV
 
 ## Online Services
 
@@ -39,4 +39,4 @@ The Finance Center at Tuscaloosa Chevrolet provides financing and lease solution
 
 Finance specialists are available during sales hours. Call (205) 409-3095 or visit the dealership at 6500 Interstate Pkwy, Cottondale, AL.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/tuscaloosa-chevrolet-okf/datasets/company.md) for the full dealership profile.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/tuscaloosa-chevrolet/datasets/company.md) for the full dealership profile.

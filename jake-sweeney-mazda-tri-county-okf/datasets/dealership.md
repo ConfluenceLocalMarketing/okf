@@ -36,13 +36,13 @@ Email: sarahdsweeney@gmail.com
 
 | Day | Hours |
 |---|---|
-| Monday | 9:00 AM – 8:00 PM |
-| Tuesday | 9:00 AM – 8:00 PM |
-| Wednesday | 9:00 AM – 8:00 PM |
-| Thursday | 9:00 AM – 8:00 PM |
-| Friday | 9:00 AM – 6:00 PM |
-| Saturday | 9:00 AM – 6:00 PM |
-| Sunday | Open 12–5 Last Sunday of the Month |
+| Monday | 9:00 AM - 8:00 PM |
+| Tuesday | 9:00 AM - 8:00 PM |
+| Wednesday | 9:00 AM - 8:00 PM |
+| Thursday | 9:00 AM - 8:00 PM |
+| Friday | 9:00 AM - 6:00 PM |
+| Saturday | 9:00 AM - 6:00 PM |
+| Sunday | Open 12-5 Last Sunday of the Month |
 
 ## Location
 
@@ -85,14 +85,14 @@ Models available include:
 
 Sales and service staff frequently praised by customers include: Hallie Abbott, Jason Vaughn, Roman (Romyl), Emilio Perez, Terry, Joe Collins, Tony, Royan, Mike B., Chris Car, Xavier, Jeff, David, Adam, Mike, Jordan, Danny, Rachel, Frank (finance), Mike Owens, Joe Collins, and others.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/staff.md) for full directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - Aggregate rating: **4.8 / 5.0** (2,030 reviews)
 - PromptGraph-collected reviews: All 5-star with consistent praise for low-pressure sales, patient staff, and knowledgeable service
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

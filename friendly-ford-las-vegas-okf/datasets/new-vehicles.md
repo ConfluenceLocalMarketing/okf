@@ -69,4 +69,4 @@ Friendly Ford Las Vegas carries a comprehensive selection of new Ford vehicles w
 
 Browse online at the Friendly Ford Las Vegas website. Over 470 new Ford vehicles in stock.
 
-See [friendly-ford-las-vegas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for full business profile and [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/financing.md) for purchase/lease options.
+See [friendly-ford-las-vegas.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/friendly-ford-las-vegas.md) for full business profile and [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/financing.md) for purchase/lease options.

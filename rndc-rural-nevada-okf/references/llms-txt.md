@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Rural Nevada Development Corporation — llms.txt
+title: Rural Nevada Development Corporation - llms.txt
 description: AI context file for RNDC. (synthesized)
 tags:
   - llms-txt

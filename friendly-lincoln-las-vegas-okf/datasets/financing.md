@@ -50,11 +50,11 @@ Estimate monthly payments using the online payment calculator before visiting th
 
 ## Finance Hours
 
-Monday–Saturday 8:00 AM to 8:00 PM. Sunday closed.
+Monday-Saturday 8:00 AM to 8:00 PM. Sunday closed.
 
 ## Contact
 
 **Finance/Sales**: (702) 790-8429
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/dealership.md) for full business profile.
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/used-vehicles.md) for current inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln-las-vegas/datasets/dealership.md) for full business profile.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln-las-vegas/datasets/new-vehicles.md) or [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln-las-vegas/datasets/used-vehicles.md) for current inventory.

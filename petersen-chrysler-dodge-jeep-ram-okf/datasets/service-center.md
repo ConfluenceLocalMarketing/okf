@@ -20,16 +20,16 @@ The service center at Petersen CDJR is staffed by factory-trained Mopar technici
 
 ## Services Offered
 
-- **Oil Changes** — Conventional and synthetic
-- **Express Lane** — Quick oil change, tire rotation, and inspection (no appointment needed)
-- **Tire Services** — Rotation, balance, replacement, alignment
-- **Brake Service** — Inspection, pad replacement, rotor service
-- **Engine Diagnostics** — Factory diagnostic equipment
-- **Transmission Service** — Fluid change, filter, repair
-- **Heating & Air Conditioning** — Inspection, recharge, repair
-- **Battery & Electrical** — Testing, replacement, charging system
-- **Scheduled Maintenance** — Factory-recommended service intervals
-- **4x4 Service** — Transfer case, differential, driveline
+- **Oil Changes** - Conventional and synthetic
+- **Express Lane** - Quick oil change, tire rotation, and inspection (no appointment needed)
+- **Tire Services** - Rotation, balance, replacement, alignment
+- **Brake Service** - Inspection, pad replacement, rotor service
+- **Engine Diagnostics** - Factory diagnostic equipment
+- **Transmission Service** - Fluid change, filter, repair
+- **Heating & Air Conditioning** - Inspection, recharge, repair
+- **Battery & Electrical** - Testing, replacement, charging system
+- **Scheduled Maintenance** - Factory-recommended service intervals
+- **4x4 Service** - Transfer case, differential, driveline
 
 ## Mopar Parts
 
@@ -51,4 +51,4 @@ The service center at Petersen CDJR is staffed by factory-trained Mopar technici
 - **Address:** 5801 E Gate Blvd, Nampa, ID 83687
 - **Text:** (208) 962-6129
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/company.md) for full dealership profile.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/company.md) for full dealership profile.

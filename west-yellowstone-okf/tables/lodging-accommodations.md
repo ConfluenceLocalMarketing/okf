@@ -39,4 +39,4 @@ timestamp: 2026-07-03
 
 ## Citations
 
-- Yellowstone.net — West Yellowstone Lodging: https://www.yellowstone.net/gateways/west-yellowstone
+- Yellowstone.net - West Yellowstone Lodging: https://www.yellowstone.net/gateways/west-yellowstone

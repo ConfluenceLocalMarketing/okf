@@ -86,5 +86,5 @@ timestamp: 2026-06-24
 - **Outlander Sport:** S, ES, LE, SE, SEL
 - **Mirage G4:** ES, LE, SE, SEL
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/dealership.md) for full business profile and current offers.
-See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/tables/model-comparison.md) for side-by-side specifications.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/dealership.md) for full business profile and current offers.
+See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/tables/model-comparison.md) for side-by-side specifications.

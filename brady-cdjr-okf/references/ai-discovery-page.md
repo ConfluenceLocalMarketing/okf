@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Brady Chrysler Dodge Jeep Ram
+title: AI Discovery Page - Brady Chrysler Dodge Jeep Ram
 description: Overview of AI visibility for Brady CDJR. (synthesized)
 tags:
   - ai-discovery
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Brady Chrysler Dodge Jeep Ram
+# AI Discovery Page - Brady Chrysler Dodge Jeep Ram
 
 ## Overview
 Brady CDJR has no AI-specific discovery files. An llms.txt and prompts.txt have been synthesized for this bundle.

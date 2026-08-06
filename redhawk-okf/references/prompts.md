@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Redhawk Gastropub — AI Prompts
+title: Redhawk Gastropub - AI Prompts
 description: Curated AI prompts for guest engagement and internal use at Redhawk Gastropub. (synthesized)
 tags:
   - prompts
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Redhawk Gastropub — AI Prompts
+# Redhawk Gastropub - AI Prompts
 
 ## Guest Engagement
 

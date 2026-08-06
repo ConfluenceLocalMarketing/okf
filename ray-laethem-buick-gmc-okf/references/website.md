@@ -1,6 +1,6 @@
 ---
 type: Website
-title: Ray Laethem Buick GMC — Official Site
+title: Ray Laethem Buick GMC - Official Site
 description: Official website for Ray Laethem Buick GMC featuring new and pre-owned inventory, service scheduling, parts ordering, financing tools, and current special offers.
 resource: https://www.laethemgm.com/
 tags:
@@ -12,7 +12,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Ray Laethem Buick GMC — Official Website
+# Ray Laethem Buick GMC - Official Website
 
 ## Source
 
@@ -30,10 +30,10 @@ timestamp: 2026-07-03
 
 ## Relevance
 
-Primary data source for the [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) concept, including inventory, services, hours, and contact details.
+Primary data source for the [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/dealership.md) concept, including inventory, services, hours, and contact details.
 
 ## Citations
 
-- See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for full dealership profile
-- See [contact.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/tables/contact.md) for department contact information
-- See [hours.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/tables/hours.md) for operating hours
+- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/dealership.md) for full dealership profile
+- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/tables/contact.md) for department contact information
+- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/tables/hours.md) for operating hours

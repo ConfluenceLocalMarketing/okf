@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Sutherlands Home Improvement — llms.txt
+title: Sutherlands Home Improvement - llms.txt
 description: AI context file for Sutherlands Home Improvement. (synthesized)
 tags:
   - llms-txt

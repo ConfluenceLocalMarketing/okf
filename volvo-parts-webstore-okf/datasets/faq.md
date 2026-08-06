@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Volvo Parts Webstore — Frequently Asked Questions
+title: Volvo Parts Webstore - Frequently Asked Questions
 description: Common questions about parts ordering, shipping, returns, fitment, and customer support at Volvo Parts Webstore.
 tags:
   - faq
@@ -13,7 +13,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Volvo Parts Webstore — FAQ
+# Volvo Parts Webstore - FAQ
 
 ## Ordering
 
@@ -32,7 +32,7 @@ Standard online payment methods including credit cards are accepted through the 
 Yes, Volvo Parts Webstore ships nationwide across the United States.
 
 ### How long does shipping take?
-Shipping times vary by destination and part availability. Most orders ship within 1–2 business days from Oak Park, IL.
+Shipping times vary by destination and part availability. Most orders ship within 1-2 business days from Oak Park, IL.
 
 ### What are the shipping costs?
 Shipping costs are calculated at checkout based on the order weight, dimensions, and destination.

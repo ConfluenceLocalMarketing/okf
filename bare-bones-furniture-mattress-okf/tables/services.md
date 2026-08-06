@@ -1,6 +1,6 @@
 ---
 type: Table
-title: Bare Bones Furniture & Mattress — Services
+title: Bare Bones Furniture & Mattress - Services
 description: Complete list of customer services offered by Bare Bones Furniture & Mattress.
 resource: https://www.barebonesfurn.com/pages/about-us
 tags:

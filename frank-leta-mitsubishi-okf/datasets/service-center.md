@@ -18,21 +18,21 @@ The service center at Frank Leta Mitsubishi provides certified auto repair and r
 
 ## Services Offered
 
-- **Oil Changes** — Conventional and synthetic oil service
-- **Tire Services** — Rotation, balance, replacement, and alignment
-- **Brake Service** — Pad replacement, rotor resurfacing, brake fluid flush
-- **Engine Diagnostics** — Check engine light diagnosis and repair
-- **Transmission Service** — Fluid change and repair
-- **Air Conditioning** — Inspection, recharge, and repair
-- **Battery & Electrical** — Testing, replacement, and charging system checks
-- **Scheduled Maintenance** — Factory-recommended service intervals
-- **State Inspections** — Missouri emissions and safety inspections
+- **Oil Changes** - Conventional and synthetic oil service
+- **Tire Services** - Rotation, balance, replacement, and alignment
+- **Brake Service** - Pad replacement, rotor resurfacing, brake fluid flush
+- **Engine Diagnostics** - Check engine light diagnosis and repair
+- **Transmission Service** - Fluid change and repair
+- **Air Conditioning** - Inspection, recharge, and repair
+- **Battery & Electrical** - Testing, replacement, and charging system checks
+- **Scheduled Maintenance** - Factory-recommended service intervals
+- **State Inspections** - Missouri emissions and safety inspections
 
 ## Service Hours
 
 | Day | Hours |
 |-----|-------|
-| Mon–Sat | 8:00 AM – 6:00 PM |
+| Mon-Sat | 8:00 AM - 6:00 PM |
 | Sun | Closed |
 
 ## Parts Department
@@ -50,4 +50,4 @@ Mitsubishi factory warranty repairs performed by certified technicians. The 10-y
 - **Service Phone:** (314) 597-9221
 - **Location:** 12101 St Charles Rock Rd, Bridgeton, MO 63044
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/frank-leta-mitsubishi-okf/datasets/company.md) for full dealership details.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/datasets/company.md) for full dealership details.

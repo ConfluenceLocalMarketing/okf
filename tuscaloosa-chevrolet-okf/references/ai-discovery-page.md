@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Tuscaloosa Chevrolet, Inc.
+title: AI Discovery Page - Tuscaloosa Chevrolet, Inc.
 description: Overview of AI visibility and discovery for Tuscaloosa Chevrolet, Inc. (synthesized)
 tags:
   - ai-discovery
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Tuscaloosa Chevrolet, Inc.
+# AI Discovery Page - Tuscaloosa Chevrolet, Inc.
 
 ## Overview
 Tuscaloosa Chevrolet, Inc. has no dedicated AI discovery files (llms.txt, prompts.txt) on its website. An llms.txt and prompts.txt have been synthesized for this bundle.

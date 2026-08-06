@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — BEK Moving Co.
+title: AI Discovery Page - BEK Moving Co.
 description: Overview of AI visibility for BEK Moving Co. (synthesized)
 tags:
   - ai-discovery
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — BEK Moving Co.
+# AI Discovery Page - BEK Moving Co.
 
 ## Overview
 BEK Moving has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.

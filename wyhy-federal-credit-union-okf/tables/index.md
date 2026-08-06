@@ -1,3 +1,3 @@
 # Tables
 
-This bundle has no standalone table concepts. Structured product comparison data is embedded within [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/wyhy-federal-credit-union-okf/datasets/company.md).
+This bundle has no standalone table concepts. Structured product comparison data is embedded within [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/datasets/company.md).

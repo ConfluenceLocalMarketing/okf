@@ -45,31 +45,31 @@ West Hills Mazda is a full-service Mazda dealership located at **1000 Oyster Bay
 ## Mazda Models
 
 ### Crossovers & SUVs
-- **CX-30** — Subcompact crossover SUV
-- **CX-5** — Compact crossover SUV, Mazda's best-seller
-- **CX-50 / CX-50 Hybrid** — Compact crossover with rugged styling, available hybrid
-- **CX-70** — Mid-size 2-row crossover SUV
-- **CX-90 / CX-90 Plug-In Hybrid** — Mid-size 3-row crossover SUV with available PHEV
-- **MX-30** — All-electric crossover
+- **CX-30** - Subcompact crossover SUV
+- **CX-5** - Compact crossover SUV, Mazda's best-seller
+- **CX-50 / CX-50 Hybrid** - Compact crossover with rugged styling, available hybrid
+- **CX-70** - Mid-size 2-row crossover SUV
+- **CX-90 / CX-90 Plug-In Hybrid** - Mid-size 3-row crossover SUV with available PHEV
+- **MX-30** - All-electric crossover
 
 ### Cars
-- **Mazda3 Sedan** — Compact sedan with premium design
-- **Mazda3 Hatchback** — Compact hatchback, available with AWD
+- **Mazda3 Sedan** - Compact sedan with premium design
+- **Mazda3 Hatchback** - Compact hatchback, available with AWD
 
 ### Sports Cars
-- **MX-5 Miata** — Iconic 2-seat convertible roadster
-- **MX-5 Miata RF** — Retractable fastback version
+- **MX-5 Miata** - Iconic 2-seat convertible roadster
+- **MX-5 Miata RF** - Retractable fastback version
 
 ### Electrified
-- **CX-90 Plug-In Hybrid** — 3-row PHEV SUV
-- **CX-70 Plug-In Hybrid** — 2-row PHEV SUV
-- **CX-50 Hybrid** — Compact hybrid SUV
+- **CX-90 Plug-In Hybrid** - 3-row PHEV SUV
+- **CX-70 Plug-In Hybrid** - 2-row PHEV SUV
+- **CX-50 Hybrid** - Compact hybrid SUV
 
 ## Services
 
-- **Finance Center** — Online credit application, payment calculator, trade-in valuation, multiple lenders
-- **Service Center** — Mazda-certified technicians, genuine Mazda parts, routine maintenance, major repairs
-- **Parts Department** — Genuine Mazda parts and accessories
+- **Finance Center** - Online credit application, payment calculator, trade-in valuation, multiple lenders
+- **Service Center** - Mazda-certified technicians, genuine Mazda parts, routine maintenance, major repairs
+- **Parts Department** - Genuine Mazda parts and accessories
 
 ## Online Tools
 
@@ -83,4 +83,4 @@ West Hills Mazda is a full-service Mazda dealership located at **1000 Oyster Bay
 
 - Aggregate rating: 4.7 / 5.0 (892 reviews)
 
-See [autoplex.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.
+See [autoplex.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/autoplex.md) for the group overview.

@@ -18,12 +18,12 @@ The Finance Center at Ron Marhofer Chevrolet helps customers secure competitive 
 
 ## Financing Options
 
-- **Online Credit Application** — Secure online application with quick pre-approval decisions
-- **Multiple Lending Partners** — Network of banks, credit unions, and financial institutions for competitive rates
-- **Flexible Terms** — Customized payment plans from 24 to 84 months
-- **New Vehicle Financing** — Special rates and incentives on current Chevrolet models
-- **Used Vehicle Financing** — Competitive rates on certified pre-owned and pre-owned inventory
-- **Special Financing Programs** — Options for first-time buyers, recent graduates, and buyers with less-than-perfect credit
+- **Online Credit Application** - Secure online application with quick pre-approval decisions
+- **Multiple Lending Partners** - Network of banks, credit unions, and financial institutions for competitive rates
+- **Flexible Terms** - Customized payment plans from 24 to 84 months
+- **New Vehicle Financing** - Special rates and incentives on current Chevrolet models
+- **Used Vehicle Financing** - Competitive rates on certified pre-owned and pre-owned inventory
+- **Special Financing Programs** - Options for first-time buyers, recent graduates, and buyers with less-than-perfect credit
 
 ## Leasing
 
@@ -61,4 +61,4 @@ Online payment calculators allow customers to estimate monthly payments based on
 
 The Finance Department can be reached at **(330) 752-1612** during business hours.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-chevrolet-okf/datasets/dealership.md) for full business profile and hours.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-chevrolet/datasets/dealership.md) for full business profile and hours.

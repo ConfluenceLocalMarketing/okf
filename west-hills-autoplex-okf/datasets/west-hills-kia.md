@@ -45,32 +45,32 @@ West Hills Kia is a full-service Kia dealership located at **515 West Hills Blvd
 ## Kia Models
 
 ### SUVs & Crossovers
-- **Sportage** — Compact SUV, multiple trims including X-Pro
-- **Sorento** — Mid-size 3-row SUV
-- **Telluride** — Full-size 3-row SUV, Kia's flagship
-- **Seltos** — Subcompact SUV
-- **EV9** — All-electric 3-row SUV
-- **Niro / Niro EV** — Subcompact hybrid/plug-in hybrid/electric crossover
-- **Carnival** — Minivan with SUV-inspired styling
+- **Sportage** - Compact SUV, multiple trims including X-Pro
+- **Sorento** - Mid-size 3-row SUV
+- **Telluride** - Full-size 3-row SUV, Kia's flagship
+- **Seltos** - Subcompact SUV
+- **EV9** - All-electric 3-row SUV
+- **Niro / Niro EV** - Subcompact hybrid/plug-in hybrid/electric crossover
+- **Carnival** - Minivan with SUV-inspired styling
 
 ### Cars
-- **K4** — Compact sedan (replaces Forte)
-- **K5** — Mid-size sedan
-- **EV6** — All-electric crossover
+- **K4** - Compact sedan (replaces Forte)
+- **K5** - Mid-size sedan
+- **EV6** - All-electric crossover
 
 ### Electrified
-- **EV6** — Dedicated all-electric crossover
-- **EV9** — All-electric 3-row SUV
-- **Niro EV** — Electric subcompact crossover
-- **Niro Plug-In Hybrid** — Plug-in hybrid crossover
-- **Sportage Plug-In Hybrid** — Plug-in hybrid compact SUV
-- **Sorento Plug-In Hybrid** — Plug-in hybrid mid-size SUV
+- **EV6** - Dedicated all-electric crossover
+- **EV9** - All-electric 3-row SUV
+- **Niro EV** - Electric subcompact crossover
+- **Niro Plug-In Hybrid** - Plug-in hybrid crossover
+- **Sportage Plug-In Hybrid** - Plug-in hybrid compact SUV
+- **Sorento Plug-In Hybrid** - Plug-in hybrid mid-size SUV
 
 ## Services
 
-- **Finance Center** — Online credit application, payment calculator, trade-in valuation
-- **Service Center** — Kia-certified technicians, diagnostics, routine maintenance, major repairs
-- **Parts Department** — Genuine Kia parts and accessories
+- **Finance Center** - Online credit application, payment calculator, trade-in valuation
+- **Service Center** - Kia-certified technicians, diagnostics, routine maintenance, major repairs
+- **Parts Department** - Genuine Kia parts and accessories
 
 ## Warranty
 
@@ -88,4 +88,4 @@ Kia's industry-leading 10-Year/100,000-Mile Limited Powertrain Warranty and 5-Ye
 
 - Aggregate rating: 4.6 / 5.0 (1,277 reviews)
 
-See [autoplex.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/autoplex.md) for the group overview.
+See [autoplex.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/autoplex.md) for the group overview.

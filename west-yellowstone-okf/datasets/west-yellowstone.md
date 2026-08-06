@@ -30,26 +30,26 @@ West Yellowstone is a small mountain town in **Gallatin County, Montana**, situa
 
 West Yellowstone offers over 2,000 hotel rooms across a range of property types:
 
-- **Hotels & Motels** — Kelly Inn, Holiday Inn, WorldMark West Yellowstone
-- **Cabins & Lodges** — Explorer Cabins at Yellowstone, Three Bear Lodge
-- **RV Parks & Campgrounds** — Grizzly RV Park, Yellowstone Grizzly RV Park
+- **Hotels & Motels** - Kelly Inn, Holiday Inn, WorldMark West Yellowstone
+- **Cabins & Lodges** - Explorer Cabins at Yellowstone, Three Bear Lodge
+- **RV Parks & Campgrounds** - Grizzly RV Park, Yellowstone Grizzly RV Park
 
-See [lodging-accommodations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-yellowstone-okf/tables/lodging-accommodations.md) for a full comparison table.
+See [lodging-accommodations.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/tables/lodging-accommodations.md) for a full comparison table.
 
 ## Attractions
 
-- **Yellowstone National Park** — Old Faithful, Grand Prismatic Spring, Hayden Valley, Madison River, Firehole River
-- **Grizzly & Wolf Discovery Center** — Wildlife conservation and education center
-- **Museum of the Yellowstone** — Housed in the historic Union Pacific Depot
-- **IMAX Theatre** — Large-format adventure films
-- **Earthquake Lake** — Site of the 1959 Hebgen Lake earthquake
-- **Hebgen Lake** — Fishing, boating, and camping
-- **Henry's Lake State Park** — Trout fishing and camping
-- **Harriman State Park** — Wildlife refuge and hiking trails
+- **Yellowstone National Park** - Old Faithful, Grand Prismatic Spring, Hayden Valley, Madison River, Firehole River
+- **Grizzly & Wolf Discovery Center** - Wildlife conservation and education center
+- **Museum of the Yellowstone** - Housed in the historic Union Pacific Depot
+- **IMAX Theatre** - Large-format adventure films
+- **Earthquake Lake** - Site of the 1959 Hebgen Lake earthquake
+- **Hebgen Lake** - Fishing, boating, and camping
+- **Henry's Lake State Park** - Trout fishing and camping
+- **Harriman State Park** - Wildlife refuge and hiking trails
 
 ## Activities
 
-See [seasonal-activities.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-yellowstone-okf/tables/seasonal-activities.md) for a comprehensive breakdown by season.
+See [seasonal-activities.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/tables/seasonal-activities.md) for a comprehensive breakdown by season.
 
 ### Summer
 - Wildlife viewing (bison, bears, elk, wolves, eagles)
@@ -75,7 +75,7 @@ See [seasonal-activities.md](https://github.com/ConfluenceLocalMarketing/okf/blo
 
 ## Nearby Communities
 
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-yellowstone-okf/datasets/datasets/dealership.md) — Big Sky Resort corridor, Bozeman
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/datasets/datasets/dealership.md) - Big Sky Resort corridor, Bozeman
 
 ## Schema
 
@@ -90,6 +90,6 @@ See [seasonal-activities.md](https://github.com/ConfluenceLocalMarketing/okf/blo
 
 ## Citations
 
-- Yellowstone.net — West Yellowstone Gateway: https://www.yellowstone.net/gateways/west-yellowstone
-- Yellowstone National Park — NPS: https://www.nps.gov/yell
-- Visit Montana — West Yellowstone: https://www.visitmt.com
+- Yellowstone.net - West Yellowstone Gateway: https://www.yellowstone.net/gateways/west-yellowstone
+- Yellowstone National Park - NPS: https://www.nps.gov/yell
+- Visit Montana - West Yellowstone: https://www.visitmt.com

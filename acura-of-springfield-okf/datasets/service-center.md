@@ -19,7 +19,7 @@ The Acura of Springfield service center is staffed by certified technicians usin
 
 - Routine maintenance (oil changes, tire rotations, inspections)
 - Major repairs (engine, transmission, brake systems)
-- Acura Accelerated Service — quick services in 30 minutes or less
+- Acura Accelerated Service - quick services in 30 minutes or less
 - Genuine Acura parts and accessories
 - Certified technicians
 
@@ -43,4 +43,4 @@ Service customers enjoy complimentary car washes and loaner vehicles during serv
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/acura-of-springfield-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/acura-of-springfield/datasets/company.md).

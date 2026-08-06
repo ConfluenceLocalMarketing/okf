@@ -59,11 +59,11 @@ As there is no PromptGraph API for this dealership, the following prompt categor
 - Day of Caring volunteer event
 
 ### Awards & Recognition
-- Chuck Haselwood — 1996 Dealer of the Year
-- Chuck Haselwood — 1998 Time Magazine Quality Dealer of the Year
-- Haselwood Auto Group — Multiple Kitsap Business Philanthropic Awards
-- Eric Wiler — 2019 Kitsap Philanthropic Award
-- Haselwood Auto Group — YMCA Lifetime Philanthropy Award
+- Chuck Haselwood - 1996 Dealer of the Year
+- Chuck Haselwood - 1998 Time Magazine Quality Dealer of the Year
+- Haselwood Auto Group - Multiple Kitsap Business Philanthropic Awards
+- Eric Wiler - 2019 Kitsap Philanthropic Award
+- Haselwood Auto Group - YMCA Lifetime Philanthropy Award
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/references/ai-discovery-page.md) for the AI infrastructure assessment.
-See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/references/ai-discovery-page.md) for the AI infrastructure assessment.
+See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/faq.md) for common questions and answers.

@@ -1,6 +1,6 @@
 ---
 type: LLMs.txt
-title: Bare Bones Furniture & Mattress — LLM Summary
+title: Bare Bones Furniture & Mattress - LLM Summary
 description: Concise markdown summary of Bare Bones Furniture & Mattress for LLM context ingestion.
 resource: https://www.barebonesfurn.com/
 tags:

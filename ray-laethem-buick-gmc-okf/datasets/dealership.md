@@ -81,10 +81,10 @@ Detroit, Grosse Pointe, St. Clair Shores, Warren, Eastpointe, Dearborn, Southfie
 ## Citations
 
 - [Official Website](https://www.laethemgm.com/)
-- See [contact.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/tables/contact.md) for full department contact details
-- See [hours.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/tables/hours.md) for operating hours
-- See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/new-vehicles.md) for Buick and GMC model lineup
-- See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/used-vehicles.md) for pre-owned inventory
-- See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/service-center.md) for service department details
-- See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/financing.md) for finance options
-- See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/staff.md) for team directory
+- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/tables/contact.md) for full department contact details
+- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/tables/hours.md) for operating hours
+- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/new-vehicles.md) for Buick and GMC model lineup
+- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/used-vehicles.md) for pre-owned inventory
+- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/service-center.md) for service department details
+- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/financing.md) for finance options
+- See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/staff.md) for team directory

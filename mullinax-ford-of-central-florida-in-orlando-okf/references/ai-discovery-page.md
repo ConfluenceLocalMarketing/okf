@@ -38,7 +38,7 @@ Mullinax Ford of Central Florida publishes an AI-optimized discovery layer via P
 | `/vehicles/{vin}` | Available | Per-VIN vehicle detail (OpenAPI spec) |
 | `/testimonials` | Available (empty) | Customer testimonial feed; returns an empty array as of 2026-08-06 |
 | `/sitemap-inventory.xml` | Listed | Inventory sitemap declared in the AI manifest |
-| `/config.json` | Available | Platform configuration (contains a private API key — excluded from this bundle) |
+| `/config.json` | Available | Platform configuration (contains a private API key - excluded from this bundle) |
 | `/openapi.json` | Available | OpenAPI 3.0 specification of the discovery API |
 
 ## Crawler Allowance (robots.txt)
@@ -58,4 +58,4 @@ The following bots are explicitly allowed across all sitemap endpoints:
 - See [llms-txt.md](llms-txt.md) for the LLM consumption directive.
 - See [prompts.md](prompts.md) for the prompt library.
 - See [testimonials.md](testimonials.md) for the reviews endpoint and aggregate rating.
-- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
+- See [mullinax-ford-of-central-florida-in-orlando.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.

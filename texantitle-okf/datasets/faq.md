@@ -1,6 +1,6 @@
 ---
 type: Entities
-title: Texan Title — FAQ
+title: Texan Title - FAQ
 description: Frequently asked questions about Texan Title services including title insurance, escrow, first-time buyers, and what sets the company apart.
 resource: https://texantitle.com/galveston
 tags:
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — FAQ
+# Texan Title - FAQ
 
 ## What services do you offer?
 
@@ -35,7 +35,7 @@ Title insurance premiums in Texas are regulated by the Texas Department of Insur
 
 ## Where can I find a Texas closing cost calculator?
 
-Texan Title offers the SouthLandAgent app — Real Estate's #1 Net Sheet and Closing Cost platform — available free at https://southlandagentapp.com for buyer estimates, seller net sheets, and quick title quotes.
+Texan Title offers the SouthLandAgent app - Real Estate's #1 Net Sheet and Closing Cost platform - available free at https://southlandagentapp.com for buyer estimates, seller net sheets, and quick title quotes.
 
 ## How do I safely deposit earnest money?
 
@@ -50,4 +50,4 @@ Yes. Texan Title 1031 Exchange provides Qualified Intermediary services with Exc
 - **Email:** connect@texantitle.com
 - **Phone:** (409) 744-9784
 - **HQ:** 6710 Stewart Road, Suite 300, Galveston, Texas 77551
-- **Individual offices:** See [locations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/locations.md)
+- **Individual offices:** See [locations.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/datasets/locations.md)

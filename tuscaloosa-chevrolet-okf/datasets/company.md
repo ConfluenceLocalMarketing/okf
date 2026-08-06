@@ -30,11 +30,11 @@ Tuscaloosa Chevrolet, Inc. is the largest Chevrolet dealer in Central Alabama, l
 
 ## Hours
 
-| Department | Mon–Fri | Sat | Sun |
+| Department | Mon-Fri | Sat | Sun |
 |------------|---------|-----|-----|
-| Sales | 8:00 AM – 7:00 PM | 8:00 AM – 6:00 PM | Closed |
-| Service | 7:00 AM – 6:00 PM | Closed | Closed |
-| Parts | 7:00 AM – 6:00 PM | Closed | Closed |
+| Sales | 8:00 AM - 7:00 PM | 8:00 AM - 6:00 PM | Closed |
+| Service | 7:00 AM - 6:00 PM | Closed | Closed |
+| Parts | 7:00 AM - 6:00 PM | Closed | Closed |
 
 ## Inventory
 
@@ -51,7 +51,7 @@ Tuscaloosa Chevrolet, Inc. is the largest Chevrolet dealer in Central Alabama, l
 
 ## Services
 
-- **Certified Service Elite GM repair facility** — only one in Alabama
+- **Certified Service Elite GM repair facility** - only one in Alabama
 - Factory-trained Chevrolet technicians
 - OEM parts and accessories
 - Electric vehicle charging stations

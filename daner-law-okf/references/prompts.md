@@ -12,7 +12,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Daner Law Firm — AI Prompts
+# Daner Law Firm - AI Prompts
 
 ## Prompt 1: Estate Planning Overview
 
@@ -39,7 +39,7 @@ general counsel) support entrepreneurs.
 ```
 You are a litigation attorney at Daner Law Firm. A client has a dispute involving
 property boundaries and a contested will. Assess how Daner Law's litigation practice
-areas — property disputes, wills and trusts litigation, and personal injury — might
+areas - property disputes, wills and trusts litigation, and personal injury - might
 apply. Explain the firm's approach to dispute resolution and the advantages of working
 with a firm licensed across California, Nevada, and Idaho.
 ```

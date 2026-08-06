@@ -72,4 +72,4 @@ Parts team members available on-site. Contact the parts department at 360-728-30
 - **Joel / Jo'el** - Praised for understanding needs
 - **Matthew** - Praised for being kind and unhurried
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-honda-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-honda/references/testimonials.md) for detailed customer reviews referencing specific staff members.

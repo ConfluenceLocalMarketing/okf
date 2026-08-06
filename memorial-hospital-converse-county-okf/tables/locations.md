@@ -1,6 +1,6 @@
 ---
 type: Location Directory
-title: Memorial Hospital of Converse County — Network Locations
+title: Memorial Hospital of Converse County - Network Locations
 description: All 16 locations of the Memorial Hospital of Converse County healthcare network across Wyoming.
 tags:
   - locations
@@ -10,13 +10,13 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Memorial Hospital of Converse County — Network Locations
+# Memorial Hospital of Converse County - Network Locations
 
 ## Douglas
 
 | Location | Services |
 |---|---|
-| Main Hospital — 111 South 5th Street | Emergency Room, Surgery, Imaging, Lab, Infusion, Inpatient |
+| Main Hospital - 111 South 5th Street | Emergency Room, Surgery, Imaging, Lab, Infusion, Inpatient |
 | Medical Office Building | Primary Care, Family Medicine, OB/GYN, Orthopedics, Spine, Sports Medicine, Neurosurgery, Pain Management, Gastroenterology, ENT, PT, OT, Water Therapy |
 | Urgent Care | Walk-in urgent care |
 | Physical Therapy | Outpatient rehabilitation |

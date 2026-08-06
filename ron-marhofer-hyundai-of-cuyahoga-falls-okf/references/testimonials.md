@@ -50,4 +50,4 @@ Ron Marhofer Hyundai of Cuyahoga Falls maintains a 4.5 / 5 star average rating a
 | Total Reviews | 2,147 |
 | Recent Trend | Positive - all recent reviews are 5/5 |
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/dealership.md) for full business profile and [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/staff.md) for team directory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-cuyahoga-falls/datasets/dealership.md) for full business profile and [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-cuyahoga-falls/datasets/staff.md) for team directory.

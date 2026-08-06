@@ -1,6 +1,6 @@
 ---
 type: Table
-title: Bare Bones Furniture & Mattress — Brand Partners
+title: Bare Bones Furniture & Mattress - Brand Partners
 description: Brand partners and their product categories carried by Bare Bones Furniture & Mattress.
 resource: https://www.barebonesfurn.com/
 tags:

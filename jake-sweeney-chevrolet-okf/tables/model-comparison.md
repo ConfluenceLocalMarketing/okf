@@ -30,12 +30,12 @@ timestamp: 2026-06-24
 | **Equinox EV** | Compact EV SUV | 5 | FWD / AWD (EV) | Mid-range | 2LT, RS |
 | **Blazer** | Mid-size SUV | 5 | FWD / AWD | Mid-range | 2LT, 3LT, RS |
 | **Blazer EV** | Mid-size EV SUV | 5 | AWD (EV) | Premium | 2LT, RS, SS |
-| **Traverse** | Mid-size SUV | 7–8 | FWD / AWD | Mid-range | LS, LT, RS, Premier |
-| **Tahoe** | Full-size SUV | 7–9 | RWD / 4WD | Premium | LS, LT, Z71, RST, Premier, High Country |
-| **Suburban** | Full-size Extended SUV | 7–9 | RWD / 4WD | Premium | LS, LT, Z71, RST, Premier, High Country |
+| **Traverse** | Mid-size SUV | 7-8 | FWD / AWD | Mid-range | LS, LT, RS, Premier |
+| **Tahoe** | Full-size SUV | 7-9 | RWD / 4WD | Premium | LS, LT, Z71, RST, Premier, High Country |
+| **Suburban** | Full-size Extended SUV | 7-9 | RWD / 4WD | Premium | LS, LT, Z71, RST, Premier, High Country |
 | **Colorado** | Mid-size Pickup | 5 | RWD / 4WD | Mid-range | WT, LT, Z71, Trail Boss, ZR2 |
-| **Silverado 1500** | Full-size Pickup | 5–6 | RWD / 4WD | Mid-range | WT, Custom, Custom Trail Boss, LT, RST, LT Trail Boss, Z71, LTZ, High Country |
-| **Silverado HD** | Heavy-Duty Pickup | 5–6 | RWD / 4WD | Premium | WT, LT, LTZ, High Country |
+| **Silverado 1500** | Full-size Pickup | 5-6 | RWD / 4WD | Mid-range | WT, Custom, Custom Trail Boss, LT, RST, LT Trail Boss, Z71, LTZ, High Country |
+| **Silverado HD** | Heavy-Duty Pickup | 5-6 | RWD / 4WD | Premium | WT, LT, LTZ, High Country |
 | **Silverado EV** | Full-size EV Pickup | 5 | AWD (EV) | Premium | WT, RST |
 | **Malibu** | Mid-size Sedan | 5 | FWD | Value | LS, RS, Premier |
 | **Impala** | Full-size Sedan | 5 | FWD | Mid-range | LS, LT, Premier |
@@ -84,5 +84,5 @@ All new Chevrolet models include:
 - **Equinox** - Popular compact SUV with strong consumer ratings
 - **Bolt EV** - Recognized for affordable EV accessibility
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-chevrolet-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/datasets/dealership.md) for current offers and promotions.

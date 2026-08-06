@@ -62,7 +62,7 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/montclare-auto-repair/
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes 10+ structured Q&A pairs. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montclare-auto-repair-okf/references/prompts.md) for the full library.
+The `/prompts` endpoint exposes 10+ structured Q&A pairs. See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montclare-auto-repair/references/prompts.md) for the full library.
 
-See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montclare-auto-repair-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montclare-auto-repair-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montclare-auto-repair/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montclare-auto-repair/references/prompts.md) for the complete Q&A prompt library.

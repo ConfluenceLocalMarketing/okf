@@ -89,5 +89,5 @@ Standard available safety technologies:
 - Rear Park Assist
 - Teen Driver technology
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/datasets/dealership.md) for current offers and promotions.

@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: BDC Door Company — llms.txt
+title: BDC Door Company - llms.txt
 description: AI context file for BDC Door Company. (synthesized)
 tags:
   - llms-txt

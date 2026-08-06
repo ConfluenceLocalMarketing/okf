@@ -32,4 +32,4 @@ Get a value assessment for your current vehicle and apply it toward a CPO or use
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/acura-of-springfield-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/acura-of-springfield/datasets/company.md).

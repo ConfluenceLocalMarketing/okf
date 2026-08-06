@@ -36,5 +36,5 @@ Comprehensive data quality services including data appending, verification, enri
 
 ## Related
 
-See [insight-pixel.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/insight-pixel.md) for website visitor identity resolution.
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.
+See [insight-pixel.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/insight-pixel.md) for website visitor identity resolution.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/company.md) for the full product ecosystem.

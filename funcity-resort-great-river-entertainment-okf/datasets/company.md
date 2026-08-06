@@ -26,7 +26,7 @@ Great River Casino Resort and FunCity is a premier entertainment destination in 
 
 ## Overview
 
-The resort offers a comprehensive entertainment experience combining casino gaming, multiple hotel properties, a family fun center, outdoor water park, golf course, spa, and event center — making it a destination for both adult gaming and family recreation.
+The resort offers a comprehensive entertainment experience combining casino gaming, multiple hotel properties, a family fun center, outdoor water park, golf course, spa, and event center - making it a destination for both adult gaming and family recreation.
 
 ## Casino
 
@@ -41,35 +41,35 @@ The casino floor features a wide selection of gaming options open daily from 10 
 
 Three hotel properties on campus:
 
-- **FunCity Resort Hotel** — Primary hotel with modern rooms and suites
-- **Great River Hotel** — Additional lodging option
-- **Hampton Inn** — Branded hotel accommodation
+- **FunCity Resort Hotel** - Primary hotel with modern rooms and suites
+- **Great River Hotel** - Additional lodging option
+- **Hampton Inn** - Branded hotel accommodation
 
 ## Dining
 
 Multiple dining options across the resort:
 
-- **Boogaloo Sports Bar & Grill** — Sports bar with full menu
-- **Lucky Street** — Casino-floor dining
-- **Shake Alley** — Milkshakes and treats
-- **Gasoline Allie's** — Casual dining
-- **Cold Stone Creamery** — Ice cream
-- **Snack Shack** — Poolside snacks
-- **Tiki Bar** — Tropical drinks and light fare
-- **Lamp Post** — Lounge
+- **Boogaloo Sports Bar & Grill** - Sports bar with full menu
+- **Lucky Street** - Casino-floor dining
+- **Shake Alley** - Milkshakes and treats
+- **Gasoline Allie's** - Casual dining
+- **Cold Stone Creamery** - Ice cream
+- **Snack Shack** - Poolside snacks
+- **Tiki Bar** - Tropical drinks and light fare
+- **Lamp Post** - Lounge
 
 ## FunCity
 
 Indoor family entertainment center featuring:
 
-- **Arcadium** — Classic and modern arcade games
-- **Ballocity** — Ball pit and play structure
-- **LazerTown** — Indoor laser tag arena
-- **KingPins** — Bowling alley
-- **Zoom** — Indoor go-karts
-- **Trax** — Indoor roller coaster or ride
-- **Ninja Extreme** — Ninja warrior obstacle course
-- **Courtside** — Indoor basketball and sports
+- **Arcadium** - Classic and modern arcade games
+- **Ballocity** - Ball pit and play structure
+- **LazerTown** - Indoor laser tag arena
+- **KingPins** - Bowling alley
+- **Zoom** - Indoor go-karts
+- **Trax** - Indoor roller coaster or ride
+- **Ninja Extreme** - Ninja warrior obstacle course
+- **Courtside** - Indoor basketball and sports
 
 ## Huck's Harbor Outdoor Water Park
 

@@ -37,4 +37,4 @@ The pre-owned inventory includes:
 - Peace of mind with warranty coverage
 - Competitive pricing and financing options
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for dealership contact information. See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/the-autobarn-volvo-cars-of-oak-park-okf/datasets/financing.md) for available financing options.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-autobarn-volvo-cars-of-oak-park/datasets/company.md) for dealership contact information. See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-autobarn-volvo-cars-of-oak-park/datasets/financing.md) for available financing options.

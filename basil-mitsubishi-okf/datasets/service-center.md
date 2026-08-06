@@ -22,8 +22,8 @@ Basil Mitsubishi's service center is a state-of-the-art facility featuring facto
 
 | Day | Hours |
 |---|---|
-| Mon–Fri | 8:00 AM – 5:00 PM |
-| Sat | 9:00 AM – 2:00 PM |
+| Mon-Fri | 8:00 AM - 5:00 PM |
+| Sat | 9:00 AM - 2:00 PM |
 | Sun | Closed |
 
 **Phone:** (716) 666-4574
@@ -68,7 +68,7 @@ The on-site collision center handles exterior body repairs:
 - Cargo organizers, roof racks, and more
 
 **Parts Phone:** (716) 325-9715
-**Parts Hours:** Mon–Fri 8–5, Sat 9–2, Sun closed
+**Parts Hours:** Mon-Fri 8-5, Sat 9-2, Sun closed
 
 ## Service Perks
 
@@ -83,5 +83,5 @@ The on-site collision center handles exterior body repairs:
 
 Monthly promotions and offers on vehicle service are available on the [service specials page](https://www.basilmitsubishi.com/service/service-specials/).
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/dealership.md) for full business profile.
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/staff.md) for service team personnel.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/dealership.md) for full business profile.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/staff.md) for service team personnel.

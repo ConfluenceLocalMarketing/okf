@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Tuscaloosa Chevrolet — Frequently Asked Questions
+title: Tuscaloosa Chevrolet - Frequently Asked Questions
 description: Common questions about Chevrolet sales, service, financing, and the customer experience at Tuscaloosa Chevrolet.
 tags:
   - faq
@@ -12,18 +12,18 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Tuscaloosa Chevrolet — FAQ
+# Tuscaloosa Chevrolet - FAQ
 
 ## General
 
 ### What type of dealership is Tuscaloosa Chevrolet?
-It is the largest Chevrolet dealer in Central Alabama, located at 6500 Interstate Pkwy, Cottondale, AL, offering new and pre-owned Chevy vehicles, certified service, and commercial fleet sales. See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/tuscaloosa-chevrolet-okf/datasets/company.md) for the full profile.
+It is the largest Chevrolet dealer in Central Alabama, located at 6500 Interstate Pkwy, Cottondale, AL, offering new and pre-owned Chevy vehicles, certified service, and commercial fleet sales. See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/tuscaloosa-chevrolet/datasets/company.md) for the full profile.
 
 ### What area does the dealership serve?
 Cottondale, Tuscaloosa, Hoover, Bessemer, Birmingham, AL and Columbus, MS.
 
 ### What are the dealership hours?
-Sales: Mon–Sat 8:00 AM – 7:00 PM (Sat until 6:00 PM), closed Sunday. Service and Parts: Mon–Fri 7:00 AM – 6:00 PM, closed weekends.
+Sales: Mon-Sat 8:00 AM - 7:00 PM (Sat until 6:00 PM), closed Sunday. Service and Parts: Mon-Fri 7:00 AM - 6:00 PM, closed weekends.
 
 ### Is the dealership BBB accredited?
 Yes, the dealership has been BBB accredited since 1985 with an A+ rating.

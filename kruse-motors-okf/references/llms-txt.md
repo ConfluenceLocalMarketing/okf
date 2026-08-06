@@ -60,5 +60,5 @@ The llms.txt directive provides machine-readable guidance for AI agents consumin
 | Flexible Financing for Every Credit Journey | Auto financing options |
 | A Local Landmark Built on Relationships | Community roots and customer relationships |
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/references/ai-discovery-page.md) for structured endpoint details.
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/references/prompts.md) for the complete prompt library.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/references/ai-discovery-page.md) for structured endpoint details.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/references/prompts.md) for the complete prompt library.

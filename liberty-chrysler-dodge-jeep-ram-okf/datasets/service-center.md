@@ -19,16 +19,16 @@ The service center at Liberty CDJR is staffed by Mopar-certified technicians usi
 
 ## Services Offered
 
-- **Oil Changes** — Conventional and synthetic oil
-- **Tire Services** — Rotation, balance, replacement, alignment
-- **Brake Service** — Pads, rotors, calipers, fluid flush
-- **Engine Diagnostics** — Check engine light, performance issues
-- **Transmission Service** — Fluid change, filter, repair
-- **Heating & Air Conditioning** — System inspection, recharge, repair
-- **Battery & Electrical** — Testing, replacement, alternator
-- **Scheduled Maintenance** — Factory-recommended service intervals
-- **4x4 / AWD Service** — Transfer case, differential service
-- **Jeep Wrangler Service** — Specialized off-road vehicle maintenance
+- **Oil Changes** - Conventional and synthetic oil
+- **Tire Services** - Rotation, balance, replacement, alignment
+- **Brake Service** - Pads, rotors, calipers, fluid flush
+- **Engine Diagnostics** - Check engine light, performance issues
+- **Transmission Service** - Fluid change, filter, repair
+- **Heating & Air Conditioning** - System inspection, recharge, repair
+- **Battery & Electrical** - Testing, replacement, alternator
+- **Scheduled Maintenance** - Factory-recommended service intervals
+- **4x4 / AWD Service** - Transfer case, differential service
+- **Jeep Wrangler Service** - Specialized off-road vehicle maintenance
 
 ## Mopar Parts
 
@@ -48,4 +48,4 @@ The service center at Liberty CDJR is staffed by Mopar-certified technicians usi
 
 - **Phone:** (224) 424-3318
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for full location details.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/company.md) for full location details.

@@ -61,4 +61,4 @@ Winter tire installation and removal, TPMS service, tire rotation, balancing, an
 
 Suspension system repair and maintenance including shock and strut replacement, alignment, and steering component service.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/champs-auto-service-okf/datasets/company.md) for our certifications, specials, and contact information.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/champs-auto-service/datasets/company.md) for our certifications, specials, and contact information.

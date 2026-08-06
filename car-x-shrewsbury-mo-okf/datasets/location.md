@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Shrewsbury, MO
+title: Car-X Tire & Auto - Shrewsbury, MO
 description: "Car-X Tire & Auto location in Shrewsbury, MO: address, hours, contact, 4.5-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/shrewsbury-mo/business
 tags:
@@ -14,9 +14,9 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Shrewsbury, MO
+# Car-X Tire & Auto - Shrewsbury, MO
 
-Car-X Tire & Auto in Saint Louis, MO is your one stop for oil changes, brakes, tires and all your auto repair needs. Serving Crestwood, St. Louis, Sappington, Sunset Hills, Webster Groves, Concord, Oakland, & more. Locally owned and operated, Car-X Tire and Auto is just around the corner. For service you can trust—from parts and labor to quality assurance, your car is in good hands. And so are you. We guarantee it. Call your Saint Louis, MO Car-X Man at (314) 351-4899 to schedule an appointment today.
+Car-X Tire & Auto in Saint Louis, MO is your one stop for oil changes, brakes, tires and all your auto repair needs. Serving Crestwood, St. Louis, Sappington, Sunset Hills, Webster Groves, Concord, Oakland, & more. Locally owned and operated, Car-X Tire and Auto is just around the corner. For service you can trust-from parts and labor to quality assurance, your car is in good hands. And so are you. We guarantee it. Call your Saint Louis, MO Car-X Man at (314) 351-4899 to schedule an appointment today.
 
 ## Contact Information
 
@@ -50,7 +50,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -59,4 +59,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-shrewsbury-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-shrewsbury-mo/tables/coupons.md) for details.

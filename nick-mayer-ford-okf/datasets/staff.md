@@ -41,5 +41,5 @@ Specific staff member names and titles were not available from the website snaps
 
 ## Related Concepts
 
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
-- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/service-center.md) - Service center details
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/dealership.md) - Dealership overview
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/service-center.md) - Service center details

@@ -51,16 +51,16 @@ Estimate monthly payments using online payment calculators before visiting the d
 
 | Day | Hours |
 |---|---|
-| Monday | 8:00 am – 9:00 pm |
-| Tuesday | 8:00 am – 9:00 pm |
-| Wednesday | 8:00 am – 9:00 pm |
-| Thursday | 8:00 am – 9:00 pm |
-| Friday | 8:00 am – 9:00 pm |
-| Saturday | 8:00 am – 9:00 pm |
+| Monday | 8:00 am - 9:00 pm |
+| Tuesday | 8:00 am - 9:00 pm |
+| Wednesday | 8:00 am - 9:00 pm |
+| Thursday | 8:00 am - 9:00 pm |
+| Friday | 8:00 am - 9:00 pm |
+| Saturday | 8:00 am - 9:00 pm |
 | Sunday | Closed |
 
 ## Contact
 
 **Sales**: (702) 996-4360 (new) / (702) 718-4683 (used)
 
-See [friendly-ford-las-vegas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/used-vehicles.md) for inventory.
+See [friendly-ford-las-vegas.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/friendly-ford-las-vegas.md) for full business profile and [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/new-vehicles.md) or [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/used-vehicles.md) for inventory.

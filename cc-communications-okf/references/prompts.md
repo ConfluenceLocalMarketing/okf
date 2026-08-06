@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: CC Communications — AI Prompts
+title: CC Communications - AI Prompts
 description: Curated AI prompts for customer service and internal use at CC Communications. (synthesized)
 tags:
   - prompts
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# CC Communications — AI Prompts
+# CC Communications - AI Prompts
 
 ## Customer Service
 

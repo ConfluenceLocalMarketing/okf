@@ -64,7 +64,7 @@ A: Yes. Friendly Ford operates a full collision center at 1650 N Decatur Blvd, L
 ## Dealership
 
 **Q: What are your sales hours?**
-A: Monday–Saturday 8:00am–9:00pm, Sunday closed.
+A: Monday-Saturday 8:00am-9:00pm, Sunday closed.
 
 **Q: Where is the dealership located?**
 A: 660 N Decatur Blvd, Las Vegas, NV 89107.
@@ -75,4 +75,4 @@ A: 1650 N Decatur Blvd, Las Vegas, NV 89107.
 **Q: What social media platforms are you on?**
 A: Friendly Ford is active on Facebook, TikTok, Instagram, Twitter, and YouTube.
 
-See [friendly-ford-las-vegas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for full business profile.
+See [friendly-ford-las-vegas.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/friendly-ford-las-vegas.md) for full business profile.

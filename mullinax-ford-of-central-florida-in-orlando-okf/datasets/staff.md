@@ -33,11 +33,11 @@ Public-facing sales staff at Mullinax Ford of Central Florida, organized by depa
 | Devon King | Sales Consultant | (888) 203-0460 | devon.king@mullinaxford.com |
 | Dennis McClung | Sales Consultant | 407-889-7600 x2080 | dmcclung@mullinaxford.com |
 | James Miller | Sales Consultant | (321) 961-0104 | james.miller@mullinaxford.com |
-| Q Sabir (Speaks Turkish and Arabic) | Sales Consultant | (888) 203-0460 | — |
+| Q Sabir (Speaks Turkish and Arabic) | Sales Consultant | (888) 203-0460 | - |
 | Nelson Santana (Hablo Español) | Sales Consultant | 407-889-7600 x2072 | nsantana@mullinaxford.com |
-| Barry Ross | Sales Consultant | 407-889-7600 | — |
+| Barry Ross | Sales Consultant | 407-889-7600 | - |
 | Brian Serrage | Sales Consultant | 407-889-7600 x2009 | bserrage@mullinaxford.com |
-| Noah Levitt | Sales Consultant | (888) 203-0460 | — |
+| Noah Levitt | Sales Consultant | (888) 203-0460 | - |
 | Jonathan Torres | Sales | 407-889-7600 | jtorres@mullinaxford.com |
 | Kevin Farinha | Sales Consultant | 407-889-7600 | Kfarinha@mullinaxford.com |
 
@@ -47,29 +47,29 @@ Public-facing sales staff at Mullinax Ford of Central Florida, organized by depa
 |---|---|---|---|
 | Jose Burgos (Hablo Español) | Internet Sales Manager | 407-889-7600 | jburgos@mullinaxford.com |
 | Michael Scapicchio | Sales Manager (Internet) | 407-889-7600 | mscapicchio@mullinaxford.com |
-| Brent Osborne | Sales Consultant | (888) 203-0460 | — |
-| Joshua Barrett | Internet Sales Consultant | (888) 203-0460 | — |
+| Brent Osborne | Sales Consultant | (888) 203-0460 | - |
+| Joshua Barrett | Internet Sales Consultant | (888) 203-0460 | - |
 | Alan Bowers | Internet Sales Consultant | 407-889-7600 | abowers@mullinaxford.com |
 | Juan Colon (Hablo Español) | Sales Consultant | (888) 203-0460 | jcolon@mullinaxford.com |
 | Jesse Friederichs | Internet Sales Consultant | 407-889-7600 | jfriederichs@mullinaxford.com |
-| Kaitlyne Jussino | Internet Sales Consultant | 407-889-7600 | — |
-| Nestor Herrera (Hablo Español) | Internet Sales Consultant | 407-889-7600 | — |
+| Kaitlyne Jussino | Internet Sales Consultant | 407-889-7600 | - |
+| Nestor Herrera (Hablo Español) | Internet Sales Consultant | 407-889-7600 | - |
 | Joe Light | Internet Sales Consultant | 407-889-7600 | jlight@mullinaxford.com |
 | Randy McDonald | Internet Sales Consultant | 407-889-7600 x2011 | rmcdonald@mullinaxford.com |
 | John Morales Melendez | Sales Consultant | (407) 951-2209 | john.morales@mullinaxford.com |
 | Dan Niekraszewicz | Internet Sales Consultant | 407-889-7600 | dniek@mullinaxford.com |
-| Andrew Thunberg | Sales Consultant | 407-889-7600 | — |
-| Chris White | Internet Sales Consultant | 407-889-7600 | — |
+| Andrew Thunberg | Sales Consultant | 407-889-7600 | - |
+| Chris White | Internet Sales Consultant | 407-889-7600 | - |
 | Paul Pineda | Internet Sales Consultant | 407-889-7600 | yoscarly.pineda@mullinaxford.com |
 | Dylan Blake | Internet Sales | 407-889-7600 | dylan.blake@mullinaxford.com |
-| James Campbell | Internet Sales Consultant | 407-889-7600 | — |
+| James Campbell | Internet Sales Consultant | 407-889-7600 | - |
 
 ## Commercial Sales Department
 
 | Name | Role | Phone | Email |
 |---|---|---|---|
 | Matthew Blum | Commercial Sales Manager | 407-889-7600 | mblum@mullinaxford.com |
-| Ryan Berglund | Commercial Accounts Manager | (888) 203-0460 | — |
+| Ryan Berglund | Commercial Accounts Manager | (888) 203-0460 | - |
 | Jim Finchen | Commercial Account Manager | 407-889-7600 | jfinchen@mullinaxford.com |
 
 ## Language Support
@@ -82,10 +82,10 @@ Several staff members are listed as bilingual or multilingual:
 ## Notes
 
 - Individual team-member profile pages follow the pattern `/team-member/{slug}` (e.g. `/team-member/shawn-marks-6455`).
-- Phone numbers are listed as published on the dealership website; a "—" indicates the site does not publish that person's email.
+- Phone numbers are listed as published on the dealership website; a "-" indicates the site does not publish that person's email.
 - This directory reflects the public website listing and is not an exhaustive org chart.
 
 ## Related Concepts
 
 - See [mullinax-ford-of-central-florida-in-orlando.md](mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
-- See [contact.md](../tables/contact.md) for department phone numbers.
+- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/contact.md) for department phone numbers.

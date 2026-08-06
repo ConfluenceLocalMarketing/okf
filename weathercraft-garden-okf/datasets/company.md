@@ -27,7 +27,7 @@ Weathercraft Garden is a roofing and exterior solutions contractor based in Gard
 - **Phone**: (620) 275-4070
 - **Toll Free**: (800) 662-2981 / (800) 346-2714
 - **Email**: sales@roofwcohd.com
-- **Hours**: Mon–Fri 8:00 AM – 5:00 PM, Sat–Sun Closed
+- **Hours**: Mon-Fri 8:00 AM - 5:00 PM, Sat-Sun Closed
 - **Website**: https://www.weathercraftgc.com/
 
 ## Services
@@ -71,6 +71,6 @@ Weathercraft Garden is a branch location of Weathercraft Companies, a multi-stat
 
 - Reader's Choice Award (2019)
 - Business of the Week (2019)
-- Multiple community sponsorship awards (1985–2023)
+- Multiple community sponsorship awards (1985-2023)
 - 200+ successful projects with 35+ trained professionals
 

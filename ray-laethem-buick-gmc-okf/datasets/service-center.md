@@ -30,12 +30,12 @@ The Ray Laethem Buick GMC Service Department provides factory-certified maintena
 
 | Day | Hours |
 |---|---|
-| Monday | 7:00 am – 6:00 pm |
-| Tuesday | 7:00 am – 6:00 pm |
-| Wednesday | 7:00 am – 6:00 pm |
-| Thursday | 7:00 am – 6:00 pm |
-| Friday | 7:00 am – 6:00 pm |
-| Saturday | 8:00 am – 4:00 pm |
+| Monday | 7:00 am - 6:00 pm |
+| Tuesday | 7:00 am - 6:00 pm |
+| Wednesday | 7:00 am - 6:00 pm |
+| Thursday | 7:00 am - 6:00 pm |
+| Friday | 7:00 am - 6:00 pm |
+| Saturday | 8:00 am - 4:00 pm |
 | Sunday | Closed |
 
 ## Contact
@@ -58,4 +58,4 @@ The dealership operates a full collision repair center for body repair and paint
 
 The Test Drive To Go program brings vehicles to your home or office for a test drive and also provides vehicle pickup and delivery for service appointments.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/staff.md) for the service team directory and [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for general business information.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/staff.md) for the service team directory and [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/dealership.md) for general business information.

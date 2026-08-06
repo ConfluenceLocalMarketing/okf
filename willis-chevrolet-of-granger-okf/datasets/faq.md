@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Willis Chevrolet Of Granger — Frequently Asked Questions
+title: Willis Chevrolet Of Granger - Frequently Asked Questions
 description: Common questions about Chevrolet sales, service, financing, and the customer experience at Willis Chevrolet Of Granger.
 tags:
   - faq
@@ -13,12 +13,12 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Willis Chevrolet Of Granger — FAQ
+# Willis Chevrolet Of Granger - FAQ
 
 ## General
 
 ### What type of dealership is Willis Chevrolet Of Granger?
-It is a full-service Chevrolet dealership in Granger, IA, serving the Des Moines metro area with new Chevy sales, certified pre-owned vehicles, and expert GM-certified service. See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/willis-chevrolet-of-granger-okf/datasets/company.md) for the full profile.
+It is a full-service Chevrolet dealership in Granger, IA, serving the Des Moines metro area with new Chevy sales, certified pre-owned vehicles, and expert GM-certified service. See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/company.md) for the full profile.
 
 ### What area does the dealership serve?
 Granger, Clive, Des Moines, Urbandale, Waukee, West Des Moines, and the greater Des Moines metro area.

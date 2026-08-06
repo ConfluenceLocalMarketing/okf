@@ -2,5 +2,5 @@
 
 Core knowledge about the Car-X Tire & Auto location in Crestwood, MO.
 
-- [location.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-crestwood-mo-okf/datasets/location.md) - Car-X Tire & Auto location in Crestwood, MO: address, hours, contact, and full auto repair services.
-- [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-crestwood-mo-okf/datasets/services.md) - Full service menu including brakes, tires, maintenance, diagnostics, steering/suspension, and pre-owned inspections
+- [location.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-crestwood-mo/datasets/location.md) - Car-X Tire & Auto location in Crestwood, MO: address, hours, contact, and full auto repair services.
+- [services.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-crestwood-mo/datasets/services.md) - Full service menu including brakes, tires, maintenance, diagnostics, steering/suspension, and pre-owned inspections

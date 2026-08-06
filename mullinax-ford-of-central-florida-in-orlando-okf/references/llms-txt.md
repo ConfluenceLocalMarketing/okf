@@ -27,12 +27,12 @@ An `llms.txt` file is published at the PromptGraph API base to guide LLMs on how
 
 ## Endpoints Referenced
 
-- `/business` — business profile
-- `/prompts` — Q&A prompt library
-- `/.well-known/ai-manifest.json` — AI manifest
-- `/vehicles` — vehicle inventory feed
-- `/testimonials` — customer testimonials
-- `/sitemap-inventory.xml` — inventory sitemap
+- `/business` - business profile
+- `/prompts` - Q&A prompt library
+- `/.well-known/ai-manifest.json` - AI manifest
+- `/vehicles` - vehicle inventory feed
+- `/testimonials` - customer testimonials
+- `/sitemap-inventory.xml` - inventory sitemap
 
 ## Business Context Provided
 
@@ -49,4 +49,4 @@ The file supplies Schema.org-style context about the dealership: name, address (
 
 - See [ai-discovery-page.md](ai-discovery-page.md) for the full endpoint inventory.
 - See [prompts.md](prompts.md) for the prompt library.
-- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
+- See [mullinax-ford-of-central-florida-in-orlando.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.

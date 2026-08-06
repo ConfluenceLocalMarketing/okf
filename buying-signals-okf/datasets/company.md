@@ -34,8 +34,8 @@ Buying Signals is a marketing technology and data services company with over 15 
 
 ## Hours
 
-Monday – Friday: 9:00 AM – 5:00 PM (PST)
-Saturday – Sunday: Closed
+Monday - Friday: 9:00 AM - 5:00 PM (PST)
+Saturday - Sunday: Closed
 
 ## Social
 
@@ -69,5 +69,5 @@ Saturday – Sunday: Closed
 
 Buying Signals combines identity resolution, enriched customer data, location intelligence, SEM, and SEO to build high-performing audiences. They focus every dollar on real people showing real intent rather than clicks, impressions, or broad demographics. Campaigns are delivered across Display, Video, CTV, OTT, Radio, Search, and Social through DSP-driven strategies.
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/references/ai-discovery-page.md) for machine-readable structured data.
-See [product-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/tables/product-comparison.md) for a side-by-side product overview.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/references/ai-discovery-page.md) for machine-readable structured data.
+See [product-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/tables/product-comparison.md) for a side-by-side product overview.

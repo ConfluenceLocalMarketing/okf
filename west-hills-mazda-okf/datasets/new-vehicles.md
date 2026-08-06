@@ -66,5 +66,5 @@ All-electric crossover with a compact footprint and distinctive design.
 
 Promotions vary by model and include low APR financing, lease specials, and rebates. West Hills Mazda frequently offers discounts below MSRP on in-stock vehicles. Contact the dealership for current offers.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/datasets/dealership.md) for contact information and current programs.
-See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-mazda-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/tables/model-comparison.md) for side-by-side model specifications.

@@ -59,4 +59,4 @@ Ford Certified Pre-Owned vehicles undergo rigorous inspection and include:
 - Cash offers for trade-ins (even without vehicle purchase)
 - Competitive trade-in values
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-ford-okf/datasets/dealership.md) for current financing and trade-in programs.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-ford/datasets/dealership.md) for current financing and trade-in programs.

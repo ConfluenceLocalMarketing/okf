@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Mehlville, MO
+title: Car-X Tire & Auto - Mehlville, MO
 description: "Car-X Tire & Auto location in Mehlville, MO: address, hours, contact, 4.7-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/mehlville-mo/business
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Mehlville, MO
+# Car-X Tire & Auto - Mehlville, MO
 
 Car-X Tire & Auto in Mehlville, strategically located at the corner of Lemay Ferry and Victory, represents the epitome of trusted automotive care. As your local maintenance and repair shop, we prioritize delivering dependable, friendly, and personalized service for every valued customer.
 
@@ -52,7 +52,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -61,4 +61,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-mehlville-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-mehlville-mo/tables/coupons.md) for details.

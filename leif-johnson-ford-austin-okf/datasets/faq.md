@@ -58,7 +58,7 @@ A: Yes. The dealership provides vehicle pickup and delivery service for service 
 ## Dealership
 
 **Q: What are your sales hours?**
-A: Monday–Thursday 8:30am–8:00pm, Friday–Saturday 8:30am–7:00pm, Sunday closed.
+A: Monday-Thursday 8:30am-8:00pm, Friday-Saturday 8:30am-7:00pm, Sunday closed.
 
 **Q: Where is the dealership located?**
 A: 501 East Koenig Lane, Austin, TX 78751.
@@ -75,4 +75,4 @@ A: Yes. The dealership uses a transparent, no-haggle pricing model.
 **Q: What community programs do you support?**
 A: The dealership supports Earning by Learning, Responsible Parenting, Toys for Tots, and other local initiatives.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-austin-okf/datasets/dealership.md) for full business profile.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/dealership.md) for full business profile.

@@ -32,12 +32,12 @@ The Friendly Ford Las Vegas Service Department provides factory-trained maintena
 
 | Day | Hours |
 |---|---|
-| Monday | 7:00 am – 6:00 pm |
-| Tuesday | 7:00 am – 6:00 pm |
-| Wednesday | 7:00 am – 6:00 pm |
-| Thursday | 7:00 am – 6:00 pm |
-| Friday | 7:00 am – 6:00 pm |
-| Saturday | 8:00 am – 5:00 pm |
+| Monday | 7:00 am - 6:00 pm |
+| Tuesday | 7:00 am - 6:00 pm |
+| Wednesday | 7:00 am - 6:00 pm |
+| Thursday | 7:00 am - 6:00 pm |
+| Friday | 7:00 am - 6:00 pm |
+| Saturday | 8:00 am - 5:00 pm |
 | Sunday | Closed |
 
 ## Contact
@@ -56,4 +56,4 @@ Friendly Ford operates a full [Collision Center](https://www.friendlyfordlasvega
 
 View current service and parts specials for discounted maintenance packages.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/staff.md) for the service team and [friendly-ford-las-vegas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for general business information.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/staff.md) for the service team and [friendly-ford-las-vegas.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/friendly-ford-las-vegas.md) for general business information.

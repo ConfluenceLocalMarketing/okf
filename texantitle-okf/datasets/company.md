@@ -1,6 +1,6 @@
 ---
 type: Organization
-title: Texan Title — Company Profile
+title: Texan Title - Company Profile
 description: Independent Texas title insurance company founded in 1995 with 27 offices across 5 regions, headquartered in Galveston, TX.
 resource: https://texantitle.com/
 tags:
@@ -13,11 +13,11 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — Company Profile
+# Texan Title - Company Profile
 
 ## Overview
 
-Texan Title is an independent, family-owned title insurance and escrow services company founded in 1995 as South Land Title. Now in its third generation of leadership, the company has grown through strategic acquisitions to operate 27 offices across 5 regions in Texas — from the Gulf Coast to Central Texas, the Hill Country, and West Texas.
+Texan Title is an independent, family-owned title insurance and escrow services company founded in 1995 as South Land Title. Now in its third generation of leadership, the company has grown through strategic acquisitions to operate 27 offices across 5 regions in Texas - from the Gulf Coast to Central Texas, the Hill Country, and West Texas.
 
 - **Website:** https://texantitle.com
 - **Email:** connect@texantitle.com
@@ -34,12 +34,12 @@ Texan Title is an independent, family-owned title insurance and escrow services 
 | Year | Acquisition | Region |
 |------|------------|--------|
 | 1995 | South Land Title (founding) | Gulf Coast |
-| — | Brazos County Abstract | Bryan/College Station |
-| — | Security Title | West Texas |
-| — | Guaranty Title | Navasota |
-| — | Washington County Abstract | Brenham |
-| — | Longhorn Title | Williamson County |
-| — | Highland Lakes Title | Hill Country |
+| - | Brazos County Abstract | Bryan/College Station |
+| - | Security Title | West Texas |
+| - | Guaranty Title | Navasota |
+| - | Washington County Abstract | Brenham |
+| - | Longhorn Title | Williamson County |
+| - | Highland Lakes Title | Hill Country |
 | 2019 | Texan Title Insurance Company (TTIC) | Statewide underwriter |
 
 ## Underwriter Partners
@@ -86,4 +86,4 @@ Texan Title represents the largest underwriters in the nation:
 | Commercial Division | 2 |
 | **Total** | **27** |
 
-See [locations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/texantitle-okf/datasets/locations.md) for full office directory.
+See [locations.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/datasets/locations.md) for full office directory.

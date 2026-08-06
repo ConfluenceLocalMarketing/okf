@@ -2,25 +2,25 @@
 okf_version: "0.1"
 ---
 
-# Petersen Chrysler Dodge Jeep Ram — OKF Bundle
+# Petersen Chrysler Dodge Jeep Ram - OKF Bundle
 
 This bundle documents Petersen Chrysler Dodge Jeep Ram, a Chrysler, Dodge, Jeep, and RAM dealership in Nampa, Idaho.
 
 ## Datasets
 
-- [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/company.md) — Full business profile: location, inventory, services, financing, history.
-- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/faq.md) — Frequently asked questions about CDJR vehicles, financing, service, and dealership.
-- [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/financing.md) — Auto financing, leasing, and credit programs for all situations in Nampa, ID.
-- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/new-vehicles.md) — Full lineup of new Chrysler, Dodge, Jeep, and RAM vehicles in Nampa, ID.
-- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/service-center.md) — Factory-trained Mopar service with Express Lane quick repairs.
-- [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/staff.md) — Sales, finance, service, and parts professionals in Nampa, ID.
-- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/datasets/used-vehicles.md) — Quality pre-owned vehicles and commercial work trucks in Nampa, ID.
+- [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/company.md) - Full business profile: location, inventory, services, financing, history.
+- [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/faq.md) - Frequently asked questions about CDJR vehicles, financing, service, and dealership.
+- [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/financing.md) - Auto financing, leasing, and credit programs for all situations in Nampa, ID.
+- [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/new-vehicles.md) - Full lineup of new Chrysler, Dodge, Jeep, and RAM vehicles in Nampa, ID.
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/service-center.md) - Factory-trained Mopar service with Express Lane quick repairs.
+- [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/staff.md) - Sales, finance, service, and parts professionals in Nampa, ID.
+- [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/used-vehicles.md) - Quality pre-owned vehicles and commercial work trucks in Nampa, ID.
 
 ## References
 
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/references/llms-txt.md) - Structured AI context for the dealership.
-- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/references/prompts.md) - Curated AI prompts for customer and internal use.
-- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/petersen-chrysler-dodge-jeep-ram-okf/references/ai-discovery-page.md) - AI visibility analysis.
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/references/llms-txt.md) - Structured AI context for the dealership.
+- [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/references/prompts.md) - Curated AI prompts for customer and internal use.
+- [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/references/ai-discovery-page.md) - AI visibility analysis.
 
 ## Tables
 

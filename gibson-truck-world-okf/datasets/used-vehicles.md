@@ -20,8 +20,8 @@ Gibson Truck World carries over 150 pre-owned vehicles on its 14-acre lot, inclu
 
 ## Truck Inventory
 
-- **Ford:** F-150, F-250, F-350 — lifted and stock
-- **RAM:** 1500, 2500, 3500 — lifted and stock
+- **Ford:** F-150, F-250, F-350 - lifted and stock
+- **RAM:** 1500, 2500, 3500 - lifted and stock
 - **Chevrolet:** Silverado 1500, 2500HD, 3500HD
 - **GMC:** Sierra 1500, 2500HD, 3500HD
 - **Nissan:** Titan
@@ -55,10 +55,10 @@ Pre-owned lifted trucks with aftermarket modifications available in stock.
 
 ## Financing
 
-Nationwide financing available with delivery. See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/gibson-truck-world-okf/datasets/financing.md).
+Nationwide financing available with delivery. See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/gibson-truck-world/datasets/financing.md).
 
 ## Delivery
 
 Nationwide delivery available on all purchases.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/gibson-truck-world-okf/datasets/company.md) for location, hours, and full profile.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/gibson-truck-world/datasets/company.md) for location, hours, and full profile.

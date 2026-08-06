@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Tuscaloosa Chevrolet, Inc. — AI Prompts
+title: Tuscaloosa Chevrolet, Inc. - AI Prompts
 description: Curated AI prompts for customer-facing and internal use at Tuscaloosa Chevrolet, Inc. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Tuscaloosa Chevrolet, Inc. — AI Prompts
+# Tuscaloosa Chevrolet, Inc. - AI Prompts
 
 ## Customer Assistance
 

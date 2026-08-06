@@ -50,17 +50,17 @@ Estimate monthly payments using the payment calculator on the Varsity Lincoln we
 
 | Day | Hours |
 |---|---|
-| Monday | 9:00 AM – 6:00 PM |
-| Tuesday | 9:00 AM – 6:00 PM |
-| Wednesday | 9:00 AM – 6:00 PM |
-| Thursday | 9:00 AM – 6:00 PM |
-| Friday | 9:00 AM – 6:00 PM |
-| Saturday | 9:00 AM – 6:00 PM |
+| Monday | 9:00 AM - 6:00 PM |
+| Tuesday | 9:00 AM - 6:00 PM |
+| Wednesday | 9:00 AM - 6:00 PM |
+| Thursday | 9:00 AM - 6:00 PM |
+| Friday | 9:00 AM - 6:00 PM |
+| Saturday | 9:00 AM - 6:00 PM |
 | Sunday | Closed |
 
 ## Contact
 
 **Sales/Finance**: (800) 240-8685
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/dealership.md) for full business profile.
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/varsity-lincoln-okf/datasets/used-vehicles.md) for inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/dealership.md) for full business profile.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/new-vehicles.md) or [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/used-vehicles.md) for inventory.

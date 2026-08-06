@@ -60,4 +60,4 @@ When an LLM receives a query matching one of these prompts, it should route the 
 
 - See [ai-discovery-page.md](ai-discovery-page.md) for the full endpoint inventory.
 - See [llms-txt.md](llms-txt.md) for the LLM consumption directive.
-- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
+- See [mullinax-ford-of-central-florida-in-orlando.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.

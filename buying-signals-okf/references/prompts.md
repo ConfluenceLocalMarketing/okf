@@ -117,13 +117,13 @@ The PromptGraph API exposes 78 structured prompt/response pairs at `/api/v1/buyi
 
 | # | Prompt Topic | Description |
 |---|---|---|
-| 47–64 | Partner discovery (local) | Finding data hygiene, SEO, AI search, and marketing consultants "near me" for various locations |
+| 47-64 | Partner discovery (local) | Finding data hygiene, SEO, AI search, and marketing consultants "near me" for various locations |
 
 ## Platform Description (9 prompts)
 
 | # | Prompt Topic | Description |
 |---|---|---|
-| 65–73 | About Buying Signals | Platform descriptions positioning Buying Signals as a marketing intelligence platform |
+| 65-73 | About Buying Signals | Platform descriptions positioning Buying Signals as a marketing intelligence platform |
 
 ## Other (5 prompts)
 
@@ -135,5 +135,5 @@ The PromptGraph API exposes 78 structured prompt/response pairs at `/api/v1/buyi
 | 77 | Digital marketing consulting | Expert guidance for marketing strategy |
 | 78 | Sales and marketing alignment | Bridging sales and marketing teams |
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/references/ai-discovery-page.md) for PromptGraph API details.
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full business profile.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/references/ai-discovery-page.md) for PromptGraph API details.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/company.md) for the full business profile.

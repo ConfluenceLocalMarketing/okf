@@ -41,4 +41,4 @@ The dealership offers trade-in evaluation through:
 
 View current pre-owned specials on the Friendly Ford Las Vegas website.
 
-See [friendly-ford-las-vegas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/friendly-ford-las-vegas.md) for full business profile and [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/financing.md) for financing options on pre-owned vehicles.
+See [friendly-ford-las-vegas.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/friendly-ford-las-vegas.md) for full business profile and [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/financing.md) for financing options on pre-owned vehicles.

@@ -17,9 +17,9 @@ Chaparral Buick GMC offers straightforward financing options aligned with the "N
 
 ## Financing Options
 
-- **Online Credit Application** — Apply from home for fast pre-approval
-- **Multiple Lending Partners** — Competitive rates through a network of lenders
-- **Flexible Terms** — Custom payment plans to fit your budget
+- **Online Credit Application** - Apply from home for fast pre-approval
+- **Multiple Lending Partners** - Competitive rates through a network of lenders
+- **Flexible Terms** - Custom payment plans to fit your budget
 
 ## Leasing
 
@@ -29,7 +29,7 @@ GM Financial offers competitive lease programs on Buick and GMC vehicles.
 |--------|--------|---------|
 | Monthly Payment | Higher | Lower |
 | Ownership | You own the vehicle | Return at lease end |
-| Mileage Limits | None | Typical 10,000–15,000 mi/year |
+| Mileage Limits | None | Typical 10,000-15,000 mi/year |
 | End of Term | Trade or keep | Return or purchase |
 
 ## Trade-In
@@ -38,4 +38,4 @@ Accurate trade-in valuations with vehicle history reports.
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/chaparral-buick-gmc-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/chaparral-buick-gmc/datasets/company.md).

@@ -24,7 +24,7 @@ Champs Auto Service (doing business as Champ Auto Repairs) is a family-oriented 
 ## Certifications
 
 - ASE Master Certified Technicians
-- NAPA AutoCare Center — Nationwide warranty honored at 14,000+ locations
+- NAPA AutoCare Center - Nationwide warranty honored at 14,000+ locations
 
 ## Fleet Services
 
@@ -36,4 +36,4 @@ Customized preventive maintenance and repair programs for commercial fleets with
 - Oil change coupons and specials
 - Seasonal promotions
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/champs-auto-service-okf/datasets/company.md) for more information about our shop, history, and full service offerings.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/champs-auto-service/datasets/company.md) for more information about our shop, history, and full service offerings.

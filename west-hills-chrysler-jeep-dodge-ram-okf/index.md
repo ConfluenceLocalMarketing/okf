@@ -6,24 +6,24 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/dealership.md) - Business profile, hours, contact, services, location, and community programs for West Hills Chrysler Jeep Dodge RAM in Bremerton, WA
-- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/new-vehicles.md) - New Chrysler, Jeep, Dodge, and RAM model lineup including Pacifica, Wrangler, Grand Cherokee, Charger, Durango, RAM trucks, and ProMaster vans
-- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, online buying tools, and trade-in services
-- [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/staff.md) - Staff directory including management, sales managers, finance team, and service/parts managers
-- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/service-center.md) - Mopar-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Mopar parts department
-- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
-- [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/dealership.md) - Business profile, hours, contact, services, location, and community programs for West Hills Chrysler Jeep Dodge RAM in Bremerton, WA
+- [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/new-vehicles.md) - New Chrysler, Jeep, Dodge, and RAM model lineup including Pacifica, Wrangler, Grand Cherokee, Charger, Durango, RAM trucks, and ProMaster vans
+- [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, online buying tools, and trade-in services
+- [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/staff.md) - Staff directory including management, sales managers, finance team, and service/parts managers
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/service-center.md) - Mopar-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Mopar parts department
+- [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
 
 ## References
 
-- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/references/ai-discovery-page.md) - AI-facing infrastructure assessment, tested endpoints, and structured data availability
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/references/llms-txt.md) - llms.txt availability assessment and key site pages for AI crawling
-- [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/references/testimonials.md) - Customer reviews, dealership reputation, and community awards
-- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/references/prompts.md) - AI prompt patterns for querying dealership knowledge
+- [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/references/ai-discovery-page.md) - AI-facing infrastructure assessment, tested endpoints, and structured data availability
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/references/llms-txt.md) - llms.txt availability assessment and key site pages for AI crawling
+- [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/references/testimonials.md) - Customer reviews, dealership reputation, and community awards
+- [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/references/prompts.md) - AI prompt patterns for querying dealership knowledge
 
 ## Tables
 
-- [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/tables/model-comparison.md) - Side-by-side comparison of all new Chrysler, Jeep, Dodge, and RAM models including body type, drivetrain, seating, features, towing, and warranty
+- [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/tables/model-comparison.md) - Side-by-side comparison of all new Chrysler, Jeep, Dodge, and RAM models including body type, drivetrain, seating, features, towing, and warranty
 
 ## Relationships
 

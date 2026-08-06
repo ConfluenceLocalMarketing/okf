@@ -48,16 +48,16 @@ Estimate monthly payments using the payment calculator before visiting the deale
 
 | Day | Hours |
 |---|---|
-| Monday | 9:00 AM – 8:00 PM |
-| Tuesday | 9:00 AM – 8:00 PM |
-| Wednesday | 9:00 AM – 8:00 PM |
-| Thursday | 9:00 AM – 8:00 PM |
-| Friday | 9:00 AM – 8:00 PM |
-| Saturday | 9:00 AM – 8:00 PM |
-| Sunday | 10:00 AM – 7:00 PM |
+| Monday | 9:00 AM - 8:00 PM |
+| Tuesday | 9:00 AM - 8:00 PM |
+| Wednesday | 9:00 AM - 8:00 PM |
+| Thursday | 9:00 AM - 8:00 PM |
+| Friday | 9:00 AM - 8:00 PM |
+| Saturday | 9:00 AM - 8:00 PM |
+| Sunday | 10:00 AM - 7:00 PM |
 
 ## Contact
 
 Contact the finance department through the group's sales line at (360) 362-4410.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/datasets/dealership.md) for full business profile and [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/datasets/new-vehicles.md) or [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-auto-group-okf/datasets/used-vehicles.md) for inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/datasets/dealership.md) for full business profile and [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/datasets/new-vehicles.md) or [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/datasets/used-vehicles.md) for inventory.

@@ -26,5 +26,5 @@ Conversational AI agents that engage website visitors, qualify leads, and drive 
 
 ## Integration
 
-See [connect-suite.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/connect-suite.md) for platform connectivity details.
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.
+See [connect-suite.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/connect-suite.md) for platform connectivity details.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/company.md) for the full product ecosystem.

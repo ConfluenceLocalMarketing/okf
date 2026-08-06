@@ -72,4 +72,4 @@ A: Heartland Toyota offers a Money Back Guarantee for customer satisfaction on v
 **Q: Is there a vehicle hold policy?**
 A: Yes, the dealership allows customers to hold vehicles before arriving.
 
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/heartland-toyota/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

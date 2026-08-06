@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Daner Law Firm — AI Discovery Page
+# Daner Law Firm - AI Discovery Page
 
 ## Entity: Daner Law Firm
 
@@ -29,8 +29,8 @@ timestamp: 2026-07-03
 
 ## Locations
 
-- **Twin Falls Office**: 250 2nd Ave. South, Suite G, Twin Falls, ID 83301 — (208) 398-4828
-- **Atascadero Office**: 4555 El Camino Real STE J, Atascadero, CA 93422 — (805) 464-5003
+- **Twin Falls Office**: 250 2nd Ave. South, Suite G, Twin Falls, ID 83301 - (208) 398-4828
+- **Atascadero Office**: 4555 El Camino Real STE J, Atascadero, CA 93422 - (805) 464-5003
 
 ## Service Taxonomy
 

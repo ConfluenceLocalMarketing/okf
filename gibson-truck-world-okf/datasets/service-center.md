@@ -28,7 +28,7 @@ Gibson Truck World operates a full-service maintenance and repair center complem
 - Suspension and steering repair
 - Electrical diagnostics
 
-## GTW Customs — Lift Kit Installation
+## GTW Customs - Lift Kit Installation
 
 - Custom 4x4 lift kit installation
 - Aftermarket wheel and tire packages
@@ -49,13 +49,13 @@ Gibson Truck World operates a full-service maintenance and repair center complem
 
 | Day | Hours |
 |-----|-------|
-| Mon–Fri | 9:00 AM – 7:00 PM |
-| Sat | 9:00 AM – 6:00 PM |
-| Sun | 10:00 AM – 5:00 PM |
+| Mon-Fri | 9:00 AM - 7:00 PM |
+| Sat | 9:00 AM - 6:00 PM |
+| Sun | 10:00 AM - 5:00 PM |
 
 ## Contact
 
 - **Phone:** (407) 321-0660
 - **Address:** 3455 S Orlando Dr, Sanford, FL 32773
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/gibson-truck-world-okf/datasets/company.md) for full dealership details.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/gibson-truck-world/datasets/company.md) for full dealership details.

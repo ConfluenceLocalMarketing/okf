@@ -33,7 +33,7 @@ Logan Square Auto Repair is a family-owned service center established in 1997, l
 ## Certifications
 
 - ASE Certified Technicians
-- AAA Approved Auto Repair — 10% labor discount for AAA members
+- AAA Approved Auto Repair - 10% labor discount for AAA members
 - BBB Accredited Business
 - NAPA AutoCare Center
 - CARFAX Top-Rated Service Center (2023)
@@ -47,4 +47,4 @@ Logan Square Auto Repair is a family-owned service center established in 1997, l
 
 Wide range of makes including Acura, Audi, BMW, Chrysler, Dodge, Ford, GMC, Honda, Hyundai, Jaguar, Jeep, KIA, Land Rover, Lexus, Mazda, Mercedes-Benz, Mini, Mitsubishi, Nissan, Porsche, Saab, Subaru, Tesla, Toyota, Volkswagen, Volvo, and more.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/logan-square-auto-repair-okf/datasets/company.md) for more information about our shop history and services.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/logan-square-auto-repair/datasets/company.md) for more information about our shop history and services.

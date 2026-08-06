@@ -27,18 +27,18 @@ Canyon Crest Event Center is the Magic Valley's most versatile convention facili
 
 Spanning 21,000 square feet, Canyon Crest features multiple event spaces:
 
-- **Main Event Center** — divisible into five separate meeting rooms for flexible configurations
-- **The Pointe** — outdoor ceremony site overlooking the Snake River Canyon
-- **Private Boardroom** — exclusive dining room with private balcony for groups up to 20
-- **Trail-side Room** — seating up to 20 with canyon views
-- **Outdoor Canyon Rim Areas** — ceremony and reception spaces with natural scenery
-- **Meeting Rooms** — multiple rooms accommodating various group sizes
-- **Redhawk Gastropub** — on-site restaurant and bar within the same facility
+- **Main Event Center** - divisible into five separate meeting rooms for flexible configurations
+- **The Pointe** - outdoor ceremony site overlooking the Snake River Canyon
+- **Private Boardroom** - exclusive dining room with private balcony for groups up to 20
+- **Trail-side Room** - seating up to 20 with canyon views
+- **Outdoor Canyon Rim Areas** - ceremony and reception spaces with natural scenery
+- **Meeting Rooms** - multiple rooms accommodating various group sizes
+- **Redhawk Gastropub** - on-site restaurant and bar within the same facility
 
 ### Capacity
 
 - Up to 350 seated guests
-- Multiple room configurations for 30–350 guests
+- Multiple room configurations for 30-350 guests
 - Intimate spaces for smaller gatherings (Twin Falls room capacity: 60)
 
 ## Services

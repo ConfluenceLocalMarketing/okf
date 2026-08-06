@@ -16,25 +16,25 @@ timestamp: 2026-07-02
 
 # Frank Leta Mitsubishi
 
-Frank Leta Mitsubishi is a premier Mitsubishi dealership located in the Automotive Outlet at Bridgeton, Missouri, serving the greater St. Louis area. The dealership offers an extensive selection of new Mitsubishi models, a diverse inventory of high-quality pre-owned vehicles, and special financing programs for all credit types — including as low as $29 down.
+Frank Leta Mitsubishi is a premier Mitsubishi dealership located in the Automotive Outlet at Bridgeton, Missouri, serving the greater St. Louis area. The dealership offers an extensive selection of new Mitsubishi models, a diverse inventory of high-quality pre-owned vehicles, and special financing programs for all credit types - including as low as $29 down.
 
 ## New Mitsubishi Sales
 
 Full lineup of new Mitsubishi models:
 
-- **2026 Outlander** — Three-row SUV starting from $29,995
-- **2025 Outlander PHEV** — Plug-in hybrid SUV starting from $40,445
-- **2026 Outlander Trail Edition** — Off-road oriented SUV
-- **2026 Eclipse Cross** — Compact crossover SUV starting from $27,695
-- **2026 Outlander Sport** — Subcompact SUV starting from $24,995
-- **Mirage / Mirage G4** — Compact car
+- **2026 Outlander** - Three-row SUV starting from $29,995
+- **2025 Outlander PHEV** - Plug-in hybrid SUV starting from $40,445
+- **2026 Outlander Trail Edition** - Off-road oriented SUV
+- **2026 Eclipse Cross** - Compact crossover SUV starting from $27,695
+- **2026 Outlander Sport** - Subcompact SUV starting from $24,995
+- **Mirage / Mirage G4** - Compact car
 
 ## Pre-Owned Vehicles
 
 - 150-point inspection on all used vehicles
 - Leta-Exclusive Protection warranty and perks
 - Free CARFAX report on every vehicle
-- Wide price range including options under $15,000–$20,000
+- Wide price range including options under $15,000-$20,000
 - All makes and models available
 
 ## Special Financing
@@ -59,4 +59,4 @@ Full lineup of new Mitsubishi models:
 - **Sales Phone:** (314) 597-9205
 - **Service Phone:** (314) 597-9221
 - **Website:** https://letacars.com/
-- **Hours:** Sales 9AM–6PM, Service 8AM–6PM
+- **Hours:** Sales 9AM-6PM, Service 8AM-6PM

@@ -39,12 +39,12 @@ Nick Mayer Ford West is a full-service Ford dealership located in Avon Lake, Ohi
 
 | Day | Sales Hours |
 |---|---|
-| Monday | 9:00 AM – 7:00 PM |
-| Tuesday | 9:00 AM – 6:00 PM |
-| Wednesday | 9:00 AM – 6:00 PM |
-| Thursday | 9:00 AM – 7:00 PM |
-| Friday | 9:00 AM – 6:00 PM |
-| Saturday | 9:00 AM – 5:00 PM |
+| Monday | 9:00 AM - 7:00 PM |
+| Tuesday | 9:00 AM - 6:00 PM |
+| Wednesday | 9:00 AM - 6:00 PM |
+| Thursday | 9:00 AM - 7:00 PM |
+| Friday | 9:00 AM - 6:00 PM |
+| Saturday | 9:00 AM - 5:00 PM |
 | Sunday | Closed |
 
 ## New Ford Models
@@ -56,13 +56,13 @@ Nick Mayer Ford West carries a full lineup of new Ford vehicles:
 - **Cars & Performance**: Mustang, Mustang Mach-E (Electric)
 - **Electric**: Mustang Mach-E, E-Transit
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/new-vehicles.md) for complete model details.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/new-vehicles.md) for complete model details.
 
 ## Pre-Owned Inventory
 
 A wide selection of pre-owned vehicles spanning multiple makes, including Ford Blue Advantage certified pre-owned vehicles with comprehensive warranty coverage. All used vehicles come with CarFax vehicle history reports.
 
-See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/used-vehicles.md) for details.
+See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/used-vehicles.md) for details.
 
 ## Financing
 
@@ -83,7 +83,7 @@ The Ford-certified service center is staffed by ASE certified technicians and of
 - Genuine Ford OEM parts
 - Online scheduling
 
-See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/service-center.md) for full details.
+See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/service-center.md) for full details.
 
 ## Online Tools
 
@@ -103,9 +103,9 @@ See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/mai
 
 ## Related Concepts
 
-- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/new-vehicles.md) - New Ford model lineup
-- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/used-vehicles.md) - Pre-owned inventory
-- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/service-center.md) - Service center details
-- [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/staff.md) - Staff directory
-- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/faq.md) - Frequently asked questions
-- [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/tables/model-comparison.md) - Ford model comparison table
+- [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/new-vehicles.md) - New Ford model lineup
+- [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/used-vehicles.md) - Pre-owned inventory
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/service-center.md) - Service center details
+- [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/staff.md) - Staff directory
+- [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/faq.md) - Frequently asked questions
+- [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/tables/model-comparison.md) - Ford model comparison table

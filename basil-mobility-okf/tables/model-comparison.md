@@ -31,7 +31,7 @@ timestamp: 2026-06-24
 | **Wheelchair Capacity** | Standard | Standard | Standard |
 | **Passenger Seating** | Up to 4 + wheelchair position | Up to 4 + wheelchair position | Up to 4 + wheelchair position |
 | **Drive** | FWD / AWD options | FWD | FWD / AWD options |
-| **Price Range** | $50,000–$60,000 | $80,000–$90,000 | Varies |
+| **Price Range** | $50,000-$60,000 | $80,000-$90,000 | Varies |
 
 ## Sample Pricing
 
@@ -53,5 +53,5 @@ timestamp: 2026-06-24
 - **Hybrid option:** XT on Toyota Sienna for fuel efficiency.
 - **In-floor ramp (XI):** Ramp stows under the vehicle floor, leaving more cabin space.
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/new-vehicles.md) for full new vehicle inventory.
-See [mobility-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/mobility-vehicles.md) for the full vehicle listing.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/new-vehicles.md) for full new vehicle inventory.
+See [mobility-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/mobility-vehicles.md) for the full vehicle listing.

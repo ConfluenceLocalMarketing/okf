@@ -29,9 +29,9 @@ The Finance Center at Frank Leta Mitsubishi helps customers secure automotive fi
 - 150-point inspected vehicles qualify for enhanced loan programs
 
 ### Special Credit Programs
-- **Bad Credit / No Credit** — Dedicated programs for rebuilding credit
-- **Credit Amnesty** — For past repossession or bankruptcy
-- **First-Time Buyer** — Build credit with a first auto loan
+- **Bad Credit / No Credit** - Dedicated programs for rebuilding credit
+- **Credit Amnesty** - For past repossession or bankruptcy
+- **First-Time Buyer** - Build credit with a first auto loan
 
 ## Leasing
 
@@ -41,7 +41,7 @@ Lease options available on new Mitsubishi models. Benefits include lower monthly
 |--------|--------|---------|
 | Monthly Payment | Higher | Lower |
 | Ownership at End | You own the vehicle | Return or buyout |
-| Mileage Limits | None | Typically 10,000–15,000/year |
+| Mileage Limits | None | Typically 10,000-15,000/year |
 | Customization | Allowed | Not allowed |
 | Equity | You build equity | No equity |
 | Trade-In | Yes, at any time | At lease end only |

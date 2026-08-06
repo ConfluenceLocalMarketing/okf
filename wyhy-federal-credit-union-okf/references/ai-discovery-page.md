@@ -73,7 +73,7 @@ Members also access over 5,000 CO-OP Shared Branches and 30,000+ CO-OP ATMs nati
 
 ## Key Differentiators
 
-1. Member-owned cooperative — profits returned to members
+1. Member-owned cooperative - profits returned to members
 2. Free access to CO-OP shared branching network
 3. Smart Returns Checking with competitive 3.00% APY
 4. WyHy Digital aggregates external accounts into single dashboard
@@ -82,6 +82,6 @@ Members also access over 5,000 CO-OP Shared Branches and 30,000+ CO-OP ATMs nati
 
 ## Related Concepts
 
-- See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/wyhy-federal-credit-union-okf/datasets/company.md) for complete credit union profile.
-- See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/wyhy-federal-credit-union-okf/references/prompts.md) for AI chatbot playbooks.
-- See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/wyhy-federal-credit-union-okf/references/llms-txt.md) for machine-readable summary.
+- See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/datasets/company.md) for complete credit union profile.
+- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/references/prompts.md) for AI chatbot playbooks.
+- See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/references/llms-txt.md) for machine-readable summary.

@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Amerion College Huntington — llms.txt
+title: Amerion College Huntington - llms.txt
 description: AI context file for Amerion College Huntington campus. (synthesized)
 tags:
   - llms-txt
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Amerion College — Huntington
+# Amerion College - Huntington
 
 > Career training school in Huntington, WV offering accelerated healthcare diploma programs.
 

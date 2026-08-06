@@ -55,13 +55,13 @@ Answers to common customer questions published on the dealership website, coveri
 ## General Questions
 
 - **Q: What is the difference between Premium Maintenance Plans and Extended Service Plan mechanical coverage?**
-  A: Extended Service Plans cover failure of covered components due to defects in material and workmanship, including normal wear and tear; on covered repairs you pay only the applicable deductible. Premium Maintenance Plans cover all scheduled maintenance in the Owner's Scheduled Maintenance Guide plus routine inspections and normal wear-and-tear items — a prepaid plan where you pay nothing for covered services.
+  A: Extended Service Plans cover failure of covered components due to defects in material and workmanship, including normal wear and tear; on covered repairs you pay only the applicable deductible. Premium Maintenance Plans cover all scheduled maintenance in the Owner's Scheduled Maintenance Guide plus routine inspections and normal wear-and-tear items - a prepaid plan where you pay nothing for covered services.
 
 - **Q: Where can I go for service with a Ford Protect plan?**
   A: Ford Protect plans are honored at any Ford or Lincoln dealer throughout the U.S., Canada, and Mexico.
 
 - **Q: Why can't I purchase Ford Protect coverage for my vehicle online?**
-  A: Possible reasons include a typo in the information entered, a recently purchased vehicle not yet in the system, or the vehicle not being eligible for the selected plan. You may still be eligible — contact the Ford Protect sales department at 800-367-3377.
+  A: Possible reasons include a typo in the information entered, a recently purchased vehicle not yet in the system, or the vehicle not being eligible for the selected plan. You may still be eligible - contact the Ford Protect sales department at 800-367-3377.
 
 ## Additional Dealership FAQs
 
@@ -69,10 +69,10 @@ Answers to common customer questions published on the dealership website, coveri
   A: 1551 E Semoran Blvd, Apopka, FL 32703, serving the Orlando/Central Florida area.
 
 - **Q: What are the dealership's hours?**
-  A: Sales: Mon-Fri 8:30a-8:00p, Sat 8:30a-7:00p, Sun 12:00p-5:00p. See [hours.md](../tables/hours.md) for all departments.
+  A: Sales: Mon-Fri 8:30a-8:00p, Sat 8:30a-7:00p, Sun 12:00p-5:00p. See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/hours.md) for all departments.
 
 - **Q: Do you charge dealer fees?**
-  A: No. Mullinax Up Front Pricing means no dealer fees on any vehicle — price plus tax and tag only.
+  A: No. Mullinax Up Front Pricing means no dealer fees on any vehicle - price plus tax and tag only.
 
 - **Q: Do you service all makes and models?**
   A: The Quick Lane provides express maintenance for all makes and models. The main service center focuses on Ford vehicles with factory-trained technicians. See [service-center.md](service-center.md).

@@ -57,4 +57,4 @@ Staff directory compiled from the dealership website.
 | Amanda Campbell | Parts Manager | (360) 473-1562 |
 | Chloe Mange | Quality Assurance Manager | (360) 473-1642 |
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-gmc-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/references/testimonials.md) for detailed customer reviews referencing specific staff members.

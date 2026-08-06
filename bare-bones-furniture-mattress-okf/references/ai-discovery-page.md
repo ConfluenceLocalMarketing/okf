@@ -70,7 +70,7 @@ timestamp: 2026-07-03
 
 ## Related Concepts
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/datasets/company.md) for full business profile.
-See [departments.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/tables/departments.md) for detailed department breakdown.
-See [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/tables/services.md) for service descriptions.
-See [brands.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/tables/brands.md) for brand partner details.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/datasets/company.md) for full business profile.
+See [departments.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/tables/departments.md) for detailed department breakdown.
+See [services.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/tables/services.md) for service descriptions.
+See [brands.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/tables/brands.md) for brand partner details.

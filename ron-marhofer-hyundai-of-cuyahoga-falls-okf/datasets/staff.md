@@ -30,4 +30,4 @@ Recent customer reviews highlight Andrew for exceptional service and dedication.
 
 For specific staff listings, visit the [staff page](https://www.hyundaiofakron.com/dealership/staff.htm) on the dealership website.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/dealership.md) for business profile and [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/service-center.md) for service department details.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-cuyahoga-falls/datasets/dealership.md) for business profile and [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-cuyahoga-falls/datasets/service-center.md) for service department details.

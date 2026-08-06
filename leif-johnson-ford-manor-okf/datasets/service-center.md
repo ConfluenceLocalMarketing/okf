@@ -30,12 +30,12 @@ The Leif Johnson Ford of Manor Service Department provides factory-authorized ma
 
 | Day | Hours |
 |---|---|
-| Monday | 7:00 am – 7:00 pm |
-| Tuesday | 7:00 am – 7:00 pm |
-| Wednesday | 7:00 am – 7:00 pm |
-| Thursday | 7:00 am – 7:00 pm |
-| Friday | 7:00 am – 7:00 pm |
-| Saturday | 8:00 am – 5:00 pm |
+| Monday | 7:00 am - 7:00 pm |
+| Tuesday | 7:00 am - 7:00 pm |
+| Wednesday | 7:00 am - 7:00 pm |
+| Thursday | 7:00 am - 7:00 pm |
+| Friday | 7:00 am - 7:00 pm |
+| Saturday | 8:00 am - 5:00 pm |
 | Sunday | Closed |
 
 ## Contact
@@ -50,4 +50,4 @@ The [Parts Center](https://www.leifjohnsonfordofmanor.com/parts-center/) stocks 
 
 View current [Service & Parts Specials](https://www.leifjohnsonfordofmanor.com/service-parts-specials/) for discounted maintenance packages.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/staff.md) for the service team directory and [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/dealership.md) for general business information.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/staff.md) for the service team directory and [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/dealership.md) for general business information.

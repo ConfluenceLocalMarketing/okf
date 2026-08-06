@@ -19,22 +19,22 @@ A-Abel Roofing Inc. is a family-owned and operated roofing and exterior improvem
 
 ## Services
 
-- **Asphalt Roofing Services** — Full roofing system installations using Owens Corning materials
-- **Residential Tear-Offs** — Complete removal and replacement of old roofing materials
-- **Gutters and Gutter Guards** — Water diversion and debris protection systems
-- **Soffit and Fascia** — Roof ventilation and exterior trim installation
-- **Hail Damage Services** — Insurance claim assistance and storm damage repair
-- **Siding Services** — Exterior siding installation in multiple materials and colors
-- **Window and Door Installations** — Energy-efficient replacement windows and doors
-- **Winter Roof Check-Ups** — Seasonal inspection and maintenance
-- **Flat Roof Services** — Specialized flat roof repair and replacement
-- **Roof Repair** — Targeted repair for leaks and damage
-- **Skylights** — Skylight installation
+- **Asphalt Roofing Services** - Full roofing system installations using Owens Corning materials
+- **Residential Tear-Offs** - Complete removal and replacement of old roofing materials
+- **Gutters and Gutter Guards** - Water diversion and debris protection systems
+- **Soffit and Fascia** - Roof ventilation and exterior trim installation
+- **Hail Damage Services** - Insurance claim assistance and storm damage repair
+- **Siding Services** - Exterior siding installation in multiple materials and colors
+- **Window and Door Installations** - Energy-efficient replacement windows and doors
+- **Winter Roof Check-Ups** - Seasonal inspection and maintenance
+- **Flat Roof Services** - Specialized flat roof repair and replacement
+- **Roof Repair** - Targeted repair for leaks and damage
+- **Skylights** - Skylight installation
 
 ## Certifications
 
-- **Owens Corning Platinum Preferred Contractor** — Highest tier of Owens Corning contractor认证
-- **BBB Accredited** — A+ rating
+- **Owens Corning Platinum Preferred Contractor** - Highest tier of Owens Corning contractor认证
+- **BBB Accredited** - A+ rating
 - **Illinois Roofing License** #104.015395
 
 ## Warranties
@@ -53,4 +53,4 @@ A-Abel Roofing Inc. is a family-owned and operated roofing and exterior improvem
 
 - **Address:** 14529 Waverly Ave., Midlothian, IL 60445
 - **Phone:** (708) 646-3656
-- **Hours:** Mon–Fri 8:00 am – 4:30 pm, Sat–Sun closed (weekend by appointment)
+- **Hours:** Mon-Fri 8:00 am - 4:30 pm, Sat-Sun closed (weekend by appointment)

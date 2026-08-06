@@ -1,6 +1,6 @@
 ---
 type: LLMs.txt
-title: Over The Top Roofing LLC — llms.txt
+title: Over The Top Roofing LLC - llms.txt
 description: An llms.txt file for AI crawlers, summarizing Over The Top Roofing LLC's business profile, services, and credentials for LLM consumption.
 resource: https://www.ottrcny.com/
 tags:
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Over The Top Roofing LLC — llms.txt
+# Over The Top Roofing LLC - llms.txt
 
 ```
 # Over The Top Roofing LLC
@@ -21,7 +21,7 @@ timestamp: 2026-07-03
 - Type: Roofing Contractor
 - Years in Business: 25+
 - Service Area: Central New York (Fulton, Oswego, Syracuse)
-- Hours: Mon–Fri 7–4, Sat–Sun Closed
+- Hours: Mon-Fri 7-4, Sat-Sun Closed
 
 ## Services
 - Roofing: installation, repair, replacement, inspections

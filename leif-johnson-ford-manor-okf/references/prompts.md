@@ -39,4 +39,4 @@ The PromptGraph API provides 107 structured prompts for Leif Johnson Ford of Man
 Endpoint: `https://api.promptgraph.ai/api/v1/leif-johnson-manor/prompts`
 Format: JSON-LD (ItemList of CreativeWork)
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/references/ai-discovery-page.md) for API access details and [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/faq.md) for common customer questions.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/references/ai-discovery-page.md) for API access details and [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/faq.md) for common customer questions.

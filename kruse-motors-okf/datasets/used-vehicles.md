@@ -49,6 +49,6 @@ Kruse Motors offers vehicle protection plans including gap protection, powertrai
 
 Each used vehicle is meticulously inspected and reconditioned to high standards. The dealership is selective when choosing inventory and stands behind the condition of every pre-owned vehicle sold.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/dealership.md) for the full business profile.
-See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/financing.md) for used vehicle financing options and incentives.
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/references/testimonials.md) for customer experiences with used vehicle purchases.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/dealership.md) for the full business profile.
+See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/financing.md) for used vehicle financing options and incentives.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/references/testimonials.md) for customer experiences with used vehicle purchases.

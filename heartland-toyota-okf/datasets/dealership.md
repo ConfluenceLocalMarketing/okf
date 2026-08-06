@@ -92,7 +92,7 @@ Toyota models available include:
 
 ## Staff
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/datasets/staff.md) for full directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/heartland-toyota/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
@@ -100,7 +100,7 @@ See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartla
 - **CARFAX:** 4.6 / 5.0 (1,977 verified reviews)
 - **Kelley Blue Book:** 4.9 stars
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/heartland-toyota-okf/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/heartland-toyota/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — CC Communications
+title: AI Discovery Page - CC Communications
 description: Overview of AI visibility for CC Communications. (synthesized)
 tags:
   - ai-discovery
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — CC Communications
+# AI Discovery Page - CC Communications
 
 ## Overview
 CC Communications has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.

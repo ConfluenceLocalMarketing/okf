@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Brady Chrysler Dodge Jeep Ram — AI Prompts
+title: Brady Chrysler Dodge Jeep Ram - AI Prompts
 description: Curated AI prompts for customer-facing and internal use at Brady CDJR. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Brady Chrysler Dodge Jeep Ram — AI Prompts
+# Brady Chrysler Dodge Jeep Ram - AI Prompts
 
 ## Customer Assistance
 

@@ -36,11 +36,11 @@ Email: lindsey@basilmarketinggroup.com
 
 | Day | Sales | Service & Parts |
 |---|---|---|
-| Mon–Tue | 9:00 AM – 7:00 PM | 8:00 AM – 5:00 PM |
-| Wed | 9:00 AM – 6:00 PM | 8:00 AM – 5:00 PM |
-| Thu | 9:00 AM – 7:00 PM | 8:00 AM – 5:00 PM |
-| Fri | 9:00 AM – 6:00 PM | 8:00 AM – 5:00 PM |
-| Sat | 9:00 AM – 5:00 PM | 9:00 AM – 2:00 PM |
+| Mon-Tue | 9:00 AM - 7:00 PM | 8:00 AM - 5:00 PM |
+| Wed | 9:00 AM - 6:00 PM | 8:00 AM - 5:00 PM |
+| Thu | 9:00 AM - 7:00 PM | 8:00 AM - 5:00 PM |
+| Fri | 9:00 AM - 6:00 PM | 8:00 AM - 5:00 PM |
+| Sat | 9:00 AM - 5:00 PM | 9:00 AM - 2:00 PM |
 | Sun | Closed | Closed |
 
 ## New Vehicles
@@ -98,7 +98,7 @@ Prominent offers include:
 - **Eric Macchiaroli** - Parts Manager
 - **Alex Luciano** - Service Advisor
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/staff.md) for full directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/staff.md) for full directory.
 
 ## Social & Reviews
 

@@ -126,5 +126,5 @@ Promotions vary by model and include low APR financing, lease specials, and reba
 
 All new vehicles qualify for the **Lifetime Powertrain Warranty** through the West Hills Advantage program.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/datasets/dealership.md) for contact information and current programs.
-See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-chevrolet-okf/tables/model-comparison.md) for side-by-side model specifications.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/datasets/dealership.md) for contact information and current programs.
+See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/tables/model-comparison.md) for side-by-side model specifications.

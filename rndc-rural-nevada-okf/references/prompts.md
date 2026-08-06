@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Rural Nevada Development Corporation — AI Prompts
+title: Rural Nevada Development Corporation - AI Prompts
 description: Curated AI prompts for client inquiries and internal use at RNDC. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Rural Nevada Development Corporation — AI Prompts
+# Rural Nevada Development Corporation - AI Prompts
 
 ## Client Inquiries
 

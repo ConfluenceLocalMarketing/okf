@@ -47,6 +47,6 @@ timestamp: 2026-08-06
 
 ## Related Concepts
 
-- See [new-vehicles.md](../datasets/new-vehicles.md) for new inventory details.
-- See [used-vehicles.md](../datasets/used-vehicles.md) for pre-owned inventory.
-- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
+- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/new-vehicles.md) for new inventory details.
+- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/used-vehicles.md) for pre-owned inventory.
+- See [mullinax-ford-of-central-florida-in-orlando.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.

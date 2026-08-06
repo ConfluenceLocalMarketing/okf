@@ -24,7 +24,7 @@ Wide-ranging inventory covering sedans, SUVs, crossovers, trucks, vans, and spec
 
 - **Under $15,000** - Budget-friendly options
 - **Under $20,000** - Broader selection
-- **All price ranges** - Full inventory available online (typical range: $23,000–$71,000)
+- **All price ranges** - Full inventory available online (typical range: $23,000-$71,000)
 - **Priced Under 20k** - Dedicated filtered view on website
 
 ## Certified Pre-Owned (CPO)
@@ -68,5 +68,5 @@ Finance department works with multiple lenders to find competitive rates and fle
 - $200 Sales Referral Program
 - On the Spot Delivery
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/datasets/dealership.md) for full business profile and contact information.
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mitsubishi-okf/references/testimonials.md) for customer reviews and experiences.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/dealership.md) for full business profile and contact information.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/references/testimonials.md) for customer reviews and experiences.

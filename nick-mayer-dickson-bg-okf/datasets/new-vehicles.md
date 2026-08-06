@@ -14,7 +14,7 @@ timestamp: 2026-07-02
 
 # New Buick and GMC Inventory
 
-Nick Mayer Buick GMC of Dickson carries a full lineup of new Buick and GMC vehicles. See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-dickson-bg-okf/datasets/dealership.md) for contact and location information.
+Nick Mayer Buick GMC of Dickson carries a full lineup of new Buick and GMC vehicles. See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-bg/datasets/dealership.md) for contact and location information.
 
 ## Buick Models
 
@@ -41,4 +41,4 @@ Nick Mayer Buick GMC of Dickson carries a full lineup of new Buick and GMC vehic
 
 Current manufacturer incentives, lease offers, and financing specials are available on select models. Contact the sales department at 615-639-0282 for current offers.
 
-See [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-dickson-bg-okf/tables/model-comparison.md) for detailed specifications.
+See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-bg/tables/model-comparison.md) for detailed specifications.

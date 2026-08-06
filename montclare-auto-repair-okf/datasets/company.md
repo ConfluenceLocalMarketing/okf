@@ -18,26 +18,26 @@ Montclare Automotive Corp., doing business as Montclare Auto Repair, is a family
 
 ## Services
 
-- **Brake Services** — Inspection, pad replacement, rotor service, and complete brake system care
-- **Suspension Services** — Shock, strut, and steering system repair and alignment
-- **General Maintenance** — Oil changes, tune-ups, fluid services, and preventative maintenance
-- **Engine Services** — Diagnostics, repair, and performance optimization
-- **A/C and Heating** — Climate control system diagnostics and repair
-- **Electrical Services** — Battery, alternator, starter, and electrical system repair
-- **Emissions Repair** — Emissions testing, diagnostics, and repair for Illinois compliance
-- **Tire Services** — Tire sales, mounting, balancing, and rotation
-- **Towing** — Vehicle towing and recovery
+- **Brake Services** - Inspection, pad replacement, rotor service, and complete brake system care
+- **Suspension Services** - Shock, strut, and steering system repair and alignment
+- **General Maintenance** - Oil changes, tune-ups, fluid services, and preventative maintenance
+- **Engine Services** - Diagnostics, repair, and performance optimization
+- **A/C and Heating** - Climate control system diagnostics and repair
+- **Electrical Services** - Battery, alternator, starter, and electrical system repair
+- **Emissions Repair** - Emissions testing, diagnostics, and repair for Illinois compliance
+- **Tire Services** - Tire sales, mounting, balancing, and rotation
+- **Towing** - Vehicle towing and recovery
 
 ## Certifications
 
 - **ASE Certified Technicians**
-- **NAPA AutoCare Center** — 24-month / 24,000-mile nationwide warranty
+- **NAPA AutoCare Center** - 24-month / 24,000-mile nationwide warranty
 - **CARFAX Top-Rated Service Center**
-- **RepairPal Certified** — Fair pricing standards
+- **RepairPal Certified** - Fair pricing standards
 
 ## Warranties
 
-- **24-month / 24,000-mile NAPA Peace of Mind Warranty** — Honored at 14,000+ locations nationwide
+- **24-month / 24,000-mile NAPA Peace of Mind Warranty** - Honored at 14,000+ locations nationwide
 
 ## Amenities
 
@@ -52,4 +52,4 @@ Montclare Automotive Corp., doing business as Montclare Auto Repair, is a family
 
 - **Address:** 6902 W. Diversey Ave., Chicago, IL 60707
 - **Phone:** (773) 237-2672
-- **Hours:** Mon–Fri 8:00 am – 6:00 pm, Sat 8:00 am – 3:00 pm, Sun closed
+- **Hours:** Mon-Fri 8:00 am - 6:00 pm, Sat 8:00 am - 3:00 pm, Sun closed

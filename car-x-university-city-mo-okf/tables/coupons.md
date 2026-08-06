@@ -1,6 +1,6 @@
 ---
 type: Promotion Table
-title: Car-X Tire & Auto — Current Coupons & Promotions
+title: Car-X Tire & Auto - Current Coupons & Promotions
 description: Current promotional offers, coupons, and financing options available at Car-X Tire & Auto locations.
 resource: https://www.carxstl.com/coupons
 tags:

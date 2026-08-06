@@ -41,22 +41,22 @@ Las Vegas, Henderson, North Las Vegas, and surrounding Southern Nevada communiti
 
 ## Lincoln Models
 
-- **Corsair** — Compact luxury SUV
-- **Nautilus** — Mid-size luxury SUV
-- **Aviator** — Mid-size three-row luxury SUV (available plug-in hybrid)
-- **Navigator** — Full-size luxury SUV
+- **Corsair** - Compact luxury SUV
+- **Nautilus** - Mid-size luxury SUV
+- **Aviator** - Mid-size three-row luxury SUV (available plug-in hybrid)
+- **Navigator** - Full-size luxury SUV
 
 ## Special Programs
 
-- **Lincoln Black Label** — Premium ownership experience with curated service, complimentary maintenance, and vehicle exchange privileges.
-- **Lincoln Electrified** — Hybrid and plug-in hybrid electric vehicle options across the lineup.
+- **Lincoln Black Label** - Premium ownership experience with curated service, complimentary maintenance, and vehicle exchange privileges.
+- **Lincoln Electrified** - Hybrid and plug-in hybrid electric vehicle options across the lineup.
 
 ## Unique Services
 
-- **Lincoln Pickup & Delivery** — Complimentary vehicle pick-up and drop-off for service appointments.
-- **Lincoln Mobile Service** — Factory-trained technicians dispatched to your home or office for select maintenance.
-- **Online Service Scheduling** — Schedule appointments through the dealership website.
-- **Lincoln Certified Pre-Owned** — Factory-backed pre-owned vehicle program with 200-point inspection, extended warranty, and roadside assistance.
+- **Lincoln Pickup & Delivery** - Complimentary vehicle pick-up and drop-off for service appointments.
+- **Lincoln Mobile Service** - Factory-trained technicians dispatched to your home or office for select maintenance.
+- **Online Service Scheduling** - Schedule appointments through the dealership website.
+- **Lincoln Certified Pre-Owned** - Factory-backed pre-owned vehicle program with 200-point inspection, extended warranty, and roadside assistance.
 
 ## Online Tools
 
@@ -70,5 +70,5 @@ Las Vegas, Henderson, North Las Vegas, and surrounding Southern Nevada communiti
 
 Personalized luxury leasing, competitive APRs, online finance application, and trade-in support available.
 
-See [vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/vehicles.md) for Lincoln model and inventory details.
-See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/datasets/service-center.md) for service offerings.
+See [vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln-las-vegas/datasets/vehicles.md) for Lincoln model and inventory details.
+See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln-las-vegas/datasets/service-center.md) for service offerings.

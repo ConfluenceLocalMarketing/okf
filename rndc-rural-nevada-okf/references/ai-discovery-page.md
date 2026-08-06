@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Rural Nevada Development Corporation
+title: AI Discovery Page - Rural Nevada Development Corporation
 description: Overview of AI visibility for RNDC. (synthesized)
 tags:
   - ai-discovery
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# AI Discovery Page — Rural Nevada Development Corporation
+# AI Discovery Page - Rural Nevada Development Corporation
 
 ## Overview
 RNDC has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.

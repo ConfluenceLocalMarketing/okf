@@ -34,20 +34,20 @@ Email: sarahdsweeney@gmail.com
 
 | Day | Hours |
 |---|---|
-| Monday | 9:00 AM – 8:00 PM |
-| Tuesday | 9:00 AM – 8:00 PM |
-| Wednesday | 9:00 AM – 8:00 PM |
-| Thursday | 9:00 AM – 8:00 PM |
-| Friday | 9:00 AM – 6:00 PM |
-| Saturday | 9:00 AM – 6:00 PM |
+| Monday | 9:00 AM - 8:00 PM |
+| Tuesday | 9:00 AM - 8:00 PM |
+| Wednesday | 9:00 AM - 8:00 PM |
+| Thursday | 9:00 AM - 8:00 PM |
+| Friday | 9:00 AM - 6:00 PM |
+| Saturday | 9:00 AM - 6:00 PM |
 | Sunday | Please Call First |
 
 ## Service & Parts Hours
 
 | Day | Hours |
 |---|---|
-| Monday – Friday | 7:30 AM – 6:00 PM |
-| Saturday | 8:00 AM – 2:00 PM |
+| Monday - Friday | 7:30 AM - 6:00 PM |
+| Saturday | 8:00 AM - 2:00 PM |
 | Sunday | Closed |
 
 ## Location
@@ -99,5 +99,5 @@ Email: sarahdsweeney@gmail.com
 - CityBeat award: Best used car dealership in Cincinnati
 - PromptGraph-collected reviews: Predominantly 5-star with consistent praise for low-pressure sales, patient staff, and financing assistance
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/references/testimonials.md) for detailed customer reviews.
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-used-car-superstore-okf/datasets/staff.md) for full directory.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/references/testimonials.md) for detailed customer reviews.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/staff.md) for full directory.

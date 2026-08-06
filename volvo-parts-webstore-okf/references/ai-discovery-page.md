@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Volvo Parts Webstore
+title: AI Discovery Page - Volvo Parts Webstore
 description: Overview of AI visibility and discovery for Volvo Parts Webstore. (synthesized)
 tags:
   - ai-discovery
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Volvo Parts Webstore
+# AI Discovery Page - Volvo Parts Webstore
 
 ## Overview
 Volvo Parts Webstore has no AI-specific discovery infrastructure (no llms.txt, prompts.txt found on the website). An llms.txt and prompts.txt have been synthesized for this bundle.

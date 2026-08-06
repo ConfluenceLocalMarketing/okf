@@ -26,6 +26,6 @@ Location intelligence platform that uses geo-framing technology and Location IQ 
 
 ## Related
 
-See [marketing-suite.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/marketing-suite.md) for omnichannel campaign execution.
-See [consumer-intelligence.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/consumer-intelligence.md) for behavioral insights.
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.
+See [marketing-suite.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/marketing-suite.md) for omnichannel campaign execution.
+See [consumer-intelligence.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/consumer-intelligence.md) for behavioral insights.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/company.md) for the full product ecosystem.

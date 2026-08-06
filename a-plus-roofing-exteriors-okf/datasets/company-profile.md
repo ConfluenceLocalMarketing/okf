@@ -19,16 +19,16 @@ timestamp: 2026-07-03
 
 ## Services
 
-- **Roof repair & replacement** — Full-service roofing for residential and commercial properties including leak repair, shingle replacement, and complete roof replacement.
-- **Roof inspection** — Comprehensive inspection to identify damage, wear, and potential failure points.
-- **Attic inspection** — Assessment of attic ventilation, insulation, and structural integrity.
-- **Siding installation & repair** — Installation and repair of exterior siding materials including vinyl, fiber cement, and wood.
-- **Gutter installation & repair** — Seamless gutter systems, downspouts, and gutter guards.
-- **Window replacement** — Energy-efficient window installation and frame repair.
-- **Storm damage restoration** — Full restoration services following hail, wind, rain, and snow storms.
-- **Insurance claim assistance** — Guidance and documentation support for insurance claims related to storm damage.
-- **Emergency roof repair** — 24/7 emergency service for leaks, fallen trees, and urgent structural damage.
-- **Ventilation systems** — Installation and upgrade of ridge vents, soffit vents, and powered attic ventilators.
+- **Roof repair & replacement** - Full-service roofing for residential and commercial properties including leak repair, shingle replacement, and complete roof replacement.
+- **Roof inspection** - Comprehensive inspection to identify damage, wear, and potential failure points.
+- **Attic inspection** - Assessment of attic ventilation, insulation, and structural integrity.
+- **Siding installation & repair** - Installation and repair of exterior siding materials including vinyl, fiber cement, and wood.
+- **Gutter installation & repair** - Seamless gutter systems, downspouts, and gutter guards.
+- **Window replacement** - Energy-efficient window installation and frame repair.
+- **Storm damage restoration** - Full restoration services following hail, wind, rain, and snow storms.
+- **Insurance claim assistance** - Guidance and documentation support for insurance claims related to storm damage.
+- **Emergency roof repair** - 24/7 emergency service for leaks, fallen trees, and urgent structural damage.
+- **Ventilation systems** - Installation and upgrade of ridge vents, soffit vents, and powered attic ventilators.
 
 ## Roofing Types
 
@@ -51,7 +51,7 @@ timestamp: 2026-07-03
 
 ## Coverage Area
 
-See [service-areas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/service-areas.md) for detailed geographic coverage.
+See [service-areas.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/datasets/service-areas.md) for detailed geographic coverage.
 
 ## Citations
 

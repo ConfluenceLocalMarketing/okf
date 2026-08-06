@@ -18,14 +18,14 @@ Verner's Lawn Care & Landscaping is a family-owned and operated landscaping comp
 
 ## Services
 
-- **Landscape Construction** — Custom landscape design and installation
-- **Landscape Maintenance** — Mulching, leaf removal, trimming, pruning, spring and fall cleanups
-- **Hardscape Design** — Boulderscaping, rock scaping, retaining walls, and hardscape installation
-- **Lawn Maintenance** — Mowing, aeration, overseeding, and edging
-- **Snow and Ice Management** — Snow plowing, snow removal, and ice removal
-- **Firewood Delivery** — Full cord, face cord, and half cord delivery
-- **Plant and Flower Installation** — Custom plantings and flower beds
-- **Drainage and Water Management** — Grading, excavation, and drainage solutions
+- **Landscape Construction** - Custom landscape design and installation
+- **Landscape Maintenance** - Mulching, leaf removal, trimming, pruning, spring and fall cleanups
+- **Hardscape Design** - Boulderscaping, rock scaping, retaining walls, and hardscape installation
+- **Lawn Maintenance** - Mowing, aeration, overseeding, and edging
+- **Snow and Ice Management** - Snow plowing, snow removal, and ice removal
+- **Firewood Delivery** - Full cord, face cord, and half cord delivery
+- **Plant and Flower Installation** - Custom plantings and flower beds
+- **Drainage and Water Management** - Grading, excavation, and drainage solutions
 
 ## Service Area
 

@@ -28,11 +28,11 @@ The finance department at Mullinax Ford of Central Florida arranges new and used
 
 ## Financing Programs
 
-- **New vehicle financing** — manufacturer rates and programs on new Ford vehicles.
-- **Used vehicle financing** — competitive rates on pre-owned inventory.
-- **Bad credit financing** — programs for buyers with less-than-perfect credit.
-- **No money down options** — depending on qualification.
-- **Leasing** — Ford lease programs with flexible mileage terms.
+- **New vehicle financing** - manufacturer rates and programs on new Ford vehicles.
+- **Used vehicle financing** - competitive rates on pre-owned inventory.
+- **Bad credit financing** - programs for buyers with less-than-perfect credit.
+- **No money down options** - depending on qualification.
+- **Leasing** - Ford lease programs with flexible mileage terms.
 
 ## Lending Partners
 

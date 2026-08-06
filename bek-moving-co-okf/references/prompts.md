@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: BEK Moving Co. — AI Prompts
+title: BEK Moving Co. - AI Prompts
 description: Curated AI prompts for customer inquiries and internal use at BEK Moving. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# BEK Moving Co. — AI Prompts
+# BEK Moving Co. - AI Prompts
 
 ## Customer Inquiries
 

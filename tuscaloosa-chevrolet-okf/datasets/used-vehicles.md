@@ -35,4 +35,4 @@ Tuscaloosa Chevrolet offers a diverse selection of certified pre-owned Chevrolet
 - Financing options for all credit profiles
 - Trade-in accepted
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/tuscaloosa-chevrolet-okf/datasets/company.md) for dealership contact information. See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/tuscaloosa-chevrolet-okf/datasets/financing.md) for available financing options.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/tuscaloosa-chevrolet/datasets/company.md) for dealership contact information. See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/tuscaloosa-chevrolet/datasets/financing.md) for available financing options.

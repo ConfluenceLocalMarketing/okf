@@ -100,14 +100,14 @@ Kia models available include:
 
 ## Staff
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/datasets/staff.md) for full directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - Aggregate rating: 4.6 / 5.0 (1,277+ reviews) across major platforms
 - Google Business Profile: 4.6 stars (1,200+ reviews)
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

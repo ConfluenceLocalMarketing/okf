@@ -45,6 +45,6 @@ While no dedicated AI surface exists, the site provides:
 
 ## Recommendation
 
-To enable AI agent discovery, the dealership could enable a PromptGraph integration (available on Dealer.com), add an `llms.txt` file, or create an AI Discovery Page at `/ai-discovery-page.htm` — all supported by the Dealer.com platform but not currently activated.
+To enable AI agent discovery, the dealership could enable a PromptGraph integration (available on Dealer.com), add an `llms.txt` file, or create an AI Discovery Page at `/ai-discovery-page.htm` - all supported by the Dealer.com platform but not currently activated.
 
-See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/references/llms-txt.md) for the llms.txt assessment.
+See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/references/llms-txt.md) for the llms.txt assessment.

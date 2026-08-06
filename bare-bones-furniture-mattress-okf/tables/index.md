@@ -1,5 +1,5 @@
 # Tables
 
-- [departments.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/tables/departments.md) - Product departments and categories offered.
-- [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/tables/services.md) - Customer services available.
-- [brands.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/bare-bones-furniture-mattress-okf/tables/brands.md) - Brand partners carried.
+- [departments.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/tables/departments.md) - Product departments and categories offered.
+- [services.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/tables/services.md) - Customer services available.
+- [brands.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bare-bones-furniture-mattress/tables/brands.md) - Brand partners carried.

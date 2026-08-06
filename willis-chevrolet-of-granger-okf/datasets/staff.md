@@ -15,29 +15,29 @@ timestamp: 2026-07-03
 
 ## Leadership
 
-- **Tom Willis** — Dealer Principal
-- **Scott Anderson** — General Manager
+- **Tom Willis** - Dealer Principal
+- **Scott Anderson** - General Manager
 
 ## Sales Team
 
-- **Brian Johnson** — Sales Manager
-- **Megan Peterson** — Sales Consultant
-- **Derek Olson** — Sales Consultant
-- **Ashley Miller** — Internet Sales Manager
+- **Brian Johnson** - Sales Manager
+- **Megan Peterson** - Sales Consultant
+- **Derek Olson** - Sales Consultant
+- **Ashley Miller** - Internet Sales Manager
 
 ## Service Team
 
-- **Jerry Thompson** — Service Manager
-- **Kyle Davis** — Service Advisor
-- **Chris Hansen** — Master Technician
+- **Jerry Thompson** - Service Manager
+- **Kyle Davis** - Service Advisor
+- **Chris Hansen** - Master Technician
 
 ## Finance
 
-- **Rachel Larson** — Finance Manager
-- **Adam Schultz** — Finance Specialist
+- **Rachel Larson** - Finance Manager
+- **Adam Schultz** - Finance Specialist
 
 ## Parts
 
-- **Doug Nelson** — Parts Manager
+- **Doug Nelson** - Parts Manager
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/willis-chevrolet-of-granger-okf/datasets/company.md) for the full dealership profile.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/company.md) for the full dealership profile.

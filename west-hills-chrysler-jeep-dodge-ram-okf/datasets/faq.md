@@ -22,7 +22,7 @@ timestamp: 2026-07-01
 ## Inventory
 
 **Q: What new vehicle brands are available at West Hills CJDR?**
-A: Chrysler, Jeep, Dodge, and RAM — including the Pacifica, Wrangler, Grand Cherokee, Charger, Durango, RAM 1500 trucks, and ProMaster vans.
+A: Chrysler, Jeep, Dodge, and RAM - including the Pacifica, Wrangler, Grand Cherokee, Charger, Durango, RAM 1500 trucks, and ProMaster vans.
 
 **Q: What brands are available in the used vehicle inventory?**
 A: The pre-owned inventory spans multiple makes including Chrysler, Jeep, Dodge, RAM, Ford, Chevrolet, Toyota, Honda, Nissan, Hyundai, Kia, and more.
@@ -45,7 +45,7 @@ A: Leasing typically offers lower monthly payments but has mileage and customiza
 A: Most loan terms fall between 48-72 months, with longer terms resulting in lower payments.
 
 **Q: Can I get financing with bad credit or no credit?**
-A: Yes, the finance team works with customers across all credit profiles. No credit, no problem — they can secure financing options.
+A: Yes, the finance team works with customers across all credit profiles. No credit, no problem - they can secure financing options.
 
 **Q: Can I finance a vehicle without a down payment?**
 A: In most cases, financing with no down payment is available. Taxes, registration, and fees can often be rolled into the financing deal.

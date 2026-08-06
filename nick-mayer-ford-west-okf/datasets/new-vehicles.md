@@ -59,7 +59,7 @@ Nick Mayer Ford West in Avon Lake, OH carries a complete lineup of new Ford vehi
 
 ## Related Concepts
 
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview
-- [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/tables/model-comparison.md) - Side-by-side model comparison
-- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/used-vehicles.md) - Pre-owned inventory
-- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/faq.md) - FAQs about inventory
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/dealership.md) - Dealership overview
+- [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/tables/model-comparison.md) - Side-by-side model comparison
+- [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/used-vehicles.md) - Pre-owned inventory
+- [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/faq.md) - FAQs about inventory

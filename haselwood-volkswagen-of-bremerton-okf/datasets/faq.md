@@ -87,4 +87,4 @@ A: Yes, the dealership offers special programs for active and veteran military p
 **Q: Can I buy a car completely online?**
 A: Yes, Click-N-Drive allows online purchasing with home delivery and at-home test drives.
 
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-volkswagen-of-bremerton-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

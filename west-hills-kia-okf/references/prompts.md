@@ -52,5 +52,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/west-hills-kia/prompts
 | 9 | `do-people-like-working-with-west-hills-kia` | Workplace culture |
 | 10 | `whats-it-actually-like-dealing-with-west-hills-kia` | Customer experience |
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/datasets/faq.md) for common questions and answers.

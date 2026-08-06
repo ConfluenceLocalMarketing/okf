@@ -27,4 +27,4 @@ Get a value assessment for your current vehicle with accurate trade-in valuation
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/chaparral-buick-gmc-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/chaparral-buick-gmc/datasets/company.md).

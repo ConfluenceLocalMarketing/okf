@@ -1,6 +1,6 @@
 ---
 type: Website
-title: Memorial Hospital of Converse County — Official Site
+title: Memorial Hospital of Converse County - Official Site
 description: Official website for Memorial Hospital of Converse County, a 25-bed critical access hospital serving Converse County, Wyoming.
 resource: https://www.conversehospital.com/
 tags:
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Memorial Hospital of Converse County — Official Site
+# Memorial Hospital of Converse County - Official Site
 
 - **URL:** https://www.conversehospital.com/
 - **Phone:** (307) 358-2122

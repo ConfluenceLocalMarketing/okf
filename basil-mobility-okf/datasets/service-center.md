@@ -22,8 +22,8 @@ Basil Mobility's service center features BraunAbility-certified technicians trai
 
 | Day | Hours |
 |---|---|
-| Mon–Fri | 8:00 AM – 5:00 PM |
-| Sat | 8:00 AM – 5:00 PM |
+| Mon-Fri | 8:00 AM - 5:00 PM |
+| Sat | 8:00 AM - 5:00 PM |
 | Sun | Closed |
 
 **Phone:** (716) 683-6800
@@ -74,5 +74,5 @@ Basil Mobility's service center features BraunAbility-certified technicians trai
 - Installing power lift systems into customer vehicles
 - Custom interior modifications for wheelchair accommodation
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/dealership.md) for full business profile and contact information.
-See [mobility-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/datasets/mobility-vehicles.md) for vehicle details.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/dealership.md) for full business profile and contact information.
+See [mobility-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/datasets/mobility-vehicles.md) for vehicle details.

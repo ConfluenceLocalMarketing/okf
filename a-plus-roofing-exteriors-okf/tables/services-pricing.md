@@ -35,12 +35,12 @@ timestamp: 2026-07-03
 
 | Material Type | Typical Applications | Durability |
 |---|---|---|
-| Asphalt Shingles | Residential roofs | 20–30 years |
-| Metal Roofing | Residential and commercial | 40–70 years |
-| Flat Roofing | Commercial and modern residential | 15–30 years |
+| Asphalt Shingles | Residential roofs | 20-30 years |
+| Metal Roofing | Residential and commercial | 40-70 years |
+| Flat Roofing | Commercial and modern residential | 15-30 years |
 | Tile Roofing | Residential and luxury | 50+ years |
-| Slate Roofing | Premium residential | 75–100 years |
+| Slate Roofing | Premium residential | 75-100 years |
 
 ## Related
 
-See [company-profile.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/company-profile.md) for detailed service descriptions and special programs.
+See [company-profile.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/datasets/company-profile.md) for detailed service descriptions and special programs.

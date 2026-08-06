@@ -18,12 +18,12 @@ The official CAT Scale Company website at [catscale.com](https://www.catscale.co
 
 ## Features
 
-- **Scale Locator** — Find the nearest CAT Scale location by address, city, state, or ZIP code; search along a route; browse locations near truck stops.
-- **Weigh My Truck** — Information and download links for the mobile weighing and payment app.
-- **News** — Company announcements, partnership news, and industry updates.
-- **About** — Company history, mission, the unconditional guarantee, and leadership information.
-- **Resources** — Downloadable longitude/latitude coordinates for GPS devices.
-- **CAT Scale Manager Login** — Portal for scale site managers.
+- **Scale Locator** - Find the nearest CAT Scale location by address, city, state, or ZIP code; search along a route; browse locations near truck stops.
+- **Weigh My Truck** - Information and download links for the mobile weighing and payment app.
+- **News** - Company announcements, partnership news, and industry updates.
+- **About** - Company history, mission, the unconditional guarantee, and leadership information.
+- **Resources** - Downloadable longitude/latitude coordinates for GPS devices.
+- **CAT Scale Manager Login** - Portal for scale site managers.
 
 ## Social Media
 
@@ -35,5 +35,5 @@ The official CAT Scale Company website at [catscale.com](https://www.catscale.co
 
 ## Related Websites
 
-- [Weigh My Truck](https://weighmytruck.com/) — Mobile app dedicated site
-- [Iowa 80 Group](https://www.iowa80group.com/) — Parent company
+- [Weigh My Truck](https://weighmytruck.com/) - Mobile app dedicated site
+- [Iowa 80 Group](https://www.iowa80group.com/) - Parent company

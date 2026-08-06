@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Hazelwood, MO
+title: Car-X Tire & Auto - Hazelwood, MO
 description: "Car-X Tire & Auto location in Hazelwood, MO: address, hours, contact, 4.3-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/hazelwood-mo/business
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Hazelwood, MO
+# Car-X Tire & Auto - Hazelwood, MO
 
 Welcome to Car-X Tire & Auto in Hazelwood, conveniently located on North Lindbergh right beside Mattingly’s Sports Bar. As a trusted local destination for top-quality automotive care, we’re committed to providing reliable, welcoming, and customized service that meets the unique needs of every customer who puts their vehicle in our hands.
 
@@ -50,7 +50,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -59,4 +59,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-hazelwood-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-hazelwood-mo/tables/coupons.md) for details.

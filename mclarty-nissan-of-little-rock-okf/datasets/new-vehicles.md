@@ -60,4 +60,4 @@ Every new Nissan includes:
 
 EV charging stations available at the dealership for customer use.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mclarty-nissan-of-little-rock-okf/datasets/company.md) for location and contact information.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/datasets/company.md) for location and contact information.

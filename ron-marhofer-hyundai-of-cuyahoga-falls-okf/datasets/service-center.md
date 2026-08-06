@@ -60,4 +60,4 @@ View current [Service & Parts Specials](https://www.hyundaiofakron.com/service/s
 
 New Hyundai vehicles include Hyundai Complimentary Maintenance covering scheduled oil changes and tire rotations for 3 years or 36,000 miles.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/staff.md) for the service team directory and [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-hyundai-of-cuyahoga-falls-okf/datasets/dealership.md) for general business information.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-cuyahoga-falls/datasets/staff.md) for the service team directory and [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-hyundai-of-cuyahoga-falls/datasets/dealership.md) for general business information.

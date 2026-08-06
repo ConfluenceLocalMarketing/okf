@@ -33,12 +33,12 @@ Leif Johnson Ford of Buda (formerly Truck City Ford) is a full-service Ford deal
 
 | Day | Sales | Service | Parts |
 |---|---|---|---|
-| Monday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Tuesday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Wednesday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Thursday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Friday | 8:30 am – 7:00 pm | 7:00 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Saturday | 8:30 am – 7:00 pm | 8:00 am – 5:00 pm | 8:00 am – 5:00 pm |
+| Monday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Tuesday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Wednesday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Thursday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Friday | 8:30 am - 7:00 pm | 7:00 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Saturday | 8:30 am - 7:00 pm | 8:00 am - 5:00 pm | 8:00 am - 5:00 pm |
 | Sunday | Closed | Closed | Closed |
 
 ## Ratings
@@ -58,4 +58,4 @@ Leif Johnson Automotive Group - family-owned, over 65 years in business. Operate
 
 Supports local programs including Earning by Learning, Responsible Parenting, and Toys for Tots.
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/new-vehicles.md) and [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/used-vehicles.md) for current inventory. See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/service-center.md) for service department details, [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/financing.md) for finance options, and [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-buda-okf/datasets/staff.md) for team directory.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/new-vehicles.md) and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/used-vehicles.md) for current inventory. See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/service-center.md) for service department details, [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/financing.md) for finance options, and [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/staff.md) for team directory.

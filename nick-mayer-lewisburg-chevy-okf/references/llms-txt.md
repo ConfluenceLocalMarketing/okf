@@ -29,4 +29,4 @@ Key pages and social media profiles for AI/LLM discovery.
 - YouTube: https://www.youtube.com/channel/UCvy83RBaRieJv2JENu8q5JA
 - Instagram: https://www.instagram.com/mayeroflewisburg/
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-chevy-okf/references/ai-discovery-page.md) for platform details.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-chevy/references/ai-discovery-page.md) for platform details.

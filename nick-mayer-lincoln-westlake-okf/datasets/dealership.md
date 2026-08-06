@@ -50,17 +50,17 @@ Cleveland, Avon, Lakewood, Fairview Park, Rocky River, and surrounding Northeast
 
 ## Lincoln Models
 
-- **Corsair** — Compact luxury SUV
-- **Nautilus** — Mid-size luxury SUV
-- **Aviator** — Mid-size three-row luxury SUV (available plug-in hybrid)
-- **Navigator** — Full-size luxury SUV
+- **Corsair** - Compact luxury SUV
+- **Nautilus** - Mid-size luxury SUV
+- **Aviator** - Mid-size three-row luxury SUV (available plug-in hybrid)
+- **Navigator** - Full-size luxury SUV
 
 ## Unique Services
 
-- **Lincoln Valet** — Complimentary pick-up and drop-off service for vehicle maintenance
-- **Free Car Washes for Life** — Complimentary car washes for vehicles purchased at the dealership
-- **Online Service Scheduling** — Schedule appointments through the dealership website
-- **Lincoln Certified Pre-Owned** — Factory-backed pre-owned vehicle program
+- **Lincoln Valet** - Complimentary pick-up and drop-off service for vehicle maintenance
+- **Free Car Washes for Life** - Complimentary car washes for vehicles purchased at the dealership
+- **Online Service Scheduling** - Schedule appointments through the dealership website
+- **Lincoln Certified Pre-Owned** - Factory-backed pre-owned vehicle program
 
 ## Online Tools
 
@@ -71,5 +71,5 @@ Cleveland, Avon, Lakewood, Fairview Park, Rocky River, and surrounding Northeast
 - Service scheduling
 - Parts ordering
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/new-vehicles.md) for Lincoln model details.
-See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/service-center.md) for service offerings.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/new-vehicles.md) for Lincoln model details.
+See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/service-center.md) for service offerings.

@@ -61,12 +61,12 @@ Service coupons and specials are available for oil changes, tire rotations, brak
 
 | Maintenance Item | Recommended Interval |
 |---|---|
-| Oil Change | Every 5,000–7,500 miles |
-| Tire Rotation | Every 5,000–7,500 miles |
-| Brake Inspection | Every 10,000–15,000 miles |
-| Air Filter Replacement | Every 15,000–30,000 miles |
-| Transmission Fluid | Every 30,000–60,000 miles |
-| Coolant Flush | Every 30,000–50,000 miles |
+| Oil Change | Every 5,000-7,500 miles |
+| Tire Rotation | Every 5,000-7,500 miles |
+| Brake Inspection | Every 10,000-15,000 miles |
+| Air Filter Replacement | Every 15,000-30,000 miles |
+| Transmission Fluid | Every 30,000-60,000 miles |
+| Coolant Flush | Every 30,000-50,000 miles |
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/dealership.md) for the full business profile.
-See [brand-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/tables/brand-comparison.md) for service-related brand features.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/dealership.md) for the full business profile.
+See [brand-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/tables/brand-comparison.md) for service-related brand features.

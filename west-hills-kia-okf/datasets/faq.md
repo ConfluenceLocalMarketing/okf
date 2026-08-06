@@ -67,9 +67,9 @@ A: West Hills Kia is part of the Haselwood Auto Group, a family of dealerships i
 A: Monday through Saturday 9:00 AM - 8:00 PM, Sunday 10:00 AM - 7:00 PM.
 
 **Q: Do you offer trade-in evaluations?**
-A: Yes, through the KBB Instant Cash Offer tool — get a value for your car online.
+A: Yes, through the KBB Instant Cash Offer tool - get a value for your car online.
 
 **Q: Is there a vehicle hold policy?**
 A: Yes, the dealership allows customers to hold vehicles before arriving.
 
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-kia-okf/references/prompts.md) for the complete prompt library with detailed Q&A pairs.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/references/prompts.md) for the complete prompt library with detailed Q&A pairs.

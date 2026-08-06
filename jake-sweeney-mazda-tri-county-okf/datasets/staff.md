@@ -50,4 +50,4 @@ Staff recognized in customer reviews and PromptGraph testimonial data:
 - **Frank** - Helpful with financing, clear financial breakdown
 - **Mike** - Finance; found great rates
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/references/testimonials.md) for detailed customer reviews referencing specific staff members.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/references/testimonials.md) for detailed customer reviews referencing specific staff members.

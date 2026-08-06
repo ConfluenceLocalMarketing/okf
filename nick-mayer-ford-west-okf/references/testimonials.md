@@ -44,6 +44,6 @@ Detailed individual testimonials and specific review excerpts were not available
 
 ## Related Concepts
 
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview
-- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/service-center.md) - Service center
-- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/references/prompts.md) - Prompt library for FAQs
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/dealership.md) - Dealership overview
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/service-center.md) - Service center
+- [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/references/prompts.md) - Prompt library for FAQs

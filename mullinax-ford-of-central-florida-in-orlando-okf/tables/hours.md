@@ -35,6 +35,6 @@ timestamp: 2026-08-06
 
 ## Related Concepts
 
-- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
-- See [service-center.md](../datasets/service-center.md) for service and Quick Lane details.
+- See [mullinax-ford-of-central-florida-in-orlando.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
+- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/service-center.md) for service and Quick Lane details.
 - See [contact.md](contact.md) for department phone numbers.

@@ -33,12 +33,12 @@ Leif Johnson Ford of Manor (formerly Riata Ford) is a full-service Ford dealersh
 
 | Day | Sales | Service |
 |---|---|---|
-| Monday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm |
-| Tuesday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm |
-| Wednesday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm |
-| Thursday | 8:30 am – 8:00 pm | 7:00 am – 7:00 pm |
-| Friday | 8:30 am – 7:00 pm | 7:00 am – 7:00 pm |
-| Saturday | 8:30 am – 7:00 pm | 8:00 am – 5:00 pm |
+| Monday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm |
+| Tuesday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm |
+| Wednesday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm |
+| Thursday | 8:30 am - 8:00 pm | 7:00 am - 7:00 pm |
+| Friday | 8:30 am - 7:00 pm | 7:00 am - 7:00 pm |
+| Saturday | 8:30 am - 7:00 pm | 8:00 am - 5:00 pm |
 | Sunday | Closed | Closed |
 
 ## Ratings
@@ -55,4 +55,4 @@ Approximately 179 vehicles in current inventory mix (new and pre-owned).
 
 Leif Johnson Automotive Group - family-owned, over 65 years in business. Operates 3 Ford franchise dealerships and 3 pre-owned locations in and around Austin, plus Chevrolet, GMC, and CDJR franchises in Monahans, TX.
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/new-vehicles.md) and [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/used-vehicles.md) for current inventory. See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/service-center.md) for service department details, [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/financing.md) for finance options, and [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/leif-johnson-ford-manor-okf/datasets/staff.md) for team directory.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/new-vehicles.md) and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/used-vehicles.md) for current inventory. See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/service-center.md) for service department details, [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/financing.md) for finance options, and [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/staff.md) for team directory.

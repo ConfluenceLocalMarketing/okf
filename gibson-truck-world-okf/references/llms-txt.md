@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Gibson Truck World — llms.txt
+title: Gibson Truck World - llms.txt
 description: AI context file for Gibson Truck World used truck dealership. (synthesized)
 tags:
   - llms-txt
@@ -38,4 +38,4 @@ timestamp: 2026-07-02
 - Nationwide financing and delivery
 
 ## Hours
-- Mon–Fri 9–7, Sat 9–6, Sun 10–5
+- Mon-Fri 9-7, Sat 9-6, Sun 10-5

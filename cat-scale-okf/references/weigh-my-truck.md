@@ -19,12 +19,12 @@ The Weigh My Truck app is a mobile application developed by CAT Scale Company th
 
 ## Features
 
-- **In-Cab Weighing** — Weigh the truck and view results on the mobile device without exiting the vehicle.
-- **Mobile Payment** — Pay for scale transactions through the app using stored payment methods.
-- **ACH Payment Option** — Bank transfer payment support added in 2016.
-- **Digital Scale Tickets** — Emails a locked PDF copy of the scale ticket to specified email addresses.
-- **Account Management** — Store trucking company name, truck number, trailer number, email preferences, and historical weight transactions.
-- **Fleet Accounts** — Fleet operators can manage drivers and receive back-end data files.
+- **In-Cab Weighing** - Weigh the truck and view results on the mobile device without exiting the vehicle.
+- **Mobile Payment** - Pay for scale transactions through the app using stored payment methods.
+- **ACH Payment Option** - Bank transfer payment support added in 2016.
+- **Digital Scale Tickets** - Emails a locked PDF copy of the scale ticket to specified email addresses.
+- **Account Management** - Store trucking company name, truck number, trailer number, email preferences, and historical weight transactions.
+- **Fleet Accounts** - Fleet operators can manage drivers and receive back-end data files.
 
 ## Integration
 

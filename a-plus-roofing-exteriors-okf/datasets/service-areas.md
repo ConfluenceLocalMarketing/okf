@@ -30,4 +30,4 @@ A Plus Roofing & Exteriors serves a multi-state region across the midwest and no
 
 ## Related
 
-See [company-profile.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/company-profile.md) for full business profile and service descriptions.
+See [company-profile.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/datasets/company-profile.md) for full business profile and service descriptions.

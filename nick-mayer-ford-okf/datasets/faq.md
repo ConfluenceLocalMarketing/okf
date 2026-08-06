@@ -58,14 +58,14 @@ Yes, the parts department stocks genuine Ford OEM parts for all repairs and main
 6200 Mayfield Road, Mayfield Heights, OH 44124.
 
 **What are your hours?**
-Monday through Thursday 9:00 AM – 8:00 PM (Mon/Thu), 9:00 AM – 6:00 PM (Tue/Wed/Fri), Saturday 9:00 AM – 5:00 PM, closed Sunday.
+Monday through Thursday 9:00 AM - 8:00 PM (Mon/Thu), 9:00 AM - 6:00 PM (Tue/Wed/Fri), Saturday 9:00 AM - 5:00 PM, closed Sunday.
 
 **Do you have a service shuttle?**
 Contact the dealership for shuttle or loaner vehicle availability.
 
 ## Related Concepts
 
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/dealership.md) - Dealership overview
-- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/new-vehicles.md) - New Ford models
-- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/used-vehicles.md) - Pre-owned inventory
-- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-okf/datasets/service-center.md) - Service center
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/dealership.md) - Dealership overview
+- [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/new-vehicles.md) - New Ford models
+- [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/used-vehicles.md) - Pre-owned inventory
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/service-center.md) - Service center

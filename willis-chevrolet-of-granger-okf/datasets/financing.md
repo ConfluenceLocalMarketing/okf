@@ -18,10 +18,10 @@ The Finance Center at Willis Chevrolet Of Granger provides financing and lease s
 
 ## Financing Options
 
-- **New Vehicle Loans** — Competitive rates on new Chevrolet models
-- **Certified Pre-Owned Financing** — Special rates on CPO vehicles
-- **Lease Programs** — Chevrolet lease plans with flexible terms
-- **Chevrolet Incentive Programs** — Manufacturer rebates and special offers
+- **New Vehicle Loans** - Competitive rates on new Chevrolet models
+- **Certified Pre-Owned Financing** - Special rates on CPO vehicles
+- **Lease Programs** - Chevrolet lease plans with flexible terms
+- **Chevrolet Incentive Programs** - Manufacturer rebates and special offers
 
 ## Online Services
 
@@ -39,4 +39,4 @@ The Finance Center at Willis Chevrolet Of Granger provides financing and lease s
 
 Finance specialists are available during dealership hours. Call (833) 591-1798 or visit the dealership in Granger, IA.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/willis-chevrolet-of-granger-okf/datasets/company.md) for the full dealership profile.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/company.md) for the full dealership profile.

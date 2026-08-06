@@ -21,7 +21,7 @@ Frank Leta Mitsubishi offers the complete Mitsubishi lineup, from compact city c
 | Model | Type | Starting MSRP | Highlights |
 |-------|------|--------------|------------|
 | 2026 Outlander | Three-Row SUV | $29,995 | Standard AWD, 7-passenger seating |
-| 2026 Outlander Trail Edition | Off-Road SUV | — | Rugged styling, all-terrain tires |
+| 2026 Outlander Trail Edition | Off-Road SUV | - | Rugged styling, all-terrain tires |
 | 2026 Eclipse Cross | Compact Crossover | $27,695 | Turbo engine, coupe-like design |
 | 2026 Outlander Sport | Subcompact SUV | $24,995 | Affordable, city-friendly size |
 
@@ -46,4 +46,4 @@ Every new Mitsubishi includes:
 - **5-Year/Unlimited-Mile Roadside Assistance**
 - **7-Year/100,000-Mile Anti-Corrosion Perforation Warranty**
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/frank-leta-mitsubishi-okf/datasets/company.md) for dealership contact and location information.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/datasets/company.md) for dealership contact and location information.

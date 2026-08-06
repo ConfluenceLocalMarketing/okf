@@ -19,7 +19,7 @@ Full Circle News is a technology company that partners with newspaper groups to 
 
 ## Overview
 
-Full Circle News helps newspaper organizations — from large metro chains to small town weeklies — grow digital revenue and build sustainable local journalism business models. The platform focuses on maximizing ad yield, growing audience reach, and streamlining the ad operations workflow for publishers.
+Full Circle News helps newspaper organizations - from large metro chains to small town weeklies - grow digital revenue and build sustainable local journalism business models. The platform focuses on maximizing ad yield, growing audience reach, and streamlining the ad operations workflow for publishers.
 
 ## Key Offerings
 

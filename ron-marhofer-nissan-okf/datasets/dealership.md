@@ -84,14 +84,14 @@ Nissan models available include:
 
 ## Staff
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/staff.md) for full directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - Aggregate rating: 4.7 / 5.0 (2,283 reviews) across major platforms
 - Google Business Profile: 4.7 stars (2,200+ reviews)
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

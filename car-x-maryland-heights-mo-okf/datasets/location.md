@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Maryland Heights, MO
+title: Car-X Tire & Auto - Maryland Heights, MO
 description: "Car-X Tire & Auto location in Maryland Heights, MO: address, hours, contact, 4.4-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/maryland-heights-mo/business
 tags:
@@ -14,13 +14,13 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Maryland Heights, MO
+# Car-X Tire & Auto - Maryland Heights, MO
 
 Experience reliable auto care at Car-X Tire & Auto, located at 11825 Dorsett Rd, Maryland Heights, MO 63043, at the corner of Schuetz and Dorsett.
 
 
 
-For nearly 50 years, our family-operated shop has provided trustworthy, affordable service—from mystery noises to new tires and tune-ups—keeping Maryland Heights drivers safely on the road.
+For nearly 50 years, our family-operated shop has provided trustworthy, affordable service-from mystery noises to new tires and tune-ups-keeping Maryland Heights drivers safely on the road.
 
 ## Contact Information
 
@@ -55,7 +55,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -64,4 +64,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-maryland-heights-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-maryland-heights-mo/tables/coupons.md) for details.

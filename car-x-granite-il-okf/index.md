@@ -6,18 +6,18 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [location.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-granite-il-okf/datasets/location.md) - Car-X Tire & Auto location in Granite City, IL: address, hours, contact, and full auto repair services.
-- [services.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-granite-il-okf/datasets/services.md) - Full service menu including brakes, tires, maintenance, diagnostics, steering/suspension, and pre-owned inspections
+- [location.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-granite-il/datasets/location.md) - Car-X Tire & Auto location in Granite City, IL: address, hours, contact, and full auto repair services.
+- [services.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-granite-il/datasets/services.md) - Full service menu including brakes, tires, maintenance, diagnostics, steering/suspension, and pre-owned inspections
 
 ## References
 
-- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-granite-il-okf/references/prompts.md) - Complete PromptGraph library of 105 structured Q&A prompts covering all auto repair and maintenance topics
-- [ai-discovery.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-granite-il-okf/references/ai-discovery.md) - AI Discovery Page with 16 ReadAction service endpoints and JSON-LD schema.org AutoDealer data
+- [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-granite-il/references/prompts.md) - Complete PromptGraph library of 105 structured Q&A prompts covering all auto repair and maintenance topics
+- [ai-discovery.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-granite-il/references/ai-discovery.md) - AI Discovery Page with 16 ReadAction service endpoints and JSON-LD schema.org AutoDealer data
 
 
 ## Tables
 
-- [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-granite-il-okf/tables/coupons.md) - Current promotional offers, coupons, and financing options
+- [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-granite-il/tables/coupons.md) - Current promotional offers, coupons, and financing options
 
 ## Relationships
 

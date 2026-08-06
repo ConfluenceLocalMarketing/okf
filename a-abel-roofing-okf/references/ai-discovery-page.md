@@ -66,17 +66,17 @@ The AI Manifest (v1.0) provides a machine-readable directory of all AI resources
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes 10+ structured Q&A prompt/response pairs. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-abel-roofing-okf/references/prompts.md) for the full library.
+The `/prompts` endpoint exposes 10+ structured Q&A prompt/response pairs. See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-abel-roofing/references/prompts.md) for the full library.
 
 ## LLM-Accessible Actions
 
-1. **Owens Corning Platinum Roofing South Suburbs** — Premium roofing contractor with highest-quality systems
-2. **Midlothian Roofing with Honest Service** — Local roofer for new roofs, repairs, gutters, skylights
-3. **South Chicago Suburbs Roofing Experts** — Exterior specialists with 5-year workmanship warranty
-4. **Seamless Aluminum Gutters Experts** — Custom .032 gauge aluminum, hidden hangers
-5. **Durable Seamless Gutter Systems** — Leak-proof continuous design, multiple sizes
-6. **Aluminum Soffit Fascia Protection** — .019 thick aluminum, moisture/rot prevention
-7. **Complete Roof Tear-Off Specialists** — Full removal/replacement using Owens Corning systems
+1. **Owens Corning Platinum Roofing South Suburbs** - Premium roofing contractor with highest-quality systems
+2. **Midlothian Roofing with Honest Service** - Local roofer for new roofs, repairs, gutters, skylights
+3. **South Chicago Suburbs Roofing Experts** - Exterior specialists with 5-year workmanship warranty
+4. **Seamless Aluminum Gutters Experts** - Custom .032 gauge aluminum, hidden hangers
+5. **Durable Seamless Gutter Systems** - Leak-proof continuous design, multiple sizes
+6. **Aluminum Soffit Fascia Protection** - .019 thick aluminum, moisture/rot prevention
+7. **Complete Roof Tear-Off Specialists** - Full removal/replacement using Owens Corning systems
 
-See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-abel-roofing-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-abel-roofing-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-abel-roofing/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-abel-roofing/references/prompts.md) for the complete Q&A prompt library.

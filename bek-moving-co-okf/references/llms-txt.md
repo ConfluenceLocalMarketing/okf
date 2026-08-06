@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: BEK Moving Co. — llms.txt
+title: BEK Moving Co. - llms.txt
 description: AI context file for BEK Moving Co. (synthesized)
 tags:
   - llms-txt

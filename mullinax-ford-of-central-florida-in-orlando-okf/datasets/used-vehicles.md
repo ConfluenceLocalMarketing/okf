@@ -21,19 +21,19 @@ Mullinax Ford of Central Florida carries a large pre-owned inventory spanning Fo
 
 ## Used Inventory
 
-- **Used SUVs** — Explorer, Escape, Edge, Bronco Sport, and other makes.
-- **Used trucks** — F-150 and Super Duty, plus non-Ford trucks.
-- **Budget categories** — used cars under $10k, $12k, $15k, and $20k.
-- **One-owner vehicles** — single-owner history highlighted in listings.
-- **Loaner / dealer demo vehicles** — low-mileage service loaners.
+- **Used SUVs** - Explorer, Escape, Edge, Bronco Sport, and other makes.
+- **Used trucks** - F-150 and Super Duty, plus non-Ford trucks.
+- **Budget categories** - used cars under $10k, $12k, $15k, and $20k.
+- **One-owner vehicles** - single-owner history highlighted in listings.
+- **Loaner / dealer demo vehicles** - low-mileage service loaners.
 
 ## Ford Blue Advantage
 
 Ford's certified pre-owned program with three tiers:
 
-- **Gold Certified** — 7-year/100,000-mile (or comparable) limited powertrain coverage plus 172-point inspection.
-- **EV Certified** — battery and powertrain coverage for used electric vehicles.
-- **Blue Certified** — comprehensive vehicle history and reconditioning standards.
+- **Gold Certified** - 7-year/100,000-mile (or comparable) limited powertrain coverage plus 172-point inspection.
+- **EV Certified** - battery and powertrain coverage for used electric vehicles.
+- **Blue Certified** - comprehensive vehicle history and reconditioning standards.
 
 ## Selling & Trading
 

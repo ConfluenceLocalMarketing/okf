@@ -26,6 +26,6 @@ Analytics platform that captures and interprets buyer behavior across digital ch
 
 ## Related
 
-See [insight-pixel.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/insight-pixel.md) for website visitor identification.
-See [geo-signals.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/geo-signals.md) for location-based behavioral data.
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/buying-signals-okf/datasets/company.md) for the full product ecosystem.
+See [insight-pixel.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/insight-pixel.md) for website visitor identification.
+See [geo-signals.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/geo-signals.md) for location-based behavioral data.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/buying-signals/datasets/company.md) for the full product ecosystem.

@@ -6,24 +6,24 @@ okf_version: "0.1"
 
 ## Datasets
 
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Ron Marhofer Nissan in Cuyahoga Falls, OH
-- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/new-vehicles.md) - New Nissan model lineup including Rogue, Altima, Sentra, Pathfinder, Frontier, Armada, Kicks, Murano, Maxima, Titan, Versa, Ariya, and LEAF
-- [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
-- [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
-- [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/service-center.md) - Nissan-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Nissan parts department
-- [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
-- [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/datasets/dealership.md) - Business profile, hours, contact, services, location, and special programs for Ron Marhofer Nissan in Cuyahoga Falls, OH
+- [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/datasets/new-vehicles.md) - New Nissan model lineup including Rogue, Altima, Sentra, Pathfinder, Frontier, Armada, Kicks, Murano, Maxima, Titan, Versa, Ariya, and LEAF
+- [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/datasets/used-vehicles.md) - Pre-owned and certified pre-owned inventory with multi-make selection, competitive pricing, and online buying tools
+- [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/datasets/service-center.md) - Nissan-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Nissan parts department
+- [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
 
 ## References
 
-- [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
-- [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/testimonials.md) - Customer reviews with predominantly 5-star ratings, most-praised staff, and notable excerpts
-- [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/references/prompts.md) - Complete PromptGraph library of 62 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
+- [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/references/ai-discovery-page.md) - Structured semantic endpoints, AI Manifest, PromptGraph API, business profile, vehicle inventory, and LLM actions
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/references/llms-txt.md) - Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts
+- [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/references/testimonials.md) - Customer reviews with predominantly 5-star ratings, most-praised staff, and notable excerpts
+- [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/references/prompts.md) - Complete PromptGraph library of 62 structured Q&A prompts covering vehicles, financing, service, parts, and dealership info
 
 ## Tables
 
-- [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-nissan-okf/tables/model-comparison.md) - Side-by-side comparison of all new Nissan models including body type, drivetrain, seating, features, trims, towing, and warranty
+- [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-nissan/tables/model-comparison.md) - Side-by-side comparison of all new Nissan models including body type, drivetrain, seating, features, trims, towing, and warranty
 
 ## Relationships
 

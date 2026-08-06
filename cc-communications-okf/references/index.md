@@ -1,3 +1,3 @@
 # References
 
-- [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/cc-communications-okf/references/llms-txt.md) - LLMs.txt reference for CC Communications AI context.
+- [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/cc-communications/references/llms-txt.md) - LLMs.txt reference for CC Communications AI context.

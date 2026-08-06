@@ -30,17 +30,17 @@ The finance team at Liberty CDJR provides competitive rates, lease programs, and
 - Wide range of loan programs
 
 ### All-Credit Programs
-- **Excellent Credit** — Best available rates
-- **Good Credit** — Standard competitive financing
-- **Fair Credit** — Flexible approval options
-- **Bad Credit / No Credit** — Special programs available
+- **Excellent Credit** - Best available rates
+- **Good Credit** - Standard competitive financing
+- **Fair Credit** - Flexible approval options
+- **Bad Credit / No Credit** - Special programs available
 
 ## Leasing
 
 | Aspect | Buying | Leasing |
 |--------|--------|---------|
 | Monthly Payment | Higher | Lower |
-| Term | 36–84 months | 24–48 months |
+| Term | 36-84 months | 24-48 months |
 | Ownership | Full ownership | Return or buyout |
 | Mileage | Unlimited | Fixed allowance |
 | Customization | Allowed | Not permitted |
@@ -60,4 +60,4 @@ The finance team at Liberty CDJR provides competitive rates, lease programs, and
 - Model-specific incentives
 - Seasonal sales events
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/liberty-chrysler-dodge-jeep-ram-okf/datasets/company.md) for dealership contact information.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/company.md) for dealership contact information.

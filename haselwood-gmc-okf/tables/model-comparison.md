@@ -82,5 +82,5 @@ Available across most GMC models:
 - **ProGrade Trailering System** - Advanced trailering technology
 - **Google Built-In** - Google Assistant, Google Maps, Google Play
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-gmc-okf/datasets/new-vehicles.md) for detailed model descriptions.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-gmc-okf/datasets/dealership.md) for current offers and promotions.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/datasets/new-vehicles.md) for detailed model descriptions.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/datasets/dealership.md) for current offers and promotions.

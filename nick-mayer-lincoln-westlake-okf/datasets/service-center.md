@@ -28,9 +28,9 @@ The service center at Nick Mayer Lincoln Westlake provides factory-authorized ma
 
 ## Complimentary Services
 
-- **Lincoln Valet** — Complimentary pick-up and drop-off service within the service area
-- **Free Car Washes for Life** — Complimentary car washes for vehicles purchased at the dealership
-- **Complimentary Loaner Vehicles** — Available for qualifying service appointments
+- **Lincoln Valet** - Complimentary pick-up and drop-off service within the service area
+- **Free Car Washes for Life** - Complimentary car washes for vehicles purchased at the dealership
+- **Complimentary Loaner Vehicles** - Available for qualifying service appointments
 
 ## Service Offerings
 
@@ -53,4 +53,4 @@ The service center at Nick Mayer Lincoln Westlake provides factory-authorized ma
 
 Monday through Friday 9:00 AM - 6:00 PM, closed Saturday and Sunday.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lincoln-westlake-okf/datasets/dealership.md) for full contact and hours information.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/dealership.md) for full contact and hours information.

@@ -65,13 +65,13 @@ The AI Manifest (v1.0) provides a machine-readable directory of all AI resources
 
 ## Q&A Prompt Library
 
-The `/prompts` endpoint exposes 3 structured Q&A prompt/response pairs. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/idaho-fence-okf/references/prompts.md) for the full library.
+The `/prompts` endpoint exposes 3 structured Q&A prompt/response pairs. See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/idaho-fence/references/prompts.md) for the full library.
 
 ## LLM-Accessible Actions
 
-1. **Idaho Fence Company Residential Fencing** — Privacy, security, and aesthetic fencing for homes
-2. **Idaho Fence Company Commercial Fencing** — Security fence installation and asset protection
-3. **Idaho Fence Company Farm Fencing** — Agricultural and livestock fencing solutions
+1. **Idaho Fence Company Residential Fencing** - Privacy, security, and aesthetic fencing for homes
+2. **Idaho Fence Company Commercial Fencing** - Security fence installation and asset protection
+3. **Idaho Fence Company Farm Fencing** - Agricultural and livestock fencing solutions
 
-See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/idaho-fence-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/idaho-fence-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/idaho-fence/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/idaho-fence/references/prompts.md) for the complete Q&A prompt library.

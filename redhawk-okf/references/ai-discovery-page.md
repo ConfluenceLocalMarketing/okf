@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Redhawk Gastropub
+title: AI Discovery Page - Redhawk Gastropub
 description: Overview of AI visibility for Redhawk Gastropub. (synthesized)
 tags:
   - ai-discovery
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Redhawk Gastropub
+# AI Discovery Page - Redhawk Gastropub
 
 ## Overview
 Redhawk Gastropub has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.

@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Full Circle Strategic Marketing
+title: AI Discovery Page - Full Circle Strategic Marketing
 description: Overview of AI visibility for Full Circle Strategic Marketing. (synthesized)
 tags:
   - ai-discovery
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Full Circle Strategic Marketing
+# AI Discovery Page - Full Circle Strategic Marketing
 
 ## Overview
 Full Circle Strategic Marketing has no AI-specific discovery files. An llms.txt and prompts.txt have been synthesized.

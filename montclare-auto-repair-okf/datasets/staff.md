@@ -14,28 +14,28 @@ timestamp: 2026-07-03
 
 # Staff Directory - Montclare Auto Repair
 
-## Paul Giannopoulos — Owner / Operator
+## Paul Giannopoulos - Owner / Operator
 
 Paul owns and operates Montclare Automotive Corp. He has over 20 years of experience in the automotive repair industry and is committed to providing quality service with fair pricing.
 
-## Lisa Chen — Shop Manager
+## Lisa Chen - Shop Manager
 
 Lisa oversees daily operations, customer relations, and scheduling. She ensures a smooth experience from drop-off to pickup.
 
-## Robert Torres — Master Technician (ASE Certified)
+## Robert Torres - Master Technician (ASE Certified)
 
 Robert holds ASE certifications in brakes, suspension, engine repair, and electrical systems. 16 years of experience with domestic and import vehicles.
 
-## Mike Okafor — Technician (ASE Certified)
+## Mike Okafor - Technician (ASE Certified)
 
 Mike specializes in diagnostics, A/C and heating, and emissions repair. ASE Certified with 9 years of experience.
 
-## Ana Morales — Service Advisor
+## Ana Morales - Service Advisor
 
 Ana assists customers with service recommendations, estimates, and coordination of repairs. Bilingual in English and Spanish.
 
-## Dave Preston — Towing and Shop Support
+## Dave Preston - Towing and Shop Support
 
 Dave handles vehicle towing and recovery as well as shop support duties.
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/montclare-auto-repair-okf/datasets/company.md) for shop information, certifications, amenities, and contact details.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montclare-auto-repair/datasets/company.md) for shop information, certifications, amenities, and contact details.

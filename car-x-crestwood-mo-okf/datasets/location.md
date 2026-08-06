@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Crestwood, MO
+title: Car-X Tire & Auto - Crestwood, MO
 description: "Car-X Tire & Auto location in Crestwood, MO: address, hours, contact, 4.5-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/crestwood-mo/business
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Crestwood, MO
+# Car-X Tire & Auto - Crestwood, MO
 
 Car-X Tire & Auto in Crestwood is conveniently located on Watson Road, right across from Rich & Charlie’s restaurant. As a valued part of the community, we dedicate ourselves to delivering reliable, welcoming, and tailored service to each person who entrusts their vehicle to us.
 
@@ -50,7 +50,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -59,4 +59,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-crestwood-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-crestwood-mo/tables/coupons.md) for details.

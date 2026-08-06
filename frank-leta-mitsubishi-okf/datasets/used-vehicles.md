@@ -25,15 +25,15 @@ Frank Leta Mitsubishi offers a large selection of pre-owned vehicles crossing al
 
 ## Quality Assurance
 
-- **150-Point Inspection** — Comprehensive mechanical and cosmetic check
-- **Leta-Exclusive Protection** — Extended service contract and perks
-- **Road Test** — Every vehicle is road-tested before listing
-- **Reconditioning** — Professional detailing and necessary repairs completed
+- **150-Point Inspection** - Comprehensive mechanical and cosmetic check
+- **Leta-Exclusive Protection** - Extended service contract and perks
+- **Road Test** - Every vehicle is road-tested before listing
+- **Reconditioning** - Professional detailing and necessary repairs completed
 
 ## Financing for Used Vehicles
 
 - As low as $29 down for qualified buyers
-- Programs for all credit types — good, bad, and no credit
+- Programs for all credit types - good, bad, and no credit
 - Over 40 lender partners
 - Online pre-approval available
 
@@ -50,4 +50,4 @@ Frank Leta Mitsubishi offers a large selection of pre-owned vehicles crossing al
 - Flexible financing including credit amnesty programs
 - Sales and service under one roof
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/frank-leta-mitsubishi-okf/datasets/company.md) for location and hours.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/datasets/company.md) for location and hours.

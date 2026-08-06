@@ -30,8 +30,8 @@ The Brady CDJR service center is staffed by factory-trained Mopar service techni
 
 | Day | Hours |
 |-----|-------|
-| Monday – Friday | 7:00 AM – 6:00 PM |
-| Saturday | 8:00 AM – 2:00 PM |
+| Monday - Friday | 7:00 AM - 6:00 PM |
+| Saturday | 8:00 AM - 2:00 PM |
 | Sunday | Closed |
 
 ## Contact
@@ -47,10 +47,10 @@ Genuine Mopar parts, accessories, and merchandise available.
 
 | Day | Hours |
 |-----|-------|
-| Monday – Friday | 7:00 AM – 6:00 PM |
-| Saturday | 8:00 AM – 2:00 PM |
+| Monday - Friday | 7:00 AM - 6:00 PM |
+| Saturday | 8:00 AM - 2:00 PM |
 | Sunday | Closed |
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/brady-cdjr-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/brady-cdjr/datasets/company.md).

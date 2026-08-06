@@ -81,5 +81,5 @@ timestamp: 2026-07-01
 | Rust-Through | 6 years / 100,000 miles |
 | Roadside Assistance | 5 years / 60,000 miles |
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-chevrolet-okf/datasets/new-vehicles.md) for full new inventory details.
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-chevrolet-okf/datasets/dealership.md) for business hours and contact.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-chevrolet/datasets/new-vehicles.md) for full new inventory details.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-chevrolet/datasets/dealership.md) for business hours and contact.

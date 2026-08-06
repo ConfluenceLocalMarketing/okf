@@ -46,21 +46,21 @@ Email: gsjones.haselwood@gmail.com
 
 ## Honda Models
 
-- **Civic / Civic Hybrid** — Compact sedan and hatchback, a best-selling icon
-- **Accord / Accord Hybrid** — Mid-size sedan with refined performance
-- **CR-V / CR-V Hybrid** — Compact SUV, top-selling Honda in its class
-- **Pilot** — Mid-size 3-row SUV with seating for up to 8
-- **HR-V** — Subcompact crossover SUV
-- **Odyssey** — Minivan with family-friendly features
-- **Ridgeline** — Mid-size pickup truck with unibody construction
-- **Prologue** — All-electric SUV, Honda's first dedicated EV
-- **Passport** — Mid-size 2-row SUV with off-road capability
+- **Civic / Civic Hybrid** - Compact sedan and hatchback, a best-selling icon
+- **Accord / Accord Hybrid** - Mid-size sedan with refined performance
+- **CR-V / CR-V Hybrid** - Compact SUV, top-selling Honda in its class
+- **Pilot** - Mid-size 3-row SUV with seating for up to 8
+- **HR-V** - Subcompact crossover SUV
+- **Odyssey** - Minivan with family-friendly features
+- **Ridgeline** - Mid-size pickup truck with unibody construction
+- **Prologue** - All-electric SUV, Honda's first dedicated EV
+- **Passport** - Mid-size 2-row SUV with off-road capability
 
 ## Services
 
-- **Finance Center** — Online credit application, payment calculator, trade-in valuation, multiple lenders
-- **Service Center** — Factory-trained technicians, Honda Express Service, diagnostics, maintenance, major repairs
-- **Parts Department** — Genuine Honda parts and accessories, tire center
+- **Finance Center** - Online credit application, payment calculator, trade-in valuation, multiple lenders
+- **Service Center** - Factory-trained technicians, Honda Express Service, diagnostics, maintenance, major repairs
+- **Parts Department** - Genuine Honda parts and accessories, tire center
 
 ## Online Tools
 
@@ -72,18 +72,18 @@ Email: gsjones.haselwood@gmail.com
 
 ## Special Programs
 
-- **West Hills Advantage** — Lifetime Powertrain Warranty on new vehicle purchases
-- **Honda Certified Pre-Owned** — Factory-backed with 7-year/100,000-mile powertrain warranty
-- **Military Appreciation** — Special incentives for service members near Naval Base Kitsap
-- **West Hills Extended Service Plus** — Protection plans at time of purchase
+- **West Hills Advantage** - Lifetime Powertrain Warranty on new vehicle purchases
+- **Honda Certified Pre-Owned** - Factory-backed with 7-year/100,000-mile powertrain warranty
+- **Military Appreciation** - Special incentives for service members near Naval Base Kitsap
+- **West Hills Extended Service Plus** - Protection plans at time of purchase
 
 ## Awards
 
-- **Honda President's Award** — Multiple wins (2008, 2012, 2014, 2015, 2016)
+- **Honda President's Award** - Multiple wins (2008, 2012, 2014, 2015, 2016)
 
 ## Reputation
 
 - Aggregate rating: 4.6 / 5.0 (2,019 reviews)
 - Google Business Profile: 4.6 stars (1,870+ reviews)
 
-See [autoplex.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/autoplex.md) for the group overview and member dealership listings.
+See [autoplex.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/autoplex.md) for the group overview and member dealership listings.

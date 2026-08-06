@@ -17,14 +17,14 @@ The company website at [aplusroofingandexteriors.com](https://www.aplusroofingan
 
 ## Site Contents
 
-- **Service pages** — Detailed descriptions of roofing, siding, gutter, window, and restoration services.
-- **Portfolio gallery** — Project photos showcasing completed residential and commercial work.
-- **Service area** — Coverage information and location-specific availability.
-- **Contact information** — Phone, email, and inquiry form for estimates and emergency requests.
-- **About section** — Company history, mission, and team background.
+- **Service pages** - Detailed descriptions of roofing, siding, gutter, window, and restoration services.
+- **Portfolio gallery** - Project photos showcasing completed residential and commercial work.
+- **Service area** - Coverage information and location-specific availability.
+- **Contact information** - Phone, email, and inquiry form for estimates and emergency requests.
+- **About section** - Company history, mission, and team background.
 
 ## Derived Concepts
 
-- [company-profile.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/company-profile.md) — Business profile and service catalog sourced from website content.
-- [service-areas.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/datasets/service-areas.md) — Geographic coverage data derived from website service area pages.
-- [services-pricing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/a-plus-roofing-exteriors-okf/tables/services-pricing.md) — Structured service table compiled from website service descriptions.
+- [company-profile.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/datasets/company-profile.md) - Business profile and service catalog sourced from website content.
+- [service-areas.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/datasets/service-areas.md) - Geographic coverage data derived from website service area pages.
+- [services-pricing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/a-plus-roofing-exteriors/tables/services-pricing.md) - Structured service table compiled from website service descriptions.

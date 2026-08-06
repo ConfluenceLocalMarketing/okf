@@ -41,10 +41,10 @@ The AI Discovery Page provides structured, machine-readable venue information fo
 
 ## Services
 
-1. **Weddings** — Full-service wedding venue with indoor/outdoor spaces, catering, and staff support
-2. **Corporate Events** — Meetings, conferences, trade shows with A/V and telecom support
-3. **Catering** — Banquet and off-site catering with customizable menus
-4. **Special Events** — Custom event planning and theme coordination
+1. **Weddings** - Full-service wedding venue with indoor/outdoor spaces, catering, and staff support
+2. **Corporate Events** - Meetings, conferences, trade shows with A/V and telecom support
+3. **Catering** - Banquet and off-site catering with customizable menus
+4. **Special Events** - Custom event planning and theme coordination
 
 ## Available Resources
 
@@ -54,5 +54,5 @@ The AI Discovery Page provides structured, machine-readable venue information fo
 - Event gallery (web page)
 - Event calendar (web page)
 
-See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/canyon-crest-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/canyon-crest-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/canyon-crest/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/canyon-crest/references/prompts.md) for the complete Q&A prompt library.

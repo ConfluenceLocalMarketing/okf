@@ -1,6 +1,6 @@
 ---
 type: Service Catalog
-title: Memorial Hospital of Converse County — Service Lines
+title: Memorial Hospital of Converse County - Service Lines
 description: Complete catalog of medical services offered by Memorial Hospital of Converse County across its 16-location network.
 tags:
   - services
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Memorial Hospital of Converse County — Service Lines
+# Memorial Hospital of Converse County - Service Lines
 
 ## Emergency & Urgent Care
 

@@ -39,7 +39,7 @@ McLarty Nissan offers competitive financing and online buying options for custom
 | Aspect | Buying | Leasing |
 |--------|--------|---------|
 | Monthly Payment | Higher | Lower |
-| Term | 36–84 months | 24–48 months |
+| Term | 36-84 months | 24-48 months |
 | Ownership | Full ownership at end | Return or buyout |
 | Mileage | Unlimited | Fixed limit |
 | Customization | Allowed | Not permitted |
@@ -56,4 +56,4 @@ McLarty Nissan offers competitive financing and online buying options for custom
 - Competitive offers
 - Trade equity applied to purchase
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/mclarty-nissan-of-little-rock-okf/datasets/company.md) for full dealership location and contact.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/datasets/company.md) for full dealership location and contact.

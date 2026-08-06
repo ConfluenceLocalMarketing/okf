@@ -29,8 +29,8 @@ Nick Mayer GMC Lewisburg is a full-service GMC dealership located at **861 N Ell
 
 | Day | Hours |
 |---|---|
-| Monday – Friday | 9:00 AM – 7:00 PM |
-| Saturday | 9:00 AM – 6:00 PM |
+| Monday - Friday | 9:00 AM - 7:00 PM |
+| Saturday | 9:00 AM - 6:00 PM |
 | Sunday | Closed |
 
 ## GMC Models
@@ -55,6 +55,6 @@ Customers can apply for financing directly through the dealership website with a
 
 Situated on N Ellington Parkway (US-31A) in Lewisburg, the dealership is easily accessible from I-65 via US-412.
 
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/new-vehicles.md) for detailed model information.
-See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/service-center.md) for service department details.
-See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-lewisburg-gmc-okf/datasets/faq.md) for frequently asked questions.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/new-vehicles.md) for detailed model information.
+See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/service-center.md) for service department details.
+See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/faq.md) for frequently asked questions.

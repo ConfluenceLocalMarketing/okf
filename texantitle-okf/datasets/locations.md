@@ -1,7 +1,7 @@
 ---
 type: Entities
-title: Texan Title — Office Locations
-description: 27 Texan Title offices organized across 5 Texas regions — South, West, Williamson County, Hill Country, and Commercial Division.
+title: Texan Title - Office Locations
+description: 27 Texan Title offices organized across 5 Texas regions - South, West, Williamson County, Hill Country, and Commercial Division.
 resource: https://texantitle.com/locations
 tags:
   - locations
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-15
 ---
 
-# Texan Title — Office Locations
+# Texan Title - Office Locations
 
 Four regions. 27 offices. One Texas family. From the Gulf Coast to Central Texas, the Hill Country and West Texas.
 
@@ -41,7 +41,7 @@ Four regions. 27 offices. One Texas family. From the Gulf Coast to Central Texas
 - **Address:** 6710 Stewart Road, Suite 200, Galveston, Texas 77551
 - **Phone:** (409) 744-0727
 - **Email:** galveston@texantitle.com
-- **Hours:** Mon–Fri: 8:30 AM – 5:00 PM
+- **Hours:** Mon-Fri: 8:30 AM - 5:00 PM
 - **Team:** Melissa Carpenter (VP of Escrow Operations), Deanna Jones (Branch Manager), Melissa Wheatly (Escrow Officer), Kristin Hatmaker (Business Development)
 
 ## West Region (3 locations)

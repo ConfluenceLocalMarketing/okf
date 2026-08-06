@@ -1,6 +1,6 @@
 ---
 type: Auto Repair Shop
-title: Car-X Tire & Auto — Jennings, MO
+title: Car-X Tire & Auto - Jennings, MO
 description: "Car-X Tire & Auto location in Jennings, MO: address, hours, contact, 4.1-star rating, and full auto repair services."
 resource: https://api.promptgraph.ai/api/v1/jennings-mo/business
 tags:
@@ -14,7 +14,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Car-X Tire & Auto — Jennings, MO
+# Car-X Tire & Auto - Jennings, MO
 
 Welcome to Car-X Tire & Auto in Jennings, your go-to destination for exceptional automotive care at the corner of Lucas-Hunt Road and West Florissant Avenue. As a trusted local hub, we’re dedicated to providing dependable, friendly, and customized service designed to meet the unique needs of every customer.
 
@@ -50,7 +50,7 @@ Car-X Tire & Auto has been a family-owned, local business for over 50 years, wit
 
 Car-X Tire & Auto offers flexible financing through **Snap Finance** to make auto repairs and maintenance affordable:
 
-- Quick approvals — often in minutes
+- Quick approvals - often in minutes
 - Affordable monthly payments
 - No hidden fees
 - Options for all credit situations, including limited or less-than-perfect credit
@@ -59,4 +59,4 @@ Apply online: [Snap Finance Application](https://getsnap.snapfinance.com/lease/e
 
 ## Coupons & Specials
 
-Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-jennings-mo-okf/tables/coupons.md) for details.
+Current promotions may include oil change savings, brake pad discounts, tire deals, and seasonal packages. See [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-jennings-mo/tables/coupons.md) for details.

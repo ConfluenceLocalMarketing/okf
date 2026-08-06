@@ -18,21 +18,21 @@ Avondale Auto Repair is a family-run, locally owned auto repair shop serving Chi
 
 ## Services
 
-- **Engine Repair and Diagnostics** — Full engine service for domestic and foreign vehicles
-- **Maintenance** — Routine preventive maintenance including oil changes and tune-ups
-- **Brake Repair** — Brake inspection, pad replacement, and rotor service
-- **Oil Change** — Professional oil and filter service
-- **Suspension and Steering** — Ride quality and handling repairs
-- **Tire Service and Repair** — Tire sales, rotation, balancing, and flat repair
-- **A/C and Heating** — Climate system diagnostics and repair
-- **Electrical Services** — Battery, alternator, and electrical system repair
-- **Emissions Repair** — Emissions testing and repair
+- **Engine Repair and Diagnostics** - Full engine service for domestic and foreign vehicles
+- **Maintenance** - Routine preventive maintenance including oil changes and tune-ups
+- **Brake Repair** - Brake inspection, pad replacement, and rotor service
+- **Oil Change** - Professional oil and filter service
+- **Suspension and Steering** - Ride quality and handling repairs
+- **Tire Service and Repair** - Tire sales, rotation, balancing, and flat repair
+- **A/C and Heating** - Climate system diagnostics and repair
+- **Electrical Services** - Battery, alternator, and electrical system repair
+- **Emissions Repair** - Emissions testing and repair
 
 ## Certifications
 
 - **ASE Certified Technicians**
 - **AAA Approved Auto Repair**
-- **NAPA AutoCare Center** — 24-month / 24,000-mile nationwide warranty
+- **NAPA AutoCare Center** - 24-month / 24,000-mile nationwide warranty
 - **CARFAX Top-Rated Service Center**
 
 ## Vehicles Serviced
@@ -48,4 +48,4 @@ Domestic and foreign vehicles including Chevy, Ford, Toyota, Honda, Nissan, Lexu
 
 - **Address:** 3425 N Pulaski Rd., Chicago, IL 60641
 - **Phone:** (773) 267-5440
-- **Hours:** Mon–Fri 8:00 am – 6:00 pm, Sat 9:00 am – 4:00 pm
+- **Hours:** Mon-Fri 8:00 am - 6:00 pm, Sat 9:00 am - 4:00 pm

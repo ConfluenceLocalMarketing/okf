@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Sutherlands Home Improvement — AI Prompts
+title: Sutherlands Home Improvement - AI Prompts
 description: Curated AI prompts for customer assistance and internal use at Sutherlands. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Sutherlands Home Improvement — AI Prompts
+# Sutherlands Home Improvement - AI Prompts
 
 ## Customer Assistance
 

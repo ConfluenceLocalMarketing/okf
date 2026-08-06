@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Amerion College Huntington — AI Prompts
+title: Amerion College Huntington - AI Prompts
 description: Curated AI prompts for student inquiries and internal use at Amerion College Huntington. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Amerion College Huntington — AI Prompts
+# Amerion College Huntington - AI Prompts
 
 ## Student Inquiries
 

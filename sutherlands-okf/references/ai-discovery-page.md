@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Sutherlands Home Improvement
+title: AI Discovery Page - Sutherlands Home Improvement
 description: Overview of AI visibility for Sutherlands. (synthesized)
 tags:
   - ai-discovery
@@ -9,7 +9,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Sutherlands Home Improvement
+# AI Discovery Page - Sutherlands Home Improvement
 
 ## Overview
 Sutherlands has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.

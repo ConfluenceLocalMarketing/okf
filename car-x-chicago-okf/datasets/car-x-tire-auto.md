@@ -21,12 +21,12 @@ Car-X Tire & Auto is a locally owned and operated auto repair franchise serving 
 
 ## Services
 
-- **Brake inspection & replacement** — Pad, rotor, caliper, and full brake system service
-- **Tire inspection & new tires** — Sales, mounting, balancing, and alignment
-- **Exhaust repair & replacement** — Mufflers, catalytic converters, and full exhaust systems
-- **Oil change & filter replacement** — Conventional and synthetic oil changes
-- **Auto safety inspection & maintenance** — State safety and emissions testing
-- **Routine vehicle maintenance** — Belts, hoses, wipers, fluids, batteries, and more
+- **Brake inspection & replacement** - Pad, rotor, caliper, and full brake system service
+- **Tire inspection & new tires** - Sales, mounting, balancing, and alignment
+- **Exhaust repair & replacement** - Mufflers, catalytic converters, and full exhaust systems
+- **Oil change & filter replacement** - Conventional and synthetic oil changes
+- **Auto safety inspection & maintenance** - State safety and emissions testing
+- **Routine vehicle maintenance** - Belts, hoses, wipers, fluids, batteries, and more
 
 ## Amenities
 
@@ -42,16 +42,16 @@ Hours vary by location. Typical operating hours:
 
 | Day | Hours |
 |-----|-------|
-| Mon–Fri | 7:30 AM – 7:00 PM |
-| Saturday | 7:30 AM – 6:00 PM |
+| Mon-Fri | 7:30 AM - 7:00 PM |
+| Saturday | 7:30 AM - 6:00 PM |
 | Sunday | Varies by location |
 
 ## The Car-X Guarantee
 
-Every repair and service is backed by the Car-X Guarantee. See [car-x-guarantee.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-chicago-okf/references/car-x-guarantee.md) for details.
+Every repair and service is backed by the Car-X Guarantee. See [car-x-guarantee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-chicago/references/car-x-guarantee.md) for details.
 
 ## Parent
 
 Car-X Tire & Auto (145+ locations across the US).
 
-See [chicago-locations.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-chicago-okf/datasets/chicago-locations.md) for individual Chicago-area location details.
+See [chicago-locations.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-chicago/datasets/chicago-locations.md) for individual Chicago-area location details.

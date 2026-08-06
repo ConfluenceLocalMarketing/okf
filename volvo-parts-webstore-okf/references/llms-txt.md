@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Volvo Parts Webstore — llms.txt
+title: Volvo Parts Webstore - llms.txt
 description: AI context file for Volvo Parts Webstore online parts retailer. (synthesized)
 tags:
   - llms-txt

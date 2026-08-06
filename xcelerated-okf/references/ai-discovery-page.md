@@ -1,6 +1,6 @@
 ---
 type: Reference
-title: AI Discovery Page — Xcelerated Data
+title: AI Discovery Page - Xcelerated Data
 description: Overview of AI visibility and discovery for Xcelerated Data. (synthesized)
 tags:
   - ai-discovery
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# AI Discovery Page — Xcelerated Data
+# AI Discovery Page - Xcelerated Data
 
 ## Overview
 Xcelerated Data has no AI-specific discovery files (llms.txt, prompts.txt) at its domain. An llms.txt and prompts.txt have been synthesized.

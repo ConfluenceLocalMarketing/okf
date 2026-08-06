@@ -63,14 +63,14 @@ All dealerships follow the same sales hours:
 
 | Category | Honda | Ford | Kia | Mazda | Chrysler/Jeep/Dodge/RAM |
 |---|---|---|---|---|---|
-| **Sedans** | Civic, Accord | — | K4, K5 | Mazda3 | Chrysler 300, Dodge Charger |
+| **Sedans** | Civic, Accord | - | K4, K5 | Mazda3 | Chrysler 300, Dodge Charger |
 | **Compact SUV** | CR-V, HR-V | Bronco Sport, Escape | Sportage, Seltos | CX-30, CX-5, CX-50 | Jeep Cherokee, Compass, Hornet |
 | **Mid-size SUV** | Passport, Pilot | Edge, Explorer | Sorento | CX-70, CX-90 | Dodge Durango, Jeep Grand Cherokee |
-| **Full-size SUV** | — | Expedition, Expedition Max | Telluride | — | Jeep Wagoneer, Grand Wagoneer |
-| **Off-road SUV** | — | Bronco | — | — | Jeep Wrangler, Gladiator |
-| **Pickup Trucks** | Ridgeline | F-150, Maverick, Super Duty | — | — | RAM 1500, 2500, 3500 |
-| **Minivans/Vans** | Odyssey | Transit, Transit Connect | Carnival | — | Chrysler Pacifica, Voyager, RAM ProMaster |
-| **Sports Cars** | — | Mustang | — | MX-5 Miata | Dodge Charger (high-performance) |
+| **Full-size SUV** | - | Expedition, Expedition Max | Telluride | - | Jeep Wagoneer, Grand Wagoneer |
+| **Off-road SUV** | - | Bronco | - | - | Jeep Wrangler, Gladiator |
+| **Pickup Trucks** | Ridgeline | F-150, Maverick, Super Duty | - | - | RAM 1500, 2500, 3500 |
+| **Minivans/Vans** | Odyssey | Transit, Transit Connect | Carnival | - | Chrysler Pacifica, Voyager, RAM ProMaster |
+| **Sports Cars** | - | Mustang | - | MX-5 Miata | Dodge Charger (high-performance) |
 | **Electric** | Prologue | Mustang Mach-E, E-Transit | EV6, EV9, Niro EV | MX-30 | Jeep Wagoneer S, RAM ProMaster EV |
 | **Hybrid/PHEV** | Civic Hybrid, Accord Hybrid, CR-V Hybrid | F-150 PowerBoost | Niro PHEV, Sportage PHEV, Sorento PHEV | CX-50 Hybrid, CX-70 PHEV, CX-90 PHEV | Jeep Wrangler 4xe, Grand Cherokee 4xe, Pacifica Hybrid |
 
@@ -78,10 +78,10 @@ All dealerships follow the same sales hours:
 
 All five dealerships are owned and operated by the **Haselwood Auto Group** and are part of the **West Hills Auto Plex** campus in Bremerton, WA.
 
-See [autoplex.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/autoplex.md) for the full group profile.
+See [autoplex.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/autoplex.md) for the full group profile.
 See individual dealership files for detailed profiles:
-- [west-hills-honda.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-honda.md)
-- [west-hills-chrysler-jeep-dodge-ram.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-chrysler-jeep-dodge-ram.md)
-- [west-hills-ford.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-ford.md)
-- [west-hills-kia.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-kia.md)
-- [west-hills-mazda.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-autoplex-okf/datasets/west-hills-mazda.md)
+- [west-hills-honda.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-honda.md)
+- [west-hills-chrysler-jeep-dodge-ram.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-chrysler-jeep-dodge-ram.md)
+- [west-hills-ford.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-ford.md)
+- [west-hills-kia.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-kia.md)
+- [west-hills-mazda.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-mazda.md)

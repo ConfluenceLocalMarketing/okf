@@ -44,10 +44,10 @@ timestamp: 2026-08-06
 
 ## Staff Direct Extension Pattern
 
-Sales staff direct lines follow `407-889-7600 xNNNN` or a published mobile number. See [staff.md](../datasets/staff.md) for individual staff contacts.
+Sales staff direct lines follow `407-889-7600 xNNNN` or a published mobile number. See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/staff.md) for individual staff contacts.
 
 ## Related Concepts
 
-- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
+- See [mullinax-ford-of-central-florida-in-orlando.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.
 - See [hours.md](hours.md) for operating hours.
-- See [service-center.md](../datasets/service-center.md) for service department details.
+- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/service-center.md) for service department details.

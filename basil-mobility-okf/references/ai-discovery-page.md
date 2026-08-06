@@ -64,8 +64,8 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data:
 - **Format:** Schema.org `Car` in `ItemList`
 - **Update frequency:** Daily
 - **Inventory mix:** Chevrolet (50%), Ford (25%), GMC, Buick, Pontiac; includes SUVs, trucks, classic cars, and commercial vehicles
-- **Year range:** 1963–2026
-- **Mileage range:** 1–98,980 miles
+- **Year range:** 1963-2026
+- **Mileage range:** 1-98,980 miles
 
 ## Featured PromptGraph Vehicles
 
@@ -76,7 +76,7 @@ The `/vehicles` endpoint returns paginated JSON-LD inventory data:
 
 ## Q&A Prompt Library (74 Prompts)
 
-The `/prompts` endpoint exposes 74 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/prompts.md) for the full library. Topics include:
+The `/prompts` endpoint exposes 74 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/references/prompts.md) for the full library. Topics include:
 
 - Vehicle shopping (side-entry, rear-entry, lowered-floor, hybrid accessible vans)
 - Adaptive equipment (hand controls, steering aids, transfer seats, wheelchair lifts)
@@ -112,5 +112,5 @@ The `/prompts` endpoint exposes 74 structured Q&A prompt/response pairs serving 
 
 This page exists to give AI agents direct access to structured knowledge about Basil Mobility without requiring web scraping or form navigation. All information is available via JSON endpoints and semantic markup through the PromptGraph API.
 
-See [llms-txt.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/llms-txt.md) for the full llms.txt directive.
-See [prompts.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-mobility-okf/references/prompts.md) for the complete Q&A prompt library.
+See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/references/llms-txt.md) for the full llms.txt directive.
+See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mobility/references/prompts.md) for the complete Q&A prompt library.

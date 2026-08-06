@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Volvo Parts Webstore — AI Prompts
+title: Volvo Parts Webstore - AI Prompts
 description: Curated AI prompts for customer-facing use at Volvo Parts Webstore. (synthesized)
 tags:
   - prompts
@@ -11,7 +11,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Volvo Parts Webstore — AI Prompts
+# Volvo Parts Webstore - AI Prompts
 
 ## Parts Lookup
 

@@ -47,5 +47,5 @@ The Basil Resale Sheridan service center is equipped to handle commercial vehicl
 - Oil changes and fluid services
 - Tire service for commercial-grade tires
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/dealership.md) for full business profile and hours.
-See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/basil-resale-okf/datasets/used-vehicles.md) for general pre-owned inventory.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/dealership.md) for full business profile and hours.
+See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/used-vehicles.md) for general pre-owned inventory.

@@ -36,9 +36,9 @@ Kruse Motors is a multi-brand automotive dealership located in Marshall, MN, ser
 
 | Day | Hours |
 |---|---|
-| Monday – Thursday | 8:00 AM – 7:00 PM |
-| Friday | 8:00 AM – 6:00 PM |
-| Saturday | 8:00 AM – 4:00 PM |
+| Monday - Thursday | 8:00 AM - 7:00 PM |
+| Friday | 8:00 AM - 6:00 PM |
+| Saturday | 8:00 AM - 4:00 PM |
 | Sunday | Closed |
 
 ## Brands
@@ -74,8 +74,8 @@ The dealership operates two service centers:
 - **Kruse Motors Ford Lincoln** - Ford and Lincoln service
 - **Kruse Motors Buick GMC** - Buick and GMC service
 
-See [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/service-center.md) for full service department details.
-See [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/new-vehicles.md) for new vehicle brands and models.
-See [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/used-vehicles.md) for pre-owned inventory details.
-See [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/datasets/financing.md) for financing and lease options.
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/kruse-motors-okf/references/ai-discovery-page.md) for machine-readable structured data.
+See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/service-center.md) for full service department details.
+See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/new-vehicles.md) for new vehicle brands and models.
+See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/used-vehicles.md) for pre-owned inventory details.
+See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/financing.md) for financing and lease options.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/references/ai-discovery-page.md) for machine-readable structured data.

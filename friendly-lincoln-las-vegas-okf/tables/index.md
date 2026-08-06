@@ -1,3 +1,3 @@
 # Tables
 
-- [model-comparison.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-lincoln-las-vegas-okf/tables/model-comparison.md) - Comparison table of Lincoln model specifications.
+- [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln-las-vegas/tables/model-comparison.md) - Comparison table of Lincoln model specifications.

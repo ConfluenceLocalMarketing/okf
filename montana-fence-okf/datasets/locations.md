@@ -36,4 +36,4 @@ timestamp: 2026-07-03
 
 ## Service Area
 
-Montana Fence provides services across Montana with physical locations in the four largest population centers. Hours may vary by location — customers are advised to call ahead to confirm Saturday availability and seasonal hours.
+Montana Fence provides services across Montana with physical locations in the four largest population centers. Hours may vary by location - customers are advised to call ahead to confirm Saturday availability and seasonal hours.

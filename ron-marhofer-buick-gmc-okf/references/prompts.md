@@ -57,5 +57,5 @@ The PromptGraph API at `https://api.promptgraph.ai/api/v1/ron-marhofer-buick-gmc
 | 9 | `do-people-like-working-with-ron-marhofer-buick-gmc` | Employee experience |
 | 10 | `whats-it-actually-like-dealing-with-ron-marhofer-buick-gmc` | Customer experience |
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/references/ai-discovery-page.md) for the complete API endpoint documentation.
-See [faq.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ron-marhofer-buick-gmc-okf/datasets/faq.md) for common questions and answers.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-buick-gmc/references/ai-discovery-page.md) for the complete API endpoint documentation.
+See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ron-marhofer-buick-gmc/datasets/faq.md) for common questions and answers.

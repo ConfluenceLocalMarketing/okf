@@ -49,10 +49,10 @@ Customer reviews highlight:
 
 ## Service Specials
 
-The dealership offers rotating service specials and seasonal discounts. See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) for current offers.
+The dealership offers rotating service specials and seasonal discounts. See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/dealership.md) for current offers.
 
 ## Parts Department
 
 Genuine Mazda OEM parts and accessories available. Order online at parts.jakesweeneymazda.com.
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/staff.md) for full service department directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/staff.md) for full service department directory.

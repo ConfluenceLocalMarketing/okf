@@ -39,8 +39,8 @@ timestamp: 2026-07-02
 | MSRP Tier | Range |
 |---|---|
 | $ | Under $30,000 |
-| $$ | $30,000 – $50,000 |
-| $$$ | $50,000 – $70,000 |
+| $$ | $30,000 - $50,000 |
+| $$$ | $50,000 - $70,000 |
 | $$$$ | Over $70,000 |
 
 ## Notes
@@ -51,5 +51,5 @@ timestamp: 2026-07-02
 
 ## Related Concepts
 
-- [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/new-vehicles.md) - New Ford model details
-- [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/nick-mayer-ford-west-okf/datasets/dealership.md) - Dealership overview
+- [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/new-vehicles.md) - New Ford model details
+- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/dealership.md) - Dealership overview

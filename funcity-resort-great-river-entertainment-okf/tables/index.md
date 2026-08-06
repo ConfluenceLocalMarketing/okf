@@ -1,3 +1,3 @@
 # Tables
 
-- [amenities.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/funcity-resort-great-river-entertainment-okf/tables/amenities.md) - Full amenities matrix across all resort facilities.
+- [amenities.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/funcity-resort-great-river-entertainment/tables/amenities.md) - Full amenities matrix across all resort facilities.

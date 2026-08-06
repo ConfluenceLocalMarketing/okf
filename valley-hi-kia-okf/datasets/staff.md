@@ -14,25 +14,25 @@ timestamp: 2026-07-03
 
 ## Sales Team
 
-- **Carlos Mendez** — General Manager
-- **Amanda Foster** — Sales Manager
-- **Ryan Kim** — Sales Consultant
-- **Stephanie Walker** — Sales Consultant
-- **Jose Hernandez** — Internet Sales Manager
+- **Carlos Mendez** - General Manager
+- **Amanda Foster** - Sales Manager
+- **Ryan Kim** - Sales Consultant
+- **Stephanie Walker** - Sales Consultant
+- **Jose Hernandez** - Internet Sales Manager
 
 ## Service Team
 
-- **Mike Torres** — Service Manager
-- **Diana Reyes** — Service Advisor
-- **Eric Larson** — Senior Technician
+- **Mike Torres** - Service Manager
+- **Diana Reyes** - Service Advisor
+- **Eric Larson** - Senior Technician
 
 ## Finance
 
-- **Nicole Chen** — Finance Manager
-- **Tyler Brooks** — Finance Specialist
+- **Nicole Chen** - Finance Manager
+- **Tyler Brooks** - Finance Specialist
 
 ## Parts
 
-- **Frank Delgado** — Parts Manager
+- **Frank Delgado** - Parts Manager
 
-See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/valley-hi-kia-okf/datasets/company.md) for the full dealership profile.
+See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/valley-hi-kia/datasets/company.md) for the full dealership profile.

@@ -37,12 +37,12 @@ Friendly Ford Las Vegas is a full-service Ford dealership located at 660 N Decat
 
 | Day | Sales | Service |
 |---|---|---|
-| Monday | 8:00 am – 9:00 pm | 7:00 am – 6:00 pm |
-| Tuesday | 8:00 am – 9:00 pm | 7:00 am – 6:00 pm |
-| Wednesday | 8:00 am – 9:00 pm | 7:00 am – 6:00 pm |
-| Thursday | 8:00 am – 9:00 pm | 7:00 am – 6:00 pm |
-| Friday | 8:00 am – 9:00 pm | 7:00 am – 6:00 pm |
-| Saturday | 8:00 am – 9:00 pm | 8:00 am – 5:00 pm |
+| Monday | 8:00 am - 9:00 pm | 7:00 am - 6:00 pm |
+| Tuesday | 8:00 am - 9:00 pm | 7:00 am - 6:00 pm |
+| Wednesday | 8:00 am - 9:00 pm | 7:00 am - 6:00 pm |
+| Thursday | 8:00 am - 9:00 pm | 7:00 am - 6:00 pm |
+| Friday | 8:00 am - 9:00 pm | 7:00 am - 6:00 pm |
+| Saturday | 8:00 am - 9:00 pm | 8:00 am - 5:00 pm |
 | Sunday | Closed | Closed |
 
 ## Inventory Volume
@@ -81,4 +81,4 @@ Bronco, Bronco Sport, E-Transit-350, Expedition, Expedition MAX, Explorer, F-150
 - Twitter: https://twitter.com/friendlyfordvega
 - YouTube: https://www.youtube.com/@FriendlyFordVegas
 
-See [hours.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/tables/hours.md) for operating hours, [contact.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/tables/contact.md) for phone numbers and addresses, [new-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/new-vehicles.md) for current new inventory, [used-vehicles.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/used-vehicles.md) for pre-owned inventory, [service-center.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/service-center.md) for service details, [financing.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/financing.md) for finance options, and [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/friendly-ford-las-vegas-okf/datasets/staff.md) for the team directory.
+See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/tables/hours.md) for operating hours, [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/tables/contact.md) for phone numbers and addresses, [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/new-vehicles.md) for current new inventory, [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/used-vehicles.md) for pre-owned inventory, [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/service-center.md) for service details, [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/financing.md) for finance options, and [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford-las-vegas/datasets/staff.md) for the team directory.

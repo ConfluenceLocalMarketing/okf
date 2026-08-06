@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Full Circle Strategic Marketing — llms.txt
+title: Full Circle Strategic Marketing - llms.txt
 description: AI context file for Full Circle Strategic Marketing. (synthesized)
 tags:
   - llms-txt

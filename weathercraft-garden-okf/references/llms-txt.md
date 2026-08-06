@@ -1,6 +1,6 @@
 ---
 type: llms.txt
-title: Weathercraft Garden — llms.txt
+title: Weathercraft Garden - llms.txt
 description: AI context file for Weathercraft Garden roofing contractor in Garden City, KS. (synthesized)
 tags:
   - llms-txt
@@ -21,7 +21,7 @@ timestamp: 2026-07-03
 - **Location**: 807 E Fulton St #1/2, Garden City, KS 67846
 - **Phone**: (620) 275-4070 | (800) 662-2981
 - **Email**: sales@roofwcohd.com
-- **Hours**: Mon–Fri 8:00 AM – 5:00 PM
+- **Hours**: Mon-Fri 8:00 AM - 5:00 PM
 - **Brand**: Weathercraft Companies network
 
 ## Services

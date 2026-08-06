@@ -24,4 +24,4 @@ timestamp: 2026-07-03
 | Diagnostic Scanning | Electronic system diagnostics, check engine light | Computerized scanning |
 | Heating & Cooling | A/C recharge, heater repair, cooling system service | Seasonal specials |
 
-See [car-x-tire-auto.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/car-x-chicago-okf/datasets/car-x-tire-auto.md) for detailed service descriptions.
+See [car-x-tire-auto.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-chicago/datasets/car-x-tire-auto.md) for detailed service descriptions.

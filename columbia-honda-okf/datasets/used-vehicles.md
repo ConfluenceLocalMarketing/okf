@@ -32,4 +32,4 @@ Get a value assessment for your current vehicle.
 
 ---
 
-For complete dealership information, see [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/columbia-honda-okf/datasets/company.md).
+For complete dealership information, see [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/columbia-honda/datasets/company.md).

@@ -78,14 +78,14 @@ GMC models available include:
 
 ## Staff
 
-See [staff.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-gmc-okf/datasets/staff.md) for full directory.
+See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/datasets/staff.md) for full directory.
 
 ## Reviews & Reputation
 
 - PromptGraph AI platform data available
 - Google Business Profile connected via OAuth
 
-See [testimonials.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/haselwood-gmc-okf/references/testimonials.md) for detailed customer reviews.
+See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/references/testimonials.md) for detailed customer reviews.
 
 ## Special Programs
 

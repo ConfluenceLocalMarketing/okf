@@ -1,6 +1,6 @@
 ---
 type: Hours Table
-title: Ray Laethem Buick GMC — Operating Hours
+title: Ray Laethem Buick GMC - Operating Hours
 description: Operating hours for sales and service departments at Ray Laethem Buick GMC.
 resource: https://www.laethemgm.com/
 tags:
@@ -16,17 +16,17 @@ timestamp: 2026-07-03
 
 | Day | Sales | Service |
 |---|---|---|
-| Monday | 9am–7pm | 7am–6pm |
-| Tuesday | 9am–7pm | 7am–6pm |
-| Wednesday | 9am–7pm | 7am–6pm |
-| Thursday | 9am–7pm | 7am–6pm |
-| Friday | 9am–7pm | 7am–6pm |
-| Saturday | 9am–7pm | 8am–4pm |
+| Monday | 9am-7pm | 7am-6pm |
+| Tuesday | 9am-7pm | 7am-6pm |
+| Wednesday | 9am-7pm | 7am-6pm |
+| Thursday | 9am-7pm | 7am-6pm |
+| Friday | 9am-7pm | 7am-6pm |
+| Saturday | 9am-7pm | 8am-4pm |
 | Sunday | Closed | Closed |
 
 *Sales hours may vary by location.*
 
 ## Citations
 
-- See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/datasets/dealership.md) for full dealership profile
-- See [contact.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/ray-laethem-buick-gmc-okf/tables/contact.md) for department contact information
+- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/datasets/dealership.md) for full dealership profile
+- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/ray-laethem-buick-gmc/tables/contact.md) for department contact information

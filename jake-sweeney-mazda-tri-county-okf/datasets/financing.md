@@ -43,4 +43,4 @@ KBB Instant Cash Offer and in-person appraisal.
 
 Through sales line at (513) 782-1150.
 
-See [dealership.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/jake-sweeney-mazda-tri-county-okf/datasets/dealership.md) for full profile.
+See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/dealership.md) for full profile.

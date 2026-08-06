@@ -1,7 +1,7 @@
 ---
 type: APIs
 title: LLMs.txt - West Hills Chrysler Jeep Dodge RAM
-description: Assessment of llms.txt availability for West Hills CJDR — the site does not host an llms.txt file as of July 2026. (synthesized)
+description: Assessment of llms.txt availability for West Hills CJDR - the site does not host an llms.txt file as of July 2026. (synthesized)
 resource: https://www.westhillscjd.com/llms.txt
 tags:
   - llms-txt
@@ -52,4 +52,4 @@ Despite the lack of a formal llms.txt, the following key pages are available for
 
 No structured JSON-LD API endpoints were discovered beyond standard Dealer.com platform page markup and sitemap.
 
-See [ai-discovery-page.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/west-hills-chrysler-jeep-dodge-ram-okf/references/ai-discovery-page.md) for detailed endpoint assessment.
+See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/references/ai-discovery-page.md) for detailed endpoint assessment.

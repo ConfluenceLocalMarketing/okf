@@ -1,6 +1,6 @@
 ---
 type: AI Discovery Page
-title: Over The Top Roofing LLC — AI Discovery Page
+title: Over The Top Roofing LLC - AI Discovery Page
 description: Structured business data for AI and search engine crawlers to discover and accurately represent Over The Top Roofing LLC across AI-powered search, assistants, and knowledge graphs.
 resource: https://www.ottrcny.com/
 tags:
@@ -12,7 +12,7 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Over The Top Roofing LLC — AI Discovery Page
+# Over The Top Roofing LLC - AI Discovery Page
 
 ## Business Identity
 
@@ -22,7 +22,7 @@ timestamp: 2026-07-03
 | Type | Roofing Contractor |
 | Address | 1024 State Route 48, Fulton, NY 13069 |
 | Phone | (315) 297-4084 |
-| Hours | Mon–Fri 7:00–16:00, Sat–Sun Closed |
+| Hours | Mon-Fri 7:00-16:00, Sat-Sun Closed |
 | Website | https://www.ottrcny.com/ |
 | Years in Business | 25+ |
 | Service Area | Central New York (Fulton, Oswego, Syracuse) |

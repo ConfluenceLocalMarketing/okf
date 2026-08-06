@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Autobarn Volvo Oak Park — Frequently Asked Questions
+title: Autobarn Volvo Oak Park - Frequently Asked Questions
 description: Common questions about Volvo sales, service, financing, and the customer experience at Autobarn Volvo Cars of Oak Park.
 tags:
   - faq
@@ -12,12 +12,12 @@ tags:
 timestamp: 2026-07-03
 ---
 
-# Autobarn Volvo Cars of Oak Park — FAQ
+# Autobarn Volvo Cars of Oak Park - FAQ
 
 ## General
 
 ### What type of dealership is Autobarn Volvo Cars of Oak Park?
-It is a full-service Volvo dealership located at 1140 Garfield Street, Oak Park, IL, serving Chicagoland with new and certified pre-owned Volvo vehicles, factory-trained service, and genuine Volvo parts. See [company.md](https://github.com/ConfluenceLocalMarketing/okf/blob/main/the-autobarn-volvo-cars-of-oak-park-okf/datasets/company.md) for the full profile.
+It is a full-service Volvo dealership located at 1140 Garfield Street, Oak Park, IL, serving Chicagoland with new and certified pre-owned Volvo vehicles, factory-trained service, and genuine Volvo parts. See [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-autobarn-volvo-cars-of-oak-park/datasets/company.md) for the full profile.
 
 ### What area does the dealership serve?
 Oak Park and the greater Chicagoland area.
@@ -39,7 +39,7 @@ Yes. The dealership offers Volvo Certified Pre-Owned vehicles with factory-backe
 ## Service
 
 ### What services does the service center provide?
-Routine maintenance (oil changes, tire rotations), major repairs, body work, and diagnostics — all performed by factory-trained Volvo technicians using genuine Volvo parts.
+Routine maintenance (oil changes, tire rotations), major repairs, body work, and diagnostics - all performed by factory-trained Volvo technicians using genuine Volvo parts.
 
 ### Are the technicians Volvo-certified?
 Yes, all technicians are factory-trained and specialize in Volvo vehicles.

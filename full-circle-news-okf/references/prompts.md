@@ -1,6 +1,6 @@
 ---
 type: Playbook
-title: Full Circle News — AI Prompts
+title: Full Circle News - AI Prompts
 description: Curated AI prompts for publisher consultations and internal use at Full Circle News. (synthesized)
 tags:
   - prompts
@@ -10,7 +10,7 @@ tags:
 timestamp: 2026-07-02
 ---
 
-# Full Circle News — AI Prompts
+# Full Circle News - AI Prompts
 
 ## Publisher Consultation
 
