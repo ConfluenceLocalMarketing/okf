@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>mullinax-ford-of-new-smyrna-beach - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "mullinax-ford-of-new-smyrna-beach";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Mullinax Ford of New Smyrna Beach",
+        "type": "Entities",
+        "description": "Common questions and answers about dealership operations, no-dealer-fee Up Front Pricing, hours, service, financing, and the Quick Lane at Mullinax Ford of New Smyrna Beach.",
+        "resource": "https://www.mullinaxfordnsb.com/is-mullinax-ford-new-smyrna-beach-open-right-now.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing & Auto Loans - Mullinax Ford of New Smyrna Beach",
+        "type": "Entities",
+        "description": "Vehicle financing options at Mullinax Ford of New Smyrna Beach including online credit application, leasing, trade-in valuation, payment calculator, and IRS Section 179 work-vehicle deduction guidance.",
+        "resource": "https://www.mullinaxfordnsb.com/finance/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "label": "Mullinax Ford of New Smyrna Beach",
+        "type": "Entities",
+        "description": "Ford dealership in New Smyrna Beach, FL serving Volusia County and the surrounding Central Florida coast with new and used vehicle sales, Up Front Pricing, financing, service, and Quick Lane at 2317 S.R. 44.",
+        "resource": "https://www.mullinaxfordnsb.com",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 45
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Ford Vehicles - Mullinax Ford of New Smyrna Beach",
+        "type": "Entities",
+        "description": "New Ford vehicle inventory at Mullinax Ford of New Smyrna Beach covering trucks, SUVs, crossovers, cars, and EVs including F-150, Super Duty, Bronco, Explorer, Mustang, and Transit with no-dealer-fee Up Front Pricing.",
+        "resource": "https://www.mullinaxfordnsb.com/new-vehicles/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center & Quick Lane - Mullinax Ford of New Smyrna Beach",
+        "type": "Entities",
+        "description": "Ford service center in New Smyrna Beach, FL offering factory-trained maintenance and repair with OEM parts, mobile service, pickup & delivery, and a Quick Lane for all makes and models.",
+        "resource": "https://www.mullinaxfordnsb.com/service/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Sales and Service Staff - Mullinax Ford of New Smyrna Beach",
+        "type": "Entities",
+        "description": "Staff directory for Mullinax Ford of New Smyrna Beach covering sales management, sales consultants, service and parts, Quick Lane, and finance departments as published on the dealership website.",
+        "resource": "https://www.mullinaxfordnsb.com/about-us/staff/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Mullinax Ford of New Smyrna Beach",
+        "type": "Entities",
+        "description": "Pre-owned vehicle inventory at Mullinax Ford of New Smyrna Beach including Ford Blue Advantage certified vehicles, budget price categories, cash purchase, and trade-in valuation.",
+        "resource": "https://www.mullinaxfordnsb.com/used-vehicles/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Hub - Mullinax Ford of New Smyrna Beach",
+        "type": "APIs",
+        "description": "Machine-readable AI discovery endpoints for Mullinax Ford of New Smyrna Beach including a PromptGraph sitemap, business profile, prompt library, and AI manifest for LLM consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-new-smyrna-beach/sitemap.xml",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt - Mullinax Ford of New Smyrna Beach",
+        "type": "APIs",
+        "description": "AI consumption directive for Mullinax Ford of New Smyrna Beach providing structured API endpoints, schema types, and business context to LLM crawlers and AI agents.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-new-smyrna-beach/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompt Library - Mullinax Ford of New Smyrna Beach",
+        "type": "APIs",
+        "description": "20 canonical question-and-answer prompts published via PromptGraph that define how AI assistants should answer common questions about Mullinax Ford of New Smyrna Beach.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-new-smyrna-beach/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Testimonials & Reviews - Mullinax Ford of New Smyrna Beach",
+        "type": "APIs",
+        "description": "Customer review profile for Mullinax Ford of New Smyrna Beach including a 4.7 out of 5 Google rating across 5,841 reviews and the dealership's Testimonials API feed.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-new-smyrna-beach/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Contact Information - Mullinax Ford of New Smyrna Beach",
+        "type": "Tables and Datasets",
+        "description": "Contact table for Mullinax Ford of New Smyrna Beach covering department phone numbers, address, coordinates, and social media channels.",
+        "resource": "https://www.mullinaxfordnsb.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Operating Hours - Mullinax Ford of New Smyrna Beach",
+        "type": "Tables and Datasets",
+        "description": "Operating hours table for all Mullinax Ford of New Smyrna Beach departments including sales, service, parts, and Quick Lane.",
+        "resource": "https://www.mullinaxfordnsb.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Ford Model Comparison - Mullinax Ford of New Smyrna Beach",
+        "type": "Tables and Datasets",
+        "description": "Comparison table of Ford models available at Mullinax Ford of New Smyrna Beach organized by segment, seating, and key features.",
+        "resource": "https://www.mullinaxfordnsb.com/model-showroom/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__tables/hours",
+        "source": "datasets/faq",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "datasets/faq",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/staff",
+        "source": "datasets/financing",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "datasets/financing",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/faq",
+        "source": "datasets/financing",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach__tables/hours",
+        "source": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach__datasets/new-vehicles",
+        "source": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach__datasets/used-vehicles",
+        "source": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach__datasets/financing",
+        "source": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach__datasets/service-center",
+        "source": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach__datasets/staff",
+        "source": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach__datasets/faq",
+        "source": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach__references/ai-discovery-page",
+        "source": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-new-smyrna-beach__tables/contact",
+        "source": "datasets/mullinax-ford-of-new-smyrna-beach",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/used-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__tables/model-comparison",
+        "source": "datasets/new-vehicles",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "datasets/service-center",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/faq",
+        "source": "datasets/service-center",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/hours",
+        "source": "datasets/service-center",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/contact",
+        "source": "datasets/service-center",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__tables/contact",
+        "source": "datasets/staff",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "datasets/staff",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "references/ai-discovery-page",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "references/llms-txt",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/llms-txt",
+        "source": "references/prompts",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "references/prompts",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/ai-discovery-page",
+        "source": "references/testimonials",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "references/testimonials",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__datasets/staff",
+        "source": "tables/contact",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "tables/contact",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__tables/hours",
+        "source": "tables/contact",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "tables/hours",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__datasets/service-center",
+        "source": "tables/hours",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__tables/contact",
+        "source": "tables/hours",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/new-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/mullinax-ford-of-new-smyrna-beach",
+        "source": "tables/model-comparison",
+        "target": "datasets/mullinax-ford-of-new-smyrna-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__references/prompts",
+        "source": "tables/model-comparison",
+        "target": "references/prompts"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/faq": "# Frequently Asked Questions - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nAnswers to common customer questions published on the dealership website and derived from dealership pages, covering pricing, location, hours, service, and general dealership topics.\n\n## Pricing Questions\n\n- **Q: Do you charge dealer fees?**\n  A: No. Mullinax Ford of New Smyrna Beach is a no-dealer-fee dealership. The dealership's no-fee policy covers no doc fee, no dealer fee, and no haggle. Customers pay the Up Front Price plus only tax and title.\n\n- **Q: What is Up Front Pricing?**\n  A: Every vehicle is marked with a transparent Up Front Price on the windshield and online. The price includes Mullinax Discounts, Factory Rebates, and Ford Credit Financing Rebates, and may include Trade Assist, Business Owner Rebate, or Owner Loyalty Rebate when available. Additional rebates (College, Military, Private) may apply.\n\n- **Q: How much do competing dealerships charge in dealer fees?**\n  A: The dealership publishes comparison data showing dealer fees at competing Central Florida dealerships ranging from about $399 to $3,992 per vehicle, illustrating savings at a no-fee store.\n\n## Location & Hours Questions\n\n- **Q: Where is the dealership located?**\n  A: 2317 S.R. 44, New Smyrna Beach, FL 32168, just a short drive from Sanford, Deltona, Daytona Beach, Port Orange, and Palm Coast.\n\n- **Q: What are the dealership's hours?**\n  A: Sales: Mon-Sat 9:00a-7:00p, Sun Closed; Service: Mon-Fri 7:00a-6:00p, Sat 8:00a-4:00p; Quick Lane: Mon-Fri 7:00a-6:00p, Sat 7:00a-5:00p; Parts: Mon-Fri 7:00a-6:00p, Sat 8:00a-4:00p. See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/hours.md) for all departments.\n\n- **Q: How do I get directions to the dealership?**\n  A: Google Maps directions: https://www.google.com/maps/place/?q=place_id:ChIJ49kYYxkp54gRQcanX7dcwtI\n\n## Service Questions\n\n- **Q: Do you service all makes and models?**\n  A: The Quick Lane provides express maintenance for all makes and models with 8 service bays. The main service center focuses on Ford vehicles with factory-trained technicians.\n\n- **Q: Do you offer mobile service or pickup and delivery?**\n  A: Yes. Mobile service brings Ford-trained technicians to a customer's location, and pickup & delivery service is available for the service center.\n\n- **Q: Can I schedule service online?**\n  A: Yes, at https://www.mullinaxfordnsb.com/service-appointment/. Service specials are at https://www.mullinaxfordnsb.com/service-specials/.\n\n## Financing Questions\n\n- **Q: How can I get pre-approved for financing?**\n  A: Submit an online credit application through the finance center at https://www.mullinaxfordnsb.com/finance/apply-for-financing/ or work with a finance manager in-store.\n\n- **Q: Can I estimate my monthly payment?**\n  A: Yes, using the payment calculator at https://www.mullinaxfordnsb.com/payment-calculator/.\n\n- **Q: Can I deduct a work vehicle purchase?**\n  A: The dealership provides IRS Section 179 deduction information at https://www.mullinaxfordnsb.com/irs-section-179-vehicles-deduction-new-smyrna-beach-fl/.\n\n## General Questions\n\n- **Q: Can I order a Ford built to my specification?**\n  A: Yes, custom orders are accepted at https://www.mullinaxfordnsb.com/custom-order-your-new-ford-new-smyrna-beach-fl/.\n\n- **Q: Can I sell my car without buying a new one?**\n  A: Yes, the dealership purchases used vehicles for cash at https://www.mullinaxfordnsb.com/sell-your-used-car-new-smyrna-beach-fl/.\n\n- **Q: Is the dealership family-owned?**\n  A: Yes. Mullinax Ford is a family-owned business that has operated since 1970.\n\n## Related Concepts\n\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/service-center.md) for service department details.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/financing.md) for credit application and financing questions.",
+    "datasets/financing": "# Financing & Auto Loans - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nThe finance department at Mullinax Ford of New Smyrna Beach arranges new and used vehicle financing and leasing. Customers can begin the credit application online and work with finance staff in-store. Finance managers are listed in [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/staff.md).\n\n## Online Credit Application\n\n- Apply online at https://www.mullinaxfordnsb.com/finance/apply-for-financing/\n- Fast pre-qualification for an auto loan.\n- Applications are submitted to lending partners for competitive rates.\n\n## Financing Programs\n\n- **New vehicle financing** - manufacturer rates and programs on new Ford vehicles.\n- **Used vehicle financing** - competitive rates on pre-owned inventory.\n- **Leasing** - Ford lease programs with flexible mileage terms.\n- **Ford Credit Financing Rebates** - included in the Up Front Price where applicable.\n- **Trade-in financing** - combine trade value with financing to reduce the financed amount.\n\n## Business & Work Vehicle Financing\n\n- **IRS Section 179 deduction**: Guidance for deducting qualifying work vehicles is published at https://www.mullinaxfordnsb.com/irs-section-179-vehicles-deduction-new-smyrna-beach-fl/.\n- Commercial and work-truck financing is handled through the Commercial department (see [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/staff.md)).\n\n## Tools\n\n- **Payment calculator**: estimate monthly payments by price, down payment, and term at https://www.mullinaxfordnsb.com/payment-calculator/.\n- **Trade-in valuation**: online appraisal at https://www.mullinaxfordnsb.com/value-your-trade/ applied toward any purchase; see [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/used-vehicles.md).\n\n## Finance Center Contacts\n\n- **Sales / Finance**: (386) 261-9164\n- **Main**: (386) 280-7185\n- **Location**: 2317 S.R. 44, New Smyrna Beach, FL 32168\n\n## Related Concepts\n\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/new-vehicles.md) and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/used-vehicles.md) for vehicle inventory.\n- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/faq.md) for financing FAQs.",
+    "datasets/mullinax-ford-of-new-smyrna-beach": "# Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nMullinax Ford of New Smyrna Beach is a full-line Ford dealership located at 2317 S.R. 44, New Smyrna Beach, FL 32168, serving New Smyrna Beach, Daytona Beach, Port Orange, Edgewater, Deltona, Sanford, and Palm Coast along the Central Florida coast. It is part of the family-owned Mullinax Ford group (family run since 1970) and is a no-dealer-fee dealership that markets Up Front Pricing on every vehicle.\n\n## Location & Contact\n\n| Item | Detail |\n|---|---|\n| Address | 2317 S.R. 44, New Smyrna Beach, FL 32168 |\n| Coordinates | 29.013537, -80.961046 |\n| Main | (386) 280-7185 |\n| Sales | (386) 261-9164 |\n| Service | (386) 230-3367 |\n| Quick Lane | (386) 202-9512 |\n| Parts | (386) 223-1753 |\n| Google Business Profile | (386) 267-4980 |\n\n## Hours\n\n- Sales: Mon-Sat 9:00a-7:00p, Sun Closed\n- Service: Mon-Fri 7:00a-6:00p, Sat 8:00a-4:00p, Sun Closed\n- Quick Lane: Mon-Fri 7:00a-6:00p, Sat 7:00a-5:00p, Sun Closed\n- Parts: Mon-Fri 7:00a-6:00p, Sat 8:00a-4:00p, Sun Closed\n\nSee [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/hours.md) for the full operating hours table.\n\n## Up Front Pricing\n\n- No dealer fees, no doc fee, and no haggling on any new or used vehicle.\n- Price you see is the price you pay, plus only tax and title.\n- The Up Front Price includes Mullinax Discounts, Factory Rebates, and Ford Credit Financing Rebates; other rebates (College, Military, Private) may apply in addition.\n- The dealership publishes comparison tables showing dealer fees of competing area dealerships ranging up to $3,992 to illustrate customer savings.\n\n## Inventory\n\n- As of the live site crawl on 2026-08-07 the dealership lists **3,534 total vehicles** (2,246 new, 1,288 used and certified used) across the Mullinax network.\n- New inventory covers the full Ford lineup including F-150, F-150 Lightning, Super Duty, Maverick, Ranger, Bronco, Bronco Sport, Explorer, Expedition, Edge, Escape, EcoSport, Mustang, Mustang Mach-E, Transit, and E-Transit.\n- Used inventory spans all makes and models with a Ford Blue Advantage certified program.\n- Network inventory is shared across Mullinax locations (New Smyrna Beach, Central Florida, Vero Beach, West Palm Beach, Kissimmee); out-of-area vehicles can be delivered within one week.\n- Work trucks and commercial fleet inventory are handled through mullinaxfordfleet.com.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/new-vehicles.md) and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/used-vehicles.md) for inventory details.\n\n## Departments\n\n- **New Vehicle Sales** - full Ford lineup; see [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/new-vehicles.md).\n- **Used Vehicle Sales** - pre-owned inventory and Ford Blue Advantage; see [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/used-vehicles.md).\n- **Commercial / Work Trucks** - fleet and work-truck solutions via mullinaxfordfleet.com and the on-site Commercial department (E-Series, Transit CC-CA, F-650/F-750, Chassis Cab).\n- **Financing** - online credit application, lease and finance options, trade-in valuation; see [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/financing.md).\n- **Service Center** - Ford-trained technicians, OEM parts, mobile service, pickup & delivery; see [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/service-center.md).\n- **Quick Lane** - express maintenance for all makes and models with 8 service bays.\n\n## Ratings & Reputation\n\n- 4.7 / 5 stars across 5,841 Google reviews (AggregateRating).\n- Google Maps place_id: `ChIJ49kYYxkp54gRQcanX7dcwtI`.\n- Review pages: https://www.mullinaxfordnsb.com/about-us/reviews and https://www.mullinaxfordnsb.com/about-us/customer-testimonials\n\n## Social Media\n\n- Facebook: https://www.facebook.com/MullinaxFordNewSmyrnaBeach\n- YouTube: https://www.youtube.com/@mullinaxford7771\n\n## Website\n\n- https://www.mullinaxfordnsb.com\n- Nav structure: New (/new-vehicles), Used (/used-vehicles), Hot Buys (/new-vehicles/new-vehicle-specials), Financing (/finance), Service & Parts (/service), Quick Lane (/quick-lane), Work Trucks (mullinaxfordfleet.com), Dealer Info (/about-us), Commercial (/commercial).\n- The site is built on the DealerInspire platform; FordDirect powers dealership support pages.\n\n## Related Concepts\n\n- See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/staff.md) for the sales, service, internet sales, Quick Lane, finance, and commercial team directory.\n- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/faq.md) for dealership FAQs.\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/ai-discovery-page.md) for machine-readable discovery endpoints.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/contact.md) for a consolidated phone directory.",
+    "datasets/new-vehicles": "# New Ford Vehicles - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nMullinax Ford of New Smyrna Beach carries a full line of new Ford vehicles, including trucks, SUVs, crossovers, cars, vans, and electric vehicles. As of the live site crawl on 2026-08-07 the new-vehicle search returns **2,246 new vehicles** across the Mullinax network, with a list price range of about $24,301 to $182,300. New inventory is priced with the dealership's Up Front Pricing and no-dealer-fee policy (Dealer Fees $0 and Electronic Filing Fees $0 on every listing). The dealership also offers custom ordering and a work-truck/commercial lineup.\n\n## Live Inventory Sample\n\nThe new-vehicle search page (sorted by price) shows the Up Front Price, MSRP, and savings per vehicle. Examples captured live on 2026-08-07:\n\n| Vehicle | Stock | MSRP | You Save | Up Front Price |\n|---|---|---|---|---|\n| New 2024 Ford Bronco Sport Big Bend (DSI LIFT & RIMS) | DE32024 | $31,390 | $2,391 | $28,999 |\n| New 2025 Ford Bronco Sport Free Wheeling 4WD | DE28093 | $36,125 | $9,147 | $26,978 |\n| New 2026 Ford Maverick XL | KA65034 | $29,289 | $2,000 | $27,289 |\n| New 2026 Ford Maverick XL | KA94037 | $29,140 | $1,640 | $27,500 |\n| New 2026 Ford Maverick XL | KA62126 | $29,182 | $1,500 | $27,682 |\n\nIndividual vehicle pages live under `/inventory/new-<year>-<make>-<model>-<...>-<vin>/` and publish MSRP, savings, Dealer Fees ($0), Electronic Filing Fees ($0), and the Up Front Price.\n\n## New Vehicle Lineup\n\n- **Trucks**: F-150, F-150 Raptor, F-150 Lightning (EV), Super Duty (F-250/F-350), Maverick, Ranger\n- **SUVs / Crossovers**: Bronco, Bronco Sport, Explorer, Expedition, Expedition MAX, Edge, Escape, EcoSport\n- **Vans & Commercial**: Transit, Transit Connect, E-Transit (EV), E-Series Cutaway, E-Series Stripped Chassis, Transit CC-CA, Chassis Cab, F-650/F-750\n- **Performance / Cars**: Mustang, Mustang Mach-E (EV)\n- **Hybrids / EVs**: Escape Hybrid, Escape Plug-In Hybrid, Explorer Hybrid, F-150 Lightning, Mustang Mach-E, E-Transit\n\n## Buying Options\n\n- **In-stock inventory**: Filter by model, trim, color, and options at https://www.mullinaxfordnsb.com/new-vehicles/\n- **Custom ordering**: Order a vehicle built to specification at https://www.mullinaxfordnsb.com/custom-order-your-new-ford-new-smyrna-beach-fl/\n- **Model showroom**: Browse models at https://www.mullinaxfordnsb.com/model-showroom/\n- **Value your trade**: Online trade appraisal at https://www.mullinaxfordnsb.com/value-your-trade/\n- **Specials & incentives**: Current manufacturer and dealer offers at https://www.mullinaxfordnsb.com/new-vehicles/new-vehicle-specials/ and the Ford tier-3 offers page (dealer PACode 09699, postal code 32168).\n\n## Features of Shopping with Mullinax\n\n- No dealer fees - price plus tax and title only.\n- Up Front Pricing shown on the windshield and online.\n- Trade-in valuation applied toward a new purchase.\n- Financing and leasing through the finance center; see [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/financing.md).\n\n## Related Concepts\n\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/used-vehicles.md) for pre-owned inventory.\n- See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/model-comparison.md) for a model-by-model comparison table.",
+    "datasets/service-center": "# Service Center & Quick Lane - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nThe Mullinax Ford of New Smyrna Beach service department performs factory-trained maintenance and repair using Ford genuine parts. A Quick Lane provides express maintenance for all makes and models.\n\n## Service Department\n\n- **Hours**: Mon-Fri 7:00a-6:00p, Sat 8:00a-4:00p, Sun Closed\n- **Phone**: (386) 230-3367\n- **Address**: 2317 S.R. 44, New Smyrna Beach, FL 32168\n- Ford-trained technicians\n- Ford genuine / OEM parts and accessories\n- Mobile service and pickup & delivery options\n\n## Services Offered\n\n- Oil changes and filter service\n- Brake service and repair\n- Tire rotation, alignment, and replacement\n- Battery testing and replacement\n- Air conditioning service and repair\n- Engine and transmission diagnostics and repair\n- Scheduled maintenance per the Ford Owner's Scheduled Maintenance Guide\n- Recall and software update service\n- Service specials and coupons\n\n## Convenience Options\n\n- **Mobile Service**: Ford-trained technicians come to the customer's home or workplace (https://www.mullinaxfordnsb.com/mobileservice/).\n- **Pickup & Delivery**: Vehicle picked up and returned for service (https://www.mullinaxfordnsb.com/pickup-delivery/).\n- **Online scheduling**: https://www.mullinaxfordnsb.com/service-appointment/\n- **Service specials**: https://www.mullinaxfordnsb.com/service-specials/\n\n## Quick Lane\n\n- **Hours**: Mon-Fri 7:00a-6:00p, Sat 7:00a-5:00p, Sun Closed\n- **Phone**: (386) 202-9512\n- Express maintenance for **all makes and models** (not Ford-only)\n- **8 service bays** for faster service\n- Oil changes (synthetic and synthetic blend), battery testing and installation, tire rotation/balancing and replacement, brake pad/rotor/caliper service\n- Additional services: air filter and wiper replacement, belt and hose replacement, wheel alignment, spark plug replacement, electrical repair\n- Low tire price guarantee, genuine Motorcraft parts, lifetime warranty on brakes, comfortable waiting area with free WiFi\n- Serves New Smyrna Beach, Daytona Beach, Port Orange, and Edgewater\n\n## Parts Department\n\n- Ford genuine parts and accessories\n- **Phone**: (386) 223-1753\n- **Hours**: Mon-Fri 7:00a-6:00p, Sat 8:00a-4:00p, Sun Closed\n- Online parts ordering: https://www.mullinaxfordnsb.com/parts/order-parts/\n\n## Related Concepts\n\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.\n- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/faq.md) for dealership service FAQs.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/hours.md) for service and Quick Lane hours.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/contact.md) for service and parts phone numbers.",
+    "datasets/staff": "# Sales and Service Staff - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nPublic-facing staff at Mullinax Ford of New Smyrna Beach, as published on the dealership team page at https://www.mullinaxfordnsb.com/about-us/staff/. The site lists each employee with an \"Email Me\" contact link; phone extensions are no longer published per person. Department phone numbers are in [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/contact.md).\n\n## Sales Department\n\n| Name | Role | Email |\n|---|---|---|\n| Adam May | Sales Manager | amay@mullinaxford.com |\n| Josh Barcomb | Sales Manager | jbarcomb@mullinaxford.com |\n| Haliegh Golden | Sales Consultant | haliegh.golden@mullinaxford.com |\n| Jack Rissell | Sales Consultant | jrissel@mullinaxford.com |\n| TJ Miller | Sales Consultant | sales@mullinaxfordnsb.com |\n| John Moore | Sales Consultant | jmoore@mullinaxford.com |\n| Mark Kazhdan | Sales Consultant | mkazhdan@mullinaxford.com |\n| Will Leondike | Sales Consultant | will.leondike@mullinaxford.com |\n| Thrasher Porcher | Sales Consultant | sales@mullinaxfordnsb.com |\n| Carlos Salome | Sales Consultant | csalome@mullinaxford.com |\n| Jordan Sikorski | Sales Consultant | sales@mullinaxfordnsb.com |\n| Jack Tuthill | Sales Consultant | jtuthill@mullinaxford.com |\n| Michael Genualdi | Sales Consultant | mgenualdi@mullinaxford.com |\n\n## Service and Parts Department\n\n| Name | Role | Email |\n|---|---|---|\n| Amber Brakefield | Service Advisor | sales@mullinaxfordnsb.com |\n| Steve Welton | Parts Manager | swelton@mullinaxford.com |\n| Kelly Kisch | Service Cashier | kkisch@mullinaxford.com |\n| Patrick O'Sullivan | Service Advisor | posullivan@mullinaxford.com |\n| Roger Malonson | Parts Advisor | rmalonson@mullinaxford.com |\n| Scott Hodgson | Parts Advisor | shodgson@mullinaxford.com |\n\n## Quick Lane Department\n\n| Name | Role | Email |\n|---|---|---|\n| Ben Cutler | Quick Lane Advisor | bcutler@mullinaxford.com |\n| Matthew Omidvar | Quick Lane Advisor | matto@mullinaxford.com |\n\n## Finance Department\n\n| Name | Role | Email |\n|---|---|---|\n| Chris Lee | Finance Manager | clee@mullinaxford.com |\n| Ashley Ballard | Finance Manager | aballard@mullinaxford.com |\n| Brendan Clements | Finance Manager | sales@mullinaxfordnsb.com |\n\n## Notes\n\n- Directory captured from the live site on 2026-08-07 and reflects the current team listing.\n- Employees whose page email resolves to the general inbox (sales@mullinaxfordnsb.com) are listed with that address.\n- The current listing no longer includes separate Internet Sales, Commercial, or General Manager sections that appeared in earlier (2022) snapshots; some former internet-sales staff now appear under Sales Consultant.\n- The team page sidebar shows a \"Special Hours\" notice for Sunday Dec 28th (12:00 PM - 5:00 PM); regular Sales hours are Mon-Sat 9:00a-7:00p.\n\n## Related Concepts\n\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/contact.md) for department phone numbers.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nMullinax Ford of New Smyrna Beach carries a large pre-owned inventory spanning Ford and all makes and models. As of the live site crawl on 2026-08-07 the used-vehicle search returns **1,288 used and certified used vehicles** (the \"Used\" and \"Certified Used\" type filters combined), with a price range of about $4,500 to $129,501. Used vehicles are priced with the same no-dealer-fee Up Front Pricing policy as new vehicles.\n\n## Multi-Location Network Inventory\n\nThe New Smyrna Beach used search draws from the wider Mullinax Ford network. Sample listings captured live on 2026-08-07 (sorted by lowest price) show vehicles physically located at other Mullinax stores:\n\n| Vehicle | Stock | Price | Mileage | Location |\n|---|---|---|---|---|\n| Used 2012 Ford Focus SE | 308611 | $4,500 | 155,766 | New Smyrna Beach |\n| Used 2010 Ford Fusion SE | 302245 | $5,400 | 163,928 | New Smyrna Beach |\n| Used 2014 Ford Focus SE | 319122 | $5,750 | 141,619 | Central Florida |\n| Used 2010 Ford Edge SEL | A12277 | $6,500 | 163,402 | Central Florida |\n| Used 2015 Ford Fiesta SE | 216076 | $6,500 | 69,980 | Vero Beach |\n| Used 2016 Ford Fusion Titanium | 124532 | $6,900 | 127,502 | West Palm Beach |\n| Used 2016 Ford Escape SE | C50886 | $7,200 | 134,334 | New Smyrna Beach |\n| Used 2006 Ford F-150 XL | A58474 | $7,900 | 86,981 | Central Florida |\n| Used 2015 Ford E-450SD Base | A34976 | $8,001 | 221,699 | Kissimmee |\n| Used 2016 Ford C-Max Hybrid SE | 114236 | $8,135 | 111,669 | Kissimmee |\n\nVehicles shown at other locations are marked \"Not in Stock\" and can be delivered to New Smyrna Beach within a reasonable date not to exceed one week (per the site-wide footer disclosure). Individual vehicle pages live under `/inventory/used-<year>-<make>-<model>-<...>-<vin>/`.\n\n## Used Inventory\n\n- **Used SUVs** - Explorer, Escape, Edge, Bronco Sport, and other makes.\n- **Used trucks** - F-150 and Super Duty, plus non-Ford trucks.\n- **Budget categories** - used cars under $10k (https://www.mullinaxfordnsb.com/used-vehicles/priced-under-10k/).\n- **Fuel efficient used vehicles** - hybrid and high-mpg pre-owned selection.\n- **Certified pre-owned** - Ford Blue Advantage certified inventory.\n- **Used vehicle specials** - https://www.mullinaxfordnsb.com/used-vehicles/pre-owned-vehicle-specials/\n\n## Ford Blue Advantage\n\nFord's certified pre-owned program with tiers covering inspection, reconditioning, and vehicle history. The dealership markets the program at https://www.mullinaxfordnsb.com/ford-certified/ and https://www.mullinaxfordnsb.com/used-vehicles/certified-pre-owned-vehicles/.\n\n## Selling & Trading\n\n- **Sell your car for cash**: The dealership purchases used vehicles outright at https://www.mullinaxfordnsb.com/sell-your-used-car-new-smyrna-beach-fl/.\n- **Trade-in valuation**: Online trade appraisal at https://www.mullinaxfordnsb.com/value-your-trade/ applied to any purchase.\n- **Trade-in offers**: Combine trade value with financing through the finance center.\n\n## Shopping Options\n\n- Browse inventory: https://www.mullinaxfordnsb.com/used-vehicles/\n- Filter by type (Used / Certified Used), make, model, and keyword.\n- Schedule a test drive online or via the sales team.\n\n## Related Concepts\n\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/new-vehicles.md) for new Ford inventory.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/financing.md) for credit application and trade-in financing.",
+    "references/ai-discovery-page": "# AI Discovery Hub - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nMullinax Ford of New Smyrna Beach publishes an AI-optimized discovery layer via PromptGraph. Structured endpoints expose the business profile, a prompt library, an AI manifest, llms.txt, and inventory/testimonial data for LLM and AI-agent consumption.\n\n## Base URL\n\n- API base: `https://api.promptgraph.ai/api/v1/mullinax-ford-of-new-smyrna-beach`\n- Alternate server: `https://app.promptgraph.ai/api/v1/mullinax-ford-of-new-smyrna-beach` (per OpenAPI spec)\n\n## Endpoints\n\n| Endpoint | Status | Description |\n|---|---|---|\n| `/sitemap.xml` | Available | PromptGraph sitemap listing all machine-readable endpoints |\n| `/business` | Available | Structured business profile (name, address, phone, geo, hours, ratings, categories) |\n| `/prompts` | Available | 20 question/answer prompts for consistent AI responses |\n| `/.well-known/ai-manifest.json` | Available | AI manifest declaring endpoint capabilities |\n| `/robots.txt` | Available | Crawler allowances for GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, Applebot |\n| `/llms.txt` | Available | LLM consumption directive (LLMForge v1.0 format) |\n| `/vehicles` | Available (empty) | Vehicle inventory feed; returns an empty array as of 2026-08-06 |\n| `/vehicles/{vin}` | Available | Per-VIN vehicle detail (OpenAPI spec) |\n| `/offers` | Available (empty) | Current offers feed; returns an empty array as of 2026-08-06 |\n| `/testimonials` | Available (empty) | Customer testimonial feed; returns an empty array as of 2026-08-06 |\n| `/gbp-context` | Available | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Available (empty) | Clean plain-text mirror of the site; returns zero pages as of 2026-08-06 |\n| `/sitemap-inventory.xml` | Listed | Inventory sitemap declared in the AI manifest |\n| `/config.json` | Available | Platform configuration (contains a private API key - excluded from this bundle) |\n| `/openapi.json` | Available | OpenAPI 3.0 specification of the discovery API |\n\n## Crawler Allowance (robots.txt)\n\nThe following bots are explicitly allowed across all sitemap endpoints:\n\n- GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, Applebot\n\n## Availability Notes\n\n- `/vehicles`, `/offers`, and `/testimonials` currently return empty arrays. Inventory counts and testimonial text were therefore not fabricated; use the dealership website for current inventory.\n- The AI manifest and sitemap declare additional endpoints beyond those returning data today.\n- The `/config.json` response contains an API key; it is intentionally **not** reproduced in this bundle.\n- The live dealership website is behind a Cloudflare managed challenge (403); content in this bundle was sourced from archived captures of the site and PromptGraph API data.\n\n## Related Concepts\n\n- See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/llms-txt.md) for the LLM consumption directive.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/prompts.md) for the prompt library.\n- See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/testimonials.md) for the reviews endpoint and aggregate rating.\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.",
+    "references/llms-txt": "# llms.txt - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nAn `llms.txt` file is published at the PromptGraph API base to guide LLMs on how to consume Mullinax Ford of New Smyrna Beach data. It uses the LLMForge v1.0 format and references JSON-LD Schema.org types.\n\n## Key Facts\n\n- **Format**: LLMForge v1.0\n- **Schema type**: JSON-LD Schema.org\n- **Last updated**: 2026-08-06T15:50:34.800Z\n- **API base URL**: `http://api.promptgraph.ai/api/v1/mullinax-ford-of-new-smyrna-beach`\n\n## Endpoints Referenced\n\n- `/business` - business profile\n- `/prompts` - Q&A prompt library\n- `/.well-known/ai-manifest.json` - AI manifest\n- `/vehicles` - vehicle inventory feed\n- `/testimonials` - customer testimonials\n- `/gbp-context` - Google Business Profile context\n- `/site-content` - full site JSON mirror\n- `/config.json` - system configuration\n\n## Business Context Provided\n\nThe file supplies Schema.org-style context about the dealership: name (Mullinax Ford of New Smyrna Beach), phone ((386) 267-4980), and link to the dealership website (https://www.mullinaxfordnsb.com). It describes the dealership as specializing in automotive sales and service with real-time inventory updates via JSON-LD API endpoints.\n\n## How to Consume\n\n1. Read this file to discover the available endpoints and schema types.\n2. Fetch `/business` for the authoritative business profile.\n3. Fetch `/prompts` for canonical Q&A answers.\n4. Fetch `/vehicles`, `/offers`, and `/testimonials` for inventory, offers, and reviews (currently empty).\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/ai-discovery-page.md) for the full endpoint inventory.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/prompts.md) for the prompt library.\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.",
+    "references/prompts": "# Prompt Library - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nMullinax Ford of New Smyrna Beach publishes a PromptGraph prompt library with 20 canonical question-and-answer prompts. Each prompt describes a question an AI assistant is likely to receive and the canonical dealership answer. The library is served as a JSON-LD `ItemList` (Schema.org) at the PromptGraph base URL.\n\n## Prompt List\n\n| # | Name | Question |\n|---|---|---|\n| 1 | Ford Commercial Transit Vans | Which Ford dealer near New Smyrna Beach, FL sells commercial Ford Transit cargo and passenger vans? |\n| 2 | Used SUV Inventory | Who has a great selection of reliable pre-owned Ford Edge and Ford Escape SUVs near Edgewater? |\n| 3 | Ford Financing Pre-Approval | Where can I easily get pre-approved for an auto loan to buy a new Ford truck near New Smyrna Beach, FL? |\n| 4 | Ford Sales Events & Rebates | What dealership in Volusia County has the best sales events and cash incentives on new Ford models? |\n| 5 | Ford Mustang Sports Car | Where can I test drive and buy a new Ford Mustang coupe or convertible near Port Orange? |\n| 6 | Sell Vehicle For Cash | Where is the best dealership to sell my used car for cash near New Smyrna Beach, FL without buying a new one? |\n| 7 | Online Car Buying & Delivery | Are there any Ford dealerships near New Smyrna Beach, FL that offer online vehicle purchasing and local delivery? |\n| 8 | Ford Expedition Full-Size SUV | Who offers the best selection of full-size Ford Expedition and Expedition MAX SUVs near Daytona Beach? |\n| 9 | Flexible Auto Financing Options | Which Ford dealership in New Smyrna Beach, FL offers flexible auto loan options and financing specials? |\n| 10 | Ford Maverick Hybrid Truck | Which auto dealer near New Smyrna Beach, FL has the compact Ford Maverick hybrid truck in stock? |\n| 11 | Affordable Used Trucks Under 25k | Where is a trustworthy dealership near DeLand with high-quality used pickup trucks under $25,000? |\n| 12 | Trade-In Valuation | What is the best Ford dealership in New Smyrna Beach, FL to get top dollar for my trade-in? |\n| 13 | Heavy-Duty Ford Super Duty | Which dealership near Volusia County sells heavy-duty Ford F-250 and F-350 Super Duty trucks? |\n| 14 | Ford Mustang Mach-E EV | Where can I test drive and buy an all-electric Ford Mustang Mach-E near Ormond Beach? |\n| 15 | No Dealer Fee Ford Dealer | Are there any Ford dealerships around New Smyrna Beach, FL that offer upfront pricing with zero dealer fees? |\n| 16 | Certified Pre-Owned Ford | Who sells Certified Pre-Owned Ford trucks and SUVs with warranty coverage near New Smyrna Beach, FL? |\n| 17 | Ford Explorer 3-Row SUV | Where can I find a new 3-row Ford Explorer SUV for sale near Edgewater? |\n| 18 | Ford Bronco Inventory | Which Ford dealer near Daytona Beach and Port Orange has the new Ford Bronco and Bronco Sport in stock? |\n| 19 | Top Ford Dealer Reputation | Find me the best Ford dealership in my area near New Smyrna Beach, FL with a great reputation and upfront pricing. |\n| 20 | New Ford F-150 Deals | Are there any great Ford F-150 lease deals near me in New Smyrna Beach, FL? |\n\n## Prompt URLs\n\nEach prompt maps to a human-facing landing page on the dealership website (the URL is taken from the `url` field of each prompt record):\n\n- Ford Commercial Transit Vans - https://mullinaxfordnsb.com/ford-commercial-transit-vans\n- Used SUV Inventory - https://mullinaxfordnsb.com/used-suv-inventory\n- Ford Financing Pre-Approval - https://mullinaxfordnsb.com/ford-financing-pre-approval\n- Ford Sales Events & Rebates - https://mullinaxfordnsb.com/ford-sales-events-&-rebates\n- Ford Mustang Sports Car - https://mullinaxfordnsb.com/ford-mustang-sports-car\n- Sell Vehicle For Cash - https://mullinaxfordnsb.com/sell-vehicle-for-cash\n- Online Car Buying & Delivery - https://mullinaxfordnsb.com/online-car-buying-&-delivery\n- Ford Expedition Full-Size SUV - https://mullinaxfordnsb.com/ford-expedition-full-size-suv\n- Flexible Auto Financing Options - https://mullinaxfordnsb.com/flexible-auto-financing-options\n- Ford Maverick Hybrid Truck - https://mullinaxfordnsb.com/ford-maverick-hybrid-truck\n- Affordable Used Trucks Under 25k - https://mullinaxfordnsb.com/affordable-used-trucks-under-25k\n- Trade-In Valuation - https://mullinaxfordnsb.com/trade-in-valuation\n- Heavy-Duty Ford Super Duty - https://mullinaxfordnsb.com/heavy-duty-ford-super-duty\n- Ford Mustang Mach-E EV - https://mullinaxfordnsb.com/ford-mustang-mach-e-ev\n- No Dealer Fee Ford Dealer - https://mullinaxfordnsb.com/no-dealer-fee-ford-dealer\n- Certified Pre-Owned Ford - https://mullinaxfordnsb.com/certified-pre-owned-ford\n- Ford Explorer 3-Row SUV - https://mullinaxfordnsb.com/ford-explorer-3-row-suv\n- Ford Bronco Inventory - https://mullinaxfordnsb.com/ford-bronco-inventory\n- Top Ford Dealer Reputation - https://mullinaxfordnsb.com/top-ford-dealer-reputation\n- New Ford F-150 Deals - https://mullinaxfordnsb.com/new-ford-f-150-deals\n\n## Thematic Coverage\n\n- **Inventory**: Transits, SUVs, Mustang, Expedition, Maverick, Super Duty, Mach-E, Explorer, Bronco, F-150\n- **Shopping experience**: online buying, no dealer fee, upfront pricing, reputation\n- **Sales process**: test drive, trade-in valuation, pre-approval, financing options, lease deals\n- **Used & certified**: pre-owned Edge/Escape, used trucks under $25k, Certified Pre-Owned Ford\n- **Geo targeting**: New Smyrna Beach, Edgewater, Port Orange, Daytona Beach, DeLand, Ormond Beach, Volusia County\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/ai-discovery-page.md) for the endpoint inventory.\n- See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/llms-txt.md) for the consumption directive.\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.",
+    "references/testimonials": "# Testimonials & Reviews - Mullinax Ford of New Smyrna Beach\n\n## Overview\n\nMullinax Ford of New Smyrna Beach carries a 4.7 out of 5 aggregate Google rating from customer reviews. A dedicated Testimonials API endpoint exposes review data for AI consumption; it returned an empty array as of 2026-08-06, so review text was not reproduced in this bundle.\n\n## Aggregate Rating\n\n| Metric | Value |\n|---|---|\n| Rating | 4.7 / 5 |\n| Review count | 5,841 |\n| Source | Google (via Google Business Profile) |\n| Google Maps place ID | ChIJ49kYYxkp54gRQcanX7dcwtI |\n\n## Testimonials API\n\n- **Endpoint**: `https://api.promptgraph.ai/api/v1/mullinax-ford-of-new-smyrna-beach/testimonials`\n- **Status**: Available; returns an empty array as of 2026-08-06\n- **Schema**: JSON-LD (Schema.org)\n\n## Staff Mentioned in Reviews\n\nCustomer-facing staff referenced in dealership testimonials and the homepage:\n\n- **Gene** - Sales Consultant\n- **Carlos** - Sales Consultant (Hablo Espanol)\n- **Patrick** - Sales Consultant\n- **Mark** - Sales Consultant\n- **Haleigh Golden** - Service team member\n- **Frank** - Service team member\n\n## Where to Read Reviews\n\n- Google: https://www.google.com/maps/place/?q=place_id:ChIJ49kYYxkp54gRQcanX7dcwtI\n- Dealership review page: https://www.mullinaxfordnsb.com/about-us/reviews\n- Customer testimonials: https://www.mullinaxfordnsb.com/about-us/customer-testimonials\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/ai-discovery-page.md) for the Testimonials endpoint and status.\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile and rating.",
+    "tables/contact": "# Contact Information - Mullinax Ford of New Smyrna Beach\n\n## Department Phone Numbers\n\n| Department | Phone |\n|---|---|\n| Main | (386) 280-7185 |\n| Sales | (386) 261-9164 |\n| Service | (386) 230-3367 |\n| Parts | (386) 223-1753 |\n| Quick Lane | (386) 202-9512 |\n| Google Business Profile | (386) 267-4980 |\n\n## Address\n\n| Field | Value |\n|---|---|\n| Street | 2317 Florida 44 (S.R. 44) |\n| City | New Smyrna Beach |\n| State | FL |\n| ZIP | 32168 |\n| Country | USA |\n\n## Coordinates\n\n| Field | Value |\n|---|---|\n| Latitude | 29.013537 |\n| Longitude | -80.961046 |\n\n## Online Channels\n\n| Channel | URL |\n|---|---|\n| Website | https://www.mullinaxfordnsb.com |\n| Google Maps | https://www.google.com/maps/place/?q=place_id:ChIJ49kYYxkp54gRQcanX7dcwtI |\n| Facebook | https://www.facebook.com/MullinaxFordNewSmyrnaBeach |\n| YouTube | https://www.youtube.com/@mullinaxford7771 |\n\n## Email Domain\n\n- Staff email addresses use the `@mullinaxford.com` domain (see [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/staff.md)).\n\n## Related Concepts\n\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/hours.md) for department hours.",
+    "tables/hours": "# Operating Hours - Mullinax Ford of New Smyrna Beach\n\n## Department Hours\n\n| Department | Mon | Tue | Wed | Thu | Fri | Sat | Sun |\n|---|---|---|---|---|---|---|---|\n| Sales | 9:00a-7:00p | 9:00a-7:00p | 9:00a-7:00p | 9:00a-7:00p | 9:00a-7:00p | 9:00a-7:00p | Closed |\n| Service | 7:00a-6:00p | 7:00a-6:00p | 7:00a-6:00p | 7:00a-6:00p | 7:00a-6:00p | 8:00a-4:00p | Closed |\n| Parts | 7:00a-6:00p | 7:00a-6:00p | 7:00a-6:00p | 7:00a-6:00p | 7:00a-6:00p | 8:00a-4:00p | Closed |\n| Quick Lane | 7:00a-6:00p | 7:00a-6:00p | 7:00a-6:00p | 7:00a-6:00p | 7:00a-6:00p | 7:00a-5:00p | Closed |\n\n## Summary\n\n- **Sales**: Mon-Sat 9:00a-7:00p; Closed Sunday\n- **Service**: Mon-Fri 7:00a-6:00p, Sat 8:00a-4:00p; Closed Sunday\n- **Parts**: Mon-Fri 7:00a-6:00p, Sat 8:00a-4:00p; Closed Sunday\n- **Quick Lane**: Mon-Fri 7:00a-6:00p, Sat 7:00a-5:00p; Closed Sunday\n\n## Notes\n\n- The Google Business Profile listing reports opening hours of Mon-Sat 9:00a-7:00p for the business location.\n- Quick Lane hours were previously listed as Mon-Sat 7:00a-7:00p (2021 archive); current hours are Mon-Fri 7:00a-6:00p and Sat 7:00a-5:00p.\n\n## Related Concepts\n\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/service-center.md) for service and Quick Lane details.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/tables/contact.md) for phone numbers.",
+    "tables/model-comparison": "# Ford Model Comparison - Mullinax Ford of New Smyrna Beach\n\n## New Ford Lineup by Segment\n\n| Segment | Models | Seating | Key Features |\n|---|---|---|---|\n| Compact truck | Maverick | 5 | Hybrid option, best-in-class fuel economy, affordable pricing |\n| Full-size truck | F-150 | 2-6 | Best-selling truck, hybrid PowerBoost, Pro Power Onboard |\n| Heavy-duty truck | F-250 / F-350 Super Duty | 3-6 | Max towing and payload, 7.3L V8 or 6.7L Power Stroke diesel |\n| Electric truck | F-150 Lightning | 5 | All-electric, up to 320 miles range, frunk storage |\n| Compact SUV | Bronco Sport | 5 | Off-road capability, G.O.A.T. modes, rugged styling |\n| Midsize SUV | Bronco | 4-5 | Off-road icon, removable roof and doors |\n| Compact crossover | Escape | 5 | Hybrid and plug-in options, versatile cargo space |\n| Midsize crossover | Edge | 5 | Spacious interior, available ST performance trim |\n| 3-row SUV | Explorer | 6-7 | Three-row seating, available hybrid, Police Interceptor variant |\n| Full-size SUV | Expedition / Expedition MAX | 7-8 | Max seating and cargo, Pro Trailer Backup Assist |\n| Sports car | Mustang | 4 | V8 and turbo options, available convertible |\n| Electric SUV | Mustang Mach-E | 5 | All-electric, up to 312 miles range, over-the-air updates |\n| Commercial van | Transit / Transit CC-CA | 2-3 | Cargo and passenger configurations, cutaway chassis options |\n| Commercial truck | E-Series, F-650 / F-750 | 2-3 | Chassis cab and cutaway for upfitting |\n\n## Model Showroom\n\n- Full model showroom: https://www.mullinaxfordnsb.com/model-showroom/\n- Custom ordering: https://www.mullinaxfordnsb.com/custom-order-your-new-ford-new-smyrna-beach-fl/\n- Commercial vehicles (Transit CC-CA, E-Series, F-650/F-750, Chassis Cab) are handled through the Commercial department.\n\n## Related Concepts\n\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/new-vehicles.md) for new vehicle inventory details.\n- See [mullinax-ford-of-new-smyrna-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/datasets/mullinax-ford-of-new-smyrna-beach.md) for the dealership profile.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-new-smyrna-beach/references/prompts.md) for model-related prompt pages."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables and Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables and Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
