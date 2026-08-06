@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>mullinax-ford-of-central-florida-in-orlando - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "mullinax-ford-of-central-florida-in-orlando";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Mullinax Ford of Central Florida",
+        "type": "Entities",
+        "description": "Common questions and answers about Ford Protect Extended Service Plans, Premium Maintenance Plans, Installment Payment Plans, and service options at Mullinax Ford of Central Florida.",
+        "resource": "https://www.mullinaxfordfl.com/faq",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing & Auto Loans - Mullinax Ford of Central Florida",
+        "type": "Entities",
+        "description": "Vehicle financing options at Mullinax Ford of Central Florida including online credit application, leasing, bad-credit programs, trade-in valuation, and payment calculator.",
+        "resource": "https://www.mullinaxfordfl.com/apply-online",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-central-florida-in-orlando",
+        "label": "Mullinax Ford of Central Florida in Orlando",
+        "type": "Entities",
+        "description": "Ford dealership in Apopka, FL serving the greater Orlando metro area with new and used vehicle sales, Up Front Pricing, financing, service, and Quick Lane at 1551 E Semoran Blvd.",
+        "resource": "https://www.mullinaxfordfl.com",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 45
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Ford Vehicles - Mullinax Ford of Central Florida",
+        "type": "Entities",
+        "description": "New Ford vehicle inventory and ordering at Mullinax Ford of Central Florida covering trucks, SUVs, sedans, and EVs including F-150, Super Duty, Bronco, Explorer, Mustang, and Transit.",
+        "resource": "https://www.mullinaxfordfl.com/sale/ford-orlando-fl",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center & Quick Lane - Mullinax Ford of Central Florida",
+        "type": "Entities",
+        "description": "Ford service center in Apopka, FL offering factory-trained maintenance and repair with OEM parts, mobile service, pickup & delivery, and a Quick Lane for all makes and models.",
+        "resource": "https://www.mullinaxfordfl.com/car-repair-service-center-orlando-fl",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Sales and Service Staff - Mullinax Ford of Central Florida",
+        "type": "Entities",
+        "description": "Staff directory for Mullinax Ford of Central Florida covering sales management, sales consultants, internet sales, and commercial sales departments with contact details.",
+        "resource": "https://www.mullinaxfordfl.com/sales-team",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Pre-Owned Vehicles - Mullinax Ford of Central Florida",
+        "type": "Entities",
+        "description": "Pre-owned vehicle inventory at Mullinax Ford of Central Florida including Ford Blue Advantage certified vehicles, cash purchase, and trade-in valuation.",
+        "resource": "https://www.mullinaxfordfl.com/sale/used-cars-orlando-fl",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Hub - Mullinax Ford of Central Florida",
+        "type": "APIs",
+        "description": "Machine-readable AI discovery endpoints for Mullinax Ford of Central Florida including a PromptGraph sitemap, business profile, prompt library, and AI manifest for LLM consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-central-florida-in-orlando/sitemap.xml",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt - Mullinax Ford of Central Florida",
+        "type": "APIs",
+        "description": "AI consumption directive for Mullinax Ford of Central Florida providing structured API endpoints, schema types, and business context to LLM crawlers and AI agents.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-central-florida-in-orlando/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompt Library - Mullinax Ford of Central Florida",
+        "type": "APIs",
+        "description": "Twenty curated Q&A prompts for consistent AI responses about Mullinax Ford of Central Florida covering inventory, financing, service, and no-dealer-fee pricing.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-central-florida-in-orlando/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Reviews & Testimonials - Mullinax Ford of Central Florida",
+        "type": "Entities",
+        "description": "Customer ratings for Mullinax Ford of Central Florida including a 4.7-star Google rating across 8,281 reviews, with an empty PromptGraph testimonials feed as of August 2026.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-central-florida-in-orlando/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Contact Information - Mullinax Ford of Central Florida",
+        "type": "Tables and Datasets",
+        "description": "Consolidated phone directory and address for sales, service, parts, Quick Lane, and general inquiries at Mullinax Ford of Central Florida in Apopka, FL.",
+        "resource": "https://www.mullinaxfordfl.com/general-contact",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Operating Hours - Mullinax Ford of Central Florida",
+        "type": "Tables and Datasets",
+        "description": "Sales, service, parts, and Quick Lane operating hours for Mullinax Ford of Central Florida at 1551 E Semoran Blvd, Apopka, FL.",
+        "resource": "https://www.mullinaxfordfl.com/general-contact",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Ford Model Comparison - Mullinax Ford of Central Florida",
+        "type": "Tables and Datasets",
+        "description": "Side-by-side comparison of key Ford models sold at Mullinax Ford of Central Florida by body type, fuel options, seating, and typical buyer, including 2026 model-year highlights.",
+        "resource": "https://www.mullinaxfordfl.com/new-vehicle-specials",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/mullinax-ford-of-central-florida-in-orlando",
+        "source": "datasets/faq",
+        "target": "datasets/mullinax-ford-of-central-florida-in-orlando"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/mullinax-ford-of-central-florida-in-orlando",
+        "source": "datasets/financing",
+        "target": "datasets/mullinax-ford-of-central-florida-in-orlando"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/faq",
+        "source": "datasets/financing",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-central-florida-in-orlando__datasets/new-vehicles",
+        "source": "datasets/mullinax-ford-of-central-florida-in-orlando",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-central-florida-in-orlando__datasets/used-vehicles",
+        "source": "datasets/mullinax-ford-of-central-florida-in-orlando",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-central-florida-in-orlando__datasets/financing",
+        "source": "datasets/mullinax-ford-of-central-florida-in-orlando",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-central-florida-in-orlando__datasets/service-center",
+        "source": "datasets/mullinax-ford-of-central-florida-in-orlando",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-central-florida-in-orlando__datasets/staff",
+        "source": "datasets/mullinax-ford-of-central-florida-in-orlando",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-central-florida-in-orlando__datasets/faq",
+        "source": "datasets/mullinax-ford-of-central-florida-in-orlando",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/mullinax-ford-of-central-florida-in-orlando",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/mullinax-ford-of-central-florida-in-orlando"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/used-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/mullinax-ford-of-central-florida-in-orlando",
+        "source": "datasets/service-center",
+        "target": "datasets/mullinax-ford-of-central-florida-in-orlando"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/faq",
+        "source": "datasets/service-center",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/mullinax-ford-of-central-florida-in-orlando",
+        "source": "datasets/staff",
+        "target": "datasets/mullinax-ford-of-central-florida-in-orlando"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/mullinax-ford-of-central-florida-in-orlando",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/mullinax-ford-of-central-florida-in-orlando"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/llms-txt",
+        "source": "references/prompts",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/ai-discovery-page",
+        "source": "references/testimonials",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/prompts",
+        "source": "references/testimonials",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__tables/hours",
+        "source": "tables/contact",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__tables/contact",
+        "source": "tables/hours",
+        "target": "tables/contact"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/faq": "# Frequently Asked Questions - Mullinax Ford of Central Florida\n\n## Overview\n\nAnswers to common customer questions published on the dealership website, covering Ford Protect plans, contracts, and general dealership topics.\n\n## Ford Protect Extended Service Plan\n\n- **Q: When does coverage begin on New Ford Protect Extended Service Plans?**\n  A: Coverage begins at the warranty start date and zero miles, and expires at the earlier of the number of months purchased or the number of miles purchased.\n\n- **Q: Are Ford Protect Extended Service Plans transferable to subsequent owners?**\n  A: Yes, they are transferable. Transfer fees vary by state. If paying via the Installment Payment Plan (IPP), the IPP contract must be paid in full to transfer coverage.\n\n- **Q: When can I purchase a New Ford Protect Extended Service Plan?**\n  A: Plans must be purchased within the time and mileage of the New Vehicle Limited Warranty (the earlier of 3 years or 36,000 miles for Ford vehicles; 4 years or 50,000 miles for Lincoln vehicles).\n\n## Ford Protect Premium Maintenance Plan (PMP)\n\n- **Q: When does coverage begin on Ford Protect Premium Maintenance Plans?**\n  A: Coverage begins at the warranty start date and zero miles, and expires at the earlier of the number of months purchased or the number of miles purchased.\n\n- **Q: Are Ford Protect Premium Maintenance Plans transferable?**\n  A: Yes, transferable; transfer fees vary by state, and an IPP contract must be paid in full to transfer.\n\n- **Q: When can I purchase a Ford Protect Premium Maintenance Plan?**\n  A: Within the time and mileage of the New Vehicle Limited Warranty (3 years / 36,000 miles for Ford; 4 years / 50,000 miles for Lincoln).\n\n## Contract Questions\n\n- **Q: If I choose an Installment Payment Plan (IPP), when will my payments begin?**\n  A: The recurring due date is based on the Extended Service Plan contract activation date. The first installment is typically due about 20 days after activation, with subsequent payments due the same day each month.\n\n- **Q: Is there a website where I can view my IPP account?**\n  A: Yes. Customers using the Ford Installment Payment Plan can create a profile at https://www.payipp.com to manage payment methods, access account information, and edit personal information.\n\n- **Q: What if I have a question about my IPP account?**\n  A: Contact IPP customer service at 888-352-7901.\n\n## General Questions\n\n- **Q: What is the difference between Premium Maintenance Plans and Extended Service Plan mechanical coverage?**\n  A: Extended Service Plans cover failure of covered components due to defects in material and workmanship, including normal wear and tear; on covered repairs you pay only the applicable deductible. Premium Maintenance Plans cover all scheduled maintenance in the Owner's Scheduled Maintenance Guide plus routine inspections and normal wear-and-tear items \u2014 a prepaid plan where you pay nothing for covered services.\n\n- **Q: Where can I go for service with a Ford Protect plan?**\n  A: Ford Protect plans are honored at any Ford or Lincoln dealer throughout the U.S., Canada, and Mexico.\n\n- **Q: Why can't I purchase Ford Protect coverage for my vehicle online?**\n  A: Possible reasons include a typo in the information entered, a recently purchased vehicle not yet in the system, or the vehicle not being eligible for the selected plan. You may still be eligible \u2014 contact the Ford Protect sales department at 800-367-3377.\n\n## Additional Dealership FAQs\n\n- **Q: Where is the dealership located?**\n  A: 1551 E Semoran Blvd, Apopka, FL 32703, serving the Orlando/Central Florida area.\n\n- **Q: What are the dealership's hours?**\n  A: Sales: Mon-Fri 8:30a-8:00p, Sat 8:30a-7:00p, Sun 12:00p-5:00p. See [hours.md](../tables/hours.md) for all departments.\n\n- **Q: Do you charge dealer fees?**\n  A: No. Mullinax Up Front Pricing means no dealer fees on any vehicle \u2014 price plus tax and tag only.\n\n- **Q: Do you service all makes and models?**\n  A: The Quick Lane provides express maintenance for all makes and models. The main service center focuses on Ford vehicles with factory-trained technicians. See [service-center.md](service-center.md).\n\n## Related Concepts\n\n- See [mullinax-ford-of-central-florida-in-orlando.md](mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.\n- See [service-center.md](service-center.md) for service department details.\n- See [financing.md](financing.md) for credit application and financing questions.",
+    "datasets/financing": "# Financing & Auto Loans - Mullinax Ford of Central Florida\n\n## Overview\n\nThe finance department at Mullinax Ford of Central Florida arranges new and used vehicle financing and leasing. Customers can begin the credit application online and work with finance staff in-store.\n\n## Online Credit Application\n\n- Apply online at https://www.mullinaxfordfl.com/apply-online\n- Fast pre-qualification with no impact on credit score for initial quote.\n- Applications are submitted to multiple lending partners for competitive rates.\n\n## Financing Programs\n\n- **New vehicle financing** \u2014 manufacturer rates and programs on new Ford vehicles.\n- **Used vehicle financing** \u2014 competitive rates on pre-owned inventory.\n- **Bad credit financing** \u2014 programs for buyers with less-than-perfect credit.\n- **No money down options** \u2014 depending on qualification.\n- **Leasing** \u2014 Ford lease programs with flexible mileage terms.\n\n## Lending Partners\n\n- Work with a network of national and local lenders (\"dozens of lenders\").\n- Financing available for buyers across all credit backgrounds.\n- Dedicated finance team to match buyers with an appropriate lender.\n\n## Tools\n\n- **Payment calculator**: estimate monthly payments by price, down payment, and term.\n- **Trade-in valuation**: online appraisal applied toward any purchase; see [used-vehicles.md](used-vehicles.md).\n- **Value your trade**: combine trade value with financing to reduce the financed amount.\n\n## Finance Center Contacts\n\n- **Phone**: (888) 206-3268 (Sales line routes finance inquiries)\n- **General**: (407) 889-7600\n- **Location**: 1551 E Semoran Blvd, Apopka, FL 32703\n\n## Related Concepts\n\n- See [mullinax-ford-of-central-florida-in-orlando.md](mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.\n- See [new-vehicles.md](new-vehicles.md) and [used-vehicles.md](used-vehicles.md) for vehicle inventory.\n- See [faq.md](faq.md) for Ford Protect plan payment questions.",
+    "datasets/mullinax-ford-of-central-florida-in-orlando": "# Mullinax Ford of Central Florida in Orlando\n\n## Overview\n\nMullinax Ford of Central Florida is a full-line Ford dealership located at 1551 E Semoran Blvd, Apopka, FL 32703, serving Apopka, Orlando, and the broader Central Florida market. It markets itself as \"The Southeast's Largest Ford Retailer\" and is part of the Mullinax Ford family of dealerships.\n\n## Location & Contact\n\n| Item | Detail |\n|---|---|\n| Address | 1551 E Semoran Blvd, Apopka, FL 32703 |\n| Coordinates | 28.673816, -81.481161 |\n| Sales | (888) 206-3268 |\n| Service | (888) 207-2696 |\n| Parts | (888) 207-2696 |\n| Quick Lane | (855) 340-9009 |\n| General | (407) 889-7600 |\n| Google Business Profile | (407) 890-0557 |\n\n## Hours\n\n- Sales: Mon-Fri 8:30a-8:00p, Sat 8:30a-7:00p, Sun 12:00p-5:00p\n- Service: Mon-Fri 7:30a-6:00p, Sat 8:00a-4:00p, Sun Closed\n- Quick Lane: Mon-Fri 7:00a-6:00p, Sat 7:00a-5:00p, Sun Closed\n\nSee [hours.md](../tables/hours.md) for the full operating hours table.\n\n## Up Front Pricing\n\n- No dealer fees on any vehicle. Price you see is the price you pay, plus only tax and tag.\n- Buyers save on average $800 in fees versus conventional dealerships.\n- Transparent internet pricing on new and used inventory.\n\n## Inventory\n\n- Approximately 3,500+ vehicles in stock across new and used.\n- New inventory includes F-150, F-150 Lightning, Super Duty, Maverick, Ranger, Bronco, Bronco Sport, Explorer, Expedition, Edge, Escape, Mustang, Mustang Mach-E, Transit, and E-Transit.\n- Used inventory spans all makes and models with a Ford Blue Advantage certified program.\n\nSee [new-vehicles.md](new-vehicles.md) and [used-vehicles.md](used-vehicles.md) for inventory details.\n\n## Departments\n\n- **New Vehicle Sales** \u2014 full Ford lineup plus 2026 models; see [new-vehicles.md](new-vehicles.md).\n- **Used Vehicle Sales** \u2014 pre-owned inventory and Ford Blue Advantage; see [used-vehicles.md](used-vehicles.md).\n- **Commercial / Work Trucks** \u2014 fleet and work-truck solutions via mullinaxford.com/commercial and mullinaxfordfleet.com.\n- **Financing** \u2014 online credit application, lease and finance options, trade-in valuation; see [financing.md](financing.md).\n- **Service Center** \u2014 Ford-trained technicians, OEM parts, mobile service, pickup & delivery; see [service-center.md](service-center.md).\n- **Quick Lane** \u2014 express maintenance for all makes and models.\n\n## Ratings & Reputation\n\n- 4.7 / 5 stars across 8,281 Google reviews (AggregateRating).\n- Google Maps place_id: `ChIJ9zGmv3p254gRQUG9R3R7ViI`.\n- Customer review page: https://www.mullinaxfordfl.com/our-reviews and https://www.mullinaxfordfl.com/mullinax-ford-customer-reviews-orlando-fl\n\n## Social Media\n\n- Facebook: https://www.facebook.com/mullinaxford\n- X: https://twitter.com/Ford_Mullinax\n- YouTube: https://www.youtube.com/channel/UC3IPTWed9Cp0VIO8fyeBrhw\n- Instagram: https://www.instagram.com/mullinaxford/\n\n## Website\n\n- https://www.mullinaxfordfl.com\n- Nav structure: New (/sale/ford-orlando-fl), Work Trucks, Used (/sale/used-cars-orlando-fl), Specials & Deals (/new-vehicle-specials), Financing (/apply-online), Service & Parts (/car-repair-service-center-orlando-fl), Quick Lane (/quick-lane), Dealer Info (/general-contact).\n\n## Related Concepts\n\n- See [staff.md](staff.md) for the sales, internet sales, and commercial team directory.\n- See [faq.md](faq.md) for Ford Protect and dealership FAQs.\n- See [ai-discovery-page.md](../references/ai-discovery-page.md) for machine-readable discovery endpoints.\n- See [contact.md](../tables/contact.md) for a consolidated phone directory.",
+    "datasets/new-vehicles": "# New Ford Vehicles - Mullinax Ford of Central Florida\n\n## Overview\n\nMullinax Ford of Central Florida carries a full line of new Ford vehicles, including 2026 model-year trucks, SUVs, cars, and electric vehicles. As \"The Southeast's Largest Ford Retailer\" the store maintains one of the region's largest new-vehicle selections with Up Front Pricing and no dealer fees.\n\n## New Vehicle Lineup\n\n- **Trucks**: F-150, F-150 Raptor, F-150 Lightning (EV), Super Duty (F-250/F-350/F-450), Maverick, Ranger\n- **SUVs**: Bronco, Bronco Sport, Explorer, Expedition, Expedition MAX, Edge, Escape\n- **Vans & Commercial**: Transit, E-Transit (EV)\n- **Performance**: Mustang, Mustang Mach-E (EV)\n- **Sedans**: Escape (compact SUV), Mustang coupe\n\n## Buying Options\n\n- **In-stock inventory**: Filter by model, trim, color, and options at https://www.mullinaxfordfl.com/sale/ford-orlando-fl\n- **Custom ordering**: Order a vehicle built to specification.\n- **Buy from home**: Online purchase workflow with at-home delivery options.\n- **Specials & Deals**: Current manufacturer and dealer incentives at https://www.mullinaxfordfl.com/new-vehicle-specials\n\n## Features of Shopping with Mullinax\n\n- No dealer fees \u2014 price plus tax and tag only.\n- Transparent internet pricing viewable online.\n- Trade-in valuation applied toward a new purchase.\n- Financing and leasing through the finance center; see [financing.md](financing.md).\n\n## 2026 Models\n\nThe dealership highlights 2026 model-year vehicles in current promotions, including the 2026 Ford F-150 (featured landing page: https://www.mullinaxfordfl.com/sale/2026-ford-f150-orlando-fl) and other 2026 truck and SUV trims.\n\n## Related Concepts\n\n- See [mullinax-ford-of-central-florida-in-orlando.md](mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.\n- See [used-vehicles.md](used-vehicles.md) for pre-owned inventory.\n- See [model-comparison.md](../tables/model-comparison.md) for a model-by-model comparison table.",
+    "datasets/service-center": "# Service Center & Quick Lane - Mullinax Ford of Central Florida\n\n## Overview\n\nThe Mullinax Ford of Central Florida service department performs factory-trained maintenance and repair using Ford genuine parts. A Quick Lane provides express service for all makes and models.\n\n## Service Department\n\n- **Hours**: Mon-Fri 7:30a-6:00p, Sat 8:00a-4:00p, Sun Closed\n- **Phone**: (888) 207-2696\n- **Address**: 1551 E Semoran Blvd, Apopka, FL 32703\n- Ford-trained and ASE-certified technicians\n- Ford genuine / OEM parts and accessories\n- Complimentary multi-point inspection with service\n\n## Services Offered\n\n- Oil changes and filter service\n- Brake service and repair\n- Tire rotation, alignment, and replacement\n- Battery testing and replacement\n- Air conditioning service and repair\n- Engine and transmission diagnostics and repair\n- Scheduled maintenance per the Owner's Scheduled Maintenance Guide\n- Ford factory-scheduled maintenance services\n\n## Convenience Options\n\n- **Mobile Service**: Service a vehicle at a customer's home or workplace.\n- **Pickup & Delivery**: Vehicle picked up and returned for service.\n- **Online scheduling**: https://www.mullinaxfordfl.com/schedule-service-appointment\n- **Service specials and coupons**: https://www.mullinaxfordfl.com/service-coupons\n\n## Quick Lane\n\n- **Hours**: Mon-Fri 7:00a-6:00p, Sat 7:00a-5:00p, Sun Closed\n- **Phone**: (855) 340-9009\n- Express maintenance for **all makes and models** (not Ford-only)\n- Oil changes, tire rotation, battery, and wiper service without an appointment\n\n## Parts Department\n\n- Ford genuine parts and accessories\n- **Phone**: (888) 207-2696\n- Same department hours as service\n\n## Related Concepts\n\n- See [mullinax-ford-of-central-florida-in-orlando.md](mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.\n- See [faq.md](faq.md) for Ford Protect plan coverage questions.\n- See [hours.md](../tables/hours.md) for service and Quick Lane hours.\n- See [contact.md](../tables/contact.md) for service and parts phone numbers.",
+    "datasets/staff": "# Sales and Service Staff - Mullinax Ford of Central Florida\n\n## Overview\n\nPublic-facing sales staff at Mullinax Ford of Central Florida, organized by department. Individual profiles are listed at https://www.mullinaxfordfl.com/sales-team. Staff phone extension format is `407-889-7600 xNNNN` where applicable.\n\n## Sales Department\n\n| Name | Role | Phone | Email |\n|---|---|---|---|\n| Shawn Marks | General Manager of Sales | 407-889-7600 | smarks@mullinaxford.com |\n| Warren Marks | Sales Manager | 407-889-7600 | wmarks@mullinaxford.com |\n| Justin Rodriguez | Sales Manager | 407-889-7600 | jrodriguez@mullinaxford.com |\n| Gary Thunberg | Sales Manager | 407-889-7600 | gthunberg@mullinaxford.com |\n| Brian Francis | Used Car Manager | 407-889-7600 | bfrancis@mullinaxford.com |\n| Dale Brown | Sales Consultant | 407-889-7600 | dbrown@mullinaxford.com |\n| Adyel Candelerio (Hablo Espa\u00f1ol) | Sales Consultant | 407-889-7600 | adyel.candelario@mullinaxford.com |\n| Devon King | Sales Consultant | (888) 203-0460 | devon.king@mullinaxford.com |\n| Dennis McClung | Sales Consultant | 407-889-7600 x2080 | dmcclung@mullinaxford.com |\n| James Miller | Sales Consultant | (321) 961-0104 | james.miller@mullinaxford.com |\n| Q Sabir (Speaks Turkish and Arabic) | Sales Consultant | (888) 203-0460 | \u2014 |\n| Nelson Santana (Hablo Espa\u00f1ol) | Sales Consultant | 407-889-7600 x2072 | nsantana@mullinaxford.com |\n| Barry Ross | Sales Consultant | 407-889-7600 | \u2014 |\n| Brian Serrage | Sales Consultant | 407-889-7600 x2009 | bserrage@mullinaxford.com |\n| Noah Levitt | Sales Consultant | (888) 203-0460 | \u2014 |\n| Jonathan Torres | Sales | 407-889-7600 | jtorres@mullinaxford.com |\n| Kevin Farinha | Sales Consultant | 407-889-7600 | Kfarinha@mullinaxford.com |\n\n## Internet Sales Department\n\n| Name | Role | Phone | Email |\n|---|---|---|---|\n| Jose Burgos (Hablo Espa\u00f1ol) | Internet Sales Manager | 407-889-7600 | jburgos@mullinaxford.com |\n| Michael Scapicchio | Sales Manager (Internet) | 407-889-7600 | mscapicchio@mullinaxford.com |\n| Brent Osborne | Sales Consultant | (888) 203-0460 | \u2014 |\n| Joshua Barrett | Internet Sales Consultant | (888) 203-0460 | \u2014 |\n| Alan Bowers | Internet Sales Consultant | 407-889-7600 | abowers@mullinaxford.com |\n| Juan Colon (Hablo Espa\u00f1ol) | Sales Consultant | (888) 203-0460 | jcolon@mullinaxford.com |\n| Jesse Friederichs | Internet Sales Consultant | 407-889-7600 | jfriederichs@mullinaxford.com |\n| Kaitlyne Jussino | Internet Sales Consultant | 407-889-7600 | \u2014 |\n| Nestor Herrera (Hablo Espa\u00f1ol) | Internet Sales Consultant | 407-889-7600 | \u2014 |\n| Joe Light | Internet Sales Consultant | 407-889-7600 | jlight@mullinaxford.com |\n| Randy McDonald | Internet Sales Consultant | 407-889-7600 x2011 | rmcdonald@mullinaxford.com |\n| John Morales Melendez | Sales Consultant | (407) 951-2209 | john.morales@mullinaxford.com |\n| Dan Niekraszewicz | Internet Sales Consultant | 407-889-7600 | dniek@mullinaxford.com |\n| Andrew Thunberg | Sales Consultant | 407-889-7600 | \u2014 |\n| Chris White | Internet Sales Consultant | 407-889-7600 | \u2014 |\n| Paul Pineda | Internet Sales Consultant | 407-889-7600 | yoscarly.pineda@mullinaxford.com |\n| Dylan Blake | Internet Sales | 407-889-7600 | dylan.blake@mullinaxford.com |\n| James Campbell | Internet Sales Consultant | 407-889-7600 | \u2014 |\n\n## Commercial Sales Department\n\n| Name | Role | Phone | Email |\n|---|---|---|---|\n| Matthew Blum | Commercial Sales Manager | 407-889-7600 | mblum@mullinaxford.com |\n| Ryan Berglund | Commercial Accounts Manager | (888) 203-0460 | \u2014 |\n| Jim Finchen | Commercial Account Manager | 407-889-7600 | jfinchen@mullinaxford.com |\n\n## Language Support\n\nSeveral staff members are listed as bilingual or multilingual:\n\n- **Spanish**: Adyel Candelerio, Jose Burgos, Nelson Santana, Juan Colon, Nestor Herrera\n- **Turkish and Arabic**: Q Sabir\n\n## Notes\n\n- Individual team-member profile pages follow the pattern `/team-member/{slug}` (e.g. `/team-member/shawn-marks-6455`).\n- Phone numbers are listed as published on the dealership website; a \"\u2014\" indicates the site does not publish that person's email.\n- This directory reflects the public website listing and is not an exhaustive org chart.\n\n## Related Concepts\n\n- See [mullinax-ford-of-central-florida-in-orlando.md](mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.\n- See [contact.md](../tables/contact.md) for department phone numbers.",
+    "datasets/used-vehicles": "# Pre-Owned Vehicles - Mullinax Ford of Central Florida\n\n## Overview\n\nMullinax Ford of Central Florida carries a large pre-owned inventory spanning Ford and all makes and models. Used vehicles are priced with the same no-dealer-fee Up Front Pricing policy as new vehicles.\n\n## Used Inventory\n\n- **Used SUVs** \u2014 Explorer, Escape, Edge, Bronco Sport, and other makes.\n- **Used trucks** \u2014 F-150 and Super Duty, plus non-Ford trucks.\n- **Budget categories** \u2014 used cars under $10k, $12k, $15k, and $20k.\n- **One-owner vehicles** \u2014 single-owner history highlighted in listings.\n- **Loaner / dealer demo vehicles** \u2014 low-mileage service loaners.\n\n## Ford Blue Advantage\n\nFord's certified pre-owned program with three tiers:\n\n- **Gold Certified** \u2014 7-year/100,000-mile (or comparable) limited powertrain coverage plus 172-point inspection.\n- **EV Certified** \u2014 battery and powertrain coverage for used electric vehicles.\n- **Blue Certified** \u2014 comprehensive vehicle history and reconditioning standards.\n\n## Selling & Trading\n\n- **Sell your car for cash**: Dealership purchases used vehicles outright.\n- **Trade-in valuation**: Online trade appraisal applied to any purchase.\n- **Trade-in offers**: Combine trade value with financing through the finance center.\n\n## Shopping Options\n\n- Browse inventory: https://www.mullinaxfordfl.com/sale/used-cars-orlando-fl\n- Schedule a test drive online or via the sales team.\n- Buy from home with remote purchase and delivery options.\n\n## Related Concepts\n\n- See [mullinax-ford-of-central-florida-in-orlando.md](mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.\n- See [new-vehicles.md](new-vehicles.md) for new Ford inventory.\n- See [financing.md](financing.md) for credit application and trade-in financing.",
+    "references/ai-discovery-page": "# AI Discovery Hub - Mullinax Ford of Central Florida\n\n## Overview\n\nMullinax Ford of Central Florida publishes an AI-optimized discovery layer via PromptGraph. Structured endpoints expose the business profile, a prompt library, an AI manifest, llms.txt, and inventory/testimonial data for LLM and AI-agent consumption.\n\n## Base URL\n\n- API base: `https://api.promptgraph.ai/api/v1/mullinax-ford-of-central-florida-in-orlando`\n- Alternate server: `https://app.promptgraph.ai/api/v1/mullinax-ford-of-central-florida-in-orlando` (per OpenAPI spec)\n\n## Endpoints\n\n| Endpoint | Status | Description |\n|---|---|---|\n| `/sitemap.xml` | Available | PromptGraph sitemap listing all machine-readable endpoints |\n| `/business` | Available | Structured business profile (name, address, phone, geo, hours, categories) |\n| `/prompts` | Available | 20 question/answer prompts for consistent AI responses |\n| `/.well-known/ai-manifest.json` | Available | AI manifest declaring endpoint capabilities |\n| `/robots.txt` | Available | Crawler allowances for GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, Applebot |\n| `/llms.txt` | Available | LLM consumption directive (LLMForge v1.0 format) |\n| `/vehicles` | Available (empty) | Vehicle inventory feed; returns an empty array as of 2026-08-06 |\n| `/vehicles/{vin}` | Available | Per-VIN vehicle detail (OpenAPI spec) |\n| `/testimonials` | Available (empty) | Customer testimonial feed; returns an empty array as of 2026-08-06 |\n| `/sitemap-inventory.xml` | Listed | Inventory sitemap declared in the AI manifest |\n| `/config.json` | Available | Platform configuration (contains a private API key \u2014 excluded from this bundle) |\n| `/openapi.json` | Available | OpenAPI 3.0 specification of the discovery API |\n\n## Crawler Allowance (robots.txt)\n\nThe following bots are explicitly allowed across all sitemap endpoints:\n\n- GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, Applebot\n\n## Availability Notes\n\n- `/vehicles` and `/testimonials` currently return empty arrays. Inventory counts and testimonial text were therefore not fabricated; use the dealership website for current inventory.\n- The AI manifest and sitemap declare additional endpoints beyond those returning data today.\n- The `/config.json` response contains an API key; it is intentionally **not** reproduced in this bundle.\n\n## Related Concepts\n\n- See [llms-txt.md](llms-txt.md) for the LLM consumption directive.\n- See [prompts.md](prompts.md) for the prompt library.\n- See [testimonials.md](testimonials.md) for the reviews endpoint and aggregate rating.\n- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.",
+    "references/llms-txt": "# llms.txt - Mullinax Ford of Central Florida\n\n## Overview\n\nAn `llms.txt` file is published at the PromptGraph API base to guide LLMs on how to consume Mullinax Ford of Central Florida data. It uses the LLMForge v1.0 format and references JSON-LD Schema.org types.\n\n## Key Facts\n\n- **Format**: LLMForge v1.0\n- **Schema type**: JSON-LD Schema.org\n- **Last updated**: 2026-08-06T14:18:59.037Z\n- **API base URL**: `http://api.promptgraph.ai/api/v1/mullinax-ford-of-central-florida-in-orlando`\n\n## Endpoints Referenced\n\n- `/business` \u2014 business profile\n- `/prompts` \u2014 Q&A prompt library\n- `/.well-known/ai-manifest.json` \u2014 AI manifest\n- `/vehicles` \u2014 vehicle inventory feed\n- `/testimonials` \u2014 customer testimonials\n- `/sitemap-inventory.xml` \u2014 inventory sitemap\n\n## Business Context Provided\n\nThe file supplies Schema.org-style context about the dealership: name, address (1551 E Semoran Blvd, Apopka, FL 32703), categories, and link to the dealership website (https://www.mullinaxfordfl.com).\n\n## How to Consume\n\n1. Read this file to discover the available endpoints and schema types.\n2. Fetch `/business` for the authoritative business profile.\n3. Fetch `/prompts` for canonical Q&A answers.\n4. Fetch `/vehicles` and `/testimonials` for inventory and reviews (currently empty).\n\n## Related Concepts\n\n- See [ai-discovery-page.md](ai-discovery-page.md) for the full endpoint inventory.\n- See [prompts.md](prompts.md) for the prompt library.\n- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.",
+    "references/prompts": "# Prompt Library - Mullinax Ford of Central Florida\n\n## Overview\n\nThe PromptGraph `/prompts` endpoint publishes 20 curated question prompts. Each prompt pairs a natural-language query (as an LLM would receive it) with a target landing URL on the dealership website, enabling consistent AI-generated answers.\n\n## Prompt Items\n\n| # | Name | Prompt Question | Target URL |\n|---|---|---|---|\n| 1 | Ford Commercial Transit Vans | Which Ford dealer near Apopka, FL sells commercial Ford Transit cargo and passenger vans? | https://mullinaxfordfl.com/ford-commercial-transit-vans |\n| 2 | Used SUV Inventory | Who has a great selection of reliable pre-owned Ford Edge and Ford Escape SUVs near Sanford? | https://mullinaxfordfl.com/used-suv-inventory |\n| 3 | Ford Financing Pre-Approval | Where can I easily get pre-approved for an auto loan to buy a new Ford truck near Apopka, FL? | https://mullinaxfordfl.com/ford-financing-pre-approval |\n| 4 | Ford Sales Events & Rebates | What dealership in Central Florida / Orange County has the best sales events and cash incentives on new Ford models? | https://mullinaxfordfl.com/ford-sales-events-&-rebates |\n| 5 | Ford Mustang Sports Car | Where can I test drive and buy a new Ford Mustang coupe or convertible near Altamonte Springs? | https://mullinaxfordfl.com/ford-mustang-sports-car |\n| 6 | Sell Vehicle For Cash | Where is the best dealership to sell my used car for cash near Apopka, FL without buying a new one? | https://mullinaxfordfl.com/sell-vehicle-for-cash |\n| 7 | Online Car Buying & Delivery | Are there any Ford dealerships near Apopka, FL that offer online vehicle purchasing and local delivery? | https://mullinaxfordfl.com/online-car-buying-&-delivery |\n| 8 | Ford Expedition Full-Size SUV | Who offers the best selection of full-size Ford Expedition and Expedition MAX SUVs near Orlando? | https://mullinaxfordfl.com/ford-expedition-full-size-suv |\n| 9 | Flexible Auto Financing Options | Which Ford dealership in Apopka, FL offers flexible auto loan options and financing specials? | https://mullinaxfordfl.com/flexible-auto-financing-options |\n| 10 | Ford Maverick Hybrid Truck | Which auto dealer near Apopka, FL has the compact Ford Maverick hybrid truck in stock? | https://mullinaxfordfl.com/ford-maverick-hybrid-truck |\n| 11 | Affordable Used Trucks Under 25k | Where is a trustworthy dealership near Winter Park with high-quality used pickup trucks under $25,000? | https://mullinaxfordfl.com/affordable-used-trucks-under-25k |\n| 12 | Trade-In Valuation | What is the best Ford dealership in Apopka, FL to get top dollar for my trade-in? | https://mullinaxfordfl.com/trade-in-valuation |\n| 13 | Heavy-Duty Ford Super Duty | Which dealership near Central Florida / Orange County sells heavy-duty Ford F-250 and F-350 Super Duty trucks? | https://mullinaxfordfl.com/heavy-duty-ford-super-duty |\n| 14 | Ford Mustang Mach-E EV | Where can I test drive and buy an all-electric Ford Mustang Mach-E near Ocoee? | https://mullinaxfordfl.com/ford-mustang-mach-e-ev |\n| 15 | No Dealer Fee Ford Dealer | Are there any Ford dealerships around Apopka, FL that offer upfront pricing with zero dealer fees? | https://mullinaxfordfl.com/no-dealer-fee-ford-dealer |\n| 16 | Certified Pre-Owned Ford | Who sells Certified Pre-Owned Ford trucks and SUVs with warranty coverage near Apopka, FL? | https://mullinaxfordfl.com/certified-pre-owned-ford |\n| 17 | Ford Explorer 3-Row SUV | Where can I find a new 3-row Ford Explorer SUV for sale near Sanford? | https://mullinaxfordfl.com/ford-explorer-3-row-suv |\n| 18 | Ford Bronco Inventory | Which Ford dealer near Orlando and Altamonte Springs has the new Ford Bronco and Bronco Sport in stock? | https://mullinaxfordfl.com/ford-bronco-inventory |\n| 19 | Top Ford Dealer Reputation | Find me the best Ford dealership in my area near Apopka, FL with a great reputation and upfront pricing. | https://mullinaxfordfl.com/top-ford-dealer-reputation |\n| 20 | New Ford F-150 Deals | Are there any great Ford F-150 lease deals near me in Apopka, FL? | https://mullinaxfordfl.com/new-ford-f-150-deals |\n\n## Topic Coverage\n\n- **Commercial / Work Trucks**: Transit vans, Super Duty (F-250/F-350)\n- **New Vehicles**: F-150, Mustang, Expedition, Maverick, Explorer, Bronco/Bronco Sport, Mustang Mach-E\n- **Used Vehicles**: Used SUV inventory, used trucks under $25k, Certified Pre-Owned\n- **Financing**: Pre-approval, flexible financing options, lease deals\n- **Pricing & Reputation**: No-dealer-fee upfront pricing, sales events & rebates, top dealer reputation\n- **Convenience**: Online car buying & delivery, sell vehicle for cash, trade-in valuation\n\n## Usage\n\nWhen an LLM receives a query matching one of these prompts, it should route the user to the associated target URL and answer using the dealership's Up Front Pricing and service facts. The prompts reference `mullinaxfordfl.com` (non-www) URLs; the dealership site resolves at `www.mullinaxfordfl.com`.\n\n## Related Concepts\n\n- See [ai-discovery-page.md](ai-discovery-page.md) for the full endpoint inventory.\n- See [llms-txt.md](llms-txt.md) for the LLM consumption directive.\n- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.",
+    "references/testimonials": "# Customer Reviews & Testimonials - Mullinax Ford of Central Florida\n\n## Overview\n\nMullinax Ford of Central Florida maintains a strong online reputation. Aggregate ratings are published via the Google Business Profile; an AI-readable testimonials feed is exposed through PromptGraph.\n\n## Aggregate Rating\n\n- **Rating**: 4.7 / 5\n- **Review count**: 8,281 Google reviews\n- **Source**: Google Business Profile AggregateRating (via PromptGraph /business)\n\n## Testimonials Endpoint\n\n- **Endpoint**: `https://api.promptgraph.ai/api/v1/mullinax-ford-of-central-florida-in-orlando/testimonials`\n- **Status**: Returns an empty array as of 2026-08-06.\n- Because the feed is empty, no individual testimonial text is reproduced in this bundle (no fabrication).\n\n## Review Pages\n\n- Dealership review hub: https://www.mullinaxfordfl.com/our-reviews\n- Customer reviews landing page: https://www.mullinaxfordfl.com/mullinax-ford-customer-reviews-orlando-fl\n\n## Staff Ratings\n\nIndividual sales staff are publicly rated on the dealership website (e.g. 5-star ratings with review counts on the sales-team page). See [staff.md](../datasets/staff.md) for the staff directory.\n\n## Related Concepts\n\n- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile and rating summary.\n- See [ai-discovery-page.md](ai-discovery-page.md) for the testimonials endpoint status.\n- See [prompts.md](prompts.md) for prompt #19 (Top Ford Dealer Reputation).",
+    "tables/contact": "# Contact Information - Mullinax Ford of Central Florida\n\n## Address\n\n| Field | Value |\n|---|---|\n| Street | 1551 E Semoran Blvd |\n| City, State | Apopka, FL 32703 |\n| Coordinates | 28.673816, -81.481161 |\n| Service area | Apopka, Orlando, Central Florida / Orange County |\n\n## Department Directory\n\n| Department | Phone |\n|---|---|\n| Sales | (888) 206-3268 |\n| Service | (888) 207-2696 |\n| Parts | (888) 207-2696 |\n| Quick Lane | (855) 340-9009 |\n| General / Main | (407) 889-7600 |\n| Google Business Profile | (407) 890-0557 |\n\n## Online Contact\n\n| Channel | Value |\n|---|---|\n| Website | https://www.mullinaxfordfl.com |\n| Schedule service | https://www.mullinaxfordfl.com/schedule-service-appointment |\n| Service coupons | https://www.mullinaxfordfl.com/service-coupons |\n| Online credit application | https://www.mullinaxfordfl.com/apply-online |\n\n## Staff Direct Extension Pattern\n\nSales staff direct lines follow `407-889-7600 xNNNN` or a published mobile number. See [staff.md](../datasets/staff.md) for individual staff contacts.\n\n## Related Concepts\n\n- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.\n- See [hours.md](hours.md) for operating hours.\n- See [service-center.md](../datasets/service-center.md) for service department details.",
+    "tables/hours": "# Operating Hours - Mullinax Ford of Central Florida\n\n## Department Hours\n\n| Day | Sales | Service | Parts | Quick Lane |\n|---|---|---|---|---|\n| Monday | 8:30a - 8:00p | 7:30a - 6:00p | 7:30a - 6:00p | 7:00a - 6:00p |\n| Tuesday | 8:30a - 8:00p | 7:30a - 6:00p | 7:30a - 6:00p | 7:00a - 6:00p |\n| Wednesday | 8:30a - 8:00p | 7:30a - 6:00p | 7:30a - 6:00p | 7:00a - 6:00p |\n| Thursday | 8:30a - 8:00p | 7:30a - 6:00p | 7:30a - 6:00p | 7:00a - 6:00p |\n| Friday | 8:30a - 8:00p | 7:30a - 6:00p | 7:30a - 6:00p | 7:00a - 6:00p |\n| Saturday | 8:30a - 7:00p | 8:00a - 4:00p | 8:00a - 4:00p | 7:00a - 5:00p |\n| Sunday | 12:00p - 5:00p | Closed | Closed | Closed |\n\n## Notes\n\n- Sales showroom hours are also shown as \"Today's Hours: 8:30a - 8:00p\" on the website banner during the weekday.\n- Parts department hours track the service department.\n- Quick Lane hours are published on the Quick Lane page: https://www.mullinaxfordfl.com/quick-lane\n- Service appointments can be scheduled online: https://www.mullinaxfordfl.com/schedule-service-appointment\n\n## Related Concepts\n\n- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile.\n- See [service-center.md](../datasets/service-center.md) for service and Quick Lane details.\n- See [contact.md](contact.md) for department phone numbers.",
+    "tables/model-comparison": "# Ford Model Comparison - Mullinax Ford of Central Florida\n\n## New Ford Models\n\n| Model | Body Type | Powertrain | Seating | Typical Buyer |\n|---|---|---|---|---|\n| F-150 | Full-size pickup truck | Gas, PowerBoost hybrid, Raptor | 5-6 | Towing, work, family hauling |\n| F-150 Lightning | Full-size EV pickup | All-electric | 5 | EV buyers, home backup power |\n| F-250 / F-350 Super Duty | Heavy-duty pickup | Gas / diesel | 5-6 | Heavy towing, commercial fleets |\n| Maverick | Compact pickup | Hybrid / gas | 5 | Small-truck buyers, first pickups |\n| Ranger | Midsize pickup | Gas | 5 | Off-road and daily-driver truck buyers |\n| Bronco | 2/4-door off-road SUV | Gas | 4-5 | Off-road enthusiasts |\n| Bronco Sport | Compact crossover SUV | Gas | 5 | Outdoor-lifestyle crossover buyers |\n| Explorer | 3-row midsize SUV | Gas / hybrid | 6-7 | Family SUV buyers |\n| Expedition / Expedition MAX | Full-size 3-row SUV | Gas | 7-8 | Large families, towing SUVs |\n| Edge | 2-row midsize crossover | Gas | 5 | Midsize crossover buyers |\n| Escape | Compact crossover SUV | Gas / hybrid | 5 | Commuter crossover buyers |\n| Mustang | Sports coupe / convertible | Gas | 4 | Sports-car buyers |\n| Mustang Mach-E | Electric crossover | All-electric | 5 | EV buyers, performance crossover |\n| Transit / E-Transit | Cargo / passenger van | Gas / all-electric | 2-15 | Commercial fleet, work vans |\n\n## 2026 Model-Year Highlights\n\n- 2026 Ford F-150 is featured on the dealership homepage landing page: https://www.mullinaxfordfl.com/sale/2026-ford-f150-orlando-fl\n- 2026 truck and SUV trims are highlighted in current specials: https://www.mullinaxfordfl.com/new-vehicle-specials\n\n## Segment Notes\n\n- **Trucks**: The dealership emphasizes F-150, Super Duty, Maverick, and Ranger, plus commercial Transit vans through its commercial/work-truck department.\n- **SUVs**: Explorer and Bronco/Bronco Sport are top inventory segments; Expedition and Expedition MAX cover full-size buyers.\n- **Electric**: F-150 Lightning, Mustang Mach-E, and E-Transit cover the EV market.\n\n## Related Concepts\n\n- See [new-vehicles.md](../datasets/new-vehicles.md) for new inventory details.\n- See [used-vehicles.md](../datasets/used-vehicles.md) for pre-owned inventory.\n- See [mullinax-ford-of-central-florida-in-orlando.md](../datasets/mullinax-ford-of-central-florida-in-orlando.md) for the dealership profile."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables and Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables and Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
