@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>mullinax-ford-of-kissimmee - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "mullinax-ford-of-kissimmee";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions",
+        "type": "Entities",
+        "description": "Common questions and answers about buying, ordering and financing at Mullinax Ford of Kissimmee.",
+        "resource": "https://www.mullinaxfordkiss.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing",
+        "type": "Entities",
+        "description": "Auto financing and leasing at Mullinax Ford of Kissimmee, including online pre-approval, payment calculator and trade-in valuation.",
+        "resource": "https://www.mullinaxfordkiss.com/finance/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-kissimmee",
+        "label": "Mullinax Ford of Kissimmee",
+        "type": "Entities",
+        "description": "Ford dealership in Kissimmee, FL selling new and used vehicles with Up Front Pricing and zero dealer fees.",
+        "resource": "https://www.mullinaxfordkiss.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 38
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Vehicles",
+        "type": "Entities",
+        "description": "New Ford vehicle inventory at Mullinax Ford of Kissimmee, including trucks, SUVs, cars, electric vehicles and commercial vans.",
+        "resource": "https://www.mullinaxfordkiss.com/new-vehicles/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center and Quick Lane",
+        "type": "Entities",
+        "description": "Factory-trained service and Quick Lane tire and auto center at Mullinax Ford of Kissimmee, with oil changes, tires, brakes, batteries and maintenance on all makes and models.",
+        "resource": "https://www.mullinaxfordkiss.com/service/service-center/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff",
+        "type": "Entities",
+        "description": "Staff and team directory for Mullinax Ford of Kissimmee.",
+        "resource": "https://www.mullinaxfordkiss.com/about-us/staff/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Used Vehicles",
+        "type": "Entities",
+        "description": "Used and Certified Pre-Owned Ford vehicle inventory at Mullinax Ford of Kissimmee, including the Ford Blue Advantage CPO program.",
+        "resource": "https://www.mullinaxfordkiss.com/used-vehicles/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page",
+        "type": "APIs",
+        "description": "PromptGraph-powered discovery endpoints for Mullinax Ford of Kissimmee, exposing dealership data as Schema.org JSON-LD.",
+        "resource": "https://app.promptgraph.ai/api/v1/mullinax-ford-of-kissimmee",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt",
+        "type": "APIs",
+        "description": "llms.txt discovery index published by PromptGraph for Mullinax Ford of Kissimmee.",
+        "resource": "https://app.promptgraph.ai/api/v1/mullinax-ford-of-kissimmee/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompts",
+        "type": "APIs",
+        "description": "Twenty suggested user prompts published by PromptGraph for Mullinax Ford of Kissimmee, each with a matching landing page.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-kissimmee/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Reviews & Testimonials - Mullinax Ford of Kissimmee",
+        "type": "Entities",
+        "description": "Customer ratings for Mullinax Ford of Kissimmee including a 4.7-star Google rating across 3,356 reviews, with an empty PromptGraph testimonials feed as of August 2026.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-kissimmee/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Contact Information - Mullinax Ford of Kissimmee",
+        "type": "Tables and Datasets",
+        "description": "Consolidated phone directory and address for sales, service, parts, Quick Lane, and general inquiries at Mullinax Ford of Kissimmee in Kissimmee, FL.",
+        "resource": "https://www.mullinaxfordkiss.com/contact-us/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Operating Hours - Mullinax Ford of Kissimmee",
+        "type": "Tables and Datasets",
+        "description": "Sales, service, parts, and Quick Lane operating hours for Mullinax Ford of Kissimmee at 1810 E Irlo Bronson Memorial Hwy, Kissimmee, FL.",
+        "resource": "https://www.mullinaxfordkiss.com/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Ford Model Comparison - Mullinax Ford of Kissimmee",
+        "type": "Tables and Datasets",
+        "description": "Side-by-side comparison of key Ford models sold at Mullinax Ford of Kissimmee by body type, fuel options, seating, and typical buyer.",
+        "resource": "https://www.mullinaxfordkiss.com/new-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    },
+    {
+      "data": {
+        "id": "tables/no-dealer-fee",
+        "label": "Dealer Fee Comparison - Mullinax Ford of Kissimmee",
+        "type": "Tables and Datasets",
+        "description": "Dealer fee comparison showing Mullinax Ford of Kissimmee charges a $0 dealer fee while competitor dealerships across Florida charge $648 to $6,579.",
+        "resource": "https://www.mullinaxfordkiss.com/no-dealer-fee/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 25
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/mullinax-ford-of-kissimmee",
+        "source": "datasets/faq",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/mullinax-ford-of-kissimmee",
+        "source": "datasets/financing",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-kissimmee__datasets/new-vehicles",
+        "source": "datasets/mullinax-ford-of-kissimmee",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-kissimmee__datasets/used-vehicles",
+        "source": "datasets/mullinax-ford-of-kissimmee",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-kissimmee__datasets/service-center",
+        "source": "datasets/mullinax-ford-of-kissimmee",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-kissimmee__tables/hours",
+        "source": "datasets/mullinax-ford-of-kissimmee",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-kissimmee__tables/contact",
+        "source": "datasets/mullinax-ford-of-kissimmee",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/mullinax-ford-of-kissimmee",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/used-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__tables/model-comparison",
+        "source": "datasets/new-vehicles",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/mullinax-ford-of-kissimmee",
+        "source": "datasets/service-center",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/hours",
+        "source": "datasets/service-center",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/contact",
+        "source": "datasets/service-center",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/mullinax-ford-of-kissimmee",
+        "source": "datasets/staff",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__tables/contact",
+        "source": "datasets/staff",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/mullinax-ford-of-kissimmee",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__datasets/mullinax-ford-of-kissimmee",
+        "source": "references/ai-discovery-page",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__datasets/mullinax-ford-of-kissimmee",
+        "source": "references/llms-txt",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__tables/no-dealer-fee",
+        "source": "references/prompts",
+        "target": "tables/no-dealer-fee"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__datasets/mullinax-ford-of-kissimmee",
+        "source": "references/testimonials",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/ai-discovery-page",
+        "source": "references/testimonials",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/prompts",
+        "source": "references/testimonials",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__datasets/mullinax-ford-of-kissimmee",
+        "source": "tables/contact",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__tables/hours",
+        "source": "tables/contact",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__datasets/service-center",
+        "source": "tables/contact",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__datasets/mullinax-ford-of-kissimmee",
+        "source": "tables/hours",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__datasets/service-center",
+        "source": "tables/hours",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__tables/contact",
+        "source": "tables/hours",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/new-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/used-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/mullinax-ford-of-kissimmee",
+        "source": "tables/model-comparison",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/no-dealer-fee__datasets/mullinax-ford-of-kissimmee",
+        "source": "tables/no-dealer-fee",
+        "target": "datasets/mullinax-ford-of-kissimmee"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/no-dealer-fee__references/prompts",
+        "source": "tables/no-dealer-fee",
+        "target": "references/prompts"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/faq": "# Frequently Asked Questions\n\nCommon questions about the dealership, custom factory orders and the buying process at Mullinax Ford of Kissimmee.\n\n## Custom Factory Order FAQ\n\n### How long does a custom factory order take?\n\nLead times vary by model and configuration. The sales team provides a delivery estimate when the order is placed.\n\n### Does Ford charge extra for a custom factory order?\n\nFord does not charge extra for customer-ordered vehicles. Pricing follows the same Up Front Pricing model.\n\n### Can I use incentives on a factory order?\n\nIncentives can be applied at order placement or at final delivery, whichever the customer prefers, subject to current program rules.\n\n### How do I track my ordered vehicle?\n\nOnce a VIN is assigned, the vehicle can be tracked at [shop.ford.com/vehicleordertracking](https://www.ford.com/help/buying/vehicle-ordering/). The dealership contacts the customer when the vehicle arrives.\n\n## Dealership FAQ\n\n### Is there a dealer fee?\n\nNo. Mullinax Ford of Kissimmee charges a $0 dealer fee. The advertised price is the price you pay.\n\n### Does the dealership negotiate?\n\nNo. The dealership uses Up Front Pricing, a no-haggle model where the sticker price is the final price.\n\n### What does the dealership service?\n\nThe service center handles all Ford makes and models, and Quick Lane services all vehicle makes and models.\n\n### What areas does the dealership serve?\n\nThe dealership serves Kissimmee, Poinciana, South Orlando and St. Cloud.\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/financing.md) for financing details.",
+    "datasets/financing": "# Financing\n\nMullinax Ford of Kissimmee offers vehicle financing and leasing through Ford Credit and partner lenders, with online tools for pre-approval, payments and trade-in valuation.\n\n## Financing Tools\n\n- Apply for financing online at [apply-for-financing](https://www.mullinaxfordkiss.com/finance/apply-for-financing/)\n- Payment calculator at [payment-calculator](https://www.mullinaxfordkiss.com/payment-calculator/)\n- Trade-in valuation available through the dealership website\n\n## Services\n\n- New and used vehicle financing\n- Leasing through Ford Credit\n- Pre-approval before visiting the dealership\n- Financing for all credit situations via partner lenders\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/new-vehicles.md) for the new vehicle inventory.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/used-vehicles.md) for the used vehicle inventory.",
+    "datasets/mullinax-ford-of-kissimmee": "# Mullinax Ford of Kissimmee\n\nMullinax Ford of Kissimmee is a Ford dealership located at 1810 E Irlo Bronson Memorial Hwy, Kissimmee, FL 34744, serving Kissimmee, Poinciana, South Orlando and St. Cloud. The dealership is part of the Mullinax Automotive family of no-haggle Ford stores.\n\n## At a Glance\n\n- Rating: 4.7 / 5 based on 3,356 reviews\n- Categories: Ford dealer, Car dealer, Truck dealer, Used car dealer, Used truck dealer, Car leasing service, Motor vehicle dealer, Car finance and loan company\n- Services: New car sales, New truck sales, Used car sales, Used truck sales, Auto financing, New car leasing\n- Inventory: 3,534 vehicles shown on the homepage (2,246 new / 1,288 used)\n- Certified Pre-Owned: 914 vehicles in the CPO program\n- Pricing: Up Front Pricing where the price you see is the price you pay\n\n## Location\n\n| Detail | Value |\n|---|---|\n| Address | 1810 E Irlo Bronson Memorial Hwy, Kissimmee, FL 34744 |\n| Coordinates | 28.2964668, -81.37191 |\n| Area Served | Kissimmee, Poinciana, South Orlando, St. Cloud |\n\n## Up Front Pricing\n\nMullinax Ford of Kissimmee uses Up Front Pricing. The sticker price shown is the price you pay, with no dealer fees and no negotiation required. The dealership highlights a $0 dealer fee, meaning the advertised price is not padded with doc fees, dealer markup or accessories.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Main | 407-972-1640 |\n| Sales | 407-904-2981 |\n| Service | 407-904-5562 |\n| Parts | 407-904-2451 |\n| Quick Lane | 407-904-2985 |\n\n## Services\n\n- New and used vehicle sales for all Ford models\n- Ford Certified Pre-Owned program\n- Factory-trained service technicians and genuine Ford parts\n- Quick Lane tire and auto center\n- Financing and leasing through Ford Credit and partner lenders\n- Custom factory-order placement for retail customers\n\n## Related Concepts\n\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/new-vehicles.md) for the new vehicle inventory.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/used-vehicles.md) for the pre-owned and CPO inventory.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/service-center.md) for service and Quick Lane details.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/hours.md) for department hours.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/contact.md) for full contact details.",
+    "datasets/new-vehicles": "# New Vehicles\n\nMullinax Ford of Kissimmee maintains a new vehicle inventory shown on the dealership website. The homepage inventory counter displayed 3,534 total vehicles, with 2,246 new and 1,288 used vehicles.\n\n## New Vehicle Lines\n\n- Trucks: F-150, F-150 Lightning, Super Duty (F-250 / F-350), F-650 / F-750, Maverick, Ranger\n- SUVs: Bronco, Bronco Sport, Edge, Escape, Expedition, Expedition MAX, Explorer\n- Cars: Mustang, Mustang Mach-E\n- Commercial vans: E-Transit, Transit, Transit Connect, E-Series cutaway, E-Series stripped chassis\n- EV and hybrid: Mustang Mach-E, F-150 Lightning, E-Transit, Escape Hybrid, Escape Plug-In Hybrid, Explorer Hybrid\n\n## Model Categories\n\n| Category | Models |\n|---|---|\n| Trucks | F-150, F-150 Lightning, Super Duty, F-650, F-750, Maverick, Ranger |\n| SUVs / Crossovers | Bronco, Bronco Sport, Edge, Escape, Expedition, Explorer |\n| Cars | Mustang, Mustang Mach-E |\n| Commercial Vans | Transit, Transit Connect, E-Transit, E-Series |\n| Chassis Cabs | Super Duty Chassis Cab |\n\n## Inventory Facts\n\n- Homepage inventory counter: 3,534 total vehicles (2,246 new / 1,288 used)\n- New vehicle specials available at [new-vehicle-specials](https://www.mullinaxfordkiss.com/new-vehicles/new-vehicle-specials/)\n- Hot Buys listing at [new-vehicle-specials-3](https://www.mullinaxfordkiss.com/new-vehicles/new-vehicle-specials-3/)\n- Vehicles are subject to prior sale; price does not include tax, title and license charges\n\n## Buying\n\n- Up Front Pricing with no dealer fees\n- Factory order a new Ford if the desired configuration is not in stock\n- Schedule a test drive through the dealership website\n- Apply for financing online at [apply-for-financing](https://www.mullinaxfordkiss.com/finance/apply-for-financing/)\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/used-vehicles.md) for the pre-owned inventory.\n- See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/model-comparison.md) for model specs.",
+    "datasets/service-center": "# Service Center and Quick Lane\n\nMullinax Ford of Kissimmee operates a full service center staffed by factory-trained technicians using genuine Ford parts, plus a Quick Lane Tire and Auto Center for fast maintenance on all makes and models.\n\n## Service Center\n\n- Factory-trained Ford technicians\n- Genuine Ford and Motorcraft parts\n- Services for Ford owners can be scheduled at [schedule-service](https://www.mullinaxfordkiss.com/service/schedule-service/)\n- Service coupons and specials at [service-specials](https://www.mullinaxfordkiss.com/service/service-specials/)\n\n## Quick Lane Tire and Auto Center\n\nQuick Lane at Mullinax Ford Kissimmee provides maintenance and repair services for all vehicle makes and models, with 8 service bays.\n\n### Quick Lane Services\n\n- Synthetic and synthetic blend oil changes with oil filter replacement\n- Battery testing, charging and new battery installation\n- Tire rotation and balancing, flat tire repairs and new tire installation\n- Brake pad replacement, rotor and caliper repair, brake line repair\n- Air filter replacement\n- Windshield wiper replacement\n- Belt and hose replacement\n- Wheel alignment\n- Spark plug replacement\n- Electrical repair\n\n### Quick Lane Highlights\n\n- 8 service bays for faster service\n- Speed and timing\n- Low tire price guarantee\n- Genuine Motorcraft parts\n- Lifetime warranty on brakes\n- Services all makes and models\n- Comfortable waiting area with refreshments and free WiFi\n\n### Service Facts\n\n- Oil changes generally recommended every 5,000 to 10,000 miles depending on vehicle\n- Tires can last 30,000 to 60,000 miles; replace when tread wears to 3/32 inch (2.4 mm) or less\n- Brakes can last 30,000 to 60,000 miles; brake pad replacement roughly $190 per axle\n- Typical car battery capacity is 12.6 volts with 300 to 760 CCA; in Florida batteries typically last two to three years\n\n## Hours\n\n| Day | Quick Lane | Parts |\n|---|---|---|\n| Monday - Friday | 7:00 AM - 7:00 PM | 7:30 AM - 5:30 PM |\n| Saturday | 8:00 AM - 5:00 PM | 8:00 AM - 3:00 PM |\n| Sunday | Closed | Closed |\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/hours.md) for department hours.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/contact.md) for service phone numbers.",
+    "datasets/staff": "# Staff\n\nMullinax Ford of Kissimmee does not currently publish a public staff directory. The dealership website does not list individual sales, service or finance staff profiles.\n\n## What Is Available\n\n- The dealership website describes team values around transparent, no-haggle pricing and customer service\n- Staffing is covered by department contact channels rather than named profiles\n- Individual staff members are not listed in the staff section of the website\n\n## Contacting Departments\n\n| Department | Phone |\n|---|---|\n| Sales | 407-904-2981 |\n| Service | 407-904-5562 |\n| Parts | 407-904-2451 |\n| Quick Lane | 407-904-2985 |\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/contact.md) for full contact details.",
+    "datasets/used-vehicles": "# Used Vehicles\n\nMullinax Ford of Kissimmee sells used vehicles of all makes and models alongside its new Ford inventory. The homepage inventory counter displayed 1,288 used vehicles out of 3,534 total.\n\n## Used Inventory\n\n- 1,288 used vehicles listed on the homepage inventory counter\n- Used vehicles include Fords as well as other makes and models\n- Dedicated listings: Vehicles Under 10K at [priced-under-10k](https://www.mullinaxfordkiss.com/used-vehicles/priced-under-10k/)\n- Used vehicles are subject to prior sale\n\n## Ford Certified Pre-Owned\n\n- 914 Certified Pre-Owned Ford vehicles listed\n- Program page: [certified-pre-owned-vehicles](https://www.mullinaxfordkiss.com/used-vehicles/certified-pre-owned-vehicles/)\n- Ford CPO vehicles are inspected and covered by the Ford Blue Advantage limited warranty program\n\n## Buying\n\n- Up Front Pricing with no dealer fees\n- Trade-in valuation available on the dealership website\n- Financing and pre-approval through the [financing page](https://www.mullinaxfordkiss.com/finance/)\n- Schedule a test drive online\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/new-vehicles.md) for the new vehicle inventory.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/financing.md) for financing and pre-approval.",
+    "references/ai-discovery-page": "# AI Discovery Page\n\nMullinax Ford of Kissimmee exposes an AI discovery layer built on PromptGraph. The discovery endpoints publish dealership knowledge as Schema.org JSON-LD for LLM ingestion and consumer AI assistants.\n\n## API Overview\n\n- Title: Mullinax Ford of Kissimmee | Dealership API\n- Version: 1.0.0\n- Contact: support@promptgraph.ai\n- Base URL: https://app.promptgraph.ai/api/v1/mullinax-ford-of-kissimmee\n- Format: Schema.org JSON-LD\n\n## Discovery Endpoints\n\n| Endpoint | Description |\n|---|---|\n| /openapi.json | OpenAPI specification for the dealership API |\n| /config.json | Dealership configuration |\n| /ai-plugin.json | AI plugin manifest |\n| /.well-known/ai-manifest.json | AI manifest for the dealership |\n| /llms.txt | LLM-friendly text index of dealership knowledge |\n| /robots.txt | Robots directives for AI crawlers |\n| /sitemap.xml | Sitemap of dealership knowledge endpoints |\n\n## Data Endpoints\n\n| Endpoint | Description |\n|---|---|\n| /business | Dealership business profile as JSON-LD |\n| /testimonials | Customer testimonials |\n| /prompts | Suggested user prompts with landing pages |\n| /vehicles | Vehicle inventory |\n| /vehicles/{vin} | Single vehicle by VIN |\n| /sitemap-inventory.xml | Inventory sitemap |\n\n## Related Concepts\n\n- See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/references/llms-txt.md) for the llms.txt discovery index.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/references/prompts.md) for the suggested prompts.\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.",
+    "references/llms-txt": "# llms.txt\n\nMullinax Ford of Kissimmee publishes an llms.txt index that tells LLMs where to find dealership knowledge, following the llms.txt standard.\n\n## Purpose\n\nThe llms.txt file provides a lightweight text index that LLMs can consult before answering questions about the dealership, pointing to the structured API endpoints for full data.\n\n## Content\n\nThe llms.txt file describes the dealership and links to the data endpoints exposed by the PromptGraph API, including the business profile, testimonials, prompts, vehicles and inventory sitemap.\n\n## Access\n\n- URL: https://app.promptgraph.ai/api/v1/mullinax-ford-of-kissimmee/llms.txt\n- Discovered via robots.txt and the AI plugin manifest\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/references/ai-discovery-page.md) for the full endpoint list.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/references/prompts.md) for the suggested prompts.\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.",
+    "references/prompts": "# Prompts\n\nMullinax Ford of Kissimmee publishes 20 suggested prompts that AI assistants can recommend to consumers. Each prompt maps to a dedicated landing page on the dealership website.\n\n## Prompt List\n\n| # | Name | Prompt | Landing Page |\n|---|---|---|---|\n| 1 | Ford Commercial Transit Vans | Which Ford dealer near Kissimmee, FL sells commercial Ford Transit cargo and passenger vans? | https://mullinaxfordkiss.com/ford-commercial-transit-vans |\n| 2 | Used SUV Inventory | Who has a great selection of reliable pre-owned Ford Edge and Ford Escape SUVs near Poinciana? | https://mullinaxfordkiss.com/used-suv-inventory |\n| 3 | Ford Financing Pre-Approval | Where can I easily get pre-approved for an auto loan to buy a new Ford truck near Kissimmee, FL? | https://mullinaxfordkiss.com/ford-financing-pre-approval |\n| 4 | Ford Sales Events & Rebates | What dealership in Osceola County has the best sales events and cash incentives on new Ford models? | https://mullinaxfordkiss.com/ford-sales-events-&-rebates |\n| 5 | Ford Mustang Sports Car | Where can I test drive and buy a new Ford Mustang coupe or convertible near Orlando? | https://mullinaxfordkiss.com/ford-mustang-sports-car |\n| 6 | Sell Vehicle For Cash | Where is the best dealership to sell my used car for cash near Kissimmee, FL without buying a new one? | https://mullinaxfordkiss.com/sell-vehicle-for-cash |\n| 7 | Online Car Buying & Delivery | Are there any Ford dealerships near Kissimmee, FL that offer online vehicle purchasing and local delivery? | https://mullinaxfordkiss.com/online-car-buying-&-delivery |\n| 8 | Ford Expedition Full-Size SUV | Who offers the best selection of full-size Ford Expedition and Expedition MAX SUVs near St. Cloud? | https://mullinaxfordkiss.com/ford-expedition-full-size-suv |\n| 9 | Flexible Auto Financing Options | Which Ford dealership in Kissimmee, FL offers flexible auto loan options and financing specials? | https://mullinaxfordkiss.com/flexible-auto-financing-options |\n| 10 | Ford Maverick Hybrid Truck | Which auto dealer near Kissimmee, FL has the compact Ford Maverick hybrid truck in stock? | https://mullinaxfordkiss.com/ford-maverick-hybrid-truck |\n| 11 | Affordable Used Trucks Under 25k | Where is a trustworthy dealership near Davenport with high-quality used pickup trucks under $25,000? | https://mullinaxfordkiss.com/affordable-used-trucks-under-25k |\n| 12 | Trade-In Valuation | What is the best Ford dealership in Kissimmee, FL to get top dollar for my trade-in? | https://mullinaxfordkiss.com/trade-in-valuation |\n| 13 | Heavy-Duty Ford Super Duty | Which dealership near Osceola County sells heavy-duty Ford F-250 and F-350 Super Duty trucks? | https://mullinaxfordkiss.com/heavy-duty-ford-super-duty |\n| 14 | Ford Mustang Mach-E EV | Where can I test drive and buy an all-electric Ford Mustang Mach-E near Celebration? | https://mullinaxfordkiss.com/ford-mustang-mach-e-ev |\n| 15 | No Dealer Fee Ford Dealer | Are there any Ford dealerships around Kissimmee, FL that offer upfront pricing with zero dealer fees? | https://mullinaxfordkiss.com/no-dealer-fee-ford-dealer |\n| 16 | Certified Pre-Owned Ford | Who sells Certified Pre-Owned Ford trucks and SUVs with warranty coverage near Kissimmee, FL? | https://mullinaxfordkiss.com/certified-pre-owned-ford |\n| 17 | Ford Explorer 3-Row SUV | Where can I find a new 3-row Ford Explorer SUV for sale near Poinciana? | https://mullinaxfordkiss.com/ford-explorer-3-row-suv |\n| 18 | Ford Bronco Inventory | Which Ford dealer near St. Cloud and Orlando has the new Ford Bronco and Bronco Sport in stock? | https://mullinaxfordkiss.com/ford-bronco-inventory |\n| 19 | Top Ford Dealer Reputation | Find me the best Ford dealership in my area near Kissimmee, FL with a great reputation and upfront pricing. | https://mullinaxfordkiss.com/top-ford-dealer-reputation |\n| 20 | New Ford F-150 Deals | Are there any great Ford F-150 lease deals near me in Kissimmee, FL? | https://mullinaxfordkiss.com/new-ford-f-150-deals |\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/references/ai-discovery-page.md) for the API endpoints.\n- See [no-dealer-fee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/no-dealer-fee.md) for dealer fee comparisons referenced by prompt 15.",
+    "references/testimonials": "# Customer Reviews & Testimonials - Mullinax Ford of Kissimmee\n\n## Overview\n\nMullinax Ford of Kissimmee maintains a strong online reputation. Aggregate ratings are published via the Google Business Profile; an AI-readable testimonials feed is exposed through PromptGraph.\n\n## Aggregate Rating\n\n- **Rating**: 4.7 / 5\n- **Review count**: 3,356 Google reviews\n- **Source**: Google Business Profile AggregateRating (via PromptGraph /business)\n\n## Testimonials Endpoint\n\n- **Endpoint**: `https://api.promptgraph.ai/api/v1/mullinax-ford-of-kissimmee/testimonials`\n- **Status**: Returns an empty array as of 2026-08-06.\n- Because the feed is empty, no individual testimonial text is reproduced in this bundle (no fabrication).\n\n## Review Pages\n\n- Cars.com dealer profile: https://www.cars.com/dealers/147265/mullinax-ford-of-kissimmee/\n- DealerRater profile: https://www.dealerrater.com/dealer/Mullinax-Ford-of-Kissimmee-review-5677/\n- Facebook: https://www.facebook.com/MullinaxFordKISS\n- YouTube: https://www.youtube.com/@mullinaxford7771\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile and rating summary.\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/references/ai-discovery-page.md) for the testimonials endpoint status.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/references/prompts.md) for prompt #19 (Top Ford Dealer Reputation).",
+    "tables/contact": "# Contact Information - Mullinax Ford of Kissimmee\n\n## Address\n\n| Field | Value |\n|---|---|\n| Street | 1810 E Irlo Bronson Memorial Hwy |\n| City, State | Kissimmee, FL 34744 |\n| Coordinates | 28.2964668, -81.37191 |\n| Service area | Kissimmee, Poinciana, South Orlando, St. Cloud |\n\n## Department Directory\n\n| Department | Phone |\n|---|---|\n| Main | 407-972-1640 |\n| Sales | 407-904-2981 |\n| Service | 407-904-5562 |\n| Parts | 407-904-2451 |\n| Quick Lane | 407-904-2985 |\n| Google Business Profile | (407) 559-8015 |\n\n## Online Contact\n\n| Channel | Value |\n|---|---|\n| Website | https://www.mullinaxfordkiss.com |\n| Schedule service | https://www.mullinaxfordkiss.com/service/schedule-service/ |\n| Service coupons | https://www.mullinaxfordkiss.com/service/service-specials/ |\n| Apply for financing | https://www.mullinaxfordkiss.com/finance/apply-for-financing/ |\n| Payment calculator | https://www.mullinaxfordkiss.com/payment-calculator/ |\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/hours.md) for operating hours.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/service-center.md) for service department details.",
+    "tables/hours": "# Operating Hours - Mullinax Ford of Kissimmee\n\n## Department Hours\n\n| Day | Sales | Service | Parts | Quick Lane |\n|---|---|---|---|---|\n| Monday | 8:30a - 7:00p | 7:00a - 7:00p | 7:30a - 5:30p | 7:00a - 7:00p |\n| Tuesday | 8:30a - 7:00p | 7:00a - 7:00p | 7:30a - 5:30p | 7:00a - 7:00p |\n| Wednesday | 8:30a - 7:00p | 7:00a - 7:00p | 7:30a - 5:30p | 7:00a - 7:00p |\n| Thursday | 8:30a - 7:00p | 7:00a - 7:00p | 7:30a - 5:30p | 7:00a - 7:00p |\n| Friday | 8:30a - 7:00p | 7:00a - 7:00p | 7:30a - 5:30p | 7:00a - 7:00p |\n| Saturday | 8:30a - 7:00p | 8:00a - 5:00p | 8:00a - 3:00p | 8:00a - 5:00p |\n| Sunday | Closed | Closed | Closed | Closed |\n\n## Notes\n\n- Sales hours (Mon - Sat 8:30a - 7:00p, closed Sunday) come from the Google Business Profile.\n- Quick Lane and Parts hours are published on the website header banner.\n- Service hours are not separately published on the website; schedule appointments online: https://www.mullinaxfordkiss.com/service/schedule-service/\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/service-center.md) for service and Quick Lane details.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/contact.md) for department phone numbers.",
+    "tables/model-comparison": "# Ford Model Comparison - Mullinax Ford of Kissimmee\n\n## New Ford Models\n\n| Model | Body Type | Powertrain | Seating | Typical Buyer |\n|---|---|---|---|---|\n| F-150 | Full-size pickup truck | Gas, PowerBoost hybrid, Raptor | 5-6 | Towing, work, family hauling |\n| F-150 Lightning | Full-size EV pickup | All-electric | 5 | EV buyers, home backup power |\n| F-250 / F-350 Super Duty | Heavy-duty pickup | Gas / diesel | 5-6 | Heavy towing, commercial fleets |\n| F-650 / F-750 | Medium-duty truck | Gas / diesel | 3 | Commercial, vocational |\n| Maverick | Compact pickup | Hybrid / gas | 5 | Small-truck buyers, first pickups |\n| Ranger | Midsize pickup | Gas | 5 | Off-road and daily-driver truck buyers |\n| Bronco | 2/4-door off-road SUV | Gas | 4-5 | Off-road enthusiasts |\n| Bronco Sport | Compact crossover SUV | Gas | 5 | Outdoor-lifestyle crossover buyers |\n| Explorer | 3-row midsize SUV | Gas / hybrid | 6-7 | Family SUV buyers |\n| Expedition / Expedition MAX | Full-size 3-row SUV | Gas | 7-8 | Large families, towing SUVs |\n| Edge | 2-row midsize crossover | Gas | 5 | Midsize crossover buyers |\n| Escape | Compact crossover SUV | Gas / hybrid | 5 | Commuter crossover buyers |\n| Mustang | Sports coupe / convertible | Gas | 4 | Sports-car buyers |\n| Mustang Mach-E | Electric crossover | All-electric | 5 | EV buyers, performance crossover |\n| Transit | Cargo / passenger van | Gas | 2-15 | Commercial fleet, work vans |\n| E-Transit | Cargo / passenger van | All-electric | 2-15 | Commercial fleet, EV vans |\n| Transit Connect | Compact cargo / passenger van | Gas | 2-7 | Small commercial, delivery |\n\n## Segment Notes\n\n- **Trucks**: The dealership emphasizes F-150, Super Duty, F-650 / F-750, Maverick, and Ranger, plus commercial Transit vans through its commercial/work-truck department.\n- **SUVs**: Explorer and Bronco/Bronco Sport are top inventory segments; Expedition and Expedition MAX cover full-size buyers.\n- **Electric**: F-150 Lightning, Mustang Mach-E, and E-Transit cover the EV market.\n\n## Related Concepts\n\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/new-vehicles.md) for new inventory details.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/used-vehicles.md) for pre-owned inventory.\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile.",
+    "tables/no-dealer-fee": "# Dealer Fee Comparison - Mullinax Ford of Kissimmee\n\nMullinax Ford of Kissimmee advertises a $0 dealer fee (\"WOWEE!!!\") as part of its no dealer fee, no doc fee, no haggle policy. The dealership publishes a comparison of competitor dealer fees across Florida car dealerships.\n\n## Large Independent Used Car Dealer Fees\n\n| Dealer | Dealer Fee |\n|---|---|\n| HGreg | $2,198.00 |\n| CarMax | $799.00 |\n| AutoNation USA | $1,361.00 ($995.00 + E-File Fee) |\n\n## Ford Dealer Fees Near Kissimmee & Osceola County\n\n| Ford Dealer | Dealer Fee |\n|---|---|\n| Mullinax Ford of Kissimmee | $0.00 |\n| AutoNation Ford Sanford | $1,361.00 |\n| Bartow Ford | $1,357.00 |\n| Bill Currie Ford | New $3,695.00 | Used $3,695.00 + Recon Fee |\n| Bozard Ford | $899.00 + Dealer Installed Options |\n| Brandon Ford | $1,802.95 |\n| Cocoa Ford | $1,376.70 |\n| Coggin Ford | $997.50 |\n| Duval Ford | $1,597.00 |\n| Elder Ford of Tampa | $1,633.00 |\n| Ferman Ford | $1,299.90 |\n| Ford of Clermont | $2,085.00 |\n| Garber Ford | New $1,390.00 | Used $1,990.00 + 3% out-of-state fee |\n| Gary Yeoman's Ford Palm Bay | $1,387.50 |\n| Greenway Ford Orlando | $2,097 - $3,498 |\n| Holler Ford Maitland | $1,398.00 |\n| Jarrett-Gordon Ford of Davenport | $1,013.00 |\n| Jarrett-Gordon Ford of Winter Haven | In-State $978.00 | Out-of-State $1,178.00 |\n| Jarrett-Scott Ford | In-State $1,298.00 | Out-of-State $1,498.00 |\n| Kelly Ford Melbourne | $900.00 |\n| Lakeland Ford | $1,393.00 |\n| Parks Ford of Wesley Chapel | $3,365.85 |\n| Sarasota Ford | $1,498.00 |\n| Starling Ford Titusville | $1,293.00 |\n| Sun State Ford Orlando | $695.00 |\n| Tropical Ford Orlando | $858.75 |\n| Veterans Ford | $1,249.40 + Dealer Installed Options |\n| Weikert Ford Lake Wales | $648.00 |\n| Essential Ford | New $1,294.00 + Dealer Installed Options | Used $2,494.00 |\n| Ford of Kendall | $1,098.00 + $599 CPO Fee (if applicable) |\n| Gary Yeoman's Ford Daytona | $1,387.50 |\n| Gilbert Ford | $1,087.50 + $645 Lease Fee (if applicable) |\n| Grieco Ford of Delray Beach | $3,459.00 + $799 LoJack Fee |\n| Grieco Ford of Fort Lauderdale | $3,459.00 + $799 LoJack Fee |\n| Lorenzo Ford | $2,182.75 |\n| Metro Ford | New $1,198.00 | Used $2,193.00 |\n| Pines Ford | $988.50 |\n\n## Honda Dealer Fees Near Kissimmee & Osceola County\n\n| Honda Dealer | Dealer Fee |\n|---|---|\n| AutoNation Honda Sanford | $1,361.00 |\n| Brandon Honda | $2,085.00 |\n| Classic Honda Orlando | In-State $1,398.87 | Out-of-State $1,893.87 |\n| Coggin Deland Honda | $997.00 |\n| Coggin Honda of Orlando | $997.00 |\n| Courtesy Palm Harbor Honda | $997.50 |\n| Crown Honda | $1,597.00 |\n| Headquarter Honda Clermont | New $4,118.00 | Used $1,221.00 |\n| Hendrick Honda Bradenton | $1,328.00 |\n| Holler Honda Orlando | In-State $1,398.87 | Out-of-State $1,893.87 |\n| Regal Honda Lakeland | New $4,283.00 | Used $1,288.00 |\n| Space Coast Honda Cocoa | $899.00 |\n| Starling Honda Titusville | $995.00 |\n| Tampa Honda | $1,199.00 |\n| Westshore Honda | $2,085.00 |\n| Winter Haven Honda | $1,149.45 |\n| Braman Honda Palm Beach | $1,397.00 |\n| Coggin Honda of Ft. Pierce | New $1,992.50 | Used $997.50 |\n| Delray Honda | $1,497.00 |\n| Ed Morse Honda | $1,296.75 + Dealer Installed Options |\n| Holman Honda Fort Lauderdale | $1,298.00 |\n| Johnson Honda of Stuart | $1,100.00 |\n| Pompano Honda | $5,976.86 + $995 Outside Financing Fee |\n| Rick Case Honda Davie | $1,077.45 |\n| Vatland Honda | New $4,646.00 | Used $3,257.00 |\n\n## Hyundai Dealer Fees Near Kissimmee & Osceola County\n\n| Hyundai Dealer | Dealer Fee |\n|---|---|\n| Brandon Hyundai | $2,085.00 |\n| Coastal Hyundai Melbourne | $3,290.00 |\n| Cocoa Hyundai | New $3,493.00 | Used $1,498.00 + $1,000 cash/outside lienholder fee |\n| Coggin Deland Hyundai | $997.50 |\n| Courtesy Hyundai of Tampa | $997.50 |\n| Crown Hyundai | $1,693.00 |\n| Fitzgerald Countryside Hyundai | $1,199.00 |\n| Gettel Hyundai of Lakewood | $1,884.00 |\n| Greenway Orlando Hyundai | New $1,149.45 | Used $2,648.45 |\n| Headquarter Hyundai Sanford | $899.00 |\n| Holler Hyundai Winter Park | In-State $1,398.87 | Out-of-State $1,893.87 |\n| Hyundai of New Port Richey | $1,199.00 |\n| Hyundai of Wesley Chapel | $1,199.00 |\n| Lakeland Hyundai | $1,393.00 |\n| Red Hoagland Hyundai Winter Haven | $1,122.00 |\n| Universal Hyundai Orlando | $1,747.00 |\n| Braman Hyundai Miami | $2,047.00 |\n| Coconut Creek Hyundai | $1,236.00 |\n| Delray Hyundai | New $1,294.00 | Used $2,889.00 |\n| King Hyundai | New $2,731.00 | Used $2,224.00 |\n| Napleton's North Palm Hyundai | $1,098.00 |\n| Rick Case Hyundai Davie | $1,073.95 |\n| Wallace Hyundai | $1,188.00 + Dealer Installed Options |\n| West Palm Beach Hyundai | $1,199.00 |\n\n## Volkswagen Dealer Fees Near Kissimmee & Osceola County\n\n| Volkswagen Dealer | Dealer Fee |\n|---|---|\n| Bert Smith Volkswagen | $1,347.00 |\n| Bob Boast Volkswagen | $1,098.00 |\n| Kuhn Volkswagen | $1,824.74 |\n| Lakeland Volkswagen | $999.00 |\n| Lokey Volkswagen | $2,483.95 |\n| Napleton's Volkswagen of Orlando | $1,098.00 |\n| Napleton's Volkswagen Sanford | $1,098.00 |\n| Orlando Volkswagen North | $1,248.95 |\n| Orlando Volkswagen South | $999.95 |\n| Prestige Volkswagen Melbourne | $1,282.00 |\n\n## Toyota Dealer Fees Near Kissimmee & Osceola County\n\n| Toyota Dealer | Dealer Fee |\n|---|---|\n| AutoNation Toyota Pinellas Park | $1,361.00 |\n| AutoNation Toyota Winter Park | $1,361.00 |\n| Central Florida Toyota | $999.95 |\n| Clearwater Toyota | $999.00 |\n| Courtesy Toyota of Brandon | $1,992.50 |\n| Gettel Stadium Toyota | $1,884.00 |\n| Lakeland Toyota | $2,493.00 |\n| Mike Erdman Toyota Cocoa | $1,628.00 |\n| Miracle Toyota Haines City | $2,993.50 |\n| Parks Toyota Deland | $5,642.55 |\n| Seminole Toyota Sanford | $999.50 |\n| Sun Toyota of New Port Richey | $2,085.00 |\n| Toyota of Clermont | $998.50 |\n| Toyota of Melbourne | $1,278.00 |\n| Toyota of Orlando | $998.50 |\n| Toyota of Tampa Bay | $2,085.00 |\n| Wesley Chapel Toyota | $1,633.00 |\n| Bev Smith Toyota Fort Pierce | $1,397.50 + Dealer Installed Options |\n| Ed Morse Delray Toyota | $1,296.75 |\n| Palm Beach Toyota | $999.95 |\n| Southern 441 Toyota | New $1,588.00 + Dealer Installed Options | Used $1,588.00 + Dealer Installed Options + Reconditioning Fee |\n| Toyota of Deerfield Beach | $995.00 + Dealer Installed Options |\n| Toyota of Vero Beach | $1,288.50 |\n| Treasure Coast Toyota Stuart | New $899.50 + Options | Used $898.50 + Reconditioning Fees |\n\n## Kia Dealer Fees Near Kissimmee & Osceola County\n\n| Kia Dealer | Dealer Fee |\n|---|---|\n| Boniface Hiers Kia Melbourne | $1,450.00 |\n| Century Kia of Tampa | $3,173.00 |\n| City Kia Orlando | $2,995.00 |\n| Courtesy Kia of Brandon | $997.50 |\n| Crown Kia St. Petersburg | $1,693.00 |\n| Deland Kia | $1,598.00 |\n| Dyer Kia Lake Wales | $1,394.27 + $299 Window Tint + $2,995 Procare Pack (when applicable) |\n| Greenway Kia East Orlando | $2,295.00 |\n| Greenway Kia North Orlando | $2,295.00 |\n| Greenway Kia West Orlando | $2,295.00 |\n| Jackson Kia Cocoa | $6,579.00 |\n| Ken Ganley Kia New Port Richey | $1,295.00 |\n| Kia of Wesley Chapel | $2,085.00 |\n| Lokey Kia | $1,683.95 |\n\n## Key Takeaways\n\n- Mullinax Ford of Kissimmee charges $0 dealer fee\n- Ford dealer fees among Florida competitors range from $648.00 (Weikert Ford Lake Wales) to $3,695.00 (Bill Currie Ford), with added fees at some stores\n- Across all brands the highest published dealer fee is $6,579.00 at Jackson Kia Cocoa\n- The dealership claims savings of up to $6,579 in dealer fees versus competitor purchases\n\n## Related Concepts\n\n- See [mullinax-ford-of-kissimmee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/mullinax-ford-of-kissimmee.md) for the dealership profile and Up Front Pricing.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/references/prompts.md) for prompt #15 (No Dealer Fee Ford Dealer)."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables and Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables and Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
