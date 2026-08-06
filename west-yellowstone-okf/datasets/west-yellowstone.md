@@ -75,7 +75,7 @@ See [seasonal-activities.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com
 
 ## Nearby Communities
 
-- [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/datasets/datasets/dealership.md) - Big Sky Resort corridor, Bozeman
+- dealership - Big Sky Resort corridor, Bozeman
 
 ## Schema
 
