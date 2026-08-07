@@ -1,0 +1,9 @@
+# Datasets
+
+- [mullinax-ford-of-mobile.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/mullinax-ford-of-mobile.md) - Ford dealership in Mobile, AL serving the greater Mobile metro area with new and used vehicle sales, Up Front Pricing, financing, service, and parts at 7311 Airport Blvd.
+- [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/new-vehicles.md) - New Ford vehicle inventory and ordering covering trucks, SUVs, vans, and EVs including F-150, Super Duty, Bronco, Explorer, Mustang, and Transit.
+- [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/used-vehicles.md) - Pre-owned vehicle inventory including certified vehicles, Up Front Pricing with zero dealer fees, cash purchase, and trade-in valuation.
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/service-center.md) - Ford service center offering factory-trained maintenance and repair with OEM Ford parts, a body shop for all makes and models, and online appointment scheduling.
+- [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/staff.md) - Staff directory covering sales, internet sales, finance, service, parts, and accounting departments with contact details.
+- [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/faq.md) - Common questions and answers about financing, no-dealer-fee pricing, and dealership operations.
+- [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/financing.md) - Vehicle financing options including online credit application, no-money-down programs, bad-credit financing, and trade-in valuation.
