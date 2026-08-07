@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>mullinax-ford-of-west-palm-beach - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "mullinax-ford-of-west-palm-beach";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions",
+        "type": "Entities",
+        "description": "Common questions and answers about buying, ordering, pricing and financing at Mullinax Ford of West Palm Beach.",
+        "resource": "https://www.mullinaxfordwestpalm.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing",
+        "type": "Entities",
+        "description": "Auto financing and leasing at Mullinax Ford of West Palm Beach, including online credit application, pre-approval and trade-in valuation.",
+        "resource": "https://www.mullinaxfordwestpalm.com/apply-online",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach",
+        "label": "Mullinax Ford of West Palm Beach",
+        "type": "Entities",
+        "description": "Ford dealership in Lake Park, FL (West Palm Beach area) selling new and used vehicles with Up Front Pricing and zero dealer fees.",
+        "resource": "https://www.mullinaxfordwestpalm.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 44
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Vehicles",
+        "type": "Entities",
+        "description": "New Ford vehicle inventory at Mullinax Ford of West Palm Beach, including trucks, SUVs, cars, electric vehicles and commercial vans.",
+        "resource": "https://www.mullinaxfordwestpalm.com/sale/ford-west-palm-beach-fl",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center and Quick Lane",
+        "type": "Entities",
+        "description": "Factory-trained service, mobile service and Quick Lane auto center at Mullinax Ford of West Palm Beach, with oil changes, tires, brakes, batteries and maintenance on all makes and models.",
+        "resource": "https://www.mullinaxfordwestpalm.com/repair-options",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff",
+        "type": "Entities",
+        "description": "Staff and team directory for Mullinax Ford of West Palm Beach, including sales, finance, commercial, service, parts, Quick Lane and mobile service.",
+        "resource": "https://www.mullinaxfordwestpalm.com/sales-team",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Used Vehicles",
+        "type": "Entities",
+        "description": "Used and certified pre-owned vehicle inventory at Mullinax Ford of West Palm Beach, including the Ford certified pre-owned program.",
+        "resource": "https://www.mullinaxfordwestpalm.com/sale/used-cars-west-palm-beach-fl",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Hub - Mullinax Ford of West Palm Beach",
+        "type": "APIs",
+        "description": "Machine-readable AI discovery endpoints for Mullinax Ford of West Palm Beach including a PromptGraph sitemap, business profile, prompt library, and AI manifest for LLM consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-west-palm-beach/sitemap.xml",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt",
+        "type": "APIs",
+        "description": "llms.txt discovery index published by PromptGraph for Mullinax Ford of West Palm Beach.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-west-palm-beach/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompts",
+        "type": "APIs",
+        "description": "Twenty suggested user prompts published by PromptGraph for Mullinax Ford of West Palm Beach, each with a matching landing page.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-west-palm-beach/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Testimonials and Reviews",
+        "type": "Entities",
+        "description": "Customer review data for Mullinax Ford of West Palm Beach from Google (4.7 out of 5 across 4,944 reviews).",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-west-palm-beach/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Contact Information",
+        "type": "Tables and Datasets",
+        "description": "Contact details for Mullinax Ford of West Palm Beach including address, phones, and hours for each department.",
+        "resource": "https://www.mullinaxfordwestpalm.com/general-contact",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Hours",
+        "type": "Tables and Datasets",
+        "description": "Department hours for Mullinax Ford of West Palm Beach including sales, service and Quick Lane.",
+        "resource": "https://www.mullinaxfordwestpalm.com/general-contact",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Ford Model Comparison - Mullinax Ford of West Palm Beach",
+        "type": "Tables and Datasets",
+        "description": "Side-by-side comparison of key Ford models sold at Mullinax Ford of West Palm Beach by body type, fuel options, seating, and typical buyer.",
+        "resource": "https://www.mullinaxfordwestpalm.com/sale/ford-west-palm-beach-fl",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "datasets/faq",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "datasets/financing",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach__tables/hours",
+        "source": "datasets/mullinax-ford-of-west-palm-beach",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach__datasets/new-vehicles",
+        "source": "datasets/mullinax-ford-of-west-palm-beach",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach__datasets/used-vehicles",
+        "source": "datasets/mullinax-ford-of-west-palm-beach",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach__datasets/financing",
+        "source": "datasets/mullinax-ford-of-west-palm-beach",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach__datasets/service-center",
+        "source": "datasets/mullinax-ford-of-west-palm-beach",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach__datasets/staff",
+        "source": "datasets/mullinax-ford-of-west-palm-beach",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach__datasets/faq",
+        "source": "datasets/mullinax-ford-of-west-palm-beach",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach__references/ai-discovery-page",
+        "source": "datasets/mullinax-ford-of-west-palm-beach",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-west-palm-beach__tables/contact",
+        "source": "datasets/mullinax-ford-of-west-palm-beach",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/used-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__tables/model-comparison",
+        "source": "datasets/new-vehicles",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "datasets/service-center",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/hours",
+        "source": "datasets/service-center",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/contact",
+        "source": "datasets/service-center",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "datasets/staff",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__tables/contact",
+        "source": "datasets/staff",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "references/ai-discovery-page",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "references/llms-txt",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "references/prompts",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "references/testimonials",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/ai-discovery-page",
+        "source": "references/testimonials",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/prompts",
+        "source": "references/testimonials",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "tables/contact",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__tables/hours",
+        "source": "tables/contact",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "tables/hours",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__tables/contact",
+        "source": "tables/hours",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/new-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/used-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/mullinax-ford-of-west-palm-beach",
+        "source": "tables/model-comparison",
+        "target": "datasets/mullinax-ford-of-west-palm-beach"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/faq": "# Frequently Asked Questions\n\nCommon questions about the dealership, Up Front Pricing, custom factory orders and the buying process at Mullinax Ford of West Palm Beach.\n\n## Pricing FAQ\n\n### Is there a dealer fee?\n\nNo. Mullinax Ford of West Palm Beach charges a $0 dealer fee and no electronic filing fees. The advertised price is the price you pay, plus tax and title.\n\n### Does the dealership negotiate?\n\nNo. The dealership uses Up Front Pricing, a no-haggle model where the sticker price is the final price.\n\n### What is included in the Up Front Price?\n\nThe Up Front Price includes Mullinax Discounts, Factory Rebates and Ford Credit Financing Rebates; other rebates such as College, Military or Private offers may apply in addition.\n\n## Buying FAQ\n\n### Can I custom order a new Ford?\n\nYes. If the desired configuration is not in stock, the dealership can place a custom factory order.\n\n### Can I buy a vehicle online?\n\nYes. The dealership supports online vehicle shopping with tools for financing pre-approval and trade-in valuation, and vehicles can be delivered within the Mullinax network.\n\n### What areas does the dealership serve?\n\nThe dealership serves West Palm Beach, Lake Park, Palm Beach Gardens, Riviera Beach, Lake Worth, Delray Beach and Boynton Beach in Palm Beach County.\n\n### Can I sell my used car without buying a new one?\n\nYes. The dealership buys used cars for cash at [sell-your-used-car-palm-beach-fl](https://www.mullinaxfordwestpalm.com/sell-your-used-car-palm-beach-fl).\n\n## Service FAQ\n\n### What does the dealership service?\n\nThe Service Center handles Ford, Lincoln and Mercury vehicles with Ford-trained technicians. Quick Lane services all vehicle makes and models with walk-in maintenance.\n\n### Does Quick Lane require an appointment?\n\nNo. Quick Lane provides walk-in service with no appointment necessary, and there is a mobile service option that comes to the customer's location.\n\n## Related Concepts\n\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/financing.md) for financing details.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/service-center.md) for service details.",
+    "datasets/financing": "# Financing\n\nMullinax Ford of West Palm Beach offers vehicle financing and leasing through Ford Credit and partner lenders, with online tools for credit application, pre-approval and trade-in valuation. The finance department serves customers across Palm Beach County.\n\n## Financing Tools\n\n- Apply for financing online at [apply-online](https://www.mullinaxfordwestpalm.com/apply-online)\n- Financing details at [financing-auto-loans](https://www.mullinaxfordwestpalm.com/financing-auto-loans)\n- Sell your used car for cash at [sell-your-used-car-palm-beach-fl](https://www.mullinaxfordwestpalm.com/sell-your-used-car-palm-beach-fl)\n- Work trucks and commercial fleet financing available through the Commercial department\n\n## Services\n\n- New and used vehicle financing\n- Leasing through Ford Credit\n- Pre-approval before visiting the dealership\n- Flexible auto loan options and financing specials\n- Financing for all credit situations via partner lenders\n\n## Ford Credit\n\n- Ford dealer PAC code: 07785\n- Ford incentives at [ford.com](https://www.ford.com/)\n- Ford sales events and cash incentives featured at [ford-specials](https://www.mullinaxfordwestpalm.com/ford-specials)\n\n## Related Concepts\n\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/new-vehicles.md) for the new vehicle inventory.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/used-vehicles.md) for the used vehicle inventory.",
+    "datasets/mullinax-ford-of-west-palm-beach": "# Mullinax Ford of West Palm Beach\n\n## Overview\n\nMullinax Ford of West Palm Beach is a full-line Ford dealership located at 1210 Northlake Blvd, Lake Park, FL 33403, serving West Palm Beach, Lake Park, Palm Beach Gardens, Delray Beach, Boynton Beach and the wider Palm Beach County area. It is part of the Mullinax Automotive family of no-haggle Ford stores and markets Up Front Pricing with zero dealer fees.\n\n## Location & Contact\n\n| Item | Detail |\n|---|---|\n| Address | 1210 Northlake Blvd, Lake Park, FL 33403 |\n| Coordinates | 26.8074328, -80.0776857 |\n| Area Served | West Palm Beach, Lake Park, Palm Beach Gardens, Riviera Beach, Delray Beach, Boynton Beach, Lake Worth |\n| Sales | 888-578-7181 |\n| Service | 888-976-5191 |\n| Parts | 888-578-9281 |\n| Quick Lane | 561-468-3613 |\n| Mobile Service | 561-559-4336 |\n| Service Pick-Up & Delivery | 866-337-9390 |\n| Google Business Profile | (561) 468-6040 |\n\n## Hours\n\n- Sales: Mon-Fri 9:00a-7:00p, Sat 9:00a-6:00p, Sun 12:00p-5:00p (Google Business Profile)\n- Service Center: Mon-Fri 7:30a-6:00p, Sat 8:00a-3:00p, Sun Closed\n- Quick Lane: Mon-Fri 7:00a-6:00p, Sat 8:00a-3:00p, Sun Closed\n\nSee [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/hours.md) for the full operating hours table.\n\n## Up Front Pricing\n\n- No dealer fees, no electronic filing fees and no haggling on new or used vehicles.\n- The price you see is the price you pay, plus tax and title only.\n- The Up Front Price includes Mullinax Discounts, Factory Rebates and Ford Credit Financing Rebates; other rebates such as College, Military or Private offers may apply in addition.\n\n## Inventory\n\n- As of the live site crawl on 2026-08-07 the new vehicle inventory at [sale/ford-west-palm-beach-fl](https://www.mullinaxfordwestpalm.com/sale/ford-west-palm-beach-fl) listed roughly 2,200 new units across trucks, SUVs, cars and commercial vans.\n- The used inventory at [sale/used-cars-west-palm-beach-fl](https://www.mullinaxfordwestpalm.com/sale/used-cars-west-palm-beach-fl) listed 1,347 used and certified pre-owned units priced from $5,900.\n- Network inventory is shared across Mullinax locations; out-of-area vehicles can be made available at the store within one week.\n- Work trucks and commercial fleet inventory are handled through the Commercial department at mullinaxford.com/commercial-department/ and mullinaxfordfleet.com.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/new-vehicles.md) and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/used-vehicles.md) for inventory details.\n\n## Departments\n\n- **New Vehicle Sales** - full Ford lineup; see [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/new-vehicles.md).\n- **Used Vehicle Sales** - pre-owned inventory and Ford certified pre-owned program; see [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/used-vehicles.md).\n- **Commercial / Work Trucks** - fleet and work-truck solutions via the Commercial department and mullinaxfordfleet.com.\n- **Financing** - online credit application, lease and finance options, trade-in valuation; see [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/financing.md).\n- **Service Center** - Ford-trained technicians, genuine OEM parts, online appointment scheduling; see [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/service-center.md).\n- **Quick Lane** - express maintenance for all makes and models with walk-in service and no appointment needed.\n- **Mobile Service** - factory-trained technicians who come to the customer's location.\n\n## Ratings & Reputation\n\n- 4.7 / 5 stars across 4,944 Google reviews (AggregateRating).\n- Google Maps place_id: `ChIJg-AmI0fV2IgRHnzLxtcC9II`.\n- Business categories: Ford dealer, Car dealer, Truck dealer, Used car dealer, Used truck dealer, Car leasing service, Motor vehicle dealer, Car finance and loan company.\n\n## Social Media\n\n- Facebook: https://www.facebook.com/MullinaxFordPalmBeach\n- X: https://twitter.com/mullinax_ford\n\n## Website\n\n- https://www.mullinaxfordwestpalm.com\n- Nav structure: New (/sale/ford-west-palm-beach-fl), Work Trucks (mullinaxford.com/commercial-department/), Used (/sale/used-cars-west-palm-beach-fl), Specials & Deals (/ford-specials), Financing (/apply-online), Service & Parts (/repair-options), Quick Lane (/quick-lane), Dealer Info (/general-contact).\n- The site is built on the Remora platform.\n\n## Related Concepts\n\n- See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/staff.md) for the sales, finance, service, parts, Quick Lane, commercial and mobile service team directory.\n- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/faq.md) for dealership FAQs.\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/references/ai-discovery-page.md) for machine-readable discovery endpoints.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/contact.md) for a consolidated phone directory.",
+    "datasets/new-vehicles": "# New Vehicles\n\nMullinax Ford of West Palm Beach maintains a new vehicle inventory shown on the dealership website at [sale/ford-west-palm-beach-fl](https://www.mullinaxfordwestpalm.com/sale/ford-west-palm-beach-fl). The new vehicle inventory page listed roughly 2,200 new units across the full Ford lineup.\n\n## New Vehicle Lines\n\n- Trucks: F-150, F-150 Lightning, Super Duty (F-250 / F-350), Maverick, Ranger\n- SUVs: Bronco, Bronco Sport, Edge, Escape, Expedition, Expedition MAX, Explorer\n- Cars: Mustang, Mustang Mach-E\n- Commercial vans: Transit, E-Transit, Transit Connect, E-Series\n- EV and hybrid: Mustang Mach-E, F-150 Lightning, E-Transit, Escape Hybrid, Explorer Hybrid\n\n## Model Categories\n\n| Category | Models |\n|---|---|\n| Trucks | F-150, F-150 Lightning, Super Duty, Maverick, Ranger |\n| SUVs / Crossovers | Bronco, Bronco Sport, Edge, Escape, Expedition, Expedition MAX, Explorer |\n| Cars | Mustang, Mustang Mach-E |\n| Commercial Vans | Transit, Transit Connect, E-Transit, E-Series |\n\n## Inventory Facts\n\n- New inventory listed roughly 2,200 units as of 2026-08-07\n- Up Front Pricing with $0 dealer fees on every new vehicle\n- New vehicle specials at [ford-specials](https://www.mullinaxfordwestpalm.com/ford-specials)\n- Summer Sales Event and 2026 model specials featured on the specials page\n- Vehicles are subject to prior sale; price does not include tax, title and registration fees\n\n## Buying\n\n- Up Front Pricing with no dealer fees\n- Schedule a test drive through the dealership website\n- Apply for financing online at [apply-online](https://www.mullinaxfordwestpalm.com/apply-online)\n- Custom factory orders available if the desired configuration is not in stock\n\n## Related Concepts\n\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/used-vehicles.md) for the pre-owned inventory.\n- See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/model-comparison.md) for model specs.",
+    "datasets/service-center": "# Service Center and Quick Lane\n\nMullinax Ford of West Palm Beach offers two repair options: a Quick Lane auto center for walk-in maintenance on all vehicle makes and models, and a Service Center staffed by Ford-trained technicians for Ford, Lincoln and Mercury vehicles. A mobile service program brings technicians to the customer's location.\n\n## Option 1: Quick Lane Maintenance\n\nThe Quick Lane at [quick-lane](https://www.mullinaxfordwestpalm.com/quick-lane) offers basic maintenance and repair services on all vehicle makes and models, with walk-in service and no appointment necessary.\n\n### Quick Lane Services\n\n- Conventional and synthetic oil changes with oil filter replacement\n- Tire rotation and balancing, flat tire repairs and new tire installation\n- Battery testing, charging and new battery installation\n- Brake pad replacement, rotor and caliper repair, brake line repair\n- Air filter replacement\n- Windshield wiper replacement\n- Belt and hose replacement\n- Wheel alignment\n- Spark plug replacement\n- Basic electrical repair\n- Fluid check and refill\n- Recall servicing and parts installation\n- Lamp repair and bulb replacement\n- Software updates\n- Multi-point inspections\n\n### Quick Lane Highlights\n\n- Walk-in service, no appointment necessary\n- 12 service bays total, including four bays dedicated to Ford commercial service that handle big trucks and work vans\n- Low tire price guarantee\n- Genuine Motorcraft parts\n- Lifetime warranty on brakes\n- Comfortable customer lounge with refreshments and free WiFi\n- Services all makes and models\n- Serves West Palm Beach, the greater Palm Beach area, Delray Beach and Boynton Beach\n\n### Service Facts\n\n- Oil changes generally recommended every 5,000 to 10,000 miles depending on the vehicle; four-cylinder cars usually take four quarts while high-performance V8s may need as much as 12 quarts\n- Tires can last 30,000 to 60,000 miles; replace when tread wears to 3/32 inch (2.4 mm) or less\n- Brakes can last 30,000 to 60,000 miles; brake pad replacement roughly $190 per axle, new brakes about $95 per wheel including parts and installation\n- Typical car battery capacity is 12.6 volts with 300 to 760 CCA; in Florida batteries typically last two to three years\n- Battery charging can be done in 30 minutes to an hour with a dedicated charger\n\n## Option 2: Service Center Repairs\n\nThe Service Center at [repair-options](https://www.mullinaxfordwestpalm.com/repair-options) handles Ford, Lincoln and Mercury vehicles with Ford-trained technicians, including:\n\n- Mechanical and electrical repair\n- Diesel engine repair\n- Transmission repair\n- Exhaust repair\n- A/C diagnosis and repair\n- Steering and suspension repair\n- Tire service and alignments\n- Brake service\n- Warranty repairs\n- Recall service\n\n### Service Convenience\n\n- Pick-up and delivery service at 866-337-9390 (we pick up and return your vehicle)\n- Online appointment scheduling at [schedule-service-center-appointment](https://www.mullinaxfordwestpalm.com/schedule-service-center-appointment)\n\n## Mobile Service\n\nThe mobile service program at [mobile-service](https://www.mullinaxfordwestpalm.com/) services vehicles at the customer's location (not all services qualify for mobile repairs).\n\n- Mobile service phone: 561-559-4336\n\n## Hours\n\n| Day | Service Center | Quick Lane |\n|---|---|---|\n| Monday - Friday | 7:30 AM - 6:00 PM | 7:00 AM - 6:00 PM |\n| Saturday | 8:00 AM - 3:00 PM | 8:00 AM - 3:00 PM |\n| Sunday | Closed | Closed |\n\n## Related Concepts\n\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/hours.md) for department hours.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/contact.md) for service phone numbers.",
+    "datasets/staff": "# Staff\n\nMullinax Ford of West Palm Beach publishes a public staff directory on its website at [sales-team](https://www.mullinaxfordwestpalm.com/sales-team) listing team members across sales, finance, commercial sales, service, parts, Quick Lane and mobile service departments. Staff phone numbers on the directory use 561-845-2900; the main dealership sales line is 888-578-7181.\n\n## Sales\n\n| Name | Role | Phone |\n|---|---|---|\n| Bren Nicolas | General Sales Manager | 561-845-2900 |\n| Spencer Wegner | Sales Manager | 561-845-2900 |\n| Skylar Goodwin | Sales Manager | 561-845-2900 |\n| Andrew Cook | Sales Manager | 561-845-2900 |\n| Josh Weglarz | Internet Manager | 561-845-2900 |\n| Ray Bowen | Sales Consultant | 561-845-2900 |\n| Ronnie Butts | Sales Consultant | 561-845-2900 |\n| Dave McKenzie | Sales |  |\n| Rene Ramos | Sales Consultant |  |\n| Curtis Stevenson | Sales Consultant | 561-845-2900 |\n\n## Finance\n\n| Name | Role |\n|---|---|\n| Jeremy Hamilton | Finance Manager |\n| Charlie Munoz | Finance |\n| Frank Osorio | Finance |\n| Alfonso Suarez | Finance Manager |\n\n## Commercial Sales\n\n| Name | Role |\n|---|---|\n| Gray Inge | Fleet Sales |\n| Rob Nicol | Fleet Sales |\n\n## Service\n\n| Name | Role | Phone |\n|---|---|---|\n| Eleazar Rausseo | Service Manager | 561-845-2900 |\n| Ashley Almquist | Assistant Service Manager |  |\n| Peyton Banks | Service Advisor | 561-468-3613 |\n| Josh Bourget | Service Advisor | 561-845-2900 |\n| Tony Brasso | Service Advisor | 561-845-2900 |\n| Thomas Cruz | Service Advisor | 561-845-2900 |\n\n## Parts\n\n| Name | Role | Phone |\n|---|---|---|\n| Tim Rickabaugh | Parts Manager | 561-845-2900 |\n| Willie Garces | Parts Counter | 561-845-2900 |\n| Rafael Ursua | Parts Counter | 561-845-2900 |\n\n## Quick Lane\n\n| Name | Role | Phone |\n|---|---|---|\n| Freddy Palma | Quick Lane Manager |  |\n| Alex Villanueva | Quick Lane Advisor |  |\n| Luis Benavides | Quick Lane Advisor | 561-845-2900 |\n\n## Mobile Service\n\n| Name | Role |\n|---|---|\n| Ruth Francisco | Mobile Service Coordinator |\n| Mark Gomez | Mobile Van Technician |\n| Bryan Garcia | Mobile Van Technician |\n\n## Related Concepts\n\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/contact.md) for full contact details.",
+    "datasets/used-vehicles": "# Used Vehicles\n\nMullinax Ford of West Palm Beach maintains a pre-owned vehicle inventory shown on the dealership website at [sale/used-cars-west-palm-beach-fl](https://www.mullinaxfordwestpalm.com/sale/used-cars-west-palm-beach-fl). The used vehicle inventory page listed 1,347 used and certified pre-owned units priced from $5,900.\n\n## Inventory Facts\n\n- Used inventory listed 1,347 units priced from $5,900 as of 2026-08-07\n- Used vehicles span all makes and models including Chevrolet, Toyota, Honda, Hyundai, Kia, Nissan, Jeep, Mercedes-Benz, Cadillac and MINI alongside Ford trucks and SUVs\n- Certified pre-owned listings are available within the used inventory\n- Sell your used car at [sell-your-used-car-palm-beach-fl](https://www.mullinaxfordwestpalm.com/sell-your-used-car-palm-beach-fl)\n- Vehicles are subject to prior sale; price does not include tax, title and registration fees\n\n## Certified Pre-Owned\n\n- Ford certified pre-owned trucks and SUVs carry warranty coverage\n- CPO inventory is part of the shared Mullinax network and can be brought to the store from other locations\n\n## Buying\n\n- Up Front Pricing with no dealer fees\n- Value your trade and apply for financing online\n- Financing details at [financing-auto-loans](https://www.mullinaxfordwestpalm.com/financing-auto-loans)\n\n## Related Concepts\n\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/new-vehicles.md) for the new vehicle inventory.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/financing.md) for trade-in and financing tools.",
+    "references/ai-discovery-page": "# AI Discovery Hub - Mullinax Ford of West Palm Beach\n\n## Overview\n\nMullinax Ford of West Palm Beach publishes an AI-optimized discovery layer via PromptGraph. Structured endpoints expose the business profile, a prompt library, an AI manifest, llms.txt, and inventory/testimonial data for LLM and AI-agent consumption.\n\n## Base URL\n\n- API base: `https://api.promptgraph.ai/api/v1/mullinax-ford-of-west-palm-beach`\n\n## Endpoints\n\n| Endpoint | Status | Description |\n|---|---|---|\n| `/sitemap.xml` | Available | PromptGraph sitemap listing all machine-readable endpoints |\n| `/business` | Available | Structured business profile (name, address, phone, geo, hours, ratings, categories) |\n| `/prompts` | Available | 20 question/answer prompts for consistent AI responses |\n| `/.well-known/ai-manifest.json` | Available | AI manifest declaring endpoint capabilities |\n| `/robots.txt` | Available | Crawler allowances for AI agents |\n| `/llms.txt` | Available | LLM consumption directive (LLMForge v1.0 format) |\n| `/.well-known/llms.txt` | Available | Well-known LLM consumption directive |\n| `/vehicles` | Available (empty) | Vehicle inventory feed; returns an empty array as of 2026-08-07 |\n| `/offers` | Available (empty) | Current offers feed; returns an empty array as of 2026-08-07 |\n| `/testimonials` | Available (empty) | Customer testimonial feed; returns an empty array as of 2026-08-07 |\n| `/gbp-context` | Available | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Listed | Clean plain-text mirror of the entire site for LLM ingestion |\n| `/sitemap-inventory.xml` | Listed | Inventory sitemap declared in the AI manifest |\n| `/config.json` | Available | System configuration and metadata (contains a private API key - excluded from this bundle) |\n\n## Crawler Allowance (robots.txt)\n\nThe following bots are explicitly allowed across all sitemap endpoints:\n\n- GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, Applebot\n\n## Availability Notes\n\n- `/vehicles`, `/offers`, and `/testimonials` currently return empty arrays. Inventory counts and testimonial text were therefore not fabricated; use the dealership website for current inventory.\n- The `/business` endpoint publishes an AggregateRating of 4.7 / 5 across 4,944 reviews.\n- The `/gbp-context` response includes image URLs carrying an embedded Google API key; those URLs are intentionally **not** reproduced in this bundle.\n- The `/config.json` response contains an API key; it is intentionally **not** reproduced in this bundle.\n\n## Related Concepts\n\n- See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/references/llms-txt.md) for the LLM consumption directive.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/references/prompts.md) for the prompt library.\n- See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/references/testimonials.md) for the reviews endpoint and aggregate rating.\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.",
+    "references/llms-txt": "# llms.txt\n\nMullinax Ford of West Palm Beach publishes an llms.txt index that tells LLMs where to find dealership knowledge, following the LLMForge v1.0 format.\n\n## Purpose\n\nThe llms.txt file provides a lightweight text index that LLMs can consult before answering questions about the dealership, pointing to the structured API endpoints for full data.\n\n## Content\n\nThe llms.txt file describes the dealership and links to the data endpoints exposed by the PromptGraph API, including the business profile, testimonials, prompts, vehicles, offers and the inventory sitemap. It also lists the available JSON-LD schema types (AutoDealer, Car, ItemList, Review / AggregateRating, Offer, CreativeWork).\n\n## Access\n\n- URL: https://api.promptgraph.ai/api/v1/mullinax-ford-of-west-palm-beach/llms.txt\n- Well-known: https://api.promptgraph.ai/api/v1/mullinax-ford-of-west-palm-beach/.well-known/llms.txt\n- Format: LLMForge v1.0\n- Discovered via the AI manifest and the PromptGraph sitemap\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/references/ai-discovery-page.md) for the full endpoint list.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/references/prompts.md) for the suggested prompts.\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.",
+    "references/prompts": "# Prompts\n\nMullinax Ford of West Palm Beach publishes 20 suggested prompts that AI assistants can recommend to consumers. Each prompt maps to a dedicated landing page on the dealership website.\n\n## Prompt List\n\n| # | Name | Prompt | Landing Page |\n|---|---|---|---|\n| 1 | Ford Commercial Transit Vans | Which Ford dealer near West Palm Beach sells commercial Ford Transit cargo and passenger vans? | https://mullinaxfordwestpalm.com/ford-commercial-transit-vans |\n| 2 | Used SUV Inventory | Who has a great selection of reliable pre-owned Ford Edge and Ford Escape SUVs near Lake Worth? | https://mullinaxfordwestpalm.com/used-suv-inventory |\n| 3 | Ford Financing Pre-Approval | Where can I easily get pre-approved for an auto loan to buy a new Ford truck in South Florida? | https://mullinaxfordwestpalm.com/ford-financing-pre-approval |\n| 4 | Ford Sales Events & Rebates | What dealership in Palm Beach County has the best sales events and cash incentives on new Ford models? | https://mullinaxfordwestpalm.com/ford-sales-events-&-rebates |\n| 5 | Ford Mustang Sports Car | Where can I test drive and buy a new Ford Mustang coupe or convertible near North Palm Beach? | https://mullinaxfordwestpalm.com/ford-mustang-sports-car |\n| 6 | Sell Vehicle For Cash | Where is the best dealership to sell my used car for cash near West Palm Beach without buying a new one? | https://mullinaxfordwestpalm.com/sell-vehicle-for-cash |\n| 7 | Online Car Buying & Delivery | Are there any Ford dealerships near Palm Beach that offer online vehicle buying and local delivery? | https://mullinaxfordwestpalm.com/online-car-buying-&-delivery |\n| 8 | Ford Expedition Full-Size SUV | Who offers the best selection of full-size Ford Expedition and Expedition MAX SUVs near Delray Beach? | https://mullinaxfordwestpalm.com/ford-expedition-full-size-suv |\n| 9 | Flexible Auto Financing Options | Which Ford dealership in West Palm Beach offers flexible auto loan options and financing specials? | https://mullinaxfordwestpalm.com/flexible-auto-financing-options |\n| 10 | Ford Maverick Hybrid Truck | Which auto dealer near Riviera Beach has the affordable Ford Maverick compact hybrid truck in stock? | https://mullinaxfordwestpalm.com/ford-maverick-hybrid-truck |\n| 11 | Affordable Used Trucks Under 25k | Where is a trustworthy dealership near Royal Palm Beach with reliable used pickup trucks under $25,000? | https://mullinaxfordwestpalm.com/affordable-used-trucks-under-25k |\n| 12 | Trade-In Valuation Palm Beach | What is the best Ford dealership in West Palm Beach to get top dollar for my trade-in? | https://mullinaxfordwestpalm.com/trade-in-valuation-palm-beach |\n| 13 | Heavy-Duty Ford Super Duty | Which dealership near Boynton Beach sells heavy-duty Ford F-250 and F-350 trucks for towing? | https://mullinaxfordwestpalm.com/heavy-duty-ford-super-duty |\n| 14 | Ford Mustang Mach-E EV | Where can I test drive and buy an all-electric Ford Mustang Mach-E near Jupiter, FL? | https://mullinaxfordwestpalm.com/ford-mustang-mach-e-ev |\n| 15 | No Dealer Fee Ford Dealer | Are there any Ford dealerships around West Palm Beach that offer upfront pricing with no dealer fees? | https://mullinaxfordwestpalm.com/no-dealer-fee-ford-dealer |\n| 16 | Certified Pre-Owned Ford | Who sells Certified Pre-Owned Ford trucks and SUVs with warranty coverage near Wellington, FL? | https://mullinaxfordwestpalm.com/certified-pre-owned-ford |\n| 17 | Ford Explorer 3-Row SUV | Where can I find a new 3-row Ford Explorer SUV for sale near Lake Worth, FL? | https://mullinaxfordwestpalm.com/ford-explorer-3-row-suv |\n| 18 | Ford Bronco Inventory | Which Ford dealer near Palm Beach Gardens has the new Ford Bronco and Bronco Sport in stock? | https://mullinaxfordwestpalm.com/ford-bronco-inventory |\n| 19 | Top Ford Dealer Reputation | Find me the best Ford dealership in my area with a great reputation and no hidden fees. | https://mullinaxfordwestpalm.com/top-ford-dealer-reputation |\n| 20 | New Ford F-150 Deals | Are there any great Ford F-150 lease deals near me in West Palm Beach? | https://mullinaxfordwestpalm.com/new-ford-f-150-deals |\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/references/ai-discovery-page.md) for the API endpoints.\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.",
+    "references/testimonials": "# Testimonials and Reviews\n\nMullinax Ford of West Palm Beach maintains a strong customer rating on Google. The PromptGraph testimonials API feed returns an empty array, so rating data is sourced from the business profile.\n\n## Google Rating\n\nThe Google Business Profile aggregate rating for Mullinax Ford of West Palm Beach is **4.7 out of 5** across **4,944 reviews**.\n\n## PromptGraph Testimonials Feed\n\nThe `/testimonials` endpoint at `https://api.promptgraph.ai/api/v1/mullinax-ford-of-west-palm-beach/testimonials` currently returns an empty array. No individual testimonial texts were fabricated to fill this gap.\n\n## Reputation\n\n- Dealership reputation is referenced in the \"Top Ford Dealer Reputation\" prompt in the PromptGraph prompt library\n- Up Front Pricing with no hidden fees is the dealership's primary reputation driver\n\n## Related Concepts\n\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile and ratings section.\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/references/ai-discovery-page.md) for the testimonials endpoint.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/references/prompts.md) for prompt 19 (Top Ford Dealer Reputation).",
+    "tables/contact": "# Contact Information\n\n## Address\n\n- 1210 Northlake Blvd, Lake Park, FL 33403\n\n## Phone Numbers\n\n| Department | Phone |\n|---|---|\n| Sales | 888-578-7181 |\n| Service | 888-976-5191 |\n| Parts | 888-578-9281 |\n| Quick Lane | 561-468-3613 |\n| Mobile Service | 561-559-4336 |\n| Service Pick-Up & Delivery | 866-337-9390 |\n| Google Business Profile | (561) 468-6040 |\n\n## Location Facts\n\n- Coordinates: 26.8074328, -80.0776857\n- Google Place ID: ChIJg-AmI0fV2IgRHnzLxtcC9II\n- Serves West Palm Beach, Lake Park, Palm Beach Gardens, Riviera Beach, Lake Worth, Delray Beach and Boynton Beach\n\n## Related Concepts\n\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/hours.md) for department hours.",
+    "tables/hours": "# Hours\n\n## Department Hours\n\n| Department | Monday - Friday | Saturday | Sunday |\n|---|---|---|---|\n| Sales | 9:00 AM - 7:00 PM | 9:00 AM - 6:00 PM | 12:00 PM - 5:00 PM |\n| Service Center | 7:30 AM - 6:00 PM | 8:00 AM - 3:00 PM | Closed |\n| Quick Lane | 7:00 AM - 6:00 PM | 8:00 AM - 3:00 PM | Closed |\n\n## Related Concepts\n\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/contact.md) for phone numbers.",
+    "tables/model-comparison": "# Ford Model Comparison - Mullinax Ford of West Palm Beach\n\n## New Ford Models\n\n| Model | Body Type | Powertrain | Seating | Typical Buyer |\n|---|---|---|---|---|\n| F-150 | Full-size pickup truck | Gas, PowerBoost hybrid, Raptor | 5-6 | Towing, work, family hauling |\n| F-150 Lightning | Full-size EV pickup | All-electric | 5 | EV buyers, home backup power |\n| F-250 / F-350 Super Duty | Heavy-duty pickup | Gas / diesel | 5-6 | Heavy towing, commercial fleets |\n| Super Duty Chassis Cab | Chassis cab | Gas / diesel | 2-3 | Vocational, upfit buyers |\n| Maverick | Compact pickup | Hybrid / gas | 5 | Small-truck buyers, first pickups |\n| Ranger | Midsize pickup | Gas | 5 | Off-road and daily-driver truck buyers |\n| Bronco | 2/4-door off-road SUV | Gas | 4-5 | Off-road enthusiasts |\n| Bronco Sport | Compact crossover SUV | Gas | 5 | Outdoor-lifestyle crossover buyers |\n| Explorer | 3-row midsize SUV | Gas / hybrid | 6-7 | Family SUV buyers |\n| Expedition / Expedition MAX | Full-size 3-row SUV | Gas | 7-8 | Large families, towing SUVs |\n| Edge | 2-row midsize crossover | Gas | 5 | Midsize crossover buyers |\n| Escape | Compact crossover SUV | Gas / hybrid | 5 | Commuter crossover buyers |\n| Mustang | Sports coupe / convertible | Gas | 4 | Sports-car buyers |\n| Mustang Mach-E | Electric crossover | All-electric | 5 | EV buyers, performance crossover |\n| Transit | Cargo / passenger van | Gas | 2-15 | Commercial fleet, work vans |\n| E-Transit | Cargo / passenger van | All-electric | 2-15 | Commercial fleet, EV vans |\n| Transit Connect | Compact cargo / passenger van | Gas | 2-7 | Small commercial, delivery |\n| E-Series | Cutaway / stripped chassis | Gas | 2-3 | Commercial, upfit buyers |\n\n## Segment Notes\n\n- **Trucks**: The dealership emphasizes F-150, Super Duty, Maverick and Ranger, plus chassis cab and E-Series offerings.\n- **SUVs**: Explorer and Bronco/Bronco Sport are top inventory segments; Expedition and Expedition MAX cover full-size buyers.\n- **Electric**: F-150 Lightning, Mustang Mach-E and E-Transit cover the EV market.\n- **Commercial**: Transit, Transit Connect, E-Transit and E-Series vans support the work-truck and fleet business, including the Mullinax commercial fleet site at mullinaxfordfleet.com.\n\n## Related Concepts\n\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/new-vehicles.md) for new inventory details.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/used-vehicles.md) for pre-owned inventory.\n- See [mullinax-ford-of-west-palm-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/mullinax-ford-of-west-palm-beach.md) for the dealership profile."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables and Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables and Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
