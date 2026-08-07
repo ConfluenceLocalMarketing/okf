@@ -1,0 +1,9 @@
+# Datasets
+
+- [mullinax-cadillac.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-cadillac/datasets/mullinax-cadillac.md) - Cadillac dealership in Montgomery, AL serving Central Alabama with new and used vehicle sales, Up Front Pricing, financing, service, and parts at 833 Eastern Blvd.
+- [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-cadillac/datasets/new-vehicles.md) - New Cadillac vehicle inventory covering sedans, SUVs, and electric vehicles including CT4, CT5, XT4, XT5, XT6, LYRIQ, OPTIQ, VISTIQ, and Escalade.
+- [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-cadillac/datasets/used-vehicles.md) - Pre-owned vehicle inventory including Certified Pre-Owned Cadillac, courtesy and demo units, Up Front Pricing with zero dealer fees, and trade-in valuation.
+- [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-cadillac/datasets/service-center.md) - Cadillac service center in Montgomery, AL offering factory-trained maintenance and repair with OEM parts, online appointment scheduling, and a parts department.
+- [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-cadillac/datasets/staff.md) - Staff directory covering management, sales, finance, service, parts, and office departments with contact details.
+- [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-cadillac/datasets/faq.md) - Common questions and answers about financing, no-dealer-fee pricing, and dealership operations.
+- [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-cadillac/datasets/financing.md) - Vehicle financing options including online credit application, leasing, trade-in valuation, and a payment calculator.
