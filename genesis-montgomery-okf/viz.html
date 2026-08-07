@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Genesis Montgomery - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "Genesis Montgomery";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Genesis Montgomery",
+        "type": "Entities",
+        "description": "Genesis Montgomery is a new and used car dealership located at 4695 Carmichael Road, Montgomery, AL, selling Genesis luxury vehicles with sales, service, and financing departments.",
+        "resource": "https://www.genesismontgomery.com",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "FAQ - Genesis Montgomery",
+        "type": "Entities",
+        "description": "Common questions and answers about buying, financing, and servicing vehicles at Genesis Montgomery (synthesized from the dealership's published prompt set and website content).",
+        "resource": "https://www.genesismontgomery.com",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing - Genesis Montgomery",
+        "type": "Entities",
+        "description": "Financing, leasing, and special offers at Genesis Montgomery, including online credit application, loans up to 72 months, payment calculator, and national APR and lease programs.",
+        "resource": "https://www.genesismontgomery.com/finance-center",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Vehicles - Genesis Montgomery",
+        "type": "Entities",
+        "description": "New Genesis vehicle inventory at Genesis Montgomery, with 107 units as of 2026-08-07 spanning the G70, GV70, GV80, G80, GV80 Coupe, and G90 models.",
+        "resource": "https://www.genesismontgomery.com/cars/new-inventory",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Genesis Montgomery",
+        "type": "Entities",
+        "description": "Genesis Montgomery's service center offers factory-trained Genesis-certified technicians, OEM parts, complimentary car wash and valet, online scheduling, and a premium waiting lounge.",
+        "resource": "https://www.genesismontgomery.com/service",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff - Genesis Montgomery",
+        "type": "Entities",
+        "description": "Sales, management, and service team roster at Genesis Montgomery as published on the dealership's meet-the-team page.",
+        "resource": "https://www.genesismontgomery.com/meet-the-team",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Used Vehicles - Genesis Montgomery",
+        "type": "Entities",
+        "description": "Pre-owned vehicle inventory at Genesis Montgomery, with 167 units as of 2026-08-07 across multiple makes, including 22 certified pre-owned Genesis vehicles.",
+        "resource": "https://www.genesismontgomery.com/cars/certified-pre-owned",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Page - Genesis Montgomery",
+        "type": "APIs",
+        "description": "Genesis Montgomery exposes AI discovery endpoints through PromptGraph, including business data, inventory, prompts, an AI manifest, llms.txt, and a robots.txt policy that allows AI crawlers.",
+        "resource": "https://api.promptgraph.ai/api/v1/genesis-montgomery",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt - Genesis Montgomery",
+        "type": "APIs",
+        "description": "The llms.txt file served by Genesis Montgomery's AI discovery setup, in LLMForge v1.0 format, providing a markdown overview for language models.",
+        "resource": "https://api.promptgraph.ai/api/v1/genesis-montgomery/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompts - Genesis Montgomery",
+        "type": "APIs",
+        "description": "The 20-question AI prompt set published by Genesis Montgomery via PromptGraph, covering online car buying, AWD inventory, test drives, loan pre-approval, and more.",
+        "resource": "https://api.promptgraph.ai/api/v1/genesis-montgomery/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Testimonials - Genesis Montgomery",
+        "type": "Entities",
+        "description": "Customer testimonials and review data for Genesis Montgomery, including a 4.3/5 Google rating from 70 reviews and a testimonials page with an embedded review widget.",
+        "resource": "https://www.genesismontgomery.com/customer-testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Contact - Genesis Montgomery",
+        "type": "Tables and Datasets",
+        "description": "Contact details for Genesis Montgomery by department, including phones, address, and key website links.",
+        "resource": "https://www.genesismontgomery.com/contact",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Hours - Genesis Montgomery",
+        "type": "Tables and Datasets",
+        "description": "Operating hours for Genesis Montgomery by department, including sales, service, and finance.",
+        "resource": "https://www.genesismontgomery.com/contact",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Model Comparison - Genesis Montgomery",
+        "type": "Tables and Datasets",
+        "description": "Comparison of the Genesis model lineup sold at Genesis Montgomery, including starting MSRPs and body types.",
+        "resource": "https://www.genesismontgomery.com/cars/new-inventory",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/used-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/financing",
+        "source": "datasets/dealership",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__tables/contact",
+        "source": "datasets/dealership",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__tables/hours",
+        "source": "datasets/dealership",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__tables/hours",
+        "source": "datasets/faq",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/dealership",
+        "source": "datasets/faq",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__references/prompts",
+        "source": "datasets/faq",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/new-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/used-vehicles",
+        "source": "datasets/faq",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/dealership",
+        "source": "datasets/financing",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__tables/contact",
+        "source": "datasets/financing",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__references/prompts",
+        "source": "datasets/new-vehicles",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__tables/model-comparison",
+        "source": "datasets/new-vehicles",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/used-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/contact",
+        "source": "datasets/service-center",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/hours",
+        "source": "datasets/service-center",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/dealership",
+        "source": "datasets/staff",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__tables/contact",
+        "source": "datasets/staff",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__datasets/dealership",
+        "source": "references/ai-discovery-page",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__datasets/dealership",
+        "source": "references/llms-txt",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__datasets/faq",
+        "source": "references/prompts",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__datasets/new-vehicles",
+        "source": "references/prompts",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__datasets/financing",
+        "source": "references/prompts",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__datasets/dealership",
+        "source": "references/testimonials",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/ai-discovery-page",
+        "source": "references/testimonials",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__datasets/dealership",
+        "source": "tables/contact",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__tables/hours",
+        "source": "tables/contact",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__datasets/staff",
+        "source": "tables/contact",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__tables/contact",
+        "source": "tables/hours",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__datasets/dealership",
+        "source": "tables/hours",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/new-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/dealership",
+        "source": "tables/model-comparison",
+        "target": "datasets/dealership"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Genesis Montgomery\n\n## Overview\n\nGenesis Montgomery is an authorized Genesis dealership located at 4695 Carmichael Road, Montgomery, AL 36106. The dealership sells new Genesis vehicles and pre-owned vehicles of all makes, and operates a full-service center with factory-trained technicians. Marketing tagline used on site materials: \"Luxury Meets Innovation\" and \"Steeped in Luxury, Driven By Innovation.\"\n\nThe dealership advertises up-front pricing with no dealer markup on new vehicles.\n\n## Location and Contact\n\n- Address: 4695 Carmichael Road, Montgomery, AL 36106\n- Sales phone: (334) 373-1781\n- Service phone: (334) 731-8175\n- General/Google Business Profile phone: (334) 326-2777\n- Website: https://www.genesismontgomery.com\n- Google Business Profile place ID: ChIJldrR1ccrjIgRS3M0Q0_hBtg\n- Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJldrR1ccrjIgRS3M0Q0_hBtg\n\n## Business Profile Data (Google Business Profile via PromptGraph)\n\n- Business type (schema.org): AutoDealer / LocalBusiness\n- Primary category: Genesis dealer\n- Additional categories: Car dealer, Used car dealer, Used truck dealer, Car leasing service, Car accessories store, Truck accessories store\n- Aggregate rating: 4.3 out of 5 from 70 Google reviews\n- Google location ID: locations/10900463585258187425\n- Hours: Mon-Fri 9:00 AM to 7:00 PM, Sat 9:00 AM to 6:00 PM (closed Sunday)\n\n## Departments\n\n- Sales: new Genesis inventory and pre-owned vehicles\n- Service Center: factory-trained Genesis-certified technicians, OEM parts, complimentary car wash and valet with service\n- Finance: online credit application, leasing, loans up to 72 months, payment calculator, trade-in valuation\n- Parts: genuine OEM Genesis parts\n\n## Website and Platform Notes\n\n- The website runs on the Motive dealership platform (motivehq.com).\n- Vehicle inventory is served from an Algolia index (`production-inventory-global_price_desc`, App ID `G58LKO3ETJ`); Genesis Montgomery is dealer ID 1833 in a shared multi-dealer index.\n- SEO services are provided by Wikimotive.\n- The homepage \"Sell Your Car\" section references \"Genesis Central Florida\" (a copy-paste error in the dealership's site content).\n- Placeholder emails such as sales@dealername.com appear on the About Us page and are not real contacts.\n\n## Social and Brand Links\n\n- Facebook: https://www.facebook.com/GenesisMotorAmerica\n- Twitter/X: https://twitter.com/GenesisUSA\n- Instagram: https://www.instagram.com/genesis_usa\n- YouTube: https://www.youtube.com/channel/UCY9WQByHn3T9tQrH0DxrIGg\n- Same-as URLs are listed in the business JSON-LD profile.\n\n## Related Concepts\n\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/new-vehicles.md) for the new Genesis inventory.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/used-vehicles.md) for the pre-owned inventory.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/service-center.md) for the service department.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/financing.md) for financing and special offers.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/contact.md) for full contact details.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/hours.md) for department hours.",
+    "datasets/faq": "# FAQ - Genesis Montgomery\n\n## Overview\n\nFrequently asked questions and answers for Genesis Montgomery, synthesized from the dealership's published AI prompt set and site pages. There is no standalone FAQ page on the website; these answers reflect the dealership's own published Q&A content.\n\n## Buying and Inventory\n\n**How do I find available inventory?**\n\nBrowse new inventory at https://www.genesismontgomery.com/cars/new-inventory and used inventory at https://www.genesismontgomery.com/cars/certified-pre-owned. The site supports model filters, drivetrain filters, and search.\n\n**Does the dealership sell all-wheel-drive Genesis models?**\n\nYes. The new inventory is primarily AWD (86 of 107 units as of 2026-08-07), including the GV80, GV70, and G70. AWD models are a focus of the lineup in the Montgomery market.\n\n**Can I test drive a luxury SUV?**\n\nYes. The dealership invites test drives of the GV70, GV80, GV80 Coupe, and other models. Contact sales at (334) 373-1781 to schedule.\n\n## Financing\n\n**Can I get pre-approved before visiting?**\n\nYes. Complete the online credit application at https://www.genesismontgomery.com/apply-for-financing or the financing page to get pre-approved before visiting.\n\n**What financing options are available?**\n\nLease and loan options up to 72 months are available, with competitive rates from top lenders and credit unions. A payment calculator is available at https://www.genesismontgomery.com/payment-calculator.\n\n**Are there special finance programs?**\n\nYes, including College Grad, Military, First Responder, Loyalty, and Competitive Owner programs. See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/financing.md) for current offers.\n\n## Trade-In\n\n**Can I trade in my current vehicle?**\n\nYes. Get a trade-in valuation at https://www.genesismontgomery.com/value-your-trade.\n\n## Service\n\n**Do I need an appointment for service?**\n\nAppointments are recommended and can be scheduled online from the service page: https://www.genesismontgomery.com/service.\n\n**Is a car wash included with service?**\n\nYes. Every service visit includes a complimentary car wash, and complimentary valet service is available.\n\n**Are the technicians factory trained?**\n\nYes. Service is performed by factory-trained, Genesis-certified technicians using genuine OEM parts.\n\n## Business Hours\n\n**What are the dealership's hours?**\n\nSales and the main showroom are open Mon-Fri 9:00 AM to 7:00 PM and Sat 9:00 AM to 6:00 PM, closed Sunday. Service is open Mon-Fri 7:30 AM to 6:00 PM. See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/hours.md) for details.\n\n## Related Concepts\n\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the full business profile.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/references/prompts.md) for the source prompt set.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/new-vehicles.md) and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/used-vehicles.md) for inventory.",
+    "datasets/financing": "# Financing - Genesis Montgomery\n\n## Overview\n\nGenesis Montgomery's finance center helps customers buy or lease with financing from top lenders and credit unions. The dealership offers an online credit application, a payment calculator, trade-in valuation, and current special offers.\n\n## Financing Services\n\n- Online credit application: https://www.genesismontgomery.com/apply-for-financing\n- Lease and loan options up to 72 months\n- Competitive rates from top lenders and credit unions\n- Payment calculator: https://www.genesismontgomery.com/payment-calculator\n- Trade-in valuation: https://www.genesismontgomery.com/value-your-trade\n- Finance center hours: Mon-Fri 9:00 AM to 5:00 PM; closed Saturday and Sunday\n\n## Current Special Offers (New Genesis, monthly)\n\n| Model | Offer |\n|---|---|\n| 2026 G70 | Finance as low as 2.99% APR |\n| 2026 GV70 | Finance as low as 1.00% / 2.99% / 3.99% APR (by term) |\n| 2026 GV80 Coupe | Finance as low as 0.49% APR |\n| 2026 GV80 | Finance as low as 0.49% APR |\n| 2026 G80 | Finance as low as 2.99% APR |\n\nOffers published at https://www.genesismontgomery.com/new-vehicle-specials.\n\n## National Offers (2026 G70 example programs)\n\n- Finance: 4.99% APR for 72 months; 2.99% APR for 48 months; 3.99% APR for 60 months\n- Lease: $429/month for 36 months or $379/month for 24 months with $4,999 due at signing (2.5T AWD)\n- Lease (2.5T PRESTIGE AWD): $469/month for 24 months or $489/month for 36 months\n- Lease (2.5T PRESTIGE RWD): $439/month for 24 months or $459/month for 36 months\n- Special programs: First Responder, Competitive Owner, Loyalty Bonus, College Grad, Military\n- Note: bonus-amount fields for the special programs render as \"$NaN\" on the national offers page, which appears to be a data error on the site\n\nNational offers are published at https://www.genesismontgomery.com/national-offers.\n\n## Related Concepts\n\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the full business profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/new-vehicles.md) for the current new inventory.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/contact.md) for finance department contact details.",
+    "datasets/new-vehicles": "# New Vehicles - Genesis Montgomery\n\n## Overview\n\nGenesis Montgomery offers new Genesis vehicles with up-front pricing and no dealer markup. Inventory is published on the website and is updated from an Algolia index shared across Genesis dealers.\n\n## Inventory Snapshot (as of 2026-08-07)\n\nActive new inventory: **107 units**.\n\n### By Model\n\n| Model | Count |\n|---|---|\n| GV80 | 49 |\n| GV70 | 29 |\n| G70 | 19 |\n| G80 | 5 |\n| GV80 Coupe | 4 |\n| G90 | 1 |\n\n### By Model Year\n\n| Year | Count |\n|---|---|\n| 2026 | 86 |\n| 2027 | 21 |\n\n### By Drivetrain\n\n- AWD: 86\n- RWD: 17\n\n### By Category\n\n- SUV: 78\n- Sedan: 25\n- Other: 4\n\n## Model Lineup and MSRPs\n\nStarting MSRPs as published on the homepage (model year varies by trim):\n\n| Model | Starting MSRP |\n|---|---|\n| G70 | $43,450 |\n| GV70 | $48,985 |\n| GV80 | $57,700 |\n| G80 | $58,450 |\n| Electrified GV70 | $64,380 |\n| G90 | See dealership |\n| GV60 | See dealership |\n| GV80 Coupe | See dealership |\n\n## Specials\n\n- Monthly new-vehicle specials are published at /new-vehicle-specials.\n- National offers (finance APR and lease programs) are published at /national-offers.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/financing.md) for current APR and lease programs.\n\n## Shopping Tools\n\n- New inventory browsing with model filters and search: https://www.genesismontgomery.com/cars/new-inventory\n- Online car buying flow available (see [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/references/prompts.md)).\n- Model comparison in [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/model-comparison.md).\n\n## Related Concepts\n\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the full business profile.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/used-vehicles.md) for the pre-owned inventory.",
+    "datasets/service-center": "# Service Center - Genesis Montgomery\n\n## Overview\n\nGenesis Montgomery operates a full-service center staffed by factory-trained, Genesis-certified technicians. The service department covers maintenance and repairs using genuine OEM Genesis parts.\n\n## Services\n\n- Routine maintenance (oil changes, fluid checks, tire rotations)\n- Advanced diagnostics\n- Brake service and repair\n- Transmission service\n- Tire service, alignment, and replacement\n- Battery service\n- Genuine OEM Genesis parts and accessories\n\n## Customer Conveniences\n\n- Complimentary car wash with every service visit\n- Complimentary valet service\n- Comfortable waiting area with free Wi-Fi, free snacks, free beverages, and gourmet coffee\n- Lounge TVs and a Bang & Olufsen sound system\n- Online appointment scheduling from the service page\n\n## Scheduling\n\n- Online scheduling is available from https://www.genesismontgomery.com/service via the embedded scheduling widget.\n- Service phone: (334) 731-8175\n- Service hours: Mon-Fri 7:30 AM to 6:00 PM; closed Saturday and Sunday.\n\n## Staff\n\n- Cody Brekke - Service Manager - (334) 777-1850 - cody.brekke@hyundaimontgomery.com\n- Ashley Banjamin - Service Consultant - (334) 777-1850 - ashley.benjamin@genesismontgomery.com\n\nSee [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/staff.md) for the full team roster.\n\n## Related Concepts\n\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the full business profile.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/contact.md) for department contacts.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/hours.md) for department hours.",
+    "datasets/staff": "# Staff - Genesis Montgomery\n\n## Overview\n\nThe Genesis Montgomery team roster as published on the dealership website. All staff share a common direct line at (334) 777-1850.\n\n## Management and Sales Team\n\n| Name | Role | Phone | Email |\n|---|---|---|---|\n| John Wayne Patrick | General Manager | (334) 777-1850 | johnwayne@genesismontgomery.com |\n| Roosevelt Moore | Sales Manager | (334) 777-1850 | roosevelt.moore@genesismontgomery.com |\n| Dale Lopez | Sales | (334) 777-1850 | dale.lopez@genesismontgomery.com |\n| Kelly Patrick | Sales | (334) 777-1850 | kelly.patrick@genesismontgomery.com |\n\n## Service Team\n\n| Name | Role | Phone | Email |\n|---|---|---|---|\n| Cody Brekke | Service Manager | (334) 777-1850 | cody.brekke@hyundaimontgomery.com |\n| Ashley Banjamin | Service Consultant | (334) 777-1850 | ashley.benjamin@genesismontgomery.com |\n\n## Front Desk\n\n| Name | Role | Phone | Email |\n|---|---|---|---|\n| Honquetta Hamilton | Receptionist | (334) 777-1850 | honquetta.hamilton@genesismontgomery.com |\n\n## Notes\n\n- The team page publishes one shared direct number, (334) 777-1850, for all listed team members.\n- Names, roles, and email addresses are transcribed exactly as published on the website; some published names may contain typos (e.g., \"Ashley Banjamin\").\n- The About Us page contains placeholder contact emails (e.g., sales@dealername.com) that are not real addresses.\n\n## Related Concepts\n\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the full business profile.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/service-center.md) for service team context.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/contact.md) for department contacts.",
+    "datasets/used-vehicles": "# Used Vehicles - Genesis Montgomery\n\n## Overview\n\nGenesis Montgomery carries a pre-owned inventory spanning many makes and model years. Certified Pre-Owned (CPO) Genesis vehicles are labeled with OEM certification.\n\n## Inventory Snapshot (as of 2026-08-07)\n\nActive used inventory: **167 units**.\n\n### By Make (top makes)\n\n| Make | Count |\n|---|---|\n| Hyundai | 35 |\n| Genesis | 22 |\n| Ford | 14 |\n| Chevrolet | 13 |\n| Honda | 12 |\n| Kia | 10 |\n| Nissan | 8 |\n| Volkswagen | 7 |\n| Jeep | 6 |\n| Toyota | 6 |\n| Dodge | 5 |\n| Cadillac | 4 |\n| GMC, Mercedes-Benz, Mitsubishi, Ram, Subaru | 3 each |\n| Acura, Lexus | 2 each |\n| Audi, Buick, Chrysler, INFINITI, Land Rover, Lincoln | 1 each |\n\n### By Drivetrain\n\n- FWD: 94\n- RWD: 33\n- AWD: 30\n- 4WD: 10\n\n### By Model Year\n\nUsed years span 2004 to 2026. Highest-volume years: 2026 (19), 2022 (20), 2023 (18), 2024 (15), 2020 (16).\n\n### By Category\n\n- SUV: 97\n- Sedan: 52\n- Truck: 9\n- Coupe: 5\n- Other: 4\n\n## Certified Pre-Owned (CPO)\n\n- Total CPO units: **9** (OEM-certified flag true)\n- By model: G70 (7), GV70 (1), GV80 (1)\n- By model year: 2026 (7), 2025 (1), 2023 (1)\n\n## Used Genesis Breakdown\n\nOf the 22 used Genesis units: G70 (11), GV80 (7), GV70 (3), G80 (1).\n\n## Notes\n\n- The used inventory is served through the same Algolia-powered inventory feed as new inventory (dealer ID 1833).\n- Certification status is tracked via the `oem_certified` field in the inventory feed.\n\n## Related Concepts\n\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the full business profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/new-vehicles.md) for the new Genesis inventory.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/financing.md) for financing on used vehicles.",
+    "references/ai-discovery-page": "# AI Discovery Page - Genesis Montgomery\n\n## Overview\n\nGenesis Montgomery participates in AI discovery through a PromptGraph account (slug: `genesis-montgomery`). The AI discovery hub is not separately configured; discovery is served through PromptGraph endpoints. A sitemap of the AI-facing resources is published at:\n\nhttps://api.promptgraph.ai/api/v1/genesis-montgomery/sitemap.xml\n\n## AI Discovery Endpoints\n\n| Endpoint | Resource Type | Status |\n|---|---|---|\n| /business | Structured business profile (JSON-LD AutoDealer) | Available |\n| /prompts | ItemList of 20 AI prompts | Available |\n| /.well-known/ai-manifest.json | AI manifest (v1.0) | Available |\n| /robots.txt | AI crawler policy | Available |\n| /llms.txt | LLMForge v1.0 llms.txt | Available |\n| /gbp-context | Google Business Profile context | Available |\n| /vehicles | Vehicle inventory (ItemList of Car) | Available (empty) |\n| /offers | Special offers (ItemList) | Available (empty) |\n| /testimonials | Customer testimonials | Available (empty) |\n| /site-content | Crawled site content | Available (empty) |\n| /openapi.json | OpenAPI spec for discovery + data endpoints | Available |\n| /sitemap-inventory.xml | Inventory sitemap | Listed in OpenAPI |\n| /vehicles/{vin} | Single-vehicle detail by VIN | Listed in OpenAPI |\n| /config.json | Configuration | Listed in OpenAPI |\n| /ai-plugin.json | AI plugin manifest | Listed in OpenAPI |\n\n## AI Manifest\n\nThe AI manifest (version 1.0) declares schema types: LocalBusiness, AutoDealer, Car, ItemList. Endpoints declared include llms_txt, business, vehicles, prompts, testimonials, sitemap, robots, and config.\n\n## robots.txt Policy\n\nThe robots.txt explicitly allows major AI crawlers, including: GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, and Applebot.\n\n## llms.txt\n\nA formatted llms.txt is served at /llms.txt using the LLMForge v1.0 format, last updated 2026-08-07. See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/references/llms-txt.md).\n\n## Related Concepts\n\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/references/prompts.md) for the published prompt set.\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the business profile data served through these endpoints.",
+    "references/llms-txt": "# llms.txt - Genesis Montgomery\n\n## Overview\n\nGenesis Montgomery publishes an `llms.txt` file through its PromptGraph AI discovery setup to help language models discover and understand the dealership. The file uses the LLMForge v1.0 format.\n\n## Details\n\n- Format: LLMForge v1.0\n- Last updated: 2026-08-07 (17:16 UTC)\n- Content schema: JSON-LD\n- Served at: https://api.promptgraph.ai/api/v1/genesis-montgomery/llms.txt\n\n## Purpose\n\nThe llms.txt provides a concise, machine-readable summary of Genesis Montgomery (name, location, contact, business category) that AI assistants can reference when answering questions about the dealership. It is part of the same discovery surface as the [AI manifest and endpoint set](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/references/ai-discovery-page.md).\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/references/ai-discovery-page.md) for the full endpoint map.\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the business profile summarized in the file.",
+    "references/prompts": "# Prompts - Genesis Montgomery\n\n## Overview\n\nGenesis Montgomery publishes a set of 20 AI prompts (schema.org CreativeWork items in an ItemList) through its PromptGraph AI discovery endpoint. These prompts are designed for AI assistants and chat agents to answer common customer questions about the dealership.\n\nEndpoint: https://api.promptgraph.ai/api/v1/genesis-montgomery/prompts\n\n## Prompt Topics\n\nThe prompt set covers questions such as:\n\n- How to buy a Genesis online (online car buying flow): genesis-online-car-buying\n- AWD Genesis models available in inventory: genesis-awd-models-inventory\n- Scheduling a luxury SUV test drive in Montgomery: luxury-suv-test-drive-montgomery\n- Auto loan pre-approval: auto-loan-pre-approval-montgomery\n- Model comparisons (G70, GV70, GV80, G80, G90, GV60, GV80 Coupe)\n- Financing and lease offers\n- Certified Pre-Owned inventory and benefits\n- Trade-in valuation\n- Service scheduling and amenities\n- Business hours and location\n\nThe full prompt set (names, questions, and answers) can be retrieved from the prompts endpoint above.\n\n## Usage Notes\n\n- Prompts are the recommended source for building FAQ or assistant responses; see [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/faq.md).\n- The endpoint returns schema.org `ItemList` of `CreativeWork` items with `@id`, name, and question fields.\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/references/ai-discovery-page.md) for the discovery surface.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/new-vehicles.md) and [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/financing.md) for the topics covered.",
+    "references/testimonials": "# Testimonials - Genesis Montgomery\n\n## Overview\n\nCustomer review and testimonial data for Genesis Montgomery as published on Google Business Profile and the dealership's testimonials page.\n\n## Google Reviews\n\n- Aggregate rating: 4.3 out of 5\n- Review count: 70 reviews\n- Source: Google Business Profile (via PromptGraph business profile data)\n\n## Testimonials Page\n\n- The dealership publishes a testimonials page at https://www.genesismontgomery.com/customer-testimonials.\n- Reviews are displayed via an embedded Elfsight widget pulling from the Google Business Profile.\n- The PromptGraph /testimonials endpoint returns an empty list; the Google Business Profile context endpoint also reports no recent reviews at this time.\n\n## Related Concepts\n\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the business profile and rating source.\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/references/ai-discovery-page.md) for the testimonials endpoint.",
+    "tables/contact": "# Contact - Genesis Montgomery\n\n## Contact Information by Department\n\n| Department | Phone | Notes |\n|---|---|---|\n| Sales | (334) 373-1781 | New and used vehicle sales |\n| Service | (334) 731-8175 | Service center appointments |\n| General / Google Business Profile | (334) 326-2777 | Main business line per GBP |\n| Team direct line | (334) 777-1850 | Published on meet-the-team page |\n\n## Address\n\n- 4695 Carmichael Road, Montgomery, AL 36106\n- Google Maps: https://www.google.com/maps/place/?q=place_id:ChIJldrR1ccrjIgRS3M0Q0_hBtg\n\n## Key Website Links\n\n| Purpose | URL |\n|---|---|\n| New inventory | https://www.genesismontgomery.com/cars/new-inventory |\n| Used / CPO inventory | https://www.genesismontgomery.com/cars/certified-pre-owned |\n| Service scheduling | https://www.genesismontgomery.com/service |\n| Finance center | https://www.genesismontgomery.com/finance-center |\n| Credit application | https://www.genesismontgomery.com/apply-for-financing |\n| Payment calculator | https://www.genesismontgomery.com/payment-calculator |\n| Trade-in valuation | https://www.genesismontgomery.com/value-your-trade |\n| Testimonials | https://www.genesismontgomery.com/customer-testimonials |\n| Meet the team | https://www.genesismontgomery.com/meet-the-team |\n| New vehicle specials | https://www.genesismontgomery.com/new-vehicle-specials |\n| National offers | https://www.genesismontgomery.com/national-offers |\n\n## Related Concepts\n\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the full business profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/hours.md) for department hours.\n- See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/staff.md) for the team roster.",
+    "tables/hours": "# Hours - Genesis Montgomery\n\n## Operating Hours by Department\n\n| Department | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday |\n|---|---|---|---|---|---|---|---|\n| Sales | 9:00 AM - 7:00 PM | 9:00 AM - 7:00 PM | 9:00 AM - 7:00 PM | 9:00 AM - 7:00 PM | 9:00 AM - 7:00 PM | 9:00 AM - 6:00 PM | Closed |\n| Service | 7:30 AM - 6:00 PM | 7:30 AM - 6:00 PM | 7:30 AM - 6:00 PM | 7:30 AM - 6:00 PM | 7:30 AM - 6:00 PM | Closed | Closed |\n| Finance | 9:00 AM - 5:00 PM | 9:00 AM - 5:00 PM | 9:00 AM - 5:00 PM | 9:00 AM - 5:00 PM | 9:00 AM - 5:00 PM | Closed | Closed |\n\n## Google Business Profile Hours\n\nAs published on the dealership's Google Business Profile: Mon-Fri 9:00 AM to 7:00 PM, Sat 9:00 AM to 6:00 PM (no Sunday hours listed).\n\n## Related Concepts\n\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/tables/contact.md) for contact details.\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the business profile.",
+    "tables/model-comparison": "# Model Comparison - Genesis Montgomery\n\n## Genesis Model Lineup\n\nStarting MSRPs as published on the Genesis Montgomery homepage (2026 model year unless noted).\n\n| Model | Body Type | Starting MSRP |\n|---|---|---|\n| G70 | Sedan | $43,450 |\n| GV70 | SUV | $48,985 |\n| GV80 | SUV | $57,700 |\n| GV80 Coupe | SUV coupe | See dealership |\n| G80 | Sedan | $58,450 |\n| Electrified GV70 | Electric SUV | $64,380 |\n| G90 | Full-size sedan | See dealership |\n| GV60 | Electric SUV | See dealership |\n\n## New Inventory by Model (as of 2026-08-07)\n\n| Model | Count |\n|---|---|\n| GV80 | 49 |\n| GV70 | 29 |\n| G70 | 19 |\n| G80 | 5 |\n| GV80 Coupe | 4 |\n| G90 | 1 |\n\n## Notes\n\n- MSRPs are starting prices and vary by trim level and options.\n- Dealership advertises up-front pricing with no dealer markup.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/new-vehicles.md) for the full new inventory breakdown.\n\n## Related Concepts\n\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/new-vehicles.md) for inventory details.\n- See [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/dealership.md) for the business profile."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables and Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables and Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
