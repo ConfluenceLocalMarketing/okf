@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>mullinax-ford-of-vero-beach - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "mullinax-ford-of-vero-beach";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions",
+        "type": "Entities",
+        "description": "Common questions and answers about buying, ordering, pricing and financing at Mullinax Ford of Vero Beach.",
+        "resource": "https://www.mullinaxfordverobeach.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing",
+        "type": "Entities",
+        "description": "Auto financing and leasing at Mullinax Ford of Vero Beach, including online pre-approval, payment calculator and trade-in valuation.",
+        "resource": "https://www.mullinaxfordverobeach.com/finance/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach",
+        "label": "Mullinax Ford of Vero Beach",
+        "type": "Entities",
+        "description": "Ford dealership in Vero Beach, FL selling new and used vehicles with Up Front Pricing and zero dealer fees.",
+        "resource": "https://www.mullinaxfordverobeach.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 39
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Vehicles",
+        "type": "Entities",
+        "description": "New Ford vehicle inventory at Mullinax Ford of Vero Beach, including trucks, SUVs, cars, electric vehicles and commercial vans.",
+        "resource": "https://www.mullinaxfordverobeach.com/new-vehicles/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center and Quick Lane",
+        "type": "Entities",
+        "description": "Factory-trained service, body shop and Quick Lane tire and auto center at Mullinax Ford of Vero Beach, with oil changes, tires, brakes, batteries and maintenance on all makes and models.",
+        "resource": "https://www.mullinaxfordverobeach.com/service/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff",
+        "type": "Entities",
+        "description": "Staff and team directory for Mullinax Ford of Vero Beach, including sales, finance, commercial, service, parts, body shop and Quick Lane.",
+        "resource": "https://www.mullinaxfordverobeach.com/about-us/staff/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Used Vehicles",
+        "type": "Entities",
+        "description": "Used and certified pre-owned vehicle inventory at Mullinax Ford of Vero Beach, including the Ford certified pre-owned program.",
+        "resource": "https://www.mullinaxfordverobeach.com/used-vehicles/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Hub - Mullinax Ford of Vero Beach",
+        "type": "APIs",
+        "description": "Machine-readable AI discovery endpoints for Mullinax Ford of Vero Beach including a PromptGraph sitemap, business profile, prompt library, and AI manifest for LLM consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-vero-beach/sitemap.xml",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt",
+        "type": "APIs",
+        "description": "llms.txt discovery index published by PromptGraph for Mullinax Ford of Vero Beach.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-vero-beach/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompts",
+        "type": "APIs",
+        "description": "Twenty suggested user prompts published by PromptGraph for Mullinax Ford of Vero Beach, each with a matching landing page.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-vero-beach/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Testimonials and Reviews",
+        "type": "Entities",
+        "description": "Customer review data for Mullinax Ford of Vero Beach from Google (4.8 out of 5 across 3,489 reviews) and the dealership's own review pages.",
+        "resource": "https://api.promptgraph.ai/api/v1/mullinax-ford-of-vero-beach/testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Contact Information",
+        "type": "Tables and Datasets",
+        "description": "Contact details for Mullinax Ford of Vero Beach including address, phones, email, and hours for each department.",
+        "resource": "https://www.mullinaxfordverobeach.com/contact-us/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Hours",
+        "type": "Tables and Datasets",
+        "description": "Department hours for Mullinax Ford of Vero Beach including sales, service, parts, Quick Lane and body shop.",
+        "resource": "https://www.mullinaxfordverobeach.com/contact-us/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Ford Model Comparison - Mullinax Ford of Vero Beach",
+        "type": "Tables and Datasets",
+        "description": "Side-by-side comparison of key Ford models sold at Mullinax Ford of Vero Beach by body type, fuel options, seating, and typical buyer.",
+        "resource": "https://www.mullinaxfordverobeach.com/new-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/mullinax-ford-of-vero-beach",
+        "source": "datasets/faq",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/mullinax-ford-of-vero-beach",
+        "source": "datasets/financing",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach__tables/hours",
+        "source": "datasets/mullinax-ford-of-vero-beach",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach__datasets/new-vehicles",
+        "source": "datasets/mullinax-ford-of-vero-beach",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach__datasets/used-vehicles",
+        "source": "datasets/mullinax-ford-of-vero-beach",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach__datasets/financing",
+        "source": "datasets/mullinax-ford-of-vero-beach",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach__datasets/service-center",
+        "source": "datasets/mullinax-ford-of-vero-beach",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach__datasets/staff",
+        "source": "datasets/mullinax-ford-of-vero-beach",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach__datasets/faq",
+        "source": "datasets/mullinax-ford-of-vero-beach",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach__references/ai-discovery-page",
+        "source": "datasets/mullinax-ford-of-vero-beach",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/mullinax-ford-of-vero-beach__tables/contact",
+        "source": "datasets/mullinax-ford-of-vero-beach",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/mullinax-ford-of-vero-beach",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/used-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__tables/model-comparison",
+        "source": "datasets/new-vehicles",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/mullinax-ford-of-vero-beach",
+        "source": "datasets/service-center",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/hours",
+        "source": "datasets/service-center",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/contact",
+        "source": "datasets/service-center",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/mullinax-ford-of-vero-beach",
+        "source": "datasets/staff",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__tables/contact",
+        "source": "datasets/staff",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/mullinax-ford-of-vero-beach",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__datasets/mullinax-ford-of-vero-beach",
+        "source": "references/ai-discovery-page",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__datasets/mullinax-ford-of-vero-beach",
+        "source": "references/llms-txt",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__datasets/mullinax-ford-of-vero-beach",
+        "source": "references/prompts",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__datasets/mullinax-ford-of-vero-beach",
+        "source": "references/testimonials",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/ai-discovery-page",
+        "source": "references/testimonials",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/prompts",
+        "source": "references/testimonials",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__datasets/mullinax-ford-of-vero-beach",
+        "source": "tables/contact",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__tables/hours",
+        "source": "tables/contact",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__datasets/mullinax-ford-of-vero-beach",
+        "source": "tables/hours",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__tables/contact",
+        "source": "tables/hours",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/new-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/used-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/mullinax-ford-of-vero-beach",
+        "source": "tables/model-comparison",
+        "target": "datasets/mullinax-ford-of-vero-beach"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/faq": "# Frequently Asked Questions\n\nCommon questions about the dealership, Up Front Pricing, custom factory orders and the buying process at Mullinax Ford of Vero Beach.\n\n## Pricing FAQ\n\n### Is there a dealer fee?\n\nNo. Mullinax Ford of Vero Beach charges a $0 dealer fee. The advertised price is the price you pay, plus tax and title.\n\n### Does the dealership negotiate?\n\nNo. The dealership uses Up Front Pricing, a no-haggle model where the sticker price is the final price.\n\n### What is included in the Up Front Price?\n\nThe Up Front Price includes Mullinax Discounts, Factory Rebates and Ford Credit Financing Rebates; other rebates such as College, Military or Private offers may apply in addition.\n\n## Buying FAQ\n\n### Can I custom order a new Ford?\n\nYes. If the desired configuration is not in stock, the dealership can place a custom factory order. Ford does not charge extra for customer-ordered vehicles and incentives can be applied at order placement or delivery.\n\n### Can I buy a vehicle online?\n\nYes. The dealership supports online vehicle shopping with digital tools for pre-approval, payment calculation and trade-in valuation, and vehicles can be delivered within the Mullinax network.\n\n### What areas does the dealership serve?\n\nThe dealership serves Vero Beach, Fort Pierce, Sebastian, Fellsmere and the surrounding Treasure Coast, financing customers from Port St. Lucie to Palm Bay.\n\n### Can I sell my used car without buying a new one?\n\nYes. The dealership buys used cars for cash at [sell-your-used-car-vero-beach-fl](https://www.mullinaxfordverobeach.com/sell-your-used-car-vero-beach-fl/).\n\n## Service FAQ\n\n### What does the dealership service?\n\nThe service center handles all Ford makes and models, and Quick Lane services all vehicle makes and models. The body shop handles any make or model.\n\n### Does Quick Lane require an appointment?\n\nNo. Quick Lane provides service without an appointment, with service while you wait.\n\n## Related Concepts\n\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/financing.md) for financing details.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/service-center.md) for service details.",
+    "datasets/financing": "# Financing\n\nMullinax Ford of Vero Beach offers vehicle financing and leasing through Ford Credit and partner lenders, with online tools for pre-approval, payments and trade-in valuation. The finance department serves customers from Vero Beach, Fort Pierce, Sebastian, Port St. Lucie and Palm Bay.\n\n## Financing Tools\n\n- Apply for financing online at [apply-for-financing](https://www.mullinaxfordverobeach.com/finance/apply-for-financing/)\n- Payment calculator at [payment-calculator](https://www.mullinaxfordverobeach.com/payment-calculator/)\n- Value your trade at [value-your-trade](https://www.mullinaxfordverobeach.com/value-your-trade/)\n- Buying power estimator at [whats-my-buying-power](https://www.mullinaxfordverobeach.com/whats-my-buying-power/)\n- Expedite paperwork online at [expedite-your-paperwork](https://www.mullinaxfordverobeach.com/expedite-your-paperwork/)\n\n## Credit Programs\n\n- **Best credit** - \"I never miss a payment!\": helps find the best interest rate for the next vehicle purchase\n- **OK credit** - \"I've missed a payment or two.\": special arrangements with local and national lenders\n- **Not so good credit** - \"I need to rebuild my credit...\": programs to get into a car and rebuild credit\n\n## Services\n\n- New and used vehicle financing\n- Leasing through Ford Credit\n- Pre-approval before visiting the dealership\n- Financing for all credit situations via partner lenders\n- Ford A, Z, D and X plans available to eligible buyers\n- Ford finance specials at [new-vehicle-specials](https://www.mullinaxfordverobeach.com/new-vehicles/new-vehicle-specials/)\n\n## Ford Credit\n\n- Ford dealer PAC code: 07785\n- Ford incentives at [ford.com](https://www.ford.com/)\n- Buying versus leasing guidance available from the finance team\n\n## Related Concepts\n\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/new-vehicles.md) for the new vehicle inventory.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/used-vehicles.md) for the used vehicle inventory.",
+    "datasets/mullinax-ford-of-vero-beach": "# Mullinax Ford of Vero Beach\n\n## Overview\n\nMullinax Ford of Vero Beach is a full-line Ford dealership located at 488 U.S. 1, Vero Beach, FL 32962, serving Vero Beach, Fort Pierce, Sebastian, Fellsmere and the wider Treasure Coast of Florida. It is part of the Mullinax Automotive family of no-haggle Ford stores and markets Up Front Pricing with zero dealer fees.\n\n## Location & Contact\n\n| Item | Detail |\n|---|---|\n| Address | 488 U.S. 1, Vero Beach, FL 32962 |\n| Coordinates | 27.6108079, -80.3823928 |\n| Area Served | Vero Beach, Fort Pierce, Sebastian, Fellsmere, Indian River County |\n| Main | 772-569-3400 |\n| Sales | 772-610-3984 |\n| Service | 772-610-3986 |\n| Parts | 772-610-3983 |\n| Body Shop | 772-210-3981 |\n| Google Business Profile | (772) 325-1316 |\n\n## Hours\n\n- Sales: Mon-Sat 9:00a-7:00p, Sun Closed (Google Business Profile)\n- Quick Lane: Mon-Fri 7:30a-5:30p, Sat 7:30a-2:00p, Sun Closed\n- Parts: Mon-Fri 7:30a-6:00p, Sat 7:30a-3:00p, Sun Closed\n- Body Shop: Mon-Fri 7:30a-5:30p, Sat 8:00a-12:00p, Sun Closed\n\nSee [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/hours.md) for the full operating hours table.\n\n## Up Front Pricing\n\n- No dealer fees and no haggling on new or used vehicles.\n- The price you see is the price you pay, plus tax and title only.\n- The dealership received a 2022 President's Award and markets a huge inventory of new, used and certified pre-owned trucks, SUVs and vans.\n\n## Inventory\n\n- As of the live site crawl on 2026-08-07 the new vehicle inventory listed **2,233 new units** priced from $24,301 to $182,300.\n- The used inventory listed **1,287 used units** priced from $4,500 to $129,501.\n- Network inventory is shared across Mullinax locations; out-of-area vehicles can be delivered within one week.\n- Work trucks and commercial fleet inventory are handled through mullinaxford.worktrucksolutions.com and mullinaxfordfleet.com.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/new-vehicles.md) and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/used-vehicles.md) for inventory details.\n\n## Departments\n\n- **New Vehicle Sales** - full Ford lineup; see [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/new-vehicles.md).\n- **Used Vehicle Sales** - pre-owned inventory and Ford certified pre-owned program; see [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/used-vehicles.md).\n- **Commercial / Work Trucks** - fleet and work-truck solutions via the on-site Commercial department and mullinaxfordfleet.com.\n- **Financing** - online credit application, lease and finance options, trade-in valuation; see [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/financing.md).\n- **Service Center** - Ford-trained technicians, OEM Ford parts, online appointment scheduling; see [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/service-center.md).\n- **Quick Lane** - express maintenance for all makes and models with no appointment needed.\n- **Body Shop** - scratch, dent, rust, frame and collision repair for any make or model.\n\n## Ratings & Reputation\n\n- 4.8 / 5 stars across 3,489 Google reviews (AggregateRating).\n- Google Maps place_id: `ChIJQUvkK3Zf3ogRcXJHxEuwUdQ`.\n- Review pages: https://www.mullinaxfordverobeach.com/about-us/reviews and https://www.mullinaxfordverobeach.com/about-us/customer-testimonials\n\n## Social Media\n\n- Facebook: https://www.facebook.com/MullinaxVeroBeach/\n- X: https://twitter.com/mullinax_ford\n- YouTube: https://www.youtube.com/@mullinaxford7771\n\n## Website\n\n- https://www.mullinaxfordverobeach.com\n- Nav structure: New (/new-vehicles), Used (/used-vehicles), Hot Buys (/new-vehicles/new-vehicle-specials), Work Trucks (mullinaxfordfleet.com), Financing (/finance), Service & Parts (/service), Quick Lane (/quick-lane), Body Shop (/body-shop-collision-center), Dealer Info (/about-us).\n- The site is built on the DealerInspire platform with FordDirect-powered support pages.\n\n## Related Concepts\n\n- See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/staff.md) for the sales, service, finance, parts, body shop and Quick Lane team directory.\n- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/faq.md) for dealership FAQs.\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/references/ai-discovery-page.md) for machine-readable discovery endpoints.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/contact.md) for a consolidated phone directory.",
+    "datasets/new-vehicles": "# New Vehicles\n\nMullinax Ford of Vero Beach maintains a new vehicle inventory shown on the dealership website. The new vehicle inventory page listed 2,233 new units priced from $24,301 to $182,300.\n\n## New Vehicle Lines\n\n- Trucks: F-150, F-150 Lightning, Super Duty (F-250 / F-350), Maverick, Ranger\n- SUVs: Bronco, Bronco Sport, Edge, Escape, Expedition, Expedition MAX, Explorer\n- Cars: Mustang, Mustang Mach-E\n- Commercial vans: Transit, E-Transit, Transit Connect, E-Series cutaway, E-Series stripped chassis\n- EV and hybrid: Mustang Mach-E, F-150 Lightning, E-Transit, Escape Hybrid, Explorer Hybrid\n\n## Model Categories\n\n| Category | Models |\n|---|---|\n| Trucks | F-150, F-150 Lightning, Super Duty, Maverick, Ranger |\n| SUVs / Crossovers | Bronco, Bronco Sport, Edge, Escape, Expedition, Expedition MAX, Explorer |\n| Cars | Mustang, Mustang Mach-E |\n| Commercial Vans | Transit, Transit Connect, E-Transit, E-Series |\n| Chassis Cabs | Super Duty Chassis Cab |\n\n## Inventory Facts\n\n- New inventory listed 2,233 units priced from $24,301 to $182,300 as of 2026-08-07\n- Up Front Pricing with $0 dealer fees on every new vehicle\n- New vehicle specials (Hot Buys) at [new-vehicle-specials](https://www.mullinaxfordverobeach.com/new-vehicles/new-vehicle-specials/)\n- F-150 site notice banner promoting 2026 model year specials at [new-vehicles F-150 2026](https://www.mullinaxfordverobeach.com/new-vehicles/?_dFR%5Bmodel%5D%5B0%5D=F-150&_dFR%5Btype%5D%5B0%5D=New&_dFR%5Byear%5D%5B0%5D=2026)\n- Specialty and lifted vehicles listed at [new-vehicles/specialty-and-lifted-vehicles](https://www.mullinaxfordverobeach.com/new-vehicles/specialty-and-lifted-vehicles/)\n- Vehicles are subject to prior sale; price does not include tax, title and license charges\n\n## Buying\n\n- Up Front Pricing with no dealer fees\n- Custom factory order a new Ford if the desired configuration is not in stock\n- Schedule a test drive through the dealership website\n- Apply for financing online at [apply-for-financing](https://www.mullinaxfordverobeach.com/finance/apply-for-financing/)\n\n## Related Concepts\n\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/used-vehicles.md) for the pre-owned inventory.\n- See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/model-comparison.md) for model specs.",
+    "datasets/service-center": "# Service Center and Quick Lane\n\nMullinax Ford of Vero Beach operates a full service center staffed by factory-trained technicians using genuine Ford parts, a Quick Lane Tire and Auto Center for fast maintenance on all makes and models, and a body shop and collision center.\n\n## Service Center\n\n- Factory-trained Ford technicians\n- Genuine Ford and Motorcraft parts\n- Online appointment scheduling at [schedule-service](https://www.mullinaxfordverobeach.com/service/contact-service/)\n- Service coupons and specials at [service-specials](https://www.mullinaxfordverobeach.com/service/service-specials/)\n- Service for Ford owners includes oil changes, batteries, tires, brakes and air conditioning\n- Serves the Vero Beach, Fort Pierce and Sebastian area\n\n## Quick Lane Tire and Auto Center\n\nQuick Lane at Mullinax Ford of Vero Beach provides maintenance and repair services for all vehicle makes and models, with no appointment needed and service while you wait.\n\n### Quick Lane Services\n\n- Synthetic and synthetic blend oil changes with oil filter replacement\n- Battery testing, charging and new battery installation\n- Tire rotation and balancing, flat tire repairs and new tire installation\n- Brake pad replacement, rotor and caliper repair, brake line repair\n- Air filter replacement\n- Windshield wiper replacement\n- Belt and hose replacement\n- Wheel alignment\n- Spark plug replacement\n- Electrical repair\n- Cooling system checks (hose damage and leaks, operating temperatures)\n- Belts and hoses inspections (wear, cracks, tension, leaks, pinch-test)\n\n### Quick Lane Highlights\n\n- No appointment necessary; service while you wait\n- The Works Fuel Saver Package (oil change plus tire rotation, brake inspection, battery test and Vehicle Check-Up Report)\n- 16 name-brand tire lines including Goodyear, Michelin, Continental, Bridgestone, BFGoodrich, Pirelli, Firestone, Hankook, Yokohama, Toyo, Nitto, Falken, Dunlop, Kelly, Uniroyal and General Tire\n- Low Price Tire Guarantee\n- Genuine Motorcraft parts\n- Services all makes and models\n- Quality parts from trusted brands like Motorcraft, Goodyear, Continental Tire and Michelin\n\n### Service Facts\n\n- Oil changes generally recommended every 5,000 to 10,000 miles depending on vehicle\n- Tires can last 30,000 to 60,000 miles; replace when tread wears to 3/32 inch (2.4 mm) or less\n- Brakes can last 30,000 to 60,000 miles; brake pad replacement roughly $190 per axle\n- Typical car battery capacity is 12.6 volts with 300 to 760 CCA; in Florida batteries typically last two to three years\n\n## Body Shop and Collision Center\n\nThe body shop at [body-shop-collision-center](https://www.mullinaxfordverobeach.com/body-shop-collision-center/) provides cosmetic and structural repairs for any make or model, serving the Vero Beach, Fort Pierce and Treasure Coast area.\n\n### Body Shop Services\n\n- Scratch and dent repair, including paintless dent repair and paint touch-up\n- Painting and paint repair with exact color matching\n- Rust repair\n- Frame repair back to factory specifications\n- Collision damage and repair returning vehicles to manufacturer specifications\n\n### Body Shop Scheduling\n\n- Open six days a week; schedule online with year, make, model and mileage\n- Preferred appointment time slots: Anytime, Morning, Mid-day, Afternoon, Evening\n\n## Hours\n\n| Day | Quick Lane | Parts | Body Shop |\n|---|---|---|---|\n| Monday - Friday | 7:30 AM - 5:30 PM | 7:30 AM - 6:00 PM | 7:30 AM - 5:30 PM |\n| Saturday | 7:30 AM - 2:00 PM | 7:30 AM - 3:00 PM | 8:00 AM - 12:00 PM |\n| Sunday | Closed | Closed | Closed |\n\n## Related Concepts\n\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/hours.md) for department hours.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/contact.md) for service phone numbers.",
+    "datasets/staff": "# Staff\n\nMullinax Ford of Vero Beach publishes a public staff directory on its website listing team members across sales, finance, commercial, service, parts, body shop and Quick Lane departments.\n\n## Sales\n\n| Name | Role | Phone |\n|---|---|---|\n| Mosen Eteshami | General Manager | 888-292-3913 |\n| Lance Cunningham | Sales Manager | 888-292-3913 |\n| Annette Lyons | Sales Manager | 888-292-3913 |\n| Jacob Barttini | Inventory Manager | 888-292-3913 |\n| Tom Patrick | Sales Consultant | 772-584-4047 |\n| Frank Felkey | Sales Consultant | 772-569-3400 |\n| Cooper Burton | Sales Consultant | 772-610-3984 |\n| Mike Campbell | Sales Consultant | 772-610-3984 |\n| Christian Jaramillo | Sales Consultant |  |\n| Samuel Flowers | Sales Consultant | 772-610-3984 |\n| Carol Lancaster | Sales Consultant | 772-610-3984 |\n| Alex Melgar | Sales Consultant | 772-610-3984 |\n| Robert Sala | Sales Consultant | 772-610-3984 |\n| Shantill Steele | Sales Consultant | 772-610-3984 |\n| Shena Taylor | Sales Consultant | 888-292-3913 |\n| Tim Taylor | Sales Consultant |  |\n| Chandler Flood | Sales Consultant | 772-610-3984 |\n| Sue Scheck | Sales Receptionist |  |\n\n## Finance\n\n| Name | Role |\n|---|---|\n| Roland Carter | Finance Manager |\n| Joe Alvey | Finance Manager |\n| Ruben Martinez | Finance Manager |\n| Dan Villanueva | Finance Manager |\n\n## Commercial\n\n| Name | Role | Phone |\n|---|---|---|\n| Vernon Lloyd | Commercial Fleet | 888-292-3913 |\n| Neal Meadors | Fleet | 888-292-3913 |\n\n## Service\n\n| Name | Role | Phone |\n|---|---|---|\n| Chris Glover | Service Manager | 772-610-3986 |\n| Kristyn Rauscher | Service Advisor | 772-569-3400 ext 2537 |\n| Kevin Brittell | Service Advisor |  |\n| Brad Hatfield | Service Advisor |  |\n| Dennis Sclafani | Diesel Service Advisor | 888-328-7117 |\n| Sandy Storey | Assistant Service Manager / Warranty | 888-328-7117 |\n| Frank Hebert | Shuttle Driver | 888-328-7117 |\n| Sherry Labellarte | Admin | 888-328-7117 |\n| Kimberly Riggins | Service Receptionist | 888-328-7117 |\n\n## Parts\n\n| Name | Role | Phone |\n|---|---|---|\n| Anthony Valvano | Parts Manager | 772-610-3984 |\n| Stephen Hooper | Parts Associate | 888-341-7987 |\n| Jim Savoie | Parts Associate | 888-341-7987 |\n\n## Body Shop\n\n| Name | Role | Phone |\n|---|---|---|\n| Wayne Borchardt | Body Shop Manager |  |\n| Sarah Mitchell | Front Desk | 772-610-3986 |\n\n## Quick Lane\n\n| Name | Role | Phone |\n|---|---|---|\n| Todd Pyles | Quick Lane Manager | 772-610-3986 |\n| Scott Birstow | Quick Lane Advisor |  |\n| Jennifer Bond | Quick Lane Advisor | 888-328-7117 |\n\n## Related Concepts\n\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/contact.md) for full contact details.",
+    "datasets/used-vehicles": "# Used Vehicles\n\nMullinax Ford of Vero Beach maintains a pre-owned vehicle inventory shown on the dealership website. The used vehicle inventory page listed 1,287 used units priced from $4,500 to $129,501.\n\n## Inventory Facts\n\n- Used inventory listed 1,287 units priced from $4,500 to $129,501 as of 2026-08-07\n- Used vehicles span all makes and models\n- Certified pre-owned vehicles listed at [certified-pre-owned-vehicles](https://www.mullinaxfordverobeach.com/used-vehicles/certified-pre-owned-vehicles/)\n- Pre-owned vehicle specials at [pre-owned-vehicle-specials](https://www.mullinaxfordverobeach.com/used-vehicles/pre-owned-vehicle-specials/)\n- Used vehicles priced under $15,000 listed at [priced-under-15k](https://www.mullinaxfordverobeach.com/used-vehicles/priced-under-15k/)\n- Sell your used car online at [sell-your-used-car-vero-beach-fl](https://www.mullinaxfordverobeach.com/sell-your-used-car-vero-beach-fl/)\n\n## Certified Pre-Owned\n\n- Ford certified pre-owned trucks and SUVs carry warranty coverage\n- CPO inventory is part of the shared Mullinax network and can be brought to Vero Beach from other locations\n\n## Buying\n\n- Up Front Pricing with no dealer fees\n- Value your trade online at [value-your-trade](https://www.mullinaxfordverobeach.com/value-your-trade/)\n- Apply for financing online at [apply-for-financing](https://www.mullinaxfordverobeach.com/finance/apply-for-financing/)\n- Vehicles are subject to prior sale; price does not include tax, title and license charges\n\n## Related Concepts\n\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/new-vehicles.md) for the new vehicle inventory.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/financing.md) for trade-in and financing tools.",
+    "references/ai-discovery-page": "# AI Discovery Hub - Mullinax Ford of Vero Beach\n\n## Overview\n\nMullinax Ford of Vero Beach publishes an AI-optimized discovery layer via PromptGraph. Structured endpoints expose the business profile, a prompt library, an AI manifest, llms.txt, and inventory/testimonial data for LLM and AI-agent consumption.\n\n## Base URL\n\n- API base: `https://api.promptgraph.ai/api/v1/mullinax-ford-of-vero-beach`\n\n## Endpoints\n\n| Endpoint | Status | Description |\n|---|---|---|\n| `/sitemap.xml` | Available | PromptGraph sitemap listing all machine-readable endpoints |\n| `/business` | Available | Structured business profile (name, address, phone, geo, hours, ratings, categories) |\n| `/prompts` | Available | 20 question/answer prompts for consistent AI responses |\n| `/.well-known/ai-manifest.json` | Available | AI manifest declaring endpoint capabilities |\n| `/robots.txt` | Available | Crawler allowances for GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, Applebot |\n| `/llms.txt` | Available | LLM consumption directive (LLMForge v1.0 format) |\n| `/vehicles` | Available (empty) | Vehicle inventory feed; returns an empty array as of 2026-08-07 |\n| `/offers` | Available (empty) | Current offers feed; returns an empty array as of 2026-08-07 |\n| `/testimonials` | Available (empty) | Customer testimonial feed; returns an empty array as of 2026-08-07 |\n| `/gbp-context` | Available | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Available (empty) | Clean plain-text mirror of the site; returns zero pages as of 2026-08-07 |\n| `/sitemap-inventory.xml` | Listed | Inventory sitemap declared in the AI manifest |\n| `/config.json` | Available | Platform configuration (contains a private API key - excluded from this bundle) |\n\n## Crawler Allowance (robots.txt)\n\nThe following bots are explicitly allowed across all sitemap endpoints:\n\n- GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, Applebot\n\n## Availability Notes\n\n- `/vehicles`, `/offers`, and `/testimonials` currently return empty arrays. Inventory counts and testimonial text were therefore not fabricated; use the dealership website for current inventory.\n- The `/business` endpoint publishes an AggregateRating of 4.8 / 5 across 3,489 reviews.\n- The `/gbp-context` response includes image URLs carrying an embedded Google API key; those URLs are intentionally **not** reproduced in this bundle.\n- The `/config.json` response contains an API key; it is intentionally **not** reproduced in this bundle.\n- The live dealership website is served behind a security challenge for some page fetches; content in this bundle was sourced from direct fetches that completed and from PromptGraph API data.\n\n## Related Concepts\n\n- See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/references/llms-txt.md) for the LLM consumption directive.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/references/prompts.md) for the prompt library.\n- See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/references/testimonials.md) for the reviews endpoint and aggregate rating.\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.",
+    "references/llms-txt": "# llms.txt\n\nMullinax Ford of Vero Beach publishes an llms.txt index that tells LLMs where to find dealership knowledge, following the LLMForge v1.0 format.\n\n## Purpose\n\nThe llms.txt file provides a lightweight text index that LLMs can consult before answering questions about the dealership, pointing to the structured API endpoints for full data.\n\n## Content\n\nThe llms.txt file describes the dealership and links to the data endpoints exposed by the PromptGraph API, including the business profile, testimonials, prompts, vehicles and inventory sitemap.\n\n## Access\n\n- URL: https://api.promptgraph.ai/api/v1/mullinax-ford-of-vero-beach/llms.txt\n- Format: LLMForge v1.0\n- Discovered via the AI manifest and the PromptGraph sitemap\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/references/ai-discovery-page.md) for the full endpoint list.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/references/prompts.md) for the suggested prompts.\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.",
+    "references/prompts": "# Prompts\n\nMullinax Ford of Vero Beach publishes 20 suggested prompts that AI assistants can recommend to consumers. Each prompt maps to a dedicated landing page on the dealership website.\n\n## Prompt List\n\n| # | Name | Prompt | Landing Page |\n|---|---|---|---|\n| 1 | Ford Commercial Transit Vans | Which Ford dealer near Vero Beach, FL sells commercial Ford Transit cargo and passenger vans? | https://mullinaxfordverobeach.com/ford-commercial-transit-vans |\n| 2 | Used SUV Inventory | Who has a great selection of reliable pre-owned Ford Edge and Ford Escape SUVs near Fellsmere? | https://mullinaxfordverobeach.com/used-suv-inventory |\n| 3 | Ford Financing Pre-Approval | Where can I easily get pre-approved for an auto loan to buy a new Ford truck near Vero Beach, FL? | https://mullinaxfordverobeach.com/ford-financing-pre-approval |\n| 4 | Ford Sales Events & Rebates | What dealership in Indian River County has the best sales events and cash incentives on new Ford models? | https://mullinaxfordverobeach.com/ford-sales-events-&-rebates |\n| 5 | Ford Mustang Sports Car | Where can I test drive and buy a new Ford Mustang coupe or convertible near Fort Pierce? | https://mullinaxfordverobeach.com/ford-mustang-sports-car |\n| 6 | Sell Vehicle For Cash | Where is the best dealership to sell my used car for cash near Vero Beach, FL without buying a new one? | https://mullinaxfordverobeach.com/sell-vehicle-for-cash |\n| 7 | Online Car Buying & Delivery | Are there any Ford dealerships near Vero Beach, FL that offer online vehicle purchasing and local delivery? | https://mullinaxfordverobeach.com/online-car-buying-&-delivery |\n| 8 | Ford Expedition Full-Size SUV | Who offers the best selection of full-size Ford Expedition and Expedition MAX SUVs near Sebastian? | https://mullinaxfordverobeach.com/ford-expedition-full-size-suv |\n| 9 | Flexible Auto Financing Options | Which Ford dealership in Vero Beach, FL offers flexible auto loan options and financing specials? | https://mullinaxfordverobeach.com/flexible-auto-financing-options |\n| 10 | Ford Maverick Hybrid Truck | Which auto dealer near Vero Beach, FL has the compact Ford Maverick hybrid truck in stock? | https://mullinaxfordverobeach.com/ford-maverick-hybrid-truck |\n| 11 | Affordable Used Trucks Under 25k | Where is a trustworthy dealership near Port St. Lucie with high-quality used pickup trucks under $25,000? | https://mullinaxfordverobeach.com/affordable-used-trucks-under-25k |\n| 12 | Trade-In Valuation | What is the best Ford dealership in Vero Beach, FL to get top dollar for my trade-in? | https://mullinaxfordverobeach.com/trade-in-valuation |\n| 13 | Heavy-Duty Ford Super Duty | Which dealership near Indian River County sells heavy-duty Ford F-250 and F-350 Super Duty trucks? | https://mullinaxfordverobeach.com/heavy-duty-ford-super-duty |\n| 14 | Ford Mustang Mach-E EV | Where can I test drive and buy an all-electric Ford Mustang Mach-E near Gifford? | https://mullinaxfordverobeach.com/ford-mustang-mach-e-ev |\n| 15 | No Dealer Fee Ford Dealer | Are there any Ford dealerships around Vero Beach, FL that offer upfront pricing with zero dealer fees? | https://mullinaxfordverobeach.com/no-dealer-fee-ford-dealer |\n| 16 | Certified Pre-Owned Ford | Who sells Certified Pre-Owned Ford trucks and SUVs with warranty coverage near Vero Beach, FL? | https://mullinaxfordverobeach.com/certified-pre-owned-ford |\n| 17 | Ford Explorer 3-Row SUV | Where can I find a new 3-row Ford Explorer SUV for sale near Fellsmere? | https://mullinaxfordverobeach.com/ford-explorer-3-row-suv |\n| 18 | Ford Bronco Inventory | Which Ford dealer near Sebastian and Fort Pierce has the new Ford Bronco and Bronco Sport in stock? | https://mullinaxfordverobeach.com/ford-bronco-inventory |\n| 19 | Top Ford Dealer Reputation | Find me the best Ford dealership in my area near Vero Beach, FL with a great reputation and upfront pricing. | https://mullinaxfordverobeach.com/top-ford-dealer-reputation |\n| 20 | New Ford F-150 Deals | Are there any great Ford F-150 lease deals near me in Vero Beach, FL? | https://mullinaxfordverobeach.com/new-ford-f-150-deals |\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/references/ai-discovery-page.md) for the API endpoints.\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.",
+    "references/testimonials": "# Testimonials and Reviews\n\nMullinax Ford of Vero Beach maintains strong customer ratings on Google, and publishes customer testimonials and reviews on its website. The PromptGraph testimonials API feed returns an empty array, so rating data is sourced from the business profile and the website.\n\n## Google Rating\n\nThe Google Business Profile aggregate rating for Mullinax Ford of Vero Beach is **4.8 out of 5** across **3,489 reviews**.\n\n## PromptGraph Testimonials Feed\n\nThe `/testimonials` endpoint at `https://api.promptgraph.ai/api/v1/mullinax-ford-of-vero-beach/testimonials` currently returns an empty array. No individual testimonial texts were fabricated to fill this gap.\n\n## Website Review Pages\n\n- Customer reviews page: https://www.mullinaxfordverobeach.com/about-us/reviews/\n- Customer testimonials page: https://www.mullinaxfordverobeach.com/about-us/customer-testimonials/\n- Dealership reputation is referenced in the \"Top Ford Dealer Reputation\" prompt in the PromptGraph prompt library\n\n## Related Concepts\n\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile and ratings section.\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/references/ai-discovery-page.md) for the testimonials endpoint.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/references/prompts.md) for prompt 19 (Top Ford Dealer Reputation).",
+    "tables/contact": "# Contact Information\n\n## Address\n\n- 488 U.S. 1, Vero Beach, FL 32962\n\n## Phone Numbers\n\n| Department | Phone |\n|---|---|\n| Main | 772-569-3400 |\n| Sales | 772-610-3984 |\n| Service | 772-610-3986 |\n| Parts | 772-610-3983 |\n| Body Shop | 772-210-3981 |\n| Google Business Profile | (772) 325-1316 |\n\n## Location Facts\n\n- Coordinates: 27.6108079, -80.3823928\n- Google Place ID: ChIJQUvkK3Zf3ogRcXJHxEuwUdQ\n- Serves Vero Beach, Fort Pierce, Sebastian, Fellsmere and the surrounding Treasure Coast\n\n## Related Concepts\n\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/hours.md) for department hours.",
+    "tables/hours": "# Hours\n\n## Department Hours\n\n| Department | Monday - Friday | Saturday | Sunday |\n|---|---|---|---|\n| Sales | 9:00 AM - 7:00 PM | 9:00 AM - 7:00 PM | Closed |\n| Service | 7:30 AM - 5:30 PM | 7:30 AM - 2:00 PM | Closed |\n| Parts | 7:30 AM - 6:00 PM | 7:30 AM - 3:00 PM | Closed |\n| Quick Lane | 7:30 AM - 5:30 PM | 7:30 AM - 2:00 PM | Closed |\n| Body Shop | 7:30 AM - 5:30 PM | 8:00 AM - 12:00 PM | Closed |\n\n## Related Concepts\n\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/contact.md) for phone numbers.",
+    "tables/model-comparison": "# Ford Model Comparison - Mullinax Ford of Vero Beach\n\n## New Ford Models\n\n| Model | Body Type | Powertrain | Seating | Typical Buyer |\n|---|---|---|---|---|\n| F-150 | Full-size pickup truck | Gas, PowerBoost hybrid, Raptor | 5-6 | Towing, work, family hauling |\n| F-150 Lightning | Full-size EV pickup | All-electric | 5 | EV buyers, home backup power |\n| F-250 / F-350 Super Duty | Heavy-duty pickup | Gas / diesel | 5-6 | Heavy towing, commercial fleets |\n| Super Duty Chassis Cab | Chassis cab | Gas / diesel | 2-3 | Vocational, upfit buyers |\n| Maverick | Compact pickup | Hybrid / gas | 5 | Small-truck buyers, first pickups |\n| Ranger | Midsize pickup | Gas | 5 | Off-road and daily-driver truck buyers |\n| Bronco | 2/4-door off-road SUV | Gas | 4-5 | Off-road enthusiasts |\n| Bronco Sport | Compact crossover SUV | Gas | 5 | Outdoor-lifestyle crossover buyers |\n| Explorer | 3-row midsize SUV | Gas / hybrid | 6-7 | Family SUV buyers |\n| Expedition / Expedition MAX | Full-size 3-row SUV | Gas | 7-8 | Large families, towing SUVs |\n| Edge | 2-row midsize crossover | Gas | 5 | Midsize crossover buyers |\n| Escape | Compact crossover SUV | Gas / hybrid | 5 | Commuter crossover buyers |\n| Mustang | Sports coupe / convertible | Gas | 4 | Sports-car buyers |\n| Mustang Mach-E | Electric crossover | All-electric | 5 | EV buyers, performance crossover |\n| Transit | Cargo / passenger van | Gas | 2-15 | Commercial fleet, work vans |\n| E-Transit | Cargo / passenger van | All-electric | 2-15 | Commercial fleet, EV vans |\n| Transit Connect | Compact cargo / passenger van | Gas | 2-7 | Small commercial, delivery |\n| E-Series | Cutaway / stripped chassis | Gas | 2-3 | Commercial, upfit buyers |\n\n## Segment Notes\n\n- **Trucks**: The dealership emphasizes F-150, Super Duty, Maverick and Ranger, plus chassis cab and E-Series offerings.\n- **SUVs**: Explorer and Bronco/Bronco Sport are top inventory segments; Expedition and Expedition MAX cover full-size buyers.\n- **Electric**: F-150 Lightning, Mustang Mach-E and E-Transit cover the EV market.\n- **Commercial**: Transit, Transit Connect, E-Transit and E-Series vans support the work-truck and fleet business, including the Mullinax Ford commercial fleet site at mullinaxfordfleet.com.\n\n## Related Concepts\n\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/new-vehicles.md) for new inventory details.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/used-vehicles.md) for pre-owned inventory.\n- See [mullinax-ford-of-vero-beach.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/mullinax-ford-of-vero-beach.md) for the dealership profile."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables and Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables and Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
