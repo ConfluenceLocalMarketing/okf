@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hyundai Montgomery - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "Hyundai Montgomery";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Hyundai Montgomery",
+        "type": "Entities",
+        "description": "Hyundai dealership in Montgomery, AL serving the River Region and Central Alabama with new and pre-owned vehicles, financing, service, and parts, family-owned since 1970.",
+        "resource": "https://www.hyundaimontgomery.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Frequently Asked Questions - Hyundai Montgomery",
+        "type": "Entities",
+        "description": "Common questions about Hyundai Montgomery's inventory, financing, service, and dealership operations in Montgomery, AL.",
+        "resource": "https://api.promptgraph.ai/api/v1/hyundai-montgomery/prompts",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing & Leasing - Hyundai Montgomery",
+        "type": "Entity",
+        "description": "Vehicle financing and leasing options at Hyundai Montgomery including online applications, trade-in valuation, and payment calculators.",
+        "resource": "https://www.hyundaimontgomery.com/finance/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Hyundai Models - Hyundai Montgomery",
+        "type": "Entities",
+        "description": "New Hyundai model lineup available at Hyundai Montgomery in Montgomery, AL including Venue, Elantra, Sonata, Kona, Tucson, Santa Fe, Palisade, IONIQ 5, IONIQ 6, IONIQ 9, and Santa Cruz.",
+        "resource": "https://www.hyundaimontgomery.com/new-vehicles/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Hyundai Montgomery",
+        "type": "Entities",
+        "description": "Hyundai-certified service center in Montgomery, AL offering routine maintenance, diagnostics, major repairs, genuine Hyundai OEM parts, and current service specials.",
+        "resource": "https://www.hyundaimontgomery.com/service/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff Directory - Hyundai Montgomery",
+        "type": "Entities",
+        "description": "Sales and service staff directory for Hyundai Montgomery in Montgomery, AL, compiled from the dealership website and customer reviews.",
+        "resource": "https://www.hyundaimontgomery.com/about-us/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Used Cars, Trucks & SUVs - Hyundai Montgomery",
+        "type": "Entities",
+        "description": "Pre-owned and certified pre-owned vehicle inventory at Hyundai Montgomery in Montgomery, AL with a large multi-make selection of cars, trucks, and SUVs from the world's leading brands.",
+        "resource": "https://www.hyundaimontgomery.com/used-inventory/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery Infrastructure - Hyundai Montgomery",
+        "type": "APIs",
+        "description": "Machine-readable knowledge base and semantic data endpoints for Hyundai Montgomery, providing AI agents structured access to business info, prompts, and site directives via PromptGraph.",
+        "resource": "https://api.promptgraph.ai/api/v1/hyundai-montgomery/sitemap.xml",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "LLMs.txt - Hyundai Montgomery",
+        "type": "APIs",
+        "description": "Full llms.txt directive content including PromptGraph API endpoints, site pages, and featured AI prompts for Hyundai Montgomery.",
+        "resource": "https://api.promptgraph.ai/api/v1/hyundai-montgomery/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "PromptGraph Prompt Library - Hyundai Montgomery",
+        "type": "Playbooks & Runbooks",
+        "description": "Complete PromptGraph library of 20 structured Q&A prompts covering vehicles, financing, service, and dealership info for Hyundai Montgomery.",
+        "resource": "https://api.promptgraph.ai/api/v1/hyundai-montgomery/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Customer Testimonials - Hyundai Montgomery",
+        "type": "Playbooks & Runbooks",
+        "description": "Customer reviews collected from the dealership website for Hyundai Montgomery in Montgomery, AL, with predominantly 5-star testimonials highlighting sales and service experiences.",
+        "resource": "https://www.hyundaimontgomery.com/service/",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Hyundai Model Lineup Comparison - Hyundai Montgomery",
+        "type": "Tables & Datasets",
+        "description": "Side-by-side comparison of new Hyundai models available at Hyundai Montgomery in Montgomery, AL, including body type, passenger capacity, drivetrain, and key features.",
+        "resource": "https://www.hyundaimontgomery.com/new-vehicles/",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/staff",
+        "source": "datasets/dealership",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__references/testimonials",
+        "source": "datasets/dealership",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__references/prompts",
+        "source": "datasets/faq",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/dealership",
+        "source": "datasets/financing",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/dealership",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__tables/model-comparison",
+        "source": "datasets/new-vehicles",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/dealership",
+        "source": "datasets/service-center",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__references/testimonials",
+        "source": "datasets/staff",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/dealership",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/dealership"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__datasets/faq",
+        "source": "references/prompts",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__datasets/staff",
+        "source": "references/testimonials",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/new-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/financing",
+        "source": "tables/model-comparison",
+        "target": "datasets/financing"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Hyundai Montgomery\n\nHyundai Montgomery is a full-service Hyundai dealership located at **4701 Carmichael Rd., Montgomery, AL 36106**, serving the River Region and Central Alabama including Montgomery, Prattville, Auburn, Selma, Wetumpka, Pike Road, and Millbrook. The family-owned business has served the area since 1970.\n\n## Contact\n\n| Department | Phone |\n|---|---|\n| Sales | (334) 851-8100 |\n| Service | (334) 851-8100 |\n| Parts | (334) 851-8100 |\n| Main | (334) 851-8100 |\n\n## Hours\n\n| Day | Sales Hours | Service Hours | Parts Hours |\n|---|---|---|---|\n| Monday | 9:00 AM - 7:00 PM | 7:30 AM - 6:00 PM | 7:30 AM - 6:00 PM |\n| Tuesday | 9:00 AM - 7:00 PM | 7:30 AM - 6:00 PM | 7:30 AM - 6:00 PM |\n| Wednesday | 9:00 AM - 7:00 PM | 7:30 AM - 6:00 PM | 7:30 AM - 6:00 PM |\n| Thursday | 9:00 AM - 7:00 PM | 7:30 AM - 6:00 PM | 7:30 AM - 6:00 PM |\n| Friday | 9:00 AM - 7:00 PM | 7:30 AM - 6:00 PM | 7:30 AM - 6:00 PM |\n| Saturday | 9:00 AM - 6:00 PM | 8:00 AM - 2:00 PM | 8:00 AM - 2:00 PM |\n| Sunday | Closed | Closed | Closed |\n\n## Location\n\n- **Address:** 4701 Carmichael Rd., Montgomery, AL 36106\n- **Google Maps:** https://goo.gl/maps/f7Z9fCTwKQT33FGU6\n\n## New Vehicles\n\nHyundai Montgomery offers a full lineup of new Hyundai models including:\n- **Venue** - Subcompact SUV, affordable entry point\n- **Elantra** - Compact sedan\n- **Sonata** - Mid-size sedan\n- **Kona** - Subcompact crossover\n- **Tucson** - Compact SUV\n- **Santa Fe / Santa Fe Hybrid** - Mid-size SUV with hybrid option\n- **Palisade** - Full-size 3-row SUV\n- **IONIQ 5** - All-electric compact crossover\n- **IONIQ 6** - All-electric streamlined sedan\n- **IONIQ 9** - All-electric 3-row flagship SUV\n- **Santa Cruz** - Compact pickup truck (Sport Adventure Vehicle)\n\nNew vehicle inventory on the dealership website shows over 1,000 new Hyundais with transparent UP FRONT pricing.\n\n## Services\n\n- **Finance Department** - Loan and lease options, online credit application, trade-in appraisal, pre-approval, payment calculator\n- **Service Center** - Hyundai-certified technicians, routine maintenance, diagnostics, major repairs, genuine Hyundai parts\n- **Parts Department** - Genuine Hyundai OEM components, accessories, tires\n\n## Online Tools\n\n- Inventory browsing and filtering (new, used, certified pre-owned)\n- Online service scheduling\n- Online credit application and pre-approval\n- Car payment calculator\n- Trade-in valuation tool (Sell Your Car / value-your-trade)\n- Express Store - online vehicle purchase platform\n\n## Staff\n\nSee [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/staff.md) for full directory.\n\n## Reviews & Reputation\n\n- **Google Business Profile (PromptGraph):** 4.4 / 5.0 (3,545 reviews)\n- **DealerRater:** Active review profile at https://www.dealerrater.com/dealer/Hyundai-Montgomery-dealer-reviews-36709/\n\nSee [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/references/testimonials.md) for detailed customer reviews.\n\n## Special Programs\n\n- **UP FRONT pricing** - Transparent online pricing on new vehicles\n- **Hyundai Rewards** - Tiered savings program (Gold / Blue tiers)\n- **Hyundai Complimentary Maintenance** - 3 years of complimentary maintenance on new 2020-2025 Hyundai model years\n- **Hyundai Certified Pre-Owned** - Certified used vehicles with warranty coverage\n- **Sell Your Car** - Trade-in valuation without a required purchase\n- **Hope on Wheels** - Hyundai dealership community program\n\n## Affiliations\n\n- Family-owned since 1970\n- Website powered by **Dealer Inspire**\n- Automotive SEO by **Wikimotive**\n- Accessibility via **AudioEye**\n- Connected via **PromptGraph** AI platform",
+    "datasets/faq": "# Frequently Asked Questions - Hyundai Montgomery\n\n## Inventory\n\n**Q: What new Hyundai models are available at Hyundai Montgomery?**\nA: The full Hyundai lineup including Venue, Elantra, Sonata, Kona, Tucson, Santa Fe (gas and hybrid), Palisade, IONIQ 5, IONIQ 6, IONIQ 9, and Santa Cruz. Over 1,000 new Hyundai vehicles are listed online.\n\n**Q: What brands are available in the used vehicle inventory?**\nA: The pre-owned inventory spans multiple makes including Hyundai, Jeep, Ford, Toyota, Buick, Cadillac, Audi, BMW, Ram, Nissan, Honda, Volkswagen, and Mercedes-Benz.\n\n**Q: Does Hyundai Montgomery offer certified pre-owned vehicles?**\nA: Yes, Certified Pre-Owned Hyundai vehicles are available with warranty coverage.\n\n**Q: Are there affordable used cars under $20,000?**\nA: Yes, the dealership maintains a selection of reliable used Hyundai vehicles under $20,000 near Montgomery.\n\n## Financing\n\n**Q: What financing options are available?**\nA: Traditional loans, leases, and special financing programs. The finance team works with many lenders that offer competitive interest rates for every buyer.\n\n**Q: Can I get pre-approved online?**\nA: Yes, a secure online credit application is available at /finance/apply-for-financing/.\n\n**Q: What current APR specials are available?**\nA: As of August 2026, 0% APR financing for 60 months is available on the 2026 Santa Fe, Santa Fe Hybrid, and Tucson, and 0% APR for 72 months on the IONIQ 5 and IONIQ 9. Offers expire 08/31/2026.\n\n**Q: Can I sell my car without buying a new one?**\nA: Yes, the Sell Your Car / value-your-trade program provides cash offers for vehicles without a required purchase.\n\n## Service\n\n**Q: Does the dealership offer complimentary maintenance?**\nA: Yes, new 2020-2025 Hyundai model years include 3 years of complimentary maintenance.\n\n**Q: How do I schedule service?**\nA: Online scheduling is available through the dealership website at /service/schedule-service/.\n\n**Q: What service specials are currently available?**\nA: 15% OFF battery special with free installation and charging system check, FREE brake inspection, and a vehicle service special saving $10-$40 on service purchases. All valid to 10/06/2026.\n\n**Q: Can I wait at the dealership during service?**\nA: Yes, the waiting area features comfortable seating, free Wi-Fi, coffee, and snacks.\n\n## Dealership\n\n**Q: Where is Hyundai Montgomery located?**\nA: 4701 Carmichael Rd., Montgomery, AL 36106, serving the River Region including Prattville, Auburn, Selma, Wetumpka, Pike Road, and Millbrook.\n\n**Q: How long has the dealership been in business?**\nA: The family-owned business has served the area since 1970.\n\n**Q: What is the dealership's rating?**\nA: 4.4 / 5.0 from 3,545 Google reviews.\n\n**Q: Does the dealership offer online car buying?**\nA: Yes, an Express Store (shopnow.hyundaimontgomery.com) supports online vehicle purchasing, and the dealership offers vehicle delivery and online appointment scheduling.\n\nSee [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/references/prompts.md) for the complete prompt library with detailed Q&A pairs.",
+    "datasets/financing": "# Financing & Leasing - Hyundai Montgomery\n\nThe Hyundai Montgomery Finance Center offers purchase financing and lease programs for new and pre-owned vehicles.\n\n## Financing Options\n\n- **Online Application** - Secure online credit application at /finance/apply-for-financing/\n- **Multiple Lending Partners** - The finance team works with many lenders to find competitive interest rates for every buyer\n- **Flexible Terms** - Loan and lease solutions for different ownership goals and budgets\n- **Customizable Terms** - Various lease options and purchase terms\n- **Competitive APR Specials** - Manufacturer incentives through Hyundai Motor Finance\n\n## Current Financing Specials (expire 08/31/2026)\n\n| Model | APR Offer | Term |\n|---|---|---|\n| 2026 Santa Fe | 0% APR | 60 months |\n| 2026 Santa Fe Hybrid | 0% APR | 60 months |\n| 2026 Tucson | 0% APR | 60 months |\n| 2026 IONIQ 5 | 0% APR | 72 months |\n| 2026 IONIQ 9 | 0% APR | 72 months |\n| 2026 Sonata | 0.99% APR | 60 months |\n| 2026 Elantra | 3.49% APR | 60 months |\n| 2026 Kona | 3.49% APR | 60 months |\n| 2026 Palisade | 3.99% APR | 60 months |\n\nAPR offers require approval and financing through Hyundai Motor Finance. Not all buyers qualify.\n\n## Leasing\n\nLeasing is available for customers who prefer lower monthly payments and the option to drive a new vehicle every few years. New vehicle lease deals include the 2026 Tucson.\n\n## Buying vs. Leasing\n\n| Factor | Buying | Leasing |\n|---|---|---|\n| Monthly Payment | Higher | Lower |\n| Ownership | Own the vehicle at end of term | Return vehicle at end of term |\n| Mileage | Unlimited | Limited by contract |\n| Sales Tax | Paid upfront or rolled into loan | Included in monthly payment |\n\n## Trade-In\n\n- **Value Your Trade** - Online valuation tool at /value-your-trade/\n- **Sell Your Car** - Cash offers for vehicles without a required purchase\n- **In-person appraisal** available at the dealership\n\n## Payment Calculators\n\nEstimate monthly payments using the online car payment calculator at /payment-calculator/.\n\n## Contact\n\nContact the finance team at (334) 851-8100 or through the dealership contact page.\n\nSee [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/dealership.md) for full business profile and [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/new-vehicles.md) or [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/used-vehicles.md) for inventory.",
+    "datasets/new-vehicles": "# New Hyundai Models - Hyundai Montgomery\n\nHyundai Montgomery carries a full lineup of new Hyundai vehicles. The dealership website listed 1,061 new Hyundai vehicles in Montgomery, AL with prices ranging from $21,500 to $79,760.\n\n## Pricing Model\n\n- **UP FRONT pricing** - Transparent online pricing, no hidden fees\n- **Hyundai Rewards** - Tiered savings program offering additional discounts (Gold / Blue tiers)\n\n## SUVs & Crossovers\n\n### Hyundai Venue\nSubcompact SUV, Hyundai's most affordable model. Fuel-efficient and city-friendly.\n\n### Hyundai Kona\nSubcompact crossover SUV available in multiple trims.\n\n### Hyundai Tucson\nCompact SUV, Hyundai's best-selling model. Features bold design, available AWD, and advanced safety technology. Available with lease deals.\n\n### Hyundai Santa Fe\nMid-size SUV with modern design. Available in gasoline and **Santa Fe Hybrid** variants.\n\n### Hyundai Palisade\nFull-size 3-row SUV for families. Available in multiple trims.\n\n### Hyundai IONIQ 5\nAll-electric compact crossover with 800V ultra-fast charging capability.\n\n### Hyundai IONIQ 9\nAll-electric 3-row flagship SUV, the largest of the IONIQ electric family.\n\n## Cars\n\n### Hyundai Elantra\nCompact sedan, affordable and fuel-efficient. Available in multiple trims.\n\n### Hyundai Sonata\nMid-size sedan with sleek design and advanced safety features.\n\n## Trucks\n\n### Hyundai Santa Cruz\nCompact pickup truck (Sport Adventure Vehicle) combining SUV comfort with truck utility.\n\n## Electric & Hybrid Vehicles\n\n| Model | Type | Notes |\n|---|---|---|\n| **IONIQ 5** | Full EV | 800V fast charging, available e-AWD |\n| **IONIQ 6** | Full EV Sedan | Aerodynamic streamliner design |\n| **IONIQ 9** | Full EV 3-Row SUV | Flagship electric SUV |\n| **Santa Fe Hybrid** | Hybrid SUV | Efficient mid-size SUV |\n\n## Hyundai Safety & Technology\n\nMost new Hyundai models include:\n- **Hyundai SmartSense** - Advanced driver assistance suite\n- **Forward Collision-Avoidance Assist**\n- **Blind-Spot Collision-Avoidance Assist**\n- **Lane Keeping Assist**\n- **Safe Exit Assist**\n- **Rear Cross-Traffic Collision-Avoidance Assist**\n- **Smart Cruise Control**\n- **Bluelink Connected Services** - Remote start, lock/unlock, vehicle monitoring\n\n## Complimentary Maintenance\n\nNew 2020-2025 Hyundai model years include **Hyundai Complimentary Maintenance** for 3 years, covering oil changes, tire rotations, and multi-point inspections.\n\n## Specials\n\nCurrent new vehicle specials include 0% APR financing on selected models (2026 Santa Fe, Santa Fe Hybrid, Tucson) and 0% APR for 72 months on the IONIQ 5 and IONIQ 9, with all offers expiring 08/31/2026.\n\nSee [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/dealership.md) for contact information and current programs.\nSee [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/tables/model-comparison.md) for side-by-side model specifications.",
+    "datasets/service-center": "# Service Center - Hyundai Montgomery\n\nThe Hyundai Montgomery Service Center provides certified maintenance and repair services at 4701 Carmichael Rd., Montgomery, AL.\n\n## Service Capabilities\n\n- **Routine Maintenance** - Oil changes, tire rotations, alignments, brake inspections\n- **Diagnostics** - Check engine light diagnosis, computerized system analysis\n- **Major Repairs** - Transmission service, engine repair, suspension work\n- **Battery Service** - Battery replacement with charging system check\n- **Brake Service** - Brake pad/shoe inspection, rotor/drum checks, brake fluid service\n- **Recall Repairs** - OEM-specified recall and campaign work (view at autoservice.hyundaiusa.com)\n- **Factory-Scheduled Maintenance** - Following Hyundai's recommended maintenance schedule\n\n## Service Team\n\n- **Factory-trained technicians** - Certified experts on maintaining your Hyundai to factory standards\n- **Certified service advisors** - Diagnose and communicate repair needs\n- **Nick Harris** - Service representative praised for updates and maintenance recommendations\n\n## Service Experience\n\n- **Online scheduling** available through the dealership website\n- **Genuine OEM parts** - Perfect fit and long-lasting performance\n- **State-of-the-art equipment** and diagnostic tools\n- **Comfortable waiting area** with seating, free Wi-Fi, coffee, and snacks\n- **Clean facilities** - Clean and sanitary restrooms\n- **Exceptional service** - Goal of getting you back on the road with your Hyundai running its best\n\n## Service Hours\n\n| Day | Hours |\n|---|---|\n| Monday | 7:30 AM - 6:00 PM |\n| Tuesday | 7:30 AM - 6:00 PM |\n| Wednesday | 7:30 AM - 6:00 PM |\n| Thursday | 7:30 AM - 6:00 PM |\n| Friday | 7:30 AM - 6:00 PM |\n| Saturday | 8:00 AM - 2:00 PM |\n| Sunday | Closed |\n\n## Parts Department\n\n- **Genuine Hyundai OEM parts** - Brake pads, discs, suspension components, and more\n- Tires and wheels\n- Accessories for Hyundai vehicles\n- Find parts via the dealership website\n\n## Complimentary Maintenance Program\n\nNew 2020-2025 Hyundai model years include 3 years of complimentary maintenance at your local Hyundai dealer, covering:\n- Hyundai-approved oil and oil filter changes\n- Tire rotations at factory-recommended intervals\n- Multi-point vehicle inspections\n- Maintenance by certified Hyundai technicians\n\n## Current Service Specials (valid to 10/06/2026)\n\n| Special | Offer | Details |\n|---|---|---|\n| **Hyundai Battery Special** | 15% OFF | FREE installation and FREE charging system check |\n| **FREE Brake Inspection** | FREE | Inspect pads/shoes, rotors/drums, master cylinder, calipers, wheel cylinders; check fluid, parking brake; road test |\n| **Vehicle Service Special** | Save $10-$40 | Spend $100-$199 save $10, $200-$299 save $20, $300-$399 save $30, $400+ save $40 |\n\nCoupons must be presented at time of write-up and cannot be combined with other offers. Valid only at Hyundai Montgomery.\n\nSee [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/staff.md) for full service department directory.\nSee [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/dealership.md) for contact information.",
+    "datasets/staff": "# Staff Directory - Hyundai Montgomery\n\nStaff directory compiled from the dealership website and customer reviews. The dealership does not publish an individual staff directory page; staff members are identified from customer reviews on Google and DealerRater.\n\n## Sales Consultants\n\n- **Kameron** - Praised for smooth, fun car buying process\n- **Michelle** - Professional salesperson; went above and beyond to find the right model and color\n- **Spencer Gilcrease** - Excellent at explaining vehicles; knowledgeable and helpful through the entire process\n- **Nick Harris** - Sales advisor; notified customers of service progress and maintenance recommendations\n- **Fred** - Attentive, responsive, transparent, and patient\n- **Jamal** - Very responsive and customer oriented\n- **Raul Altamira** - Helped customers into the right car; quick, efficient, easy process\n- **Zolan (Zoland Armstrong)** - Great to work with on new purchases\n- **Randy Dunn** - Made decision making smoother than expected; answered every question\n- **Nicoy** - Made a phone call and located the exact vehicle requested\n- **Jalen** - Exceptional salesman; timely process\n- **Jarvis (Jarkis)** - Knowledgeable about vehicles and features; very helpful\n- **David (David Neal)** - Patient, helpful, knew a lot about the vehicles\n- **Nicholas** - Wonderful salesperson\n- **Marcus** - Made the process easier\n- **Tusan** - Patient; went on several test drives before finding the right vehicle\n- **LC** - Made the process smooth\n\n## Finance Team\n\n- **Andrew** - Finance Manager; professional (mentioned in customer review)\n\n## Service Department\n\n- **Nick Harris** - Service representative; great at updates, let customers know what maintenance may be needed\n\n## Contact\n\n- **Sales:** (334) 851-8100\n- **Service:** (334) 851-8100\n- **Parts:** (334) 851-8100\n\nSee [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/references/testimonials.md) for detailed customer reviews referencing specific staff members.",
+    "datasets/used-vehicles": "# Used Cars, Trucks & SUVs - Hyundai Montgomery\n\nHyundai Montgomery is a used car headquarters with one of the largest selections of pre-owned vehicles in the area. The dealership website listed 319 used and certified used vehicles in Montgomery, AL.\n\n## Inventory Scope\n\n- **Total vehicles:** 319 used and certified used vehicles\n- **Multi-make selection** including Hyundai, Jeep, Ford, Toyota, Buick, Cadillac, Audi, BMW, Ram, Nissan, Honda, Volkswagen, and Mercedes-Benz\n- **Vehicle types:** Sedans, SUVs, trucks, and crossovers\n- **Hyundai models:** Popular sedans like the Elantra and Sonata, plus SUVs like the Tucson, Palisade, and Kona\n\n## Quality Assurance\n\n- **Vetting process** - Every used vehicle must meet or exceed dealership quality standards before earning a place in inventory\n- **Hyundai Certified Pre-Owned (CPO)** - Certified used vehicles with warranty coverage\n- **Carfax History Reports** - Available on request\n\n## Popular Used Models\n\n- **Hyundai** - Elantra, Sonata, Tucson, Palisade, Kona\n- **Jeep** - Wrangler, Cherokee, Grand Cherokee\n- **Ford** - Bronco Sport\n- **Toyota** - Tacoma, 4Runner\n- **Premium** - Buick, Cadillac, Audi, BMW\n- **Additional makes** - Ram, Nissan, Honda, Volkswagen, Mercedes-Benz\n\n## Shopping Experience\n\n- **Relationship-focused sales** - Team prioritizes relationships over sales and commissions\n- **Transparent and no-pressure** approach\n- **Test drives** available at the dealership\n\n## Online Buying Tools\n\n- Online inventory browsing and filtering\n- Value Your Trade tool (Sell Your Car)\n- Car payment calculator\n- Online credit application and pre-approval\n\n## Trade-In\n\n- Trade-in valuation tool available online and in person\n- Sell Your Car program - cash offers without a required purchase\n\nSee [dealership.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/dealership.md) for current financing and trade-in programs.",
+    "references/ai-discovery-page": "# AI Discovery Infrastructure - Hyundai Montgomery\n\nHyundai Montgomery's AI discovery infrastructure is provided by [PromptGraph](https://promptgraph.ai) at `https://api.promptgraph.ai/api/v1/hyundai-montgomery`. The site is built on the **Dealer Inspire** platform.\n\nNote: The dealership does not publish a dedicated `/ai-discovery-page` on its own website. AI discovery is instead exposed through the PromptGraph API and the AI Manifest file.\n\n## AI Manifest (`/.well-known/ai-manifest.json`)\n\nThe AI Manifest (v1.0) provides a machine-readable directory of AI resources:\n\n- **Last updated:** 2026-08-07T16:49:15.489Z\n- **Schema types:** `LocalBusiness`, `AutoDealer`, `Car`, `ItemList`\n\n## PromptGraph API Endpoints\n\nThe PromptGraph API exposes these endpoints:\n\n| Endpoint | Description |\n|---|---|\n| `/business` | Business profile (JSON-LD) |\n| `/vehicles` | Vehicle inventory (JSON-LD) |\n| `/prompts` | Q&A / FAQ prompts (20 prompts) |\n| `/testimonials` | Customer reviews |\n| `/offers` | Current offers and incentives |\n| `/llms.txt` | LLMs.txt directive |\n| `/.well-known/ai-manifest.json` | AI Manifest |\n| `/sitemap.xml` | Sitemap |\n| `/robots.txt` | Robots rules |\n| `/config.json` | System configuration |\n| `/gbp-context` | Flattened Google Business Profile data for LLM ingestion |\n| `/site-content` | Clean, plain-text mirror of the site |\n\n## Business Profile (Schema.org AutoDealer)\n\nFrom `https://api.promptgraph.ai/api/v1/hyundai-montgomery/business`:\n\n- **Name:** Hyundai Montgomery\n- **Type:** AutoDealer (Schema.org)\n- **Additional Types:** Hyundai dealer, Car dealer, Truck dealer, Used car dealer, Used truck dealer, Car leasing service, Car accessories store, Truck accessories store\n- **Address:** 4701 Carmichael Rd., Montgomery, AL 36106\n- **Telephone:** (334) 686-1615\n- **URL:** `https://www.hyundaimontgomery.com/`\n- **Aggregate Rating:** 4.4 / 5.0 (3,545 reviews)\n- **Hours:** Mon-Fri 9:00 AM - 7:00 PM, Sat 9:00 AM - 6:00 PM\n\n## Google Business Profile Context\n\nThe `/gbp-context` endpoint provides flattened Google Business Profile data for LLM ingestion, including:\n\n- **Service items:** Vehicle Financing, Used Car Specials, New Car Specials, Vehicle Delivery, Online Car Buying, Online Appointment Scheduling, Trade Appraisals\n- **Place ID:** ChIJDX1tIPgqjIgRnJGUf_LR5-o\n- **Average rating:** 4.4 / 5.0 (3,545 reviews)\n- **Last sync:** 2026-08-05T13:48:55.604Z\n\n## Vehicle Inventory Endpoint\n\nThe `/vehicles` endpoint returns JSON-LD inventory data. As of 2026-08-08, the structured endpoint returned `numberOfItems: 0` (empty ItemList), while the dealership website displays over 1,000 new and 319 used vehicles. Inventory data should be sourced from the website for current availability.\n\n## Q&A Prompt Library (20 Prompts)\n\nThe `/prompts` endpoint exposes 20 structured Q&A prompt/response pairs serving as an AI FAQ. See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/references/prompts.md) for the full library. Topics include:\n\n- Vehicle shopping and model-specific inquiries (Venue, Kona, Sonata, Elantra, IONIQ 5, IONIQ 6, Tucson, Santa Fe, Palisade, Santa Cruz)\n- Financing, leasing, and trade-in questions\n- Used vehicle shopping (SUVs, cars under $20,000, certified pre-owned)\n- Dealership reputation and customer ratings\n\n## Testimonials Endpoint\n\nThe `/testimonials` endpoint returns customer review data. As of 2026-08-08, the structured endpoint returned an empty testimonials list. Customer reviews are instead visible on the dealership website (Google and DealerRater). See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/references/testimonials.md) for details.\n\n## Global AI Directives\n\n| Resource | URL |\n|---|---|\n| AI Manifest (PromptGraph) | `https://api.promptgraph.ai/api/v1/hyundai-montgomery/.well-known/ai-manifest.json` |\n| LLMs.txt | `https://api.promptgraph.ai/api/v1/hyundai-montgomery/llms.txt` |\n| Robots.txt | `https://api.promptgraph.ai/api/v1/hyundai-montgomery/robots.txt` |\n| Sitemap XML | `https://api.promptgraph.ai/api/v1/hyundai-montgomery/sitemap.xml` |\n| Config | `https://api.promptgraph.ai/api/v1/hyundai-montgomery/config.json` |\n\n## Purpose\n\nThis infrastructure exists to give AI agents direct access to structured knowledge about Hyundai Montgomery without requiring web scraping or human-readable page parsing. Business info, prompts, and site directives are available via JSON endpoints and semantic markup through the PromptGraph API.\n\nSee [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/references/llms-txt.md) for the full llms.txt directive.\nSee [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/references/prompts.md) for the complete Q&A prompt library.",
+    "references/llms-txt": "# LLMs.txt - Hyundai Montgomery\n\nThe `llms.txt` file provides a structured directive for LLMs and AI agents interacting with Hyundai Montgomery's web properties. It indexes key pages and structured API endpoints.\n\n## Site Pages\n\n### Main Site\n\n- [Hyundai Montgomery Home](https://www.hyundaimontgomery.com/) - New and used Hyundai vehicles in Montgomery, AL.\n- [New Vehicles](https://www.hyundaimontgomery.com/new-vehicles/) - Browse new Hyundai inventory.\n- [Used Inventory](https://www.hyundaimontgomery.com/used-inventory/) - Browse used cars, trucks, and SUVs.\n- [Finance](https://www.hyundaimontgomery.com/finance/) - Financing and lease options.\n- [Online Credit Application](https://www.hyundaimontgomery.com/finance/apply-for-financing/) - Apply for credit online.\n- [Service](https://www.hyundaimontgomery.com/service/) - Schedule an appointment for auto repair or regular maintenance.\n- [Parts](https://www.hyundaimontgomery.com/parts/) - Genuine Hyundai parts and accessories.\n- [Service Specials](https://www.hyundaimontgomery.com/service/service-specials/) - Current service offers.\n- [New Vehicle Specials](https://www.hyundaimontgomery.com/new-vehicles/new-vehicle-specials/) - Current Hyundai offers and incentives.\n- [About Us](https://www.hyundaimontgomery.com/about-us/) - Dealership history and team.\n- [Contact Us](https://www.hyundaimontgomery.com/contact-us/) - Contact form and dealer info.\n- [Value Your Trade](https://www.hyundaimontgomery.com/value-your-trade/) - Trade-in valuation.\n- [Payment Calculator](https://www.hyundaimontgomery.com/payment-calculator/) - Estimate monthly payments.\n- [Express Store](https://shopnow.hyundaimontgomery.com/inventory) - Online vehicle purchase platform.\n\n### AI & LLM Resources\n\n- [LLMs.txt](https://api.promptgraph.ai/api/v1/hyundai-montgomery/llms.txt) - Structured directive for LLMs and AI agents\n\n### Social Media\n\n- [Facebook](https://www.facebook.com/HyundaiMontgomery/)\n- [Instagram](https://www.instagram.com/hyundai_montgomery/)\n- [X](https://twitter.com/Hyundai_AL)\n- [YouTube](https://www.youtube.com/@HyundaiMontgomery)\n\n## API Endpoints\n\nStructured JSON-LD data endpoints optimized for AI consumption:\n\n- [Business Information](http://api.promptgraph.ai/api/v1/hyundai-montgomery/business) - Complete business profile with address, contact, hours, and location in JSON-LD format\n- [Vehicle Inventory](http://api.promptgraph.ai/api/v1/hyundai-montgomery/vehicles) - Vehicle inventory in JSON-LD format\n- [Current Offers](http://api.promptgraph.ai/api/v1/hyundai-montgomery/offers) - Current incentives and special offers\n- [Prompts & FAQs](http://api.promptgraph.ai/api/v1/hyundai-montgomery/prompts) - 20 structured prompts for consistent AI responses\n- [Customer Testimonials](http://api.promptgraph.ai/api/v1/hyundai-montgomery/testimonials) - Customer reviews and ratings in JSON-LD format\n- [Google Business Profile Context](http://api.promptgraph.ai/api/v1/hyundai-montgomery/gbp-context) - Flattened GBP data for LLM ingestion\n- [Full Site JSON Mirror](http://api.promptgraph.ai/api/v1/hyundai-montgomery/site-content) - Clean, plain-text mirror of the site for LLM ingestion\n- [AI Manifest](http://api.promptgraph.ai/api/v1/hyundai-montgomery/.well-known/ai-manifest.json) - Machine-readable directory of all available AI resources\n- [Sitemap](http://api.promptgraph.ai/api/v1/hyundai-montgomery/sitemap.xml) - XML sitemap for search engine and AI crawler discovery\n- [Configuration](http://api.promptgraph.ai/api/v1/hyundai-montgomery/config.json) - System configuration and metadata\n\n## Featured Prompts\n\n- [Hyundai Venue Crossover Sales](http://api.promptgraph.ai/api/v1/hyundai-montgomery/prompts/hyundai-venue-crossover-sales) - Affordable new Hyundai Venue near Montgomery, AL\n- [Hyundai IONIQ 6 Electric Sedan](http://api.promptgraph.ai/api/v1/hyundai-montgomery/prompts/hyundai-ioniq-6-electric-sedan) - All-electric IONIQ 6 streamliner\n- [Used SUV Inventory Montgomery](http://api.promptgraph.ai/api/v1/hyundai-montgomery/prompts/used-suv-inventory-montgomery) - Reliable used Hyundai Tucson and Santa Fe SUVs\n- [Auto Loan Pre-Approval](http://api.promptgraph.ai/api/v1/hyundai-montgomery/prompts/auto-loan-pre-approval) - Pre-approval for auto loans in Central Alabama\n- [Hyundai Sales Events & Rebates](http://api.promptgraph.ai/api/v1/hyundai-montgomery/prompts/hyundai-sales-events-&-rebates) - Promotional cash incentives on new Hyundai models\n\nSee [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/references/ai-discovery-page.md) for detailed endpoint documentation.",
+    "references/prompts": "# PromptGraph Prompt Library - Hyundai Montgomery\n\nThe PromptGraph API at `https://api.promptgraph.ai/api/v1/hyundai-montgomery/prompts` exposes 20 structured Q&A prompt/response pairs. Below is a categorized summary.\n\n## Prompt Categories\n\n### Vehicle Shopping & Models (10+ prompts)\n- Hyundai Venue Crossover Sales - affordable new Venue near Montgomery\n- Hyundai IONIQ 6 Electric Sedan - all-electric streamliner near Prattville\n- Hyundai Kona Compact SUV - selection near Auburn\n- Hyundai Sonata Midsize Sedan - new Sonata near Selma\n- Hyundai Santa Cruz Truck - sport adventure pickup near Pike Road\n- Hyundai Elantra Sedan Sales - affordable Elantra near Wetumpka\n- Hyundai IONIQ 5 EV Deals - all-electric IONIQ 5 in the area\n- Hyundai Santa Fe Inventory - test drive and buy near Millbrook\n- Hyundai Palisade 3-Row SUV - family SUV near Prattville\n- New Hyundai Tucson Deals - best lease deals near Montgomery\n\n### Used Vehicles (3 prompts)\n- Used SUV Inventory Montgomery - reliable used Tucson and Santa Fe SUVs in the River Region\n- Affordable Used Cars Under 20k - trustworthy used Hyundais under $20,000\n- Certified Pre-Owned Hyundai - CPO cars and SUVs with warranty coverage\n\n### Financing (3 prompts)\n- Auto Loan Pre-Approval - pre-approval in Central Alabama\n- Flexible Auto Financing Options - low APR specials in Montgomery\n- Trade-In Valuation Montgomery - top dollar for trade-ins\n\n### Dealership & Reputation (2 prompts)\n- Top Hyundai Dealer Reputation - best dealership with high customer ratings\n- Hyundai Sales Events & Rebates - promotional cash incentives in Montgomery County\n\n### Buying Experience (2 prompts)\n- Sell Vehicle For Cash - sell a used car for cash without buying\n- Online Car Buying & Delivery - online buying and home delivery in Montgomery\n\n## Complete Prompt List\n\n| # | Position | Prompt Slug | Focus |\n|---|---|---|---|\n| 1 | 1 | `hyundai-venue-crossover-sales` | Venue availability |\n| 2 | 2 | `hyundai-ioniq-6-electric-sedan` | IONIQ 6 EV |\n| 3 | 3 | `used-suv-inventory-montgomery` | Used SUVs |\n| 4 | 4 | `auto-loan-pre-approval` | Loan pre-approval |\n| 5 | 5 | `hyundai-sales-events-&-rebates` | Rebates and incentives |\n| 6 | 6 | `sell-vehicle-for-cash` | Sell car for cash |\n| 7 | 7 | `online-car-buying-&-delivery` | Online buying |\n| 8 | 8 | `hyundai-kona-compact-suv` | Kona availability |\n| 9 | 9 | `flexible-auto-financing-options` | Financing options |\n| 10 | 10 | `hyundai-sonata-midsize-sedan` | Sonata availability |\n| 11 | 11 | `affordable-used-cars-under-20k` | Used cars under $20k |\n| 12 | 12 | `hyundai-santa-cruz-truck` | Santa Cruz truck |\n| 13 | 13 | `trade-in-valuation-montgomery` | Trade-in value |\n| 14 | 14 | `hyundai-elantra-sedan-sales` | Elantra availability |\n| 15 | 15 | `hyundai-ioniq-5-ev-deals` | IONIQ 5 EV |\n| 16 | 16 | `certified-pre-owned-hyundai` | Certified pre-owned |\n| 17 | 17 | `hyundai-santa-fe-inventory` | Santa Fe availability |\n| 18 | 18 | `hyundai-palisade-3-row-suv` | Palisade availability |\n| 19 | 19 | `top-hyundai-dealer-reputation` | Dealership reputation |\n| 20 | 20 | `new-hyundai-tucson-deals` | Tucson lease deals |\n\nNote: Some prompts in the library contain empty response text (`\"text\": \"\"`), indicating inactive or placeholder scripts.\n\nSee [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/references/ai-discovery-page.md) for the complete API endpoint documentation.\nSee [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/faq.md) for common questions and answers.",
+    "references/testimonials": "# Customer Testimonials - Hyundai Montgomery\n\nCustomer testimonials for Hyundai Montgomery are displayed on the dealership website (service page) and sourced from Google and DealerRater. Reviews are predominantly 5-star with strong themes of professional sales service, no-pressure approach, and transparent pricing.\n\n## Aggregate Ratings\n\n- **Google Business Profile:** 4.4 / 5.0 (3,545 reviews)\n- **DealerRater:** Active profile at https://www.dealerrater.com/dealer/Hyundai-Montgomery-dealer-reviews-36709/\n- **Website reviews (July-August 2026):** Predominantly 5-star\n\nNote: The PromptGraph `/testimonials` endpoint currently returns an empty list; reviews were collected from the dealership website instead.\n\n## Most-Praised Staff (by frequency)\n\n- **Kameron** - Made getting a car smooth and fun; great to work with\n- **Michelle** - Professional; went above and beyond to find the right model and color\n- **Spencer Gilcrease** - Excellent at explaining vehicles; knowledgeable and helpful through the entire process\n- **Nick Harris** - Service representative; great updates and maintenance recommendations\n- **Fred** - Attentive, responsive, transparent, and patient\n- **Jamal** - Very responsive and customer oriented\n- **Raul Altamira** - Helped customers into the right car; quick, efficient process\n- **Zolan / Zoland Armstrong** - Great with new purchases\n- **Randy Dunn** - Made decision making smoother; answered every question\n\n## Notable Excerpts\n\n> \"love, love, love Kameron!! She made the process of getting a car so smooth & fun!! Definitely will be back & sending recommendations to her & This location.\" - Google review, Aug 2, 2026\n\n> \"Michelle went above and beyond to find the car model and color I wanted. I really appreciated her friendly and professional service and would recommend her to anyone looking for a vehicle!\" - Google review, Jul 23, 2026\n\n> \"Nick Harris was my service representative, and he was great. I highly recommend Nick Harris.\" - Google review, Aug 1, 2026\n\n> \"Spencer Gilcrease did an excellent job of explaining things about our new Santa Fe.\" - Google review, Jul 29, 2026\n\n> \"my salesperson Tusan was so very patient and went on several test drives before finding the right vehicle .. no hidden fees .. the price of the vehicle plus tax and title fee\" - Google review, Jul 29, 2026\n\n> \"Randy Dunn definitely made the process of decision making a lot smoother than I expected. Every question was answered.\" - Google review, Jul 25, 2026\n\n> \"They looked out for me like never before. It was a full house and took a little time but they made sure everyone left with a car and smile. We are family now !!\" - Google review, Aug 2, 2026\n\n> \"I used Hyundai Montgomery service department approximately a month ago. It was my first visit to the new facility, and it was very nice.\" - Google review, Aug 1, 2026\n\n## Sales Themes\n\n- **No-pressure approach** - Relationship-focused sales team that prioritizes relationships over commissions\n- **Transparent pricing** - No hidden fees; price of the vehicle plus tax and title\n- **Knowledgeable staff** - Sales consultants explain vehicles and features thoroughly\n- **Customer-first focus** - Staff listen to needs and find the right vehicle, including locating off-lot vehicles\n- **Smooth process** - Efficient paperwork, fast turnaround, full tank of gas on delivery\n\n## Service Themes\n\n- **Excellent communication** - Service representatives provide updates and maintenance recommendations\n- **Professional advisors** - Nick Harris praised for being personable, attentive, and genuinely listening\n- **New facility** - Customers note the \"new facility\" is nice\n- **Honest recommendations** - Advisors explain why work is needed rather than pushing extra services\n\n## Notable Staff References\n\n- **Sales:** Kameron, Michelle, Spencer Gilcrease, Fred, Jamal, Raul Altamira, Zolan (Zoland Armstrong), Randy Dunn, Nicoy, Jalen, Jarvis (Jarkis), David (David Neal), Nicholas, Marcus, Tusan, LC, Winston\n- **Finance:** Andrew (Finance Manager)\n- **Service:** Nick Harris\n\nSee [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/staff.md) for the full staff directory.",
+    "tables/model-comparison": "# Hyundai Model Lineup Comparison - Hyundai Montgomery\n\n## Model Overview\n\n| Model | Body Type | Passengers | Drivetrain | Key Trims |\n|---|---|---|---|---|\n| **Venue** | Subcompact SUV | 5 | FWD | SE, SEL, Denim |\n| **Elantra** | Compact Sedan | 5 | FWD | SE, SEL, N Line, Limited |\n| **Sonata** | Mid-size Sedan | 5 | FWD | SE, SEL, N Line, Limited |\n| **Kona** | Subcompact Crossover | 5 | FWD / AWD | SE, SEL, N Line, Limited |\n| **Tucson** | Compact SUV | 5 | FWD / AWD | SE, SEL, XRT, N Line, Limited |\n| **Santa Fe** | Mid-size SUV | 5-7 | FWD / AWD | SE, SEL, XRT, Limited, Calligraphy |\n| **Santa Fe Hybrid** | Mid-size Hybrid SUV | 5-7 | AWD | SEL, Limited, Calligraphy |\n| **Palisade** | Full-size 3-Row SUV | 7-8 | FWD / AWD | SE, SEL, XRT, Limited, Calligraphy |\n| **Santa Cruz** | Compact Pickup (SAV) | 5 | FWD / AWD | SE, SEL, Night, XRT, Limited |\n| **IONIQ 5** | Compact EV Crossover | 5 | RWD / e-AWD | SE, SEL, Limited |\n| **IONIQ 6** | Mid-size EV Sedan | 5 | RWD / e-AWD | SE, SEL, Limited |\n| **IONIQ 9** | Full-size EV 3-Row SUV | 7 | e-AWD | SE, SEL, Limited, Calligraphy |\n\n## Key Feature Comparison\n\n| Feature | Elantra | Sonata | Tucson | Santa Fe | Palisade | IONIQ 5 | Kona |\n|---|---|---|---|---|---|---|---|\n| Base Engine | 2.0L 4-cyl | 2.5L 4-cyl | 2.5L 4-cyl | 2.5L 4-cyl | 3.8L V6 | Electric | 2.0L 4-cyl |\n| AWD Available | No | No | Yes | Yes | Yes | e-AWD | Yes |\n| 3rd Row | No | No | No | Optional | Yes | No | No |\n| SmartSense | Standard | Standard | Standard | Standard | Standard | Standard | Standard |\n| Wireless Apple CarPlay | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n| Wireless Android Auto | Yes | Yes | Yes | Yes | Yes | Yes | Yes |\n\n## Electric & Hybrid Options\n\n| Model | Type | Notes |\n|---|---|---|\n| **IONIQ 5** | Full EV | 800V fast charging, vehicle-to-load |\n| **IONIQ 6** | Full EV Sedan | Aerodynamic streamliner design |\n| **IONIQ 9** | Full EV 3-Row SUV | Flagship electric SUV |\n| **Santa Fe Hybrid** | Hybrid | Efficient mid-size SUV |\n\n## Current Financing Specials (expire 08/31/2026)\n\n| Model | APR Offer | Term |\n|---|---|---|\n| 2026 Santa Fe | 0% APR | 60 months |\n| 2026 Santa Fe Hybrid | 0% APR | 60 months |\n| 2026 Tucson | 0% APR | 60 months |\n| 2026 IONIQ 5 | 0% APR | 72 months |\n| 2026 IONIQ 9 | 0% APR | 72 months |\n| 2026 Sonata | 0.99% APR | 60 months |\n| 2026 Elantra | 3.49% APR | 60 months |\n| 2026 Kona | 3.49% APR | 60 months |\n| 2026 Palisade | 3.99% APR | 60 months |\n\n## Warranty\n\nAll new Hyundai models include:\n\n- **5-Year / 60,000-Mile New Vehicle Limited Warranty**\n- **10-Year / 100,000-Mile Powertrain Limited Warranty**\n- **7-Year / Unlimited-Mile Anti-Perforation Limited Warranty**\n- **5-Year / Unlimited-Mile Roadside Assistance**\n- **3-Year Complimentary Maintenance** (Hyundai Complimentary Maintenance on 2020-2025 model years)\n\n## Hyundai SmartSense Safety\n\nStandard across most Hyundai models:\n\n- Forward Collision-Avoidance Assist\n- Blind-Spot Collision-Avoidance Assist\n- Rear Cross-Traffic Collision-Avoidance Assist\n- Lane Keeping Assist\n- Lane Following Assist\n- Safe Exit Assist\n- Driver Attention Warning\n- Smart Cruise Control\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/new-vehicles.md) for detailed model descriptions.\nSee [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/financing.md) for current financing specials."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Entity",
+    "Playbooks & Runbooks",
+    "Tables & Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "Entity": "#8b5cf6",
+    "APIs": "#10b981",
+    "Playbooks & Runbooks": "#10b981",
+    "Tables & Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
