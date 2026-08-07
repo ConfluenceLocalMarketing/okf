@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>genesis-of-central-florida - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "genesis-of-central-florida";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "FAQ - Genesis of Central Florida",
+        "type": "Entities",
+        "description": "Frequently asked questions about Genesis of Central Florida covering no-dealer-fee pricing, veteran ownership, online car buying, financing, service valet, and the Genesis model lineup.",
+        "resource": "https://genesiscfl.com",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Financing - Genesis of Central Florida",
+        "type": "Entities",
+        "description": "Vehicle financing and leasing at Genesis of Central Florida including online credit application, flexible loan terms, lease offers, trade-in valuation, payment calculator, and special programs.",
+        "resource": "https://genesiscfl.com/finance",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida",
+        "label": "Genesis of Central Florida",
+        "type": "Entities",
+        "description": "Genesis dealership in Clermont, FL serving Central Florida with new, used, and certified pre-owned Genesis vehicles, Up Front Pricing, no dealer fees, financing, and service at 4500 Collina Terrace.",
+        "resource": "https://www.genesiscfl.com",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 38
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "New Vehicles - Genesis of Central Florida",
+        "type": "Entities",
+        "description": "New Genesis vehicle inventory and ordering at Genesis of Central Florida covering sedans, SUVs, and EVs including G70, G80, G90, GV60, GV70, Electrified GV70, GV80, and GV80 Coupe.",
+        "resource": "https://genesiscfl.com/new-inventory",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Service Center - Genesis of Central Florida",
+        "type": "Entities",
+        "description": "Genesis of Central Florida service center offering factory-trained certified technicians, OEM parts, routine maintenance, diagnostics, brake, transmission, tire, and battery service, with complimentary valet and car wash.",
+        "resource": "https://genesiscfl.com/service",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Staff - Genesis of Central Florida",
+        "type": "Entities",
+        "description": "Departmental staff overview for Genesis of Central Florida covering sales, service, parts, and finance teams; individual staff names are not published on the website (synthesized).",
+        "resource": "https://genesiscfl.com/about-us",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Used Vehicles - Genesis of Central Florida",
+        "type": "Entities",
+        "description": "Pre-owned vehicle inventory at Genesis of Central Florida including Genesis Certified Pre-Owned vehicles and a wide selection of other makes with trade-in and cash purchase options.",
+        "resource": "https://genesiscfl.com/cars/pre-owned-inventory",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "AI Discovery - Genesis of Central Florida",
+        "type": "APIs",
+        "description": "Machine-readable AI discovery endpoints for Genesis of Central Florida including a PromptGraph sitemap, business profile, prompt library, AI manifest, and llms.txt for LLM consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/genesis-of-central-florida/sitemap.xml",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "llms.txt - Genesis of Central Florida",
+        "type": "APIs",
+        "description": "AI consumption directive for Genesis of Central Florida providing structured API endpoints, schema types, and business context to LLM crawlers and AI agents.",
+        "resource": "https://api.promptgraph.ai/api/v1/genesis-of-central-florida/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Prompts - Genesis of Central Florida",
+        "type": "APIs",
+        "description": "Twenty curated Q&A prompts from the PromptGraph API for consistent AI responses covering inventory, financing, service, and the Genesis model lineup at Genesis of Central Florida.",
+        "resource": "https://api.promptgraph.ai/api/v1/genesis-of-central-florida/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Testimonials - Genesis of Central Florida",
+        "type": "Entities",
+        "description": "Customer ratings and reviews for Genesis of Central Florida including a 4.8-star Google rating across 515 reviews, with an empty PromptGraph testimonials feed as of August 2026.",
+        "resource": "https://genesiscfl.com/customer-testimonials",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Contact - Genesis of Central Florida",
+        "type": "Table",
+        "description": "Contact information for Genesis of Central Florida including address, phone numbers by department, hours, and location details.",
+        "resource": "https://www.genesiscfl.com/contact",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Hours - Genesis of Central Florida",
+        "type": "Table",
+        "description": "Operating hours for Genesis of Central Florida covering sales, service, and parts departments across the week as published on the website and Google Business Profile.",
+        "resource": "https://www.genesiscfl.com/contact",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Model Comparison - Genesis of Central Florida",
+        "type": "Spec Sheet",
+        "description": "Comparison of the current Genesis model lineup sold at Genesis of Central Florida including body style, drivetrain, seating, and layout across G70, G80, G90, GV60, GV70, and GV80.",
+        "resource": "https://www.genesiscfl.com/new-inventory",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/faq__datasets/genesis-of-central-florida",
+        "source": "datasets/faq",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__references/prompts",
+        "source": "datasets/faq",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/financing",
+        "source": "datasets/faq",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq__datasets/service-center",
+        "source": "datasets/faq",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/genesis-of-central-florida",
+        "source": "datasets/financing",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/used-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/faq",
+        "source": "datasets/financing",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida__tables/hours",
+        "source": "datasets/genesis-of-central-florida",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida__datasets/new-vehicles",
+        "source": "datasets/genesis-of-central-florida",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida__datasets/used-vehicles",
+        "source": "datasets/genesis-of-central-florida",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida__datasets/financing",
+        "source": "datasets/genesis-of-central-florida",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida__datasets/service-center",
+        "source": "datasets/genesis-of-central-florida",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida__datasets/staff",
+        "source": "datasets/genesis-of-central-florida",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida__datasets/faq",
+        "source": "datasets/genesis-of-central-florida",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida__references/ai-discovery-page",
+        "source": "datasets/genesis-of-central-florida",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/genesis-of-central-florida__tables/contact",
+        "source": "datasets/genesis-of-central-florida",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__tables/model-comparison",
+        "source": "datasets/new-vehicles",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/genesis-of-central-florida",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/used-vehicles",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/genesis-of-central-florida",
+        "source": "datasets/service-center",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/hours",
+        "source": "datasets/service-center",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/contact",
+        "source": "datasets/service-center",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/genesis-of-central-florida",
+        "source": "datasets/staff",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__tables/contact",
+        "source": "datasets/staff",
+        "target": "tables/contact"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff__datasets/service-center",
+        "source": "datasets/staff",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/genesis-of-central-florida",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/new-vehicles",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/testimonials",
+        "source": "references/ai-discovery-page",
+        "target": "references/testimonials"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__datasets/genesis-of-central-florida",
+        "source": "references/ai-discovery-page",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/ai-discovery-page",
+        "source": "references/llms-txt",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__references/prompts",
+        "source": "references/llms-txt",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt__datasets/genesis-of-central-florida",
+        "source": "references/llms-txt",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__references/ai-discovery-page",
+        "source": "references/prompts",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__datasets/faq",
+        "source": "references/prompts",
+        "target": "datasets/faq"
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts__datasets/genesis-of-central-florida",
+        "source": "references/prompts",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__datasets/genesis-of-central-florida",
+        "source": "references/testimonials",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials__references/ai-discovery-page",
+        "source": "references/testimonials",
+        "target": "references/ai-discovery-page"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__tables/hours",
+        "source": "tables/contact",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact__datasets/genesis-of-central-florida",
+        "source": "tables/contact",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__datasets/genesis-of-central-florida",
+        "source": "tables/hours",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours__datasets/service-center",
+        "source": "tables/hours",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/new-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/used-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/used-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/genesis-of-central-florida",
+        "source": "tables/model-comparison",
+        "target": "datasets/genesis-of-central-florida"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/faq": "# FAQ - Genesis of Central Florida\n\n## Pricing & Fees\n\n- **Do you charge dealer fees?** No. Genesis of Central Florida never charges dealer fees, dealer-installed options, or dealer markup. Buyers save an average of $900 in fees; you pay the Up Front price plus only tax and tag.\n- **What is Up Front Pricing?** The best price is placed on every vehicle - new, pre-owned, and certified - with no haggling required.\n- **Is the dealership veteran owned?** Yes. The dealership markets itself as proudly Veteran Owned.\n\n## Buying & Inventory\n\n- **Can I buy a Genesis online?** Yes. The dealership supports online car buying, quote requests, and online financing applications. See https://genesiscfl.com/genesis-online-car-buying.\n- **What Genesis models are available?** The lineup includes the G70, G80, G90 sedans and the GV60, GV70, Electrified GV70, GV80, and GV80 Coupe SUVs, in new, used, and Certified Pre-Owned forms.\n- **Can I test drive a GV80 near Highway 50?** Yes, the dealership is on 4500 Collina Terrace in Clermont, off the Highway 50 corridor, and offers test drive scheduling.\n- **Do you carry all-wheel drive models?** Yes, extensive AWD SUV stock is available in new and pre-owned inventory.\n- **What budget-friendly pre-owned options exist?** Collections include pre-owned luxury SUVs under $40,000 and inventory under $30,000 and under 50,000 miles.\n\n## Financing & Trade-In\n\n- **Can I get pre-approved for an auto loan?** Yes, via the online credit application at https://genesiscfl.com/finance, with flexible rates and options from top lenders and credit unions.\n- **Do you offer lease options?** Yes, including offers on the GV70, Electrified GV70, and other models, plus national and regional incentives.\n- **What is my vehicle worth?** Use the online trade valuation tool at https://genesiscfl.com/trade-valuation for a free estimate in under 30 seconds.\n- **Can I sell my car for cash without buying?** Yes, the dealership buys vehicles for cash via https://genesiscfl.com/sell-us-your-car.\n\n## Service\n\n- **Do you offer pickup and delivery for service?** Yes, complimentary Genesis Service Valet picks up and returns the vehicle, with loaner vehicles available.\n- **Is the car wash included?** A complimentary car wash is provided with every service.\n- **Who performs the service?** Factory-trained and certified Genesis technicians using genuine OEM parts.\n\n## Related Concepts\n\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/references/prompts.md) for the canonical PromptGraph Q&A prompt library.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/financing.md) for financing and leasing details.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/service-center.md) for service department details.",
+    "datasets/financing": "# Financing - Genesis of Central Florida\n\n## Overview\n\nGenesis of Central Florida offers simplified, transparent financing with Up Front Pricing and no dealer fees. Finance experts work with top lenders and credit unions to tailor loan and lease packages to each customer's goals.\n\n## Options\n\n- **Online Credit Application** - apply online at https://genesiscfl.com/finance (powered by Motive).\n- **Auto Loans** - customizable loan terms and competitive interest rates.\n- **Leasing** - a variety of lease options, including current offers on the GV70 and Electrified GV70.\n- **Bad-Credit Programs** - experience helping drivers in diverse credit circumstances.\n- **Trade-In Valuation** - free online estimate at https://genesiscfl.com/trade-valuation.\n- **Payment Calculator** - estimate monthly payments at https://genesiscfl.com/payment-calculator.\n\n## Current Offer Highlights\n\n- 2026 GV70: 1.99% APR for 48 months.\n- August Sales Event: $1,000 off every new vehicle.\n- National offers: https://genesiscfl.com/national-offers.\n\n## Special Programs\n\n- Genesis College Graduate Program: https://genesiscfl.com/genesis-college-graduate-program\n- Military Personnel Program: https://genesiscfl.com/military-personnel-program\n- First Responders Program: https://genesiscfl.com/first-responders\n- Mobility Equipment Program: https://genesiscfl.com/mobility-equipment-program\n\n## Finance Hours\n\n- Sun 12:00p-6:00p, Mon-Thu 9:00a-7:00p, Fri 9:00a-6:00p, Sat 9:00a-6:00p\n\n## Related Concepts\n\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/new-vehicles.md) for new vehicle offers.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/used-vehicles.md) for pre-owned inventory and trade-in details.\n- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/faq.md) for financing FAQs.",
+    "datasets/genesis-of-central-florida": "# Genesis of Central Florida\n\n## Overview\n\nGenesis of Central Florida is a Genesis brand dealership located at 4500 Collina Terrace, Clermont, FL 34711, serving Clermont, Winter Garden, Ocoee, Minneola, Groveland, Leesburg, Kissimmee, Orlando, The Villages, and the broader Central Florida market. It markets itself as a veteran-owned dealership with NO DEALER FEES, Up Front Pricing, and NO DEALER MARKUP. The dealership sells new, used, and Genesis Certified Pre-Owned sedans and SUVs and operates full service and parts departments.\n\n## Location & Contact\n\n| Item | Detail |\n|---|---|\n| Address | 4500 Collina Terrace, Clermont, FL 34711 |\n| Coordinates | 28.547701, -81.6678343 |\n| Sales | (407) 550-0800 |\n| Service | (407) 809-8712 |\n| Service (department line) | (407) 550-0770 |\n| Parts | (407) 550-0760 |\n| Google Business Profile | (407) 544-5196 |\n\n## Hours\n\n- Sales: Sun 12:00p-6:00p, Mon-Thu 9:00a-7:00p, Fri 9:00a-6:00p, Sat 9:00a-6:00p\n- Service: Sun Closed, Mon-Fri 8:00a-5:00p, Sat 8:00a-3:00p\n- Parts: Sun Closed, Mon-Fri 8:00a-5:00p, Sat 8:00a-3:00p\n- Finance: Sun 12:00p-6:00p, Mon-Thu 9:00a-7:00p, Fri 9:00a-6:00p, Sat 9:00a-6:00p\n\nSee [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/tables/hours.md) for the full operating hours table.\n\n## Up Front Pricing\n\n- No dealer fees on any vehicle. The price you see is the price you pay, plus only tax and tag.\n- No dealer-installed options and no dealer markup.\n- Buyers save an average of $900 in fees versus conventional dealerships.\n- Transparent internet pricing on new and pre-owned inventory.\n\n## Inventory\n\n- Approximately 368 vehicles in stock as of 2026-08-08: 136 new and 232 used (source: dealer inventory API).\n- New inventory is all Genesis: GV80, GV70, G70, GV80 Coupe, G80, and G90 in stock, with GV60, Electrified GV70, and Electrified G80 in the lineup.\n- Used inventory spans Genesis plus Hyundai, Chevrolet, Ford, Toyota, Nissan, Honda, Kia, Mercedes-Benz, Subaru, Volkswagen, BMW, Tesla, and other brands.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/new-vehicles.md) and [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/used-vehicles.md) for inventory details.\n\n## Departments\n\n- **New Vehicle Sales** - full Genesis lineup with Up Front Pricing; see [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/new-vehicles.md).\n- **Pre-Owned Sales** - used and Certified Pre-Owned inventory; see [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/used-vehicles.md).\n- **Financing** - online credit application, lease and loan options, trade-in valuation; see [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/financing.md).\n- **Service Center** - factory-trained certified Genesis technicians and OEM parts; see [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/service-center.md).\n- **Parts** - genuine Genesis parts counter.\n- **Special Programs** - college graduate, military personnel, first responder, and mobility equipment programs.\n\n## Ratings & Reputation\n\n- 4.8 / 5 stars across 515 Google reviews (AggregateRating, as of 2026-08-08).\n- Google Maps place_id: `ChIJoxNMFvyF54gRNTUhrC4yBqc`.\n- Customer review page: https://genesiscfl.com/customer-testimonials\n\n## Social Media\n\n- Facebook: https://www.facebook.com/GENESISofCFL\n\n## Website\n\n- https://www.genesiscfl.com\n- Inventory platform: RideMotive with Algolia search (dealer id 1218); trade and finance tools powered by Motive (https://motivehq.com).\n- Nav structure: New, Executive Vehicles (/cars/executive-demo), Pre-Owned, Service, Finance, About, The Genesis Experience.\n\n## Related Concepts\n\n- See [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/staff.md) for the sales, service, parts, and finance teams.\n- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/faq.md) for dealership FAQs.\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/references/ai-discovery-page.md) for machine-readable discovery endpoints.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/tables/contact.md) for a consolidated phone directory.",
+    "datasets/new-vehicles": "# New Vehicles - Genesis of Central Florida\n\n## Overview\n\nGenesis of Central Florida carries the full Genesis lineup of new luxury sedans and SUVs with Up Front Pricing, no dealer fees, no dealer-installed options, and no dealer markup. New inventory is sourced from the dealer's RideMotive/Algolia inventory feed (dealer id 1218) and the public inventory pages.\n\n## Current New Inventory\n\nAs of 2026-08-08 the dealership lists 136 new Genesis vehicles in stock:\n\n| Model | In stock | Body type |\n|---|---|---|\n| GV80 | 52 | Midsize luxury SUV |\n| GV70 | 51 | Compact luxury SUV |\n| G70 | 18 | Compact luxury sport sedan |\n| GV80 Coupe | 12 | Coupe-styled luxury SUV |\n| G80 | 2 | Midsize luxury sedan |\n| G90 | 1 | Flagship luxury sedan |\n\nModel years include 2026 and 2027 units. GV60, Electrified GV70, and Electrified G80 are part of the lineup and offered via order or periodic stock.\n\n## Model Lineup & Starting MSRP\n\n| Model | Body type | Powertrain | Starting MSRP |\n|---|---|---|---|\n| G70 | Compact luxury sport sedan | 2.5T / 3.3T gasoline | $43,450 |\n| GV60 | Compact luxury EV crossover | Electric | $52,000 |\n| GV70 | Compact luxury SUV | 2.5T / 3.5T gasoline | $48,985 |\n| Electrified GV70 | Compact luxury EV SUV | Electric | $64,380 |\n| G80 | Midsize luxury sedan | 2.5T / 3.5T gasoline | $58,450 |\n| GV80 | Midsize luxury SUV | 2.5T / 3.5T gasoline | $57,700 |\n| GV80 Coupe | Coupe-styled luxury SUV | 3.5T E-SC MHEV | $81,850 |\n| G90 | Flagship luxury sedan | 3.5T E-SC MHEV | Flagship positioning |\n\nSee [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/tables/model-comparison.md) for a side-by-side comparison.\n\n## Current Offers\n\n- 2026 GV70: 1.99% APR for 48 months (lease/finance offer as of August 2026).\n- August Sales Event: $1,000 off every new vehicle (https://genesiscfl.com/august-sales-event---1000-off-every-new-vehicle).\n- National and regional offers: https://genesiscfl.com/national-offers and https://genesiscfl.com/cars/regional-incentives.\n\n## Buying Experience\n\n- Up Front Pricing with no haggling and no dealer fees.\n- Online shopping, quote requests, and payment calculator at https://genesiscfl.com/payment-calculator.\n- Test drive scheduling at https://genesiscfl.com/schedule-test-drive.\n- Vehicle search by feature: Apple CarPlay, 3rd row seats, sun/moon roof, ultra luxury, family-friendly, sporty.\n\n## Related Concepts\n\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/used-vehicles.md) for pre-owned and Certified Pre-Owned inventory.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/financing.md) for financing and lease options.\n- See [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/tables/model-comparison.md) for the model lineup table.",
+    "datasets/service-center": "# Service Center - Genesis of Central Florida\n\n## Overview\n\nThe Genesis of Central Florida service center is a state-of-the-art facility staffed by factory-trained and certified Genesis technicians. It provides routine maintenance and complex repairs using genuine Genesis OEM parts and manufacturer specifications.\n\n## Services\n\n- **Routine Maintenance** - oil changes, tire rotations, brake inspections.\n- **Advanced Diagnostics** - check-engine light and fault diagnosis.\n- **Brake Service** - inspections, repairs, and replacements.\n- **Transmission Service** - expert care for transmissions.\n- **Tire Service** - alignment and replacements.\n- **Battery Service** - battery testing, replacement, and charging system checks.\n- Additional repairs as needed across all Genesis models.\n\n## Guest Conveniences\n\n- Complimentary car wash with every service.\n- Complimentary Genesis Service Valet - pickup and delivery of the vehicle, plus loaner vehicles.\n- Comfortable waiting area with free Wi-Fi, free snacks, free beverages, and gourmet coffee, with TVs and a Bang & Olufsen sound system.\n- Online appointment scheduling at https://genesiscfl.com/schedule-service.\n\n## Contact & Hours\n\n- Service phone: (407) 550-0770\n- Service line: (407) 809-8712\n- Hours: Mon-Fri 8:00a-5:00p, Sat 8:00a-3:00p, Sun Closed\n\n## Related Concepts\n\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/tables/hours.md) for service department hours.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/tables/contact.md) for service contact details.",
+    "datasets/staff": "# Staff - Genesis of Central Florida\n\n## Overview\n\nGenesis of Central Florida does not publish an individual staff directory on its website. This page summarizes the roles and departments that make up the team, assembled from the dealership's About and service pages (synthesized).\n\n## Departments & Roles\n\n| Department | Role description | Contact |\n|---|---|---|\n| Sales | Genesis sales consultants who guide customers through new and pre-owned inventory without pressure | (407) 550-0800 |\n| Finance | Lease and loan experts who tailor payment packages to customer goals | (407) 550-0800 |\n| Service | Factory-trained, certified Genesis technicians | (407) 550-0770 |\n| Parts | Parts counter staff supplying genuine Genesis parts | (407) 550-0760 |\n\n## Notes\n\n- The dealership describes its team as \"helpful Genesis sales team,\" \"highly trained Genesis service techs,\" and \"knowledgeable finance experts.\"\n- The site highlights a no-pressure, connection-focused sales approach and a veteran-owned dealership identity.\n- Individual staff names, titles, and direct lines are not publicly listed as of 2026-08-08; contact via the department lines above or the dealership contact page.\n\n## Related Concepts\n\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.\n- See [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/tables/contact.md) for the department phone directory.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/service-center.md) for the service team details.",
+    "datasets/used-vehicles": "# Used Vehicles - Genesis of Central Florida\n\n## Overview\n\nGenesis of Central Florida sells used and Genesis Certified Pre-Owned (CPO) vehicles. The used lot includes Genesis models as well as many other makes and models, with options to finance, trade in, or sell a vehicle for cash.\n\n## Current Used Inventory\n\nAs of 2026-08-08 the dealership lists 232 used vehicles in stock (source: dealer inventory API):\n\n| Make | Approx. in stock |\n|---|---|\n| Genesis | 45 (G70 30, GV70 11, GV80 3, Electrified GV70 1) |\n| Hyundai | 71 |\n| Chevrolet | 10 |\n| Ford | 10 |\n| Toyota | 9 |\n| Nissan | 8 |\n| Honda | 7 |\n| Kia | 7 |\n| Mercedes-Benz | 6 |\n| Subaru | 6 |\n| Volkswagen | 6 |\n| BMW | 5 |\n| Chrysler | 4 |\n| Jeep | 4 |\n| Ram | 4 |\n| Tesla | 4 |\n| Other (Acura, Dodge, GMC, Lexus, Audi, Infiniti, Lincoln, Volvo, Alfa Romeo, Buick, Cadillac, Jaguar, Mazda, Mitsubishi) | ~21 |\n\nCommon used models include Hyundai Tucson, Santa Fe, Palisade, and Elantra, plus Subaru Outback, Nissan Rogue, Toyota RAV4 and 4Runner, Chevrolet Tahoe, Ford Explorer and F-150, and Tesla Model 3/Y.\n\n## Genesis Certified Pre-Owned (CPO)\n\n- Genesis CPO vehicles meet manufacturer standards with warranty coverage.\n- CPO page and inventory: https://genesiscfl.com/cars/certified-pre-owned\n- CPO program details: https://genesiscfl.com/certified-pre-owned-information\n- Blog: https://genesiscfl.com/blog/the-top-benefits-of-the-genesis-cpo-program\n\n## Selling & Trade-In\n\n- Online trade-in valuation: https://genesiscfl.com/trade-valuation (powered by Motive, under 30 seconds).\n- Cash offer to buy your car: https://genesiscfl.com/trade and https://genesiscfl.com/sell-us-your-car.\n- Budget-specific collections: inventory under $30,000 (https://genesiscfl.com/inventory-under-30k) and under 50,000 miles (https://genesiscfl.com/inventory-under-50k-miles).\n\n## Related Concepts\n\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/new-vehicles.md) for new vehicle inventory.\n- See [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/financing.md) for financing, leasing, and trade-in details.",
+    "references/ai-discovery-page": "# AI Discovery - Genesis of Central Florida\n\n## Overview\n\nGenesis of Central Florida does not publish a separate AI Discovery Hub page on its website. AI discovery is instead served by the PromptGraph platform, which exposes structured JSON-LD endpoints for the business profile, a 20-item prompt library, an AI manifest, llms.txt, and inventory/testimonial feeds for LLM and AI-agent consumption.\n\n## Base URL\n\n- API base: `https://api.promptgraph.ai/api/v1/genesis-of-central-florida`\n- Alternate server: `https://app.promptgraph.ai/api/v1/genesis-of-central-florida` (per OpenAPI spec)\n\n## Endpoints\n\n| Endpoint | Status | Description |\n|---|---|---|\n| `/sitemap.xml` | Available | PromptGraph sitemap listing the discovery endpoints |\n| `/business` | Available | Structured business profile (name, address, phone, geo, hours, rating) |\n| `/prompts` | Available | 20 question/answer prompts for consistent AI responses |\n| `/.well-known/ai-manifest.json` | Available | AI manifest declaring endpoint capabilities |\n| `/robots.txt` | Available | Crawler allowances for GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, Applebot |\n| `/llms.txt` | Available | LLM consumption directive (LLMForge v1.0 format) |\n| `/.well-known/llms.txt` | Available | Alias of `/llms.txt` (302 redirect) |\n| `/openapi.json` | Available | OpenAPI 3.0 specification of the discovery API |\n| `/ai-plugin.json` | Available | ChatGPT plugin manifest |\n| `/config.json` | Available | Platform configuration (contains a private API key - excluded from this bundle) |\n| `/gbp-context` | Available | Flattened Google Business Profile data (business info, 5 latest posts) |\n| `/vehicles` | Available (empty) | Vehicle inventory feed; returns an empty array as of 2026-08-08 |\n| `/vehicles/{vin}` | Listed | Per-VIN vehicle detail (OpenAPI spec) |\n| `/offers` | Available (empty) | Current offers feed; returns an empty array as of 2026-08-08 |\n| `/testimonials` | Available (empty) | Customer testimonial feed; returns an empty array as of 2026-08-08 |\n| `/site-content` | Available (empty) | Plain-text site mirror; returns zero pages as of 2026-08-08 |\n| `/sitemap-inventory.xml` | Available (empty) | Inventory sitemap; contains an empty urlset as of 2026-08-08 |\n\n## Crawler Allowance (robots.txt)\n\nThe following bots are explicitly allowed across all endpoints:\n\n- GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, Applebot\n\n## Availability Notes\n\n- `/vehicles`, `/offers`, and `/testimonials` currently return empty arrays, and `/site-content` and `/sitemap-inventory.xml` are empty. Inventory counts in this bundle were therefore sourced from the dealership's public inventory API (Algolia/RideMotive) rather than the PromptGraph feed.\n- The AI manifest declares more endpoints than the sitemap lists; the manifest includes vehicles, offers, prompts, testimonials, and gbp-context.\n- The `/config.json` response contains an API key; it is intentionally **not** reproduced in this bundle.\n\n## Related Concepts\n\n- See [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/references/llms-txt.md) for the LLM consumption directive.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/references/prompts.md) for the prompt library.\n- See [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/references/testimonials.md) for the reviews endpoint and aggregate rating.\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.",
+    "references/llms-txt": "# llms.txt - Genesis of Central Florida\n\n## Overview\n\nAn `llms.txt` file is published at the PromptGraph API base to guide LLMs on how to consume Genesis of Central Florida data. It uses the LLMForge v1.0 format and references JSON-LD Schema.org types.\n\n## Key Facts\n\n- **Format**: LLMForge v1.0\n- **Schema type**: JSON-LD (Schema.org)\n- **Last updated**: 2026-08-07T16:03:50.778Z\n- **API base URL**: `http://api.promptgraph.ai/api/v1/genesis-of-central-florida`\n- **Primary discovery**: `http://api.promptgraph.ai/api/v1/genesis-of-central-florida/.well-known/ai-manifest.json`\n\n## Endpoints Referenced\n\n- `/business` - business profile\n- `/vehicles` - vehicle inventory feed\n- `/prompts` - Q&A prompt library\n- `/testimonials` - customer testimonials\n- `/gbp-context` - Google Business Profile context\n- `/site-content` - full site plain-text mirror\n- `/.well-known/ai-manifest.json` - AI manifest\n- `/sitemap.xml` - XML sitemap\n\n## Available Schema Types\n\n- LocalBusiness / AutoDealer\n- Car (for vehicle inventory)\n- ItemList\n- Review / AggregateRating\n- Offer\n- CreativeWork (for prompts/FAQs)\n\n## Business Context Provided\n\nThe file supplies Schema.org-style context about the dealership: name, address (4500 Collina Terrace, Clermont, FL 34711), phone (407) 544-5196, and link to the dealership website (https://genesiscfl.com).\n\n## How to Consume\n\n1. Read this file to discover the available endpoints and schema types.\n2. Fetch `/business` for the authoritative business profile.\n3. Fetch `/prompts` for canonical Q&A answers.\n4. Fetch `/vehicles` and `/testimonials` for inventory and reviews (currently empty; use the dealership website inventory API for current stock).\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/references/ai-discovery-page.md) for the full endpoint inventory.\n- See [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/references/prompts.md) for the prompt library.\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.",
+    "references/prompts": "# Prompts - Genesis of Central Florida\n\n## Overview\n\nThe PromptGraph API publishes 20 curated question/answer prompts (CreativeWork items) that map to landing pages on genesiscfl.com. They enable consistent AI responses about the dealership's inventory, financing, and services.\n\n## Full Prompt List\n\n| # | Prompt name | Question covered |\n|---|---|---|\n| 1 | Genesis Online Car Buying | Are there any luxury auto dealers near Clermont, FL that let you complete your entire vehicle purchase online? |\n| 2 | Genesis AWD Models Inventory | Which Genesis dealer near Central Florida has an extensive selection of all-wheel drive SUVs in stock? |\n| 3 | Luxury SUV Test Drive Orlando Area | Where is the closest luxury car dealership near Highway 50 in Clermont to test drive a GV80? |\n| 4 | Auto Loan Pre-Approval Clermont | Where can I easily get pre-approved for a luxury auto loan near Clermont and Winter Garden, FL? |\n| 5 | Genesis Sales Events & Incentives | What dealership in Lake County has the best promotional APR rates and incentives on new Genesis models? |\n| 6 | Sell Luxury Vehicle For Cash | Where is the best dealership to sell my luxury car for cash near Central Florida without buying a new one? |\n| 7 | Used Luxury Vehicles Clermont | Who has a great selection of low-mileage pre-owned Genesis vehicles near Groveland, FL? |\n| 8 | Genesis Luxury Concierge Services | Which luxury car dealer in Central Florida offers personalized home delivery and concierge buying? |\n| 9 | Flexible Luxury Car Financing | Which Genesis dealership in Clermont offers flexible financing rates and luxury auto loan options? |\n| 10 | Electrified GV70 Lease Offers | Which Genesis dealership in Central Florida has competitive lease options on the Electrified GV70? |\n| 11 | Pre-Owned Luxury SUVs Under 40k | Where is a trustworthy dealership near Leesburg with high-quality pre-owned luxury SUVs under $40,000? |\n| 12 | Genesis Flagship G90 Sedan | Where can I buy the flagship Genesis G90 luxury sedan near Ocoee, FL? |\n| 13 | Trade-In Valuation Central Florida | What is the best Genesis dealership in Central Florida to get top dollar for my trade-in? |\n| 14 | Genesis G80 Executive Sedan | Which auto dealer near Windermere, FL offers the new Genesis G80 executive luxury sedan? |\n| 15 | Genesis GV60 Electric SUV | Are there any dealerships around Clermont selling the new all-electric Genesis GV60 crossover? |\n| 16 | Certified Pre-Owned Genesis | Who sells Certified Pre-Owned Genesis luxury vehicles with warranty coverage near Orlando, FL? |\n| 17 | Genesis G70 Luxury Sport Sedan | Where can I test drive and buy a new Genesis G70 sport sedan near Minneola, FL? |\n| 18 | Genesis GV80 3-Row Luxury SUV | Which dealership near Winter Garden, FL has the new Genesis GV80 3-row luxury SUV in stock? |\n| 19 | Top Genesis Dealer Reputation | Find me the best Genesis dealership in Central Florida with a great reputation and high customer ratings. |\n| 20 | New Genesis GV70 Deals | Where can I find the best lease deals on a new Genesis GV70 luxury SUV near Clermont, FL? |\n\n## Usage\n\n- Prompts reference the dealership's published answer pages, e.g. https://genesiscfl.com/genesis-online-car-buying.\n- AI agents should fetch `/prompts` and match an incoming question to the closest prompt for a consistent, dealership-accurate answer.\n\n## Related Concepts\n\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/references/ai-discovery-page.md) for the full endpoint inventory.\n- See [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/faq.md) for consolidated FAQ content.\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.",
+    "references/testimonials": "# Testimonials - Genesis of Central Florida\n\n## Overview\n\nGenesis of Central Florida holds a 4.8 / 5 star Google rating across 515 reviews (AggregateRating from the PromptGraph business profile, as of 2026-08-08). The website's customer testimonials page loads reviews through an Elfsight widget.\n\n## Ratings\n\n| Metric | Value |\n|---|---|\n| Average rating | 4.8 / 5 |\n| Review count | 515 |\n| Review source | Google |\n| Place ID | ChIJoxNMFvyF54gRNTUhrC4yBqc |\n\n## PromptGraph Testimonials Endpoint\n\n- Endpoint: `https://api.promptgraph.ai/api/v1/genesis-of-central-florida/testimonials`\n- Status: Available but returns an empty array as of 2026-08-08.\n- The `/gbp-context` endpoint also lists no recent reviews (recent_reviews is empty), though it does expose 5 recent Google Business Profile posts.\n\n## Google Business Profile Posts (gbp-context)\n\n| Post | Date |\n|---|---|\n| When Sophistication Meets the SUV: The 2026 Genesis GV80 | 2026-06-10 |\n| How the 2026 G70 Will Captivate You | 2026-02-25 |\n| The Top Benefits of the Genesis CPO Program! | 2025-12-12 |\n| Which Genesis GV70 Has What You Want? | 2025-10-06 |\n| Labor Day Sale! Get $1,000 OFF the Up Front Price for all new 2024 Genesis vehicles | 2024-08-30 |\n\n## Availability Notes\n\n- Review text from the PromptGraph testimonials feed was not fabricated; only the aggregate Google rating is published.\n- Individual review excerpts are served via the Elfsight widget on https://genesiscfl.com/customer-testimonials.\n\n## Related Concepts\n\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.\n- See [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/references/ai-discovery-page.md) for the testimonials endpoint status.",
+    "tables/contact": "# Contact - Genesis of Central Florida\n\n## Dealership Location\n\n| Field | Value |\n|---|---|\n| Name | Genesis of Central Florida |\n| Street address | 4500 Collina Terrace |\n| City, State, ZIP | Clermont, FL 34711 |\n| Coordinates | 28.547701, -81.6678343 |\n\n## Phone Numbers\n\n| Department | Phone |\n|---|---|\n| Sales | (407) 550-0800 |\n| Service | (407) 550-0770 |\n| Parts | (407) 550-0760 |\n| General (GMB) | (407) 544-5196 |\n\n## Digital\n\n| Channel | Value |\n|---|---|\n| Website | https://genesiscfl.com |\n| Inventory API | https://www.genesiscfl.com/new-inventory (Algolia/RideMotive) |\n| PromptGraph API | https://api.promptgraph.ai/api/v1/genesis-of-central-florida/sitemap.xml |\n| Google Place ID | ChIJoxNMFvyF54gRNTUhrC4yBqc |\n\n## Notes\n\n- Located on Collina Terrace near the Highway 50 corridor in Clermont, Lake County, FL.\n- Sales and finance hours differ from service and parts hours; see [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/tables/hours.md).\n- The primary GMB-listed phone is (407) 544-5196; department lines are from the website's contact page.\n\n## Related Concepts\n\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.\n- See [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/tables/hours.md) for department operating hours.",
+    "tables/hours": "# Hours - Genesis of Central Florida\n\n## Sales Hours\n\n| Day | Sales |\n|---|---|\n| Sunday | 12:00p - 6:00p |\n| Monday | 9:00a - 7:00p |\n| Tuesday | 9:00a - 7:00p |\n| Wednesday | 9:00a - 7:00p |\n| Thursday | 9:00a - 7:00p |\n| Friday | 9:00a - 6:00p |\n| Saturday | 9:00a - 6:00p |\n\n## Service Hours\n\n| Day | Service |\n|---|---|\n| Sunday | Closed |\n| Monday | 8:00a - 5:00p |\n| Tuesday | 8:00a - 5:00p |\n| Wednesday | 8:00a - 5:00p |\n| Thursday | 8:00a - 5:00p |\n| Friday | 8:00a - 5:00p |\n| Saturday | 8:00a - 3:00p |\n\n## Parts Hours\n\n| Day | Parts |\n|---|---|\n| Monday | 8:00a - 5:00p |\n| Tuesday | 8:00a - 5:00p |\n| Wednesday | 8:00a - 5:00p |\n| Thursday | 8:00a - 5:00p |\n| Friday | 8:00a - 5:00p |\n| Saturday | 8:00a - 3:00p |\n| Sunday | Closed |\n\n## Source Notes\n\n- Sales hours match the Google Business Profile and the website's contact/finance pages.\n- Service and parts hours are from the Google Business Profile (service hours) and dealership parts page (parts hours).\n- Hours are subject to change on holidays; verify at https://www.genesiscfl.com/contact before visiting.\n\n## Related Concepts\n\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile.\n- See [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/service-center.md) for service department details.",
+    "tables/model-comparison": "# Model Comparison - Genesis of Central Florida\n\n## Overview\n\nGenesis of Central Florida stocks the full Genesis lineup: the G70, G80, and G90 sedans and the GV60, GV70, and GV80 SUVs, available new, used, and Certified Pre-Owned.\n\n## Lineup Comparison\n\n| Model | Body style | Drivetrain | Seating | Layout |\n|---|---|---|---|---|\n| G70 | Sport sedan | RWD / AWD | 5 | Compact executive |\n| G80 | Executive sedan | RWD / AWD | 5 | Mid-size executive |\n| G90 | Flagship sedan | RWD / AWD | 5 | Full-size luxury flagship |\n| GV60 | Compact electric crossover | AWD | 5 | All-electric dedicated platform |\n| GV70 | Compact luxury SUV | RWD / AWD | 5 | 5-passenger SUV |\n| Electrified GV70 | All-electric SUV | AWD | 5 | EV variant of the GV70 |\n| GV80 | Mid-size luxury SUV | RWD / AWD | 5-7 | 3-row SUV with available 7 seats |\n| GV80 Coupe | Sportback SUV | AWD | 5 | Coup\u00e9-style GV80 variant |\n\n## Stock Snapshot (as of 2026-08-08)\n\nNew inventory (136 units, by model):\n\n- GV80: 52\n- GV70: 51\n- G70: 18\n- GV80 Coupe: 12\n- G80: 2\n- G90: 1\n\nUsed inventory (232 units, Genesis subset: 45):\n\n- G70: 30\n- GV70: 11\n- GV80: 3\n- Electrified GV70: 1\n\n## Related Concepts\n\n- See [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/new-vehicles.md) for new inventory details.\n- See [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/used-vehicles.md) for pre-owned inventory details.\n- See [genesis-of-central-florida.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/genesis-of-central-florida.md) for the dealership profile."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Spec Sheet",
+    "Table"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Table": "#3b82f6",
+    "Spec Sheet": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
