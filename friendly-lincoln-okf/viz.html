@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>friendly-lincoln - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "friendly-lincoln";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Friendly Lincoln",
+        "type": "Entities",
+        "description": "Lincoln luxury vehicle dealership in Monroe, MI serving Monroe County and the greater Detroit-Toledo area with new and pre-owned Lincoln sales, a certified service center, collision center, Money Back Guarantee, and online purchase.",
+        "resource": "https://www.friendlylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Friendly Lincoln FAQ",
+        "type": "Entities",
+        "description": "Frequently asked questions about buying, financing, trading in, and servicing Lincoln vehicles at Friendly Lincoln in Monroe, MI, including the Money Back Guarantee and online purchase process.",
+        "resource": "https://www.friendlylincoln.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Friendly Lincoln Financing",
+        "type": "Entities",
+        "description": "Vehicle financing and leasing at Friendly Lincoln in Monroe, MI, through Lincoln Automotive Financial Services with lease and loan options, online credit application, and current APR and cash offers.",
+        "resource": "https://www.friendlylincoln.com/financecenter.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "Friendly Lincoln New Vehicles",
+        "type": "Entities",
+        "description": "New Lincoln SUV inventory at Friendly Lincoln in Monroe, MI, spanning the 2026 Corsair, Nautilus, Aviator, Navigator, and Navigator L with promotional APR and cash offers.",
+        "resource": "https://www.friendlylincoln.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Friendly Lincoln Service Center",
+        "type": "Entities",
+        "description": "Factory-trained Lincoln service center and collision center at Friendly Lincoln in Monroe, MI, offering OEM parts, oil change, brake, battery, and tire service with complimentary pickup and delivery.",
+        "resource": "https://www.friendlylincoln.com/service-and-parts-center.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Friendly Lincoln Staff",
+        "type": "Entities",
+        "description": "Staff directory for Friendly Lincoln in Monroe, MI, covering management, sales, service, collision, parts, and office departments with direct phone extensions.",
+        "resource": "https://www.friendlylincoln.com/dealership/staff.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Friendly Lincoln Used Vehicles",
+        "type": "Entities",
+        "description": "Pre-owned and certified pre-owned vehicle inventory at Friendly Lincoln in Monroe, MI, including Lincoln Certified Pre-Owned models and a mix of Ford vehicles from the affiliated Friendly Ford store.",
+        "resource": "https://www.friendlylincoln.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Friendly Lincoln AI Discovery",
+        "type": "APIs",
+        "description": "Machine-readable AI discovery endpoints for Friendly Lincoln published by PromptGraph, including a business profile, vehicle inventory, offers, prompts, AI manifest, llms.txt, and robots.txt policy for LLM consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/friendly-lincoln/sitemap.xml",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Friendly Lincoln llms.txt",
+        "type": "APIs",
+        "description": "AI consumption directive in LLMForge v1.0 format published by PromptGraph for Friendly Lincoln, providing structured API endpoints and schema types for LLM crawlers and AI agents.",
+        "resource": "https://api.promptgraph.ai/api/v1/friendly-lincoln/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Friendly Lincoln Prompts",
+        "type": "APIs",
+        "description": "Structured Q&A prompts published by PromptGraph for Friendly Lincoln, including 15 featured Monroe MI prompts covering inventory, financing, service, and the Lincoln model lineup, within a 102-item prompt library.",
+        "resource": "https://api.promptgraph.ai/api/v1/friendly-lincoln/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Friendly Lincoln Testimonials",
+        "type": "Entities",
+        "description": "Customer review data for Friendly Lincoln in Monroe, MI, including a 4.7 out of 5 Google rating across 13 reviews, with recent reviews highlighting sales and service staff.",
+        "resource": "https://api.promptgraph.ai/api/v1/friendly-lincoln/gbp-context",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Friendly Lincoln Contact",
+        "type": "Tables and Datasets",
+        "description": "Consolidated contact directory for Friendly Lincoln in Monroe, MI, including phone numbers by department, address, and website.",
+        "resource": "https://www.friendlylincoln.com/contact.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Friendly Lincoln Hours",
+        "type": "Tables and Datasets",
+        "description": "Operating hours for Friendly Lincoln in Monroe, MI, covering sales, service, and parts departments.",
+        "resource": "https://www.friendlylincoln.com/dealership/about.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Lincoln Model Comparison",
+        "type": "Tables and Datasets",
+        "description": "Side-by-side comparison of the Lincoln SUV lineup sold at Friendly Lincoln, including Corsair, Nautilus, Aviator, Navigator, and Navigator L by body style, seating, and drivetrain.",
+        "resource": "https://www.friendlylincoln.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__tables/model-comparison",
+        "source": "datasets/new-vehicles",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/hours",
+        "source": "datasets/service-center",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/new-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/new-vehicles"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Friendly Lincoln\n\nFriendly Lincoln is a Lincoln luxury vehicle dealership located at 2800 N Telegraph Rd, Monroe, MI 48162. The dealership serves Monroe County and the greater Detroit-Toledo area, offering new and pre-owned Lincoln sales, a factory-trained service center, a collision center, genuine OEM parts, and Lincoln Pickup & Delivery.\n\n## Contact Information\n\n- **Sales**: (734) 590-5807\n- **Service**: (734) 590-5808\n- **Parts**: (734) 590-5805\n- **Main line (site header)**: (734) 243-6000\n- **Website**: https://www.friendlylincoln.com/\n\n## Location\n\n2800 N Telegraph Rd, Monroe, MI 48162\n\nGoogle place_id: `ChIJC3ZSvXJvO4gRblnd0jS6dpY`\n\n## Service Area\n\nMonroe County and the greater Detroit-Toledo area, including Carleton, Luna Pier, Maybee, Monroe, and Newport, Michigan.\n\n## About\n\nFriendly Lincoln describes itself as one of the premier Lincoln dealerships in the Detroit-Toledo area and, in its PromptGraph business profile, as \"the nation's leading Lincoln dealer.\" The dealership emphasizes a Money Back Guarantee, exceptional customer service, trade-in appraisal, and online purchase options.\n\n## Lincoln Model Lineup\n\n- **Corsair** - Compact luxury SUV\n- **Nautilus** - Mid-size luxury SUV (hybrid available)\n- **Aviator** - Mid-size three-row luxury SUV (plug-in hybrid available)\n- **Navigator** - Full-size luxury SUV\n- **Navigator L** - Extended-length full-size luxury SUV\n\n## Key Programs\n\n- **Money Back Guarantee** - Customer-satisfaction guarantee on vehicle purchases.\n- **Trade-In Appraisal** - Vehicle valuation toward a new or pre-owned Lincoln.\n- **Online Purchase** - Remote buying experience with video walkaround and home test drive.\n- **Lincoln Pickup & Delivery** - Complimentary pickup, delivery, and loaner for 2017+ model-year owners.\n\n## Platform\n\nThe website runs on the FordDirect platform (footer links to forddirect.com/adchoices), with inventory and service tools including new and pre-owned search, online credit application, and service scheduling.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/new-vehicles.md) for the new Lincoln lineup.\nSee [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/service-center.md) for service offerings.",
+    "datasets/faq": "# Friendly Lincoln FAQ\n\nCommon questions and answers about Friendly Lincoln's sales, financing, service, and dealership programs. Synthesized from the dealership's published prompt set and website content (synthesized).\n\n## Buying\n\n**Does Friendly Lincoln offer a money-back guarantee?**\nYes. Friendly Lincoln advertises a Money Back Guarantee on vehicle purchases, giving customers confidence in their buying decision.\n\n**Can I buy a Lincoln online?**\nYes. Friendly Lincoln supports a fully online buying process, including virtual video walkarounds, test drive at home, digital financing, and home delivery.\n\n**What is the trade-in process?**\nFriendly Lincoln offers trade-in appraisal with instant offers, and the value can be applied toward a new Lincoln purchase.\n\n## Financing\n\n**Does Friendly Lincoln offer 0% APR financing?**\nYes, 0% APR financing for 48 months is available on select 2026 Lincoln Aviator and Nautilus models during the Summer Sales Event.\n\n**What financing programs are available?**\nLease and loan options through Lincoln Automotive Financial Services, including Red Carpet Lease, Flex Buy, and GAP Coverage.\n\n## Service\n\n**Does Friendly Lincoln offer pickup and delivery for service?**\nYes. Lincoln Pickup & Delivery provides complimentary pickup, delivery, and a loaner for owners of 2017 and newer model-year Lincoln vehicles.\n\n**What services does the service center provide?**\nOil changes, brake service, battery service, tire care, general service, and genuine OEM parts and accessories, plus a collision center for body work.",
+    "datasets/financing": "# Friendly Lincoln Financing\n\nFriendly Lincoln's finance center offers lease and loan options through Lincoln Automotive Financial Services (Lincoln AFS). The finance team supports both purchasing and leasing a new or pre-owned Lincoln.\n\n## Financing Programs\n\n- **Purchase a Lincoln** - Auto loans with flexible terms and competitive APRs.\n- **Lease a Lincoln** - Red Carpet Lease options through Lincoln AFS.\n- **Flex Buy** - Alternative ownership structure with a final payment option.\n- **GAP Coverage** - Optional coverage for the gap between loan balance and vehicle value.\n\n## Online Tools\n\n- Online credit application (`/financing/application.htm`)\n- Pre-qualify online\n- Credit estimator (`/credit-estimator.htm`)\n- Lincoln Credit Online (`/lincoln-credit-online.htm`)\n- Value Your Trade\n\n## Current Offers\n\n- **Lincoln Summer Sales Event** - 0% APR for 36 months, 0 payments for up to 90 days, and $1,000 bonus cash on select 2026 models.\n- **Select 2026 Nautilus** - $1,000 bonus cash and 0.0% APR for 48 months.\n- **2026 Navigator L** - 7.3% APR for 60 months.\n- **2026 Aviator** - $4,000 retail customer cash plus $1,000 Summer Sales Event bonus cash.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/new-vehicles.md) for offer details by model.",
+    "datasets/new-vehicles": "# Friendly Lincoln New Vehicles\n\nFriendly Lincoln sells the full Lincoln luxury SUV lineup. The homepage inventory search reports 17 new vehicles in stock as of August 2026, and the dealer's vehicle API reports 99 total vehicles (new and pre-owned combined).\n\n## New Lincoln Models\n\n| Model | Body Style | Notes |\n|---|---|---|\n| Lincoln Corsair | Compact luxury SUV | Entry-level Lincoln crossover |\n| Lincoln Nautilus | Mid-size luxury SUV | Hybrid available |\n| Lincoln Aviator | Mid-size three-row luxury SUV | Plug-in hybrid available |\n| Lincoln Navigator | Full-size luxury SUV | Flagship three-row |\n| Lincoln Navigator L | Extended-length full-size SUV | Long-wheelbase Navigator |\n\n## Current New Vehicle Offers\n\n- **Lincoln Summer Sales Event** - 0% APR financing for 36 months, 0 payments for up to 90 days, $1,000 bonus cash, and a 24-month complimentary maintenance plan on select 2026 Navigator, Aviator, and Nautilus models.\n- **Select Nautilus models** - $1,000 bonus cash and 0.0% APR for 48 months (effective 7/7/2026 through 8/31/2026).\n- **2026 Navigator L** - 7.3% APR for 60 months through Lincoln Automotive Financial Services (7/11/2026 through 9/30/2026).\n- **2026 Aviator** - $4,000 retail customer cash plus $1,000 Summer Sales Event bonus cash.\n\nSee [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/tables/model-comparison.md) for a side-by-side lineup comparison.\nSee [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/financing.md) for financing and lease details.",
+    "datasets/service-center": "# Friendly Lincoln Service Center\n\nFriendly Lincoln operates a factory-trained Lincoln service and parts center and a collision (body shop) center at 2800 N Telegraph Rd, Monroe, MI. The service department uses OEM-approved parts and is staffed by certified technicians.\n\n## Services Offered\n\n- **General Service** - Routine maintenance and repair\n- **Oil Change** - Factory-specified oil and filter service\n- **Brake Service** - Brake inspection and repair\n- **Battery Service** - Battery testing and replacement\n- **Tire Care** - Tire rotation, balancing, and replacement\n- **Accessories** - Genuine Lincoln accessories via accessories.lincoln.com\n\n## Lincoln Pickup & Delivery\n\nComplimentary pickup, delivery, and a loaner Lincoln on your schedule. Valid for owners of 2017 and newer model-year Lincoln vehicles; available for retail and warranty repairs.\n\n## Collision Center\n\nA dedicated collision center provides body shop services, staffed by a Collision Center Manager, an Estimator, and a Body Shop Administrative Assistant.\n\n## Scheduling\n\n- Schedule Service: `/service/index.htm`\n- Service Coupons: `/coupons/fd.htm`\n\nSee [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/staff.md) for the service department roster.\nSee [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/tables/hours.md) for service hours.",
+    "datasets/staff": "# Friendly Lincoln Staff\n\nFriendly Lincoln publishes a full staff directory organized by department. Names, roles, and direct extensions below are from the dealership's staff page.\n\n## Management\n\n- **Nicole Ernst** - General Manager\n- **Kim Wilson** - Business Manager\n- **Kristie Harris** - Business Manager (734-243-6000)\n- **James Stasek** - Pre-Owned Sales Manager (734-240-4952)\n- **Neil Helfrich** - New Vehicle Sales Manager (734-240-4942)\n- **Phil Smith** - Service Department Manager\n- **Dan Ortiz** - Assistant Service Department Manager (734-243-6000)\n- **Jodi Lesinszki** - Controller/Office Manager (734-240-4946)\n- **Carol Smock** - BDC Manager\n\n## Sales Department\n\n- **Alan Liparoto** - New Vehicle Sales (734-243-6000)\n- **Andy Omler** - New Vehicle Sales (734-240-5012)\n- **Blaine Whitlow** - New Vehicle Sales (734-240-4949)\n- **Dave Perry** - New Vehicle Sales (734-240-4959)\n- **John Goodnough** - New Vehicle Sales (734-240-4961)\n- **Larry Middleton** - New Vehicle Sales (734-240-4968)\n- **Mike Brown** - New Vehicle Sales (734-240-5013)\n- **Mike Drake** - New Vehicle Sales (734-240-4941)\n- **Ryan Leslie** - New Vehicle Sales (734-240-5011)\n- **John 'JR' Riley** - Pre-Owned Vehicle Sales (734-240-4966)\n- **Jeremy Frayer** - Pre-Owned Vehicle Sales (734-240-4967)\n- **Carlo Grassi** - Pre-Owned Vehicle Sales (734-240-4954)\n- **Joei Lemanski** - Sales Support\n- **Brian Langton** - Retail Specialist (866-886-2698)\n- **Jeremy Stuck** - Retail Specialist\n\n## Service Department\n\n- **Pat Shankie** - Service Advisor\n- **Guy Talluto** - Service Advisor\n- **Craig Rumberger** - Service Advisor\n\n## Collision Center\n\n- **Sean Green** - Collision Center Manager\n- **Joe Lopez** - Estimator / Assistant Body Shop Manager (734-243-6900)\n- **Vicki Moore** - Body Shop Administrative Assistant\n\n## Parts Department\n\n- **Sheila Johnston** - Assistant Parts Manager (866-886-2698)\n\n## Office\n\n- **Deb Sieb** - Customer Service\n- **Cheryl Morton** - Office Staff\n- **Shari Metz** - Office Staff\n- **Heather Clark** - Office Staff\n- **Cindy Paulovich** - Office Staff\n- **Jan Chappell** - Receptionist\n- **Corey Bogedain** - Network Administrator (734-243-6000)",
+    "datasets/used-vehicles": "# Friendly Lincoln Used Vehicles\n\nFriendly Lincoln sells pre-owned and Lincoln Certified Pre-Owned vehicles alongside its new inventory. Because the dealership shares the Friendly Auto Group campus with Friendly Ford, the pre-owned lot carries a substantial number of Ford models in addition to Lincolns.\n\n## Inventory Composition\n\nA sample of the vehicle feed (page 1 of 20) showed:\n\n- **16 used**, **3 certified pre-owned**, and **1 new** vehicle\n- **Makes**: Ford (16) and Lincoln (4)\n- **Ford models**: F-150, Escape, Edge, Explorer, Maverick, Bronco Sport, Ranger\n- **Lincoln models**: Corsair (2 CPO), Aviator (1), Nautilus (1 CPO)\n- **Pre-owned price range** (sample): $23,154 to $50,154\n- **Year range** (sample): 2021 to 2026; mileage 2,408 to 100,711 miles\n\n## Certified Pre-Owned\n\nLincoln Certified Pre-Owned vehicles pass a factory-backed inspection and carry extended warranty coverage and roadside assistance. CPO Corsair and Nautilus models were among the inventory sampled.\n\n## Buying Tools\n\n- Value Your Trade\n- Online credit application and financing\n- Money Back Guarantee on purchases\n\nSee [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/financing.md) for pre-owned financing options.",
+    "references/ai-discovery-page": "# Friendly Lincoln AI Discovery\n\nFriendly Lincoln exposes machine-readable AI discovery endpoints through PromptGraph. The sitemap at `https://api.promptgraph.ai/api/v1/friendly-lincoln/sitemap.xml` enumerates the available endpoints.\n\n## Endpoints\n\n| Endpoint | Status | Notes |\n|---|---|---|\n| `/business` | Populated | AutoDealer JSON-LD with address, phone, hours, rating |\n| `/prompts` | Populated | 102 items; 15 featured Monroe MI prompts |\n| `/offers` | Populated | 7 current offers |\n| `/vehicles` | Populated | 99 vehicles, paginated (20 per page) |\n| `/testimonials` | Empty | Returns empty array |\n| `/gbp-context` | Populated | 4.7/5 rating, 13 reviews, 5 recent reviews |\n| `/site-content` | Broken | 107 friendlylincoln.com URLs returned with empty content; bundled unrelated site content |\n| `/.well-known/ai-manifest.json` | Populated | Machine-readable resource directory |\n| `/robots.txt` | Populated | Allows all AI bots |\n| `/llms.txt` | Populated | LLMForge v1.0 directive |\n| `/config.json` | Present | Contains a private API key; excluded from bundle |\n\n## robots.txt Policy\n\nThe robots.txt allows all user agents and explicitly allows GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, and Applebot.\n\n## Notable Findings\n\n- The `/site-content` mirror is broken as of 2026-08-18: every one of the 107 `friendlylincoln.com` page URLs returned empty `main_content`, and the response bundled full content from an unrelated site (Memorial Hospital of Converse County). Site data was therefore sourced via direct browser crawl instead.\n- The `/vehicles` endpoint reports 99 total vehicles but is paginated (20 per page); only page 1 was sampled.\n\nSee [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/references/llms-txt.md) for the LLMForge directive.\nSee [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/references/prompts.md) for the prompt library.",
+    "references/llms-txt": "# Friendly Lincoln llms.txt\n\nFriendly Lincoln publishes an llms.txt directive in LLMForge v1.0 format, last updated 2026-08-17.\n\n## Discovery\n\n- Primary discovery endpoint: `/.well-known/ai-manifest.json`\n- Format: JSON-LD following Schema.org standards\n- API base: `https://api.promptgraph.ai/api/v1/friendly-lincoln`\n\n## Documented Endpoints\n\n- **Business Information** (`/business`) - Address, contact, hours, location\n- **Vehicle Inventory** (`/vehicles`) - Specifications, pricing, availability\n- **Prompts & FAQs** (`/prompts`) - Structured prompts for consistent AI responses\n- **Customer Testimonials** (`/testimonials`) - Reviews and ratings\n- **Google Business Profile Context** (`/gbp-context`) - Flattened GBP data\n- **Full Site JSON Mirror** (`/site-content`) - Plain-text mirror of the site\n- **AI Manifest** (`/.well-known/ai-manifest.json`) - Resource directory\n- **Sitemap** (`/sitemap.xml`) - XML sitemap\n- **Configuration** (`/config.json`) - System configuration\n\n## Schema Types\n\nLocalBusiness / AutoDealer, Car, ItemList, Review / AggregateRating, Offer, CreativeWork.",
+    "references/prompts": "# Friendly Lincoln Prompts\n\nPromptGraph serves a prompt library for Friendly Lincoln. The `/prompts` endpoint returns 102 items (long-tail SEO prompts mapped to site pages). Fifteen featured Monroe MI prompts are surfaced in the PromptGraph sitemap and llms.txt.\n\n## Featured Prompts\n\n1. **Luxury Lincoln Dealer in Monroe MI with Exceptional Service** - Premier full-line Lincoln dealership with transparent pricing and a hassle-free buying experience.\n2. **New Lincoln Vehicles for Sale Near Monroe MI** - Latest Lincoln models with current promotions such as 0% APR financing.\n3. **Used Lincoln Cars and SUVs in Monroe MI** - Used and certified pre-owned inventory with guarantees, warranties, and inspections.\n4. **Lincoln Financing Options and Lease Deals Monroe MI** - Lease and loan options through Lincoln Automotive Financial Services.\n5. **Lincoln Service Center and Maintenance in Monroe MI** - Certified service using genuine parts with factory-trained technicians.\n6. **Lincoln Navigator Dealer Near Me in Monroe MI** - New and used Navigator models with special incentives.\n7. **Lincoln Aviator for Sale with Deals in Monroe MI** - Mid-size luxury SUV with hybrid options and low APR financing.\n8. **Lincoln Corsair Luxury Compact SUV Dealer Monroe MI** - Compact luxury SUV with advanced safety features.\n9. **Lincoln Nautilus Hybrid and SUV Sales Monroe MI** - Hybrid efficiency and current incentives.\n10. **Money Back Guarantee on Lincoln Purchases Monroe MI** - Customer-centric dealership with a unique Money Back Guarantee.\n11. **Online Lincoln Car Buying Experience in Monroe MI** - Fully online buying with virtual tours, digital financing, and home delivery.\n12. **Trade-In Appraisal for Your Vehicle at Lincoln Dealer Monroe MI** - Fair appraisals and instant offers applied toward a new Lincoln.\n13. **0% Financing on Select Lincoln Models Monroe MI** - 0% APR financing on select 2026 Aviator and Nautilus models.\n14. **Luxury Car Service Specials and Appointments Monroe MI** - Maintenance specials and convenient online scheduling.\n15. **Premier Lincoln Dealership with Customer-First Approach Monroe MI** - Top-rated dealership with personalized service and full support.\n\n## Structure\n\nEach prompt includes a title, a description (the model instruction), and an example response. The full 102-item library extends into long-tail topics such as virtual video walkthroughs and all-weather floor liner packages, each mapped to a specific site page.",
+    "references/testimonials": "# Friendly Lincoln Testimonials\n\nFriendly Lincoln holds a 4.7 out of 5 Google rating across 13 reviews. The PromptGraph `/testimonials` endpoint returns an empty array, so review data was sourced from the Google Business Profile context endpoint.\n\n## Aggregate Rating\n\n- **Rating**: 4.7 / 5\n- **Review count**: 13\n- **place_id**: ChIJC3ZSvXJvO4gRblnd0jS6dpY\n\n## Recent Reviews\n\n| Author | Rating | Summary |\n|---|---|---|\n| Toni Lollini | 5 | \"Best place and deals in town. This is our second time buying a vehicle from Jordan. Fast and efficient!!\" (2026-04) |\n| Amber Hum | 5 | \"Jeremy and James are the best! ... He found me just what I was looking for in minutes!\" (2022-08) |\n| Orsymco Rodgers | 5 | \"The service representative was very professional. ... I am very pleased with the service department.\" (2021-11) |\n| William Graczyk | 5 | \"Andy Omler is the best salesman they have!\" (2021-09) |\n| William Soto | 5 | \"Andy olmer and mrs Kim Wilson ... thank you very much your the best\" (2020-12) |\n\n## Themes\n\nReviewers consistently praise the sales staff by name (Jordan, Jeremy, James, Andy Omler) and the fast, efficient financing process. Service reviews highlight professional, knowledgeable advisors.",
+    "tables/contact": "# Friendly Lincoln Contact\n\n## Address\n\n2800 N Telegraph Rd\nMonroe, MI 48162\n\n## Phone Numbers\n\n| Department | Phone |\n|---|---|\n| Sales | (734) 590-5807 |\n| Service | (734) 590-5808 |\n| Parts | (734) 590-5805 |\n| Main line (site header) | (734) 243-6000 |\n\n## Online\n\n- **Website**: https://www.friendlylincoln.com/\n- **Directions**: /dealership/directions.htm\n- **Schedule Service**: /service/index.htm\n- **Finance Application**: /financing/application.htm\n\n## Google Business Profile\n\n- place_id: `ChIJC3ZSvXJvO4gRblnd0jS6dpY`\n- Rating: 4.7 / 5 (13 reviews)",
+    "tables/hours": "# Friendly Lincoln Hours\n\nFriendly Lincoln operates on a Monday through Saturday schedule, closed on Sundays.\n\n| Day | Sales | Service | Parts |\n|---|---|---|---|\n| Monday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Tuesday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Wednesday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Thursday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Friday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Saturday | 9am-1pm | 9am-1pm | 9am-1pm |\n| Sunday | Closed | Closed | Closed |",
+    "tables/model-comparison": "# Lincoln Model Comparison\n\nThe Lincoln lineup sold at Friendly Lincoln is an all-SUV range spanning compact to full-size luxury.\n\n| Model | Body Style | Seating | Drivetrain Options | Positioning |\n|---|---|---|---|---|\n| Corsair | Compact luxury SUV | 5 | Gasoline | Entry-level luxury crossover |\n| Nautilus | Mid-size luxury SUV | 5 | Gasoline, Hybrid | Two-row luxury with hybrid efficiency |\n| Aviator | Mid-size three-row luxury SUV | 6-7 | Gasoline, Plug-in Hybrid | Three-row family luxury |\n| Navigator | Full-size luxury SUV | 7-8 | Gasoline | Flagship full-size |\n| Navigator L | Extended-length full-size SUV | 7-8 | Gasoline | Long-wheelbase Navigator |\n\n## Notes\n\n- The Aviator offers a Grand Touring plug-in hybrid variant.\n- The Nautilus offers a hybrid powertrain option.\n- All models are sold new from the 2026 model year at Friendly Lincoln.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/new-vehicles.md) for current offers by model."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables and Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables and Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>

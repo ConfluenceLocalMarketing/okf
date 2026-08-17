@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>friendly-ford - OKF Bundle Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.title strong { font-size: 16px; margin-right: 8px; }
+.muted { color: #64748b; font-size: 12px; }
+.controls { display: flex; gap: 8px; }
+.controls input, .controls select, .controls button {
+  font-size: 13px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+.controls input { width: 220px; }
+.controls button { cursor: pointer; background: #f1f5f9; }
+.controls button:hover { background: #e2e8f0; }
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+#graph {
+  flex: 1 1 60%;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+  position: relative;
+}
+#detail {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #fff;
+}
+#detail-empty { text-align: center; margin-top: 40px; }
+.detail-header { margin-bottom: 12px; }
+.detail-header h1 { font-size: 18px; margin: 4px 0 2px; font-weight: 600; }
+.type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+dl.frontmatter {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  row-gap: 4px;
+  column-gap: 12px;
+  margin: 8px 0 12px;
+  font-size: 13px;
+}
+dl.frontmatter dt { color: #64748b; font-weight: 500; }
+dl.frontmatter dd { margin: 0; }
+dl.frontmatter a { color: #2563eb; word-break: break-all; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+}
+hr { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+#detail-body { font-size: 13px; line-height: 1.55; }
+#detail-body h1 { font-size: 16px; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+#detail-body h2 { font-size: 14px; margin: 14px 0 4px; }
+#detail-body h3 { font-size: 13px; margin: 12px 0 4px; }
+#detail-body p { margin: 6px 0; }
+#detail-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+#detail-body pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+#detail-body pre code { background: transparent; color: inherit; padding: 0; }
+#detail-body ul, #detail-body ol { padding-left: 22px; margin: 6px 0; }
+#detail-body li { margin: 2px 0; }
+#detail-body table { border-collapse: collapse; margin: 8px 0; }
+#detail-body th, #detail-body td { border: 1px solid #e2e8f0; padding: 4px 8px; font-size: 12px; }
+#detail-body a.internal { color: #2563eb; cursor: pointer; }
+#detail-body a.external { color: #2563eb; }
+#detail-backlinks { margin-top: 18px; }
+#detail-backlinks h2 { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+#detail-backlinks ul { padding-left: 18px; }
+#detail-backlinks a { color: #2563eb; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong id="bundle-name"></strong>
+    <span class="muted">OKF bundle</span>
+  </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search title / id / tag">
+    <select id="filter-type">
+      <option value="">All types</option>
+    </select>
+    <select id="layout">
+      <option value="cose">cose (force)</option>
+      <option value="concentric">concentric</option>
+      <option value="breadthfirst">breadth-first</option>
+      <option value="circle">circle</option>
+      <option value="grid">grid</option>
+    </select>
+    <button id="reset">Reset view</button>
+  </div>
+</header>
+<main>
+  <section id="graph"></section>
+  <section id="detail">
+    <div id="detail-empty" class="muted">Click a node to see its details.</div>
+    <article id="detail-content" hidden>
+      <header class="detail-header">
+        <span class="type-chip" id="detail-type"></span>
+        <h1 id="detail-title"></h1>
+        <div class="muted" id="detail-id"></div>
+      </header>
+      <dl class="frontmatter">
+        <dt>Description</dt><dd id="detail-description"></dd>
+        <dt>Resource</dt><dd id="detail-resource"></dd>
+        <dt>Tags</dt><dd id="detail-tags"></dd>
+      </dl>
+      <hr>
+      <div id="detail-body"></div>
+      <section id="detail-backlinks" hidden>
+        <h2>Cited by</h2>
+        <ul id="backlinks-list"></ul>
+      </section>
+    </article>
+  </section>
+</main>
+<script>
+window.BUNDLE_NAME = "friendly-ford";
+window.BUNDLE = {
+  "nodes": [
+    {
+      "data": {
+        "id": "datasets/dealership",
+        "label": "Friendly Ford",
+        "type": "Entities",
+        "description": "Ford dealership in Monroe, MI serving Monroe County and the greater Detroit-Toledo area with new and pre-owned Ford sales, a full service center, collision center, mobile service, and pickup and delivery.",
+        "resource": "https://www.yourfriendlyford.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 22
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/faq",
+        "label": "Friendly Ford FAQ",
+        "type": "Entities",
+        "description": "Frequently asked questions about buying, financing, trading in, and servicing Ford vehicles at Friendly Ford in Monroe, MI, including mobile service and pickup and delivery.",
+        "resource": "https://www.yourfriendlyford.com/",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 16
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing",
+        "label": "Friendly Ford Financing",
+        "type": "Entities",
+        "description": "Vehicle financing and leasing at Friendly Ford in Monroe, MI, with no-hassle financing, an online application, Kelley Blue Book trade-in valuation, and Ford program APR and cash offers.",
+        "resource": "https://www.yourfriendlyford.com/financing/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 21
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles",
+        "label": "Friendly Ford New Vehicles",
+        "type": "Entities",
+        "description": "New Ford inventory at Friendly Ford in Monroe, MI, spanning trucks, SUVs, electric vehicles, and vans including the F-150, Super Duty, Ranger, Maverick, Bronco, Explorer, and Mustang Mach-E.",
+        "resource": "https://www.yourfriendlyford.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center",
+        "label": "Friendly Ford Service Center",
+        "type": "Entities",
+        "description": "Ford service center at Friendly Ford in Monroe, MI, offering in-person service, mobile service, and pickup and delivery with factory-trained technicians, loaner vehicles, and a local shuttle.",
+        "resource": "https://www.yourfriendlyford.com/service-center.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 26
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/staff",
+        "label": "Friendly Ford Staff",
+        "type": "Entities",
+        "description": "Staff directory for Friendly Ford in Monroe, MI, covering leadership, administrative, collision, finance, parts, sales, and service departments with direct phone extensions.",
+        "resource": "https://www.yourfriendlyford.com/dealership/staff.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles",
+        "label": "Friendly Ford Used Vehicles",
+        "type": "Entities",
+        "description": "Pre-owned and certified pre-owned Ford vehicle inventory at Friendly Ford in Monroe, MI, with trade-in appraisal via Kelley Blue Book Instant Cash Offer.",
+        "resource": "https://www.yourfriendlyford.com/used-inventory/index.htm",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 25
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page",
+        "label": "Friendly Ford AI Discovery",
+        "type": "APIs",
+        "description": "PromptGraph AI discovery endpoints for the friendly-ford slug in Monroe, MI, documenting a business, vehicle inventory, offers, prompts, AI manifest, llms.txt, and robots.txt policy for LLM consumption.",
+        "resource": "https://api.promptgraph.ai/api/v1/friendly-ford/sitemap.xml",
+        "tags": [],
+        "color": "#10b981",
+        "size": 29
+      }
+    },
+    {
+      "data": {
+        "id": "references/llms-txt",
+        "label": "Friendly Ford llms.txt",
+        "type": "APIs",
+        "description": "AI consumption directive in LLMForge v1.0 format published by PromptGraph for Friendly Ford in Monroe, MI, providing structured API endpoints and schema types for LLM crawlers and AI agents.",
+        "resource": "https://api.promptgraph.ai/api/v1/friendly-ford/llms.txt",
+        "tags": [],
+        "color": "#10b981",
+        "size": 20
+      }
+    },
+    {
+      "data": {
+        "id": "references/prompts",
+        "label": "Friendly Ford Prompts",
+        "type": "APIs",
+        "description": "Structured Q&A prompts published by PromptGraph for Friendly Ford in Monroe, MI, covering inventory, trucks, financing, service, trade-in, and the Ford model lineup.",
+        "resource": "https://api.promptgraph.ai/api/v1/friendly-ford/prompts",
+        "tags": [],
+        "color": "#10b981",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "references/testimonials",
+        "label": "Friendly Ford Testimonials",
+        "type": "Entities",
+        "description": "Customer review data for Friendly Ford in Monroe, MI, including a 4.5 out of 5 Google rating across 1,201 reviews, with recent reviews highlighting sales and service staff.",
+        "resource": "https://api.promptgraph.ai/api/v1/friendly-ford/gbp-context",
+        "tags": [],
+        "color": "#10b981",
+        "size": 24
+      }
+    },
+    {
+      "data": {
+        "id": "tables/contact",
+        "label": "Friendly Ford Contact",
+        "type": "Tables and Datasets",
+        "description": "Consolidated contact directory for Friendly Ford in Monroe, MI, including phone numbers by department, address, and website.",
+        "resource": "https://www.yourfriendlyford.com/contact.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 19
+      }
+    },
+    {
+      "data": {
+        "id": "tables/hours",
+        "label": "Friendly Ford Hours",
+        "type": "Tables and Datasets",
+        "description": "Operating hours for Friendly Ford in Monroe, MI, covering sales, service, and parts departments.",
+        "resource": "https://www.yourfriendlyford.com/dealership/about.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 17
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison",
+        "label": "Ford Model Comparison",
+        "type": "Tables and Datasets",
+        "description": "Side-by-side comparison of the Ford lineup sold at Friendly Ford in Monroe, MI, including trucks, SUVs, electric vehicles, and vans.",
+        "resource": "https://www.yourfriendlyford.com/new-inventory/index.htm",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 28
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/new-vehicles",
+        "source": "datasets/dealership",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/dealership__datasets/service-center",
+        "source": "datasets/dealership",
+        "target": "datasets/service-center"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/financing__datasets/new-vehicles",
+        "source": "datasets/financing",
+        "target": "datasets/new-vehicles"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__tables/model-comparison",
+        "source": "datasets/new-vehicles",
+        "target": "tables/model-comparison"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/new-vehicles__datasets/financing",
+        "source": "datasets/new-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__datasets/staff",
+        "source": "datasets/service-center",
+        "target": "datasets/staff"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/service-center__tables/hours",
+        "source": "datasets/service-center",
+        "target": "tables/hours"
+      }
+    },
+    {
+      "data": {
+        "id": "datasets/used-vehicles__datasets/financing",
+        "source": "datasets/used-vehicles",
+        "target": "datasets/financing"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/llms-txt",
+        "source": "references/ai-discovery-page",
+        "target": "references/llms-txt"
+      }
+    },
+    {
+      "data": {
+        "id": "references/ai-discovery-page__references/prompts",
+        "source": "references/ai-discovery-page",
+        "target": "references/prompts"
+      }
+    },
+    {
+      "data": {
+        "id": "tables/model-comparison__datasets/new-vehicles",
+        "source": "tables/model-comparison",
+        "target": "datasets/new-vehicles"
+      }
+    }
+  ],
+  "bodies": {
+    "datasets/dealership": "# Friendly Ford\n\nFriendly Ford is a Ford dealership located at 2800 N Telegraph Rd, Monroe, MI 48162. It shares the Friendly Auto Group campus with Friendly Lincoln, operating under the combined \"Friendly Ford Lincoln\" brand. The dealership serves Monroe County and the greater Detroit-Toledo area.\n\n## Contact Information\n\n- **Sales**: (734) 243-6000\n- **Service**: (734) 240-5010\n- **Parts**: (734) 240-5020\n- **Website**: https://www.yourfriendlyford.com/\n\n## Location\n\n2800 N Telegraph Rd, Monroe, MI 48162\n\nGoogle place_id: `ChIJHXiveTFvO4gR6Pak6d1TQo0`\n\n## Service Area\n\nMonroe County and nearby Wayne County communities including Monroe, Riverview, Trenton, and Woodhaven, Michigan.\n\n## About\n\nFriendly Ford's mission is to be \"the automotive home of drivers in the Monroe MI area.\" The dealership's tagline is \"Friendly - It's not just a name, it's the way we do business!\" It is led by President Tom Shankie and Dealer Principal & General Manager Nicole Ernst.\n\n## Departments and Features\n\n- **Sales** - New and pre-owned Ford cars, trucks, and SUVs\n- **Service Center** - \"Service Your Way\" with in-person service, mobile service, and pickup & delivery\n- **Collision Center** - Full body shop at (734) 243-6900\n- **Parts Center** - Genuine Ford parts\n- **Finance Center** - No-hassle financing and leasing\n- **EV & Hybrid** - Electric and hybrid vehicle inventory\n\n## Service Amenities\n\nFree coffee and Wi-Fi, loaner vehicles, local shuttle service, and a free car wash with service.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/new-vehicles.md) for the Ford lineup.\nSee [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/service-center.md) for service offerings.",
+    "datasets/faq": "# Friendly Ford FAQ\n\nCommon questions and answers about Friendly Ford's sales, service, and dealership programs. Synthesized from the dealership's website content (synthesized).\n\n## Buying\n\n**What models does Friendly Ford sell?**\nFriendly Ford sells the full Ford lineup including the F-150, Super Duty, Ranger, Maverick, Bronco, Explorer, Escape, Expedition, Mustang, and Mustang Mach-E, plus commercial Transit vans.\n\n**Does Friendly Ford offer a trade-in appraisal?**\nYes. Friendly Ford offers a fast trade-in value tool powered by Kelley Blue Book Instant Cash Offer.\n\n## Financing\n\n**Does Friendly Ford offer financing?**\nYes. The finance center offers no-hassle financing and lease options for new and pre-owned vehicles, including Ford program offers with APR and cash incentives.\n\n## Service\n\n**Does Friendly Ford offer mobile service?**\nYes. Under \"Service Your Way,\" customers can choose in-person service, mobile service at home or office, or pickup and delivery.\n\n**What amenities does the service center offer?**\nFree coffee and Wi-Fi, loaner vehicles, a local shuttle service, and a free car wash with service.\n\n## Company\n\n**Is Friendly Ford part of a larger group?**\nFriendly Ford shares the Monroe campus with Friendly Lincoln under the combined \"Friendly Ford Lincoln\" brand.",
+    "datasets/financing": "# Friendly Ford Financing\n\nFriendly Ford's finance center offers no-hassle financing and leasing for new and pre-owned Ford vehicles, with plans designed around the customer's lifestyle and budget.\n\n## Finance Tools\n\n- Online financing application (`/financing/index.htm`)\n- Kelley Blue Book Instant Cash Offer trade-in valuation\n- Payment calculators\n\n## Current Offers\n\n- **Select Ford Bronco** - 7.3% APR for 60 months.\n- **Select Ford Maverick** - $1,000 cash back and 7.3% APR for 60 months; or $3,000 cash back and 6.7% APR for 62 months.\n- **Select Ford Explorer** - $1,000 cash back and 0.0% APR for 38 months.\n- **2026 F-150 SuperCrew 4x4 2.7L (Pkg 302A)** - Lease for $449/mo for 24 months (everyone), or $329/mo with A/Z Plan.\n- **2026 Explorer 2.3L 4WD (Pkg 200A)** - Lease for $439/mo for 24 months (everyone), or $369/mo with A/Z Plan.\n- **2026 F-150 XLT Gas** - Up to $4,000 in factory rebates plus up to $1,750 conditional trade assist.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/new-vehicles.md) for offer details by model.",
+    "datasets/new-vehicles": "# Friendly Ford New Vehicles\n\nFriendly Ford sells the full Ford lineup with an emphasis on trucks and commercial vehicles. The homepage organizes models by body style: Convertible, SUV, Truck, Van, and Wagon.\n\n## New Ford Lineup\n\n| Category | Models |\n|---|---|\n| SUV | Bronco, Bronco Sport, Expedition Max, Explorer, Mustang Mach-E |\n| Truck | F-150, Super Duty (F-250/F-350/F-450/F-550/F-600), Ranger, Maverick |\n| Van | Transit (150/250/350) |\n| Wagon | Expedition, Explorer |\n| Convertible | Mustang |\n\n## EV & Hybrid\n\nThe dealership maintains a dedicated EV & Hybrid navigation section for models such as the Mustang Mach-E and F-150 Lightning.\n\n## Current New Vehicle Offers\n\n- **Select Ford Bronco** - 7.3% APR for 60 months.\n- **Select Ford Maverick** - $1,000 cash back and 7.3% APR for 60 months.\n- **Select Ford Explorer** - $1,000 cash back and 0.0% APR for 38 months.\n- **2026 F-150 XLT Gas** - Up to $4,000 in factory rebates plus up to $1,750 conditional trade assist.\n\nSee [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/tables/model-comparison.md) for a lineup comparison.\nSee [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/financing.md) for finance and lease details.",
+    "datasets/service-center": "# Friendly Ford Service Center\n\nFriendly Ford operates a full service center at 2800 N Telegraph Rd, Monroe, MI, under a \"Service Your Way\" model offering three service options.\n\n## Service Your Way\n\n- **In-Person Service** - Traditional service appointments\n- **Mobile Service** - Technicians dispatched to the customer's home or office\n- **Pick-Up & Delivery** - Vehicle pickup and delivery\n\n## Service Amenities\n\n- Free coffee and Wi-Fi\n- Loaner vehicles\n- Local shuttle service\n- Free car wash with service\n- Factory-trained technicians and OEM parts\n\n## Collision Center\n\nA dedicated collision center provides body shop services at (734) 243-6900, staffed by a Collision Center Manager, technicians, a painter, and an estimator.\n\nSee [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/staff.md) for the service department roster.\nSee [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/tables/hours.md) for service hours.",
+    "datasets/staff": "# Friendly Ford Staff\n\nFriendly Ford publishes a full staff directory organized by department. Names, roles, and extensions below are from the dealership's staff page.\n\n## Leadership\n\n- **Tom Shankie** - President\n- **Nicole Ernst** - Dealer Principal & General Manager (734) 240-4945\n- **Neil Helfrich** - New Vehicle Sales Manager (734) 240-4942\n- **James Stasek** - Pre-Owned Vehicle Sales Manager (734) 240-4952\n- **Dan Ortiz** - Service Manager\n- **Keith Jessie** - Collision Center Manager (734) 243-6900 x1237\n- **Brian Langton** - Parts Manager (734) 590-5803\n- **Jodi Herkimer** - Controller (734) 243-6000 x4946\n- **Kelsey Smith** - Marketing Manager (734) 243-6000 x4970\n\n## Administrative\n\n- **Jodi Herkimer** - Controller/Office Manager (734) 240-4946\n- **Olivia Bacarella** - Cashier (734) 822-5513\n- **Blythe Burger** - Senior Cashier (734) 822-5513\n- **Carrie Gratz** - Cashier (734) 822-5513\n- **Alice Reaume** - Cashier (734) 822-5513\n- **Elain Tulak** - Cashier (734) 822-5513\n- **Taylor Kehres** - Biller\n- **Shari Metz** - Accounts Payable\n- **Cheryl Norton** - Office Staff\n- **Kathy Cesnulis** - Support Staff (734) 243-6000\n- **Jan Chappell** - Receptionist (734) 243-6000\n- **Corey Bogedain** - IT Support (734) 243-6000\n\n## Collision Center\n\n- **Keith Jessie** - Collision Center Manager (734) 243-6900 x1237\n- **Gerald Bruck** - Technician (734) 243-6900\n- **Rich Hurley** - Technician (734) 243-6900\n- **Cal Palmiter** - Technician (734) 243-6900\n- **Eric Godbey** - Painter (734) 243-6900\n- **Ryan Wansitler** - Estimator (734) 590-5804\n- **Sarah Lange** - Administrative Assistance (734) 243-6900 x1220\n- **Jim Compora** - Porter (734) 243-6900\n- **Gerardo Gallegos-Olvera** - Porter (734) 243-6900\n\n## Finance Center\n\n- **Kristie Harris** - Finance Manager (734) 243-6000 x4977\n- **Kim Wilson** - Finance Manager (734) 243-6000 x1228\n\n## Parts Center\n\n- **Brian Langton** - Parts Department Manager (734) 590-5803\n- **Isaac Bagnall** - Advisor (734) 590-5803\n- **Steve Girard** - Advisor (734) 590-5803\n- **Alan Kimball** - Advisor (734) 590-5803\n- **Matt Zagorski** - Advisor (734) 590-5803\n- **Jeremy Stuck** - Advisor (734) 243-5803\n\n## Sales Center\n\n- **Neil Helfrich** - New Vehicle Sales Manager (734) 240-4942\n- **James Stasek** - Pre-Owned Vehicle Sales Manager (734) 240-4952\n- **Drake Ernst** - New Vehicle Sales (734) 240-4956\n- **Mike Drake** - New Vehicle Sales (734) 240-4941\n- **Karissa Lomas** - New Vehicle Sales (734) 240-4959\n- **Larry Middleton** - New Vehicle Sales (734) 240-4968\n- **Andy Omler** - New Vehicle Sales (734) 240-5012\n- **Nick Sherman** - New Vehicle Sales (734) 240-4967\n- **Blaine Whitlow** - New Vehicle Sales (734) 240-4949\n- **Caden Brooks** - Pre-Owned Vehicle Sales (734) 240-5011\n- **Jordan Doster** - Pre-Owned Vehicle Sales (734) 240-4966\n- **Carlo Grassi** - Pre-Owned Vehicle Sales (734) 240-4954\n- **James Chwalek** - Sales Support\n- **Joei Lemanski** - Sales Support (734) 240-4947\n\n## Service Center\n\n- **Dan Ortiz** - Service Manager (734) 243-6000 x4951\n- **Pat Shankie** - Assistant Service Manager (734) 243-590-5804 x5090\n- **George Burkey** - Service Advisor (734) 590-5804\n- **Dave Kegley** - Service Advisor (734) 590-5804\n- **Brandon Mitchell** - Service Advisor (734) 590-5804\n- **Keely Vorva** - Advisor (734) 590-5804\n- **Bridget Fetterly** - Guest Relations Manager (734) 240-4943\n- **Tyler Gordon** - Mobile Service Technician (734) 590-5804\n- **Sam Applegate** - Technician (734) 590-5804\n- **Darian Hamlin** - Technician (734) 590-5804\n- **Ryan Keck** - Technician (734) 590-5804\n- **Adam Russell** - Technician (734) 590-5804\n- **Bill Sheridan** - Technician (734) 590-5804\n- **Chad Cousino-Szasz** - Technician (734) 590-5804\n- **Michael Beaudry** - Lube Technician (734) 590-5804\n- **Cody Raymer** - Lube Technician (734) 590-5804\n- **Christopher Carpenter** - Porter (734) 590-5804\n- **Craig Rumberger** - Porter (734) 590-5804",
+    "datasets/used-vehicles": "# Friendly Ford Used Vehicles\n\nFriendly Ford offers pre-owned and certified pre-owned Ford vehicles alongside its new inventory. The dealership keeps a stock of used cars, trucks, and SUVs at competitive prices.\n\n## Trade-In\n\nFriendly Ford offers a fast trade-in value tool powered by Kelley Blue Book Instant Cash Offer, letting customers get an accurate value for their vehicle today and apply it toward a purchase.\n\n## Buying Tools\n\n- Value Your Trade (Kelley Blue Book Instant Cash Offer)\n- No-hassle financing and lease options\n- Pre-owned specials\n\nSee [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/financing.md) for pre-owned financing options.",
+    "references/ai-discovery-page": "# Friendly Ford AI Discovery\n\nFriendly Ford (Monroe, MI) is associated with the PromptGraph slug `friendly-ford`. The sitemap at `https://api.promptgraph.ai/api/v1/friendly-ford/sitemap.xml` enumerates the available endpoints.\n\n## Endpoints\n\n| Endpoint | Status | Notes |\n|---|---|---|\n| `/business` | Populated | AutoDealer JSON-LD with address, phone, hours, rating |\n| `/prompts` | Populated | 15 featured Monroe MI prompts |\n| `/offers` | Populated | 8 Ford program offers |\n| `/vehicles` | Populated | 134 vehicles, paginated (20 per page) |\n| `/testimonials` | Empty | Returns empty array |\n| `/gbp-context` | Populated | 4.5/5 rating, 1,201 reviews, 5 recent reviews |\n| `/.well-known/ai-manifest.json` | Populated | Machine-readable resource directory |\n| `/robots.txt` | Populated | Allows all AI bots |\n| `/llms.txt` | Populated | LLMForge v1.0 directive |\n\n## robots.txt Policy\n\nThe robots.txt allows all user agents and explicitly allows GPTBot, Claude-Web, GoogleOther, PerplexityBot, anthropic-ai, Grok-Bot, and Applebot.\n\n## Data Note\n\nThe `/vehicles` endpoint reports 134 total vehicles, but its crawl metadata references `friendlyford.com` (a different, unrelated Friendly Ford dealership in Roselle, IL) rather than the Monroe site `yourfriendlyford.com`. Inventory counts should therefore be treated with caution.\n\nSee [llms-txt.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/references/llms-txt.md) for the LLMForge directive.\nSee [prompts.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/references/prompts.md) for the prompt library.",
+    "references/llms-txt": "# Friendly Ford llms.txt\n\nFriendly Ford publishes an llms.txt directive in LLMForge v1.0 format, last updated 2026-08-17.\n\n## Discovery\n\n- Primary discovery endpoint: `/.well-known/ai-manifest.json`\n- Format: JSON-LD following Schema.org standards\n- API base: `https://api.promptgraph.ai/api/v1/friendly-ford`\n\n## Documented Endpoints\n\n- **Business Information** (`/business`) - Address, contact, hours, location\n- **Vehicle Inventory** (`/vehicles`) - Specifications, pricing, availability\n- **Prompts & FAQs** (`/prompts`) - Structured prompts for consistent AI responses\n- **Customer Testimonials** (`/testimonials`) - Reviews and ratings\n- **Google Business Profile Context** (`/gbp-context`) - Flattened GBP data\n- **Full Site JSON Mirror** (`/site-content`) - Plain-text mirror of the site\n- **AI Manifest** (`/.well-known/ai-manifest.json`) - Resource directory\n- **Sitemap** (`/sitemap.xml`) - XML sitemap\n- **Configuration** (`/config.json`) - System configuration\n\n## Schema Types\n\nLocalBusiness / AutoDealer, Car, ItemList, Review / AggregateRating, Offer, CreativeWork.",
+    "references/prompts": "# Friendly Ford Prompts\n\nPromptGraph serves a prompt library for Friendly Ford. Fifteen featured prompts are surfaced in the sitemap and llms.txt.\n\n## Featured Prompts\n\n1. **Friendly Ford Dealer Monroe MI** - Customer-focused dealership with transparent pricing and easy financing.\n2. **New Ford Trucks Monroe MI** - F-150 and Ranger trucks with towing capability and specials.\n3. **Used Ford Cars SUVs Monroe** - Quality used inventory with inspections and warranties.\n4. **Ford Financing Monroe MI** - Flexible financing and leasing with online applications.\n5. **Ford Service Monroe MI** - Factory-trained technicians, oil changes, and free car washes.\n6. **Ford F-150 Dealer Monroe** - New and used F-150 trucks with expert advice.\n7. **Certified Pre-Owned Ford Monroe** - Rigorous inspections and warranties.\n8. **Ford Explorer SUVs Monroe MI** - New and used Explorer options.\n9. **Ford Mustang Mach-E Electric Monroe** - Electric vehicle guidance and incentives.\n10. **Ford Lease Deals Monroe MI** - Low monthly payments and lease specials.\n11. **Trade-In Value Monroe Ford Dealer** - Kelley Blue Book instant offers and appraisals.\n12. **Ford Parts Monroe MI** - Genuine Ford parts and accessories.\n13. **Ford Service Specials Monroe** - Oil change, brake, and tire service coupons.\n14. **New Ford Inventory Monroe MI** - Searchable new inventory with specials.\n15. **Used Ford Deals Monroe MI** - Competitive used pricing with financing.\n\n## Structure\n\nEach prompt includes a title, a description (the model instruction), and an example response.",
+    "references/testimonials": "# Friendly Ford Testimonials\n\nFriendly Ford holds a 4.5 out of 5 Google rating across 1,201 reviews. The PromptGraph `/testimonials` endpoint returns an empty array, so review data was sourced from the Google Business Profile context endpoint.\n\n## Aggregate Rating\n\n- **Rating**: 4.5 / 5\n- **Review count**: 1,201\n- **place_id**: ChIJHXiveTFvO4gR6Pak6d1TQo0\n\n## Recent Reviews\n\n| Author | Rating | Summary |\n|---|---|---|\n| Bobbie Jones | 5 | \"I had a great experience with Friendly Ford and my salesperson, Blaine. The pricing on the internet was the same price I received when I went in...\" (2026-02) |\n| Kelli Magill | 5 | \"Found a great used truck here at Friendly Ford! ... We dealt with Carlo Grassi and he was an absolute pleasure to deal with.\" (2026-02) |\n| Mariah Bray | 5 | \"Took my car in for a break repair, they caught a broken fly wheel for me... My work also came with a 2 year warranty.\" (2026-05) |\n| Kristina Yates | 5 | \"I needed an oil change... I was able to call and get a same day appointment. I was in and out within an hour.\" (2026-01) |\n| Phillip Gere | 4 | \"Nick Sherman walked over and offered to help me... went over everything for my lease in great detail.\" (2026-01) |\n\n## Themes\n\nReviewers consistently praise the sales staff by name (Blaine, Nick Sherman, Carlo Grassi) for transparent pricing and attentive service, and the service department for thorough diagnostics and fast turnaround.",
+    "tables/contact": "# Friendly Ford Contact\n\n## Address\n\n2800 N Telegraph Rd\nMonroe, MI 48162\n\n## Phone Numbers\n\n| Department | Phone |\n|---|---|\n| Sales | (734) 243-6000 |\n| Service | (734) 240-5010 |\n| Parts | (734) 240-5020 |\n\nAdditional department lines listed on the about page: Sales (734) 415-2080, Service (734) 590-5804, Parts (734) 590-5803.\n\n## Online\n\n- **Website**: https://www.yourfriendlyford.com/\n- **Directions**: /dealership/directions.htm\n- **Schedule Service**: /service-appointment.htm\n- **Mobile Service**: /mobileservice.htm\n- **Financing**: /financing/index.htm\n\n## Social Media\n\n- Facebook: @friendlyfordmonroe\n- Instagram: @friendlyfordlincoln\n- YouTube: Friendly Ford Lincoln channel\n\n## Google Business Profile\n\n- place_id: `ChIJHXiveTFvO4gR6Pak6d1TQo0`\n- Rating: 4.5 / 5 (1,201 reviews)",
+    "tables/hours": "# Friendly Ford Hours\n\nFriendly Ford operates on a Monday through Saturday schedule, closed on Sundays.\n\n| Day | Sales | Service | Parts |\n|---|---|---|---|\n| Monday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Tuesday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Wednesday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Thursday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Friday | 9am-6pm | 9am-6pm | 9am-6pm |\n| Saturday | 9am-1pm | 9am-1pm | 9am-1pm |\n| Sunday | Closed | Closed | Closed |",
+    "tables/model-comparison": "# Ford Model Comparison\n\nThe Ford lineup sold at Friendly Ford spans compact crossovers to heavy-duty commercial trucks, with electric options.\n\n| Model | Segment | Body Style | Powertrain Options |\n|---|---|---|---|\n| Maverick | Compact pickup | Truck | Gasoline, Hybrid |\n| Ranger | Mid-size pickup | Truck | Gasoline |\n| F-150 | Full-size pickup | Truck | Gasoline, Hybrid, Electric (Lightning) |\n| F-150 Lightning | Full-size electric pickup | Truck | Electric |\n| Super Duty (F-250/F-350/F-450/F-550/F-600) | Heavy-duty pickup | Truck | Gasoline, Diesel |\n| Transit (150/250/350) | Commercial van | Van | Gasoline |\n| Bronco Sport | Compact off-road SUV | SUV | Gasoline |\n| Bronco | Mid-size off-road SUV | SUV | Gasoline |\n| Escape | Compact SUV | SUV | Gasoline, Hybrid |\n| Explorer | Mid-size three-row SUV | SUV | Gasoline, Hybrid |\n| Expedition / Expedition Max | Full-size SUV | SUV | Gasoline |\n| Mustang Mach-E | Electric crossover | SUV | Electric |\n| Mustang | Sports car | Convertible/Coupe | Gasoline |\n\n## Notes\n\n- The F-150 Lightning and Mustang Mach-E represent Ford's electric lineup.\n- Super Duty and Transit models support Friendly Ford's commercial and work truck focus.\n- The Mustang is the lone convertible/coupe in the lineup.\n\nSee [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/new-vehicles.md) for current offers by model."
+  },
+  "types": [
+    "APIs",
+    "Entities",
+    "Tables and Datasets"
+  ],
+  "palette": {
+    "Entities": "#8b5cf6",
+    "APIs": "#10b981",
+    "Tables and Datasets": "#3b82f6"
+  }
+};
+</script>
+<script>
+(function () {
+  const bundle = window.BUNDLE;
+  const bundleName = window.BUNDLE_NAME;
+  document.title = `${bundleName} - OKF Viewer`;
+  document.getElementById("bundle-name").textContent = bundleName;
+
+  const typeSelect = document.getElementById("filter-type");
+  for (const t of bundle.types) {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  }
+
+  const backlinks = {};
+  for (const edge of bundle.edges) {
+    const { source, target } = edge.data;
+    (backlinks[target] ||= []).push(source);
+  }
+
+  const nodeIndex = {};
+  for (const n of bundle.nodes) nodeIndex[n.data.id] = n.data;
+
+  const cy = cytoscape({
+    container: document.getElementById("graph"),
+    elements: [...bundle.nodes, ...bundle.edges],
+    style: [
+      { selector: "node", style: { "background-color": "data(color)", "label": "data(label)", "color": "#0f172a", "font-size": 11, "text-valign": "bottom", "text-margin-y": 4, "text-wrap": "wrap", "text-max-width": 120, "width": "data(size)", "height": "data(size)", "border-width": 1, "border-color": "#0f172a" } },
+      { selector: "node:selected", style: { "border-width": 3, "border-color": "#f59e0b" } },
+      { selector: "edge", style: { "width": 1.5, "line-color": "#cbd5e1", "target-arrow-color": "#cbd5e1", "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.9 } },
+      { selector: "edge:selected", style: { "line-color": "#f59e0b", "target-arrow-color": "#f59e0b", "width": 2.5 } },
+      { selector: ".dim", style: { "opacity": 0.15 } },
+    ],
+    layout: { name: "cose", animate: false, padding: 30 },
+    wheelSensitivity: 0.2,
+  });
+
+  cy.on("tap", "node", (evt) => showDetail(evt.target.id()));
+  cy.on("tap", (evt) => { if (evt.target === cy) clearSelection(); });
+
+  document.getElementById("layout").addEventListener("change", (e) => {
+    cy.layout({ name: e.target.value, animate: false, padding: 30 }).run();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    cy.fit(null, 30);
+    clearSelection();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => {
+      const d = n.data();
+      const hay = (d.label || "").toLowerCase() + " " + d.id.toLowerCase() + " " + (d.tags || []).join(" ").toLowerCase();
+      n.toggleClass("dim", !hay.includes(q));
+    });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  document.getElementById("filter-type").addEventListener("change", (e) => {
+    const t = e.target.value;
+    if (!t) { cy.elements().removeClass("dim"); return; }
+    cy.nodes().forEach((n) => { n.toggleClass("dim", n.data("type") !== t); });
+    cy.edges().forEach((edge) => {
+      edge.toggleClass("dim", edge.source().hasClass("dim") || edge.target().hasClass("dim"));
+    });
+  });
+
+  function clearSelection() {
+    cy.elements().unselect();
+    document.getElementById("detail-empty").hidden = false;
+    document.getElementById("detail-content").hidden = true;
+  }
+
+  function showDetail(conceptId) {
+    const data = nodeIndex[conceptId];
+    if (!data) return;
+    cy.elements().unselect();
+    const node = cy.getElementById(conceptId);
+    if (node) node.select();
+
+    document.getElementById("detail-empty").hidden = true;
+    document.getElementById("detail").scrollTop = 0;
+    const content = document.getElementById("detail-content");
+    content.hidden = false;
+
+    const chip = document.getElementById("detail-type");
+    chip.textContent = data.type;
+    chip.style.background = data.color;
+
+    document.getElementById("detail-title").textContent = data.label;
+    document.getElementById("detail-id").textContent = conceptId;
+    document.getElementById("detail-description").textContent = data.description || "-";
+
+    const resourceEl = document.getElementById("detail-resource");
+    resourceEl.innerHTML = "";
+    if (data.resource) {
+      const a = document.createElement("a");
+      a.href = data.resource;
+      a.textContent = data.resource;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "external";
+      resourceEl.appendChild(a);
+    } else {
+      resourceEl.textContent = "-";
+    }
+
+    const tagsEl = document.getElementById("detail-tags");
+    tagsEl.innerHTML = "";
+    if (data.tags && data.tags.length) {
+      for (const t of data.tags) {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        tagsEl.appendChild(span);
+      }
+    } else {
+      tagsEl.textContent = "-";
+    }
+
+    const body = bundle.bodies[conceptId] || "";
+    const html = marked.parse(body, { breaks: false, gfm: true });
+    const bodyEl = document.getElementById("detail-body");
+    bodyEl.innerHTML = html;
+    rewriteInternalLinks(bodyEl, conceptId);
+
+    const bl = backlinks[conceptId] || [];
+    const blSection = document.getElementById("detail-backlinks");
+    const blList = document.getElementById("backlinks-list");
+    blList.innerHTML = "";
+    if (bl.length) {
+      blSection.hidden = false;
+      for (const src of bl) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = (nodeIndex[src]?.label || src).replace(/—/g, '-');
+        a.dataset.target = src;
+        a.addEventListener("click", () => showDetail(src));
+        li.appendChild(a);
+        const muted = document.createElement("span");
+        muted.className = "muted";
+        muted.textContent = ` (${src})`;
+        li.appendChild(muted);
+        blList.appendChild(li);
+      }
+    } else {
+      blSection.hidden = true;
+    }
+  }
+
+  function rewriteInternalLinks(root, sourceConceptId) {
+    const sourceDir = sourceConceptId ? sourceConceptId.substring(0, sourceConceptId.lastIndexOf("/")) : "";
+    root.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.endsWith(".md") && !href.startsWith("http")) {
+        let target = href.startsWith("/") ? href.slice(1) : href;
+        target = target.slice(0, -3);
+        if (!nodeIndex[target] && sourceDir && !target.includes("/")) {
+          target = sourceDir + "/" + target;
+        }
+        if (nodeIndex[target]) {
+          a.className = "internal";
+          a.textContent = nodeIndex[target].label.replace(/—/g, '-');
+          a.setAttribute("href", "javascript:void(0)");
+          a.addEventListener("click", (e) => { e.preventDefault(); showDetail(target); });
+          return;
+        }
+      }
+      a.className = "external";
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+    });
+  }
+
+  const initial = bundle.nodes[0];
+  if (initial) showDetail(initial.data.id);
+})();
+</script>
+</body>
+</html>
