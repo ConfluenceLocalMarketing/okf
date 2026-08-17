@@ -40,7 +40,7 @@ The AI Manifest (v1.0) provides a machine-readable directory of all AI resources
 - **Description:** Kruse Motors is proud to serve our customers around the Marshall area and worldwide as your certified dealer for Ford, Lincoln, Buick, and GMC.
 - **Last updated:** 2026-06-25T17:27:12.157Z
 - **Schema types:** LocalBusiness, AutoDealer, Car, ItemList
-- **Contact:** kendallbillman@gmail.com
+- **Contact:** adam@theautowarehouse.com
 
 ### Registered Endpoints
 
@@ -74,7 +74,7 @@ From `https://api.promptgraph.ai/api/v1/kruse-motors/business`:
 - **Address:** 1651 East College Drive, Marshall, MN 56258
 - **Geo:** 44.4516, -95.7517
 - **Telephone:** (507) 337-7500
-- **Email:** kendallbillman@gmail.com
+- **Email:** adam@theautowarehouse.com
 - **URL:** https://www.krusemotors.com/
 - **Aggregate Rating:** 4.6/5.0 (1,259 reviews)
 - **Date Modified:** 2026-02-03T15:05:04.755Z
