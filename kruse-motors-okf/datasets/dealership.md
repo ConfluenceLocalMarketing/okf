@@ -30,7 +30,7 @@ Kruse Motors is a multi-brand automotive dealership located in Marshall, MN, ser
 | GM Service Phone | (507) 401-2907 |
 | Ford Service Phone | (507) 537-0313 |
 | Main Phone | (507) 337-7500 |
-| Email | adam@theautowarehouse.com |
+| Email |  |
 
 ## Hours
 
