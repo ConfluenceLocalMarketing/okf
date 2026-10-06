@@ -29,3 +29,16 @@ TEST_SLUGS = [
 ]
 
 BUNDLE_SUFFIX = "-okf"
+
+ALIASES = {
+    "basil-resale": "basil-resale-sheridan",
+    "nick-mayer-dickson-bg": "dickson-bg",
+    "nick-mayer-dickson-chevy": "dickson-chevy",
+    "nick-mayer-lewisburg-chevy": "lewisburg-chevy",
+    "nick-mayer-lewisburg-gmc": "lewisburg-gmc",
+    "leif-johnson-ford-austin": "leif-johnson-austin",
+    "leif-johnson-ford-buda": "leif-johnson-buda",
+    "leif-johnson-ford-manor": "leif-johnson-manor",
+    "texantitle": "texan-title",
+    "memorial-hospital-converse-county": "memorial-hospital-of-converse-county",
+}
