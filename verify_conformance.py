@@ -1,44 +1,64 @@
-import os, yaml, sys
+import os
+import sys
+from pathlib import Path
 
-errors = []
-for bundle in ['jake-sweeney-used-car-superstore-okf', 'jake-sweeney-mazda-tri-county-okf', 'bmw-of-cincinnati-north-okf']:
+import yaml
+
+RESERVED = {"index.md", "log.md"}
+
+
+def check_bundle(bundle):
+    bundle = Path(bundle)
+    errors = []
     count = 0
-    for root, dirs, files in os.walk(bundle):
+    for root, _dirs, files in os.walk(bundle):
         for f in files:
-            if f == 'viz.html':
+            if not f.endswith(".md") or f == "viz.html":
                 continue
-            if not f.endswith('.md'):
-                continue
-            fp = os.path.join(root, f)
+            fp = Path(root) / f
             count += 1
-            is_index = f == 'index.md'
-            relative = os.path.relpath(fp)
+            if f in RESERVED:
+                continue
+            content = fp.read_text(encoding="utf-8")
+            rel = os.path.relpath(fp)
+            if not content.startswith("---"):
+                errors.append(f"{rel}: missing frontmatter")
+                continue
+            parts = content.split("---")
+            if len(parts) < 3:
+                errors.append(f"{rel}: malformed frontmatter")
+                continue
             try:
-                with open(fp, encoding='utf-8') as fh:
-                    content = fh.read()
-                if not content.startswith('---'):
-                    if not is_index:
-                        errors.append(f'{relative}: missing frontmatter')
-                    continue
-                parts = content.split('---')
-                if len(parts) < 3:
-                    if not is_index:
-                        errors.append(f'{relative}: malformed frontmatter')
-                    continue
                 fm = yaml.safe_load(parts[1])
-                if not is_index:
-                    if not fm or 'type' not in fm or not fm['type']:
-                        errors.append(f'{relative}: missing or empty type field')
             except Exception as e:
-                errors.append(f'{relative}: error - {e}')
-    
-    viz_exists = os.path.exists(os.path.join(bundle, 'viz.html'))
-    print(f'{bundle}: {count} md files, viz.html={viz_exists}')
+                errors.append(f"{rel}: bad yaml - {e}")
+                continue
+            if not fm or not fm.get("type"):
+                errors.append(f"{rel}: missing or empty type field")
+    return errors, count
 
-if errors:
-    print(f'\nERRORS ({len(errors)}):')
-    for e in errors:
-        print(f'  {e}')
-    sys.exit(1)
-else:
-    print('\nAll bundles conformant.')
+
+def discover_bundles(root="."):
+    return sorted(
+        p for p in Path(root).iterdir() if p.is_dir() and p.name.endswith("-okf")
+    )
+
+
+def main(bundles=None):
+    bundles = bundles or discover_bundles()
+    all_errors = []
+    for b in bundles:
+        errors, count = check_bundle(b)
+        print(f"{b}: {count} md files, viz.html={(Path(b) / 'viz.html').exists()}")
+        all_errors.extend(errors)
+    if all_errors:
+        print(f"\nERRORS ({len(all_errors)}):")
+        for e in all_errors:
+            print(f"  {e}")
+        return 1
+    print(f"\nAll {len(bundles)} bundles conformant.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
