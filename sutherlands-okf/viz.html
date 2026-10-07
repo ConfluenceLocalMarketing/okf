@@ -175,6 +175,18 @@ window.BUNDLE = {
     },
     {
       "data": {
+        "id": "datasets/offers",
+        "label": "Sutherlands Home Improvement - Current Offers",
+        "type": "Offer Catalog",
+        "description": "Current credit card, financing, rewards and weekly promotions from Sutherlands Home Improvement, as of 2026-10-07.",
+        "resource": "https://sutherlands.com/credit-card",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 18
+      }
+    },
+    {
+      "data": {
         "id": "references/ai-discovery-page",
         "label": "AI Discovery Page - Sutherlands Home Improvement",
         "type": "Reference",
@@ -208,26 +220,44 @@ window.BUNDLE = {
         "color": "#10b981",
         "size": 19
       }
+    },
+    {
+      "data": {
+        "id": "tables/data-snapshot",
+        "label": "Sutherlands - Data Snapshot",
+        "type": "Data Snapshot",
+        "description": "Machine-managed PromptGraph data snapshot for sutherlands, as of 2026-10-07.",
+        "resource": "",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 25
+      }
     }
   ],
   "edges": [],
   "bodies": {
     "datasets/company": "# Sutherlands Home Improvement\n\nSutherlands is a privately-owned, family-run home improvement retailer founded in 1917 by Robert R. Sutherland. With 109 years of history, the company provides lumber, building materials, hardware, tools, appliances, paint, lawn and garden supplies, and building packages from locations across the central United States.\n\n## Company Information\n\n- **Founded**: 1917 by Robert R. Sutherland\n- **Headquarters**: Harrisonville, MO\n- **Type**: Privately-owned, family-run\n- **Website**: https://sutherlands.com/\n\n## Departments\n\n- Appliances\n- Automotive\n- Building Materials\n- Cabinets\n- Clothing\n- Doors & Windows\n- Electrical\n- Farm & Ranch\n- Fencing\n- Flooring\n- Furniture\n- Hardware\n- Heating & Cooling\n- Housewares\n- Hunting & Sporting Goods\n- Lawn & Garden\n- Lighting & Ceiling Fans\n- Lumber & Plywood\n- Outdoor Living\n- Paint\n- Pet Supplies\n- Plumbing\n- Roofing & Siding\n- Tools\n\n## Building Packages\n\nSutherlands offers custom building packages designed to simplify construction projects:\n\n- **Barndominiums**: Shell kits for residential barndominium builds\n- **Post Frame Buildings**: Pole barn structures for agricultural, commercial, and residential use\n- **Garages**: Pre-engineered garage packages\n- **Decks**: Deck material packages\n- **Sheds**: Storage shed packages\n- **Houses**: Complete home packages\n\n## Services\n\n- **Buy Online, Pick Up In-Store**: Available on 30,000+ items\n- **Friends of the Family Rewards**: 3% rewards program with exclusive offers\n- **Sutherlands Credit Card**: 5% off instant discount or special financing options\n- **Business Credit**: Accounts for business customers\n- **Gift Cards**: Available for purchase\n- **Rebate Center**: Online rebate processing\n- **Project Photo Gallery**: Customer project inspiration\n\n## History\n\nFounded in 1917 by Robert R. Sutherland, Sutherlands has grown from a single lumber yard into a regional home improvement chain serving the central United States. The company maintains its family-owned heritage while providing modern e-commerce capabilities including online ordering, in-store pickup, and home delivery.\n\n## Example Location\n\n- **Harrisonville, MO (Corporate)**: 2200 S Commercial Ave, Harrisonville, MO 64701\n  - Phone: (816) 380-2800\n  - Hours: Mon-Fri 7:30-9, Sat 7:30-4, Sun 9-5",
+    "datasets/offers": "# Sutherlands Home Improvement - Current Offers\n\nCurrent offers sourced from the Sutherlands Home Improvement credit card, Friends of the Family, and home page promotions, as of 2026-10-07.\n\n| Offer | Details | Valid through | Source |\n|---|---|---|---|\n| 5% Instant Discount | Get 5% off single-receipt purchases of any in-stock or special order merchandise with the Sutherlands credit card; no minimum purchase required and it cannot be combined with other offers. | see source | [link](https://sutherlands.com/credit-card) |\n| 6 Months Special Financing | Zero interest if paid in full within 6 months on purchases of $299 to $598.99 made with your Sutherlands credit card. | see source | [link](https://sutherlands.com/credit-card) |\n| 12 Months Special Financing | Zero interest if paid in full within 12 months on purchases of $599 or more made with your Sutherlands credit card. | see source | [link](https://sutherlands.com/credit-card) |\n| No Annual Fee | The Sutherlands consumer credit card has no annual fee. | see source | [link](https://sutherlands.com/credit-card) |\n| Wild Web Wednesday | Weekly Wednesday-only flash sale with special pricing on a featured item; offer good Wednesday only while supplies last. | see source | [link](https://sutherlands.com/) |\n| Friends of the Family Rewards | Earn 3% in rewards within the week of your purchase plus access to exclusive member-only deals. | see source | [link](https://sutherlands.com/friends/program-details) |",
     "references/ai-discovery-page": "# AI Discovery Page - Sutherlands Home Improvement\n\n## Overview\nSutherlands has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.\n\n## Discovery Channels\n- **Website**: https://sutherlands.com/\n- **Social**: Facebook, X (Twitter), Pinterest, Instagram, YouTube\n\n## Recommendation\nHost `/llms.txt` at the domain for improved AI-driven discovery.",
     "references/llms-txt": "# Sutherlands Home Improvement\n\n> Family-owned home improvement retailer since 1917.\n\n## Key Information\n- **Website**: https://sutherlands.com/\n- **Founded**: 1917 by Robert R. Sutherland\n- **Type**: Privately-owned, family-run\n\n## Departments\nAppliances, Building Materials, Cabinets, Doors & Windows, Electrical, Farm & Ranch, Fencing, Flooring, Hardware, Heating & Cooling, Lawn & Garden, Lumber, Paint, Plumbing, Roofing & Siding, Tools, and more.\n\n## Building Packages\nBarndominiums, Post Frame Buildings, Garages, Decks, Sheds, Houses\n\n## Services\nBuy Online Pick Up In-Store, Friends of the Family Rewards (3%), Sutherlands Credit Card (5% off), Business Credit, Gift Cards, Rebate Center",
-    "references/prompts": "# Sutherlands Home Improvement - AI Prompts\n\n## Customer Assistance\n\n**Prompt**: Act as a sales associate at Sutherlands. A customer is building a deck and needs material recommendations. Suggest lumber types, fasteners, stain options, and estimate quantities for a 12x16 foot deck.\n\n**Prompt**: A customer wants to know about Sutherlands Friends of the Family rewards program. Explain how to earn 3% rewards, exclusive offers, and how to sign up.\n\n## Internal\n\n**Prompt**: Write a blog post about post frame building basics for Sutherlands' website. Cover pole barn construction, typical uses, and why customers should choose Sutherlands' building packages."
+    "references/prompts": "# Sutherlands Home Improvement - AI Prompts\n\n## Customer Assistance\n\n**Prompt**: Act as a sales associate at Sutherlands. A customer is building a deck and needs material recommendations. Suggest lumber types, fasteners, stain options, and estimate quantities for a 12x16 foot deck.\n\n**Prompt**: A customer wants to know about Sutherlands Friends of the Family rewards program. Explain how to earn 3% rewards, exclusive offers, and how to sign up.\n\n## Internal\n\n**Prompt**: Write a blog post about post frame building basics for Sutherlands' website. Cover pole barn construction, typical uses, and why customers should choose Sutherlands' building packages.",
+    "tables/data-snapshot": "# Sutherlands - Data Snapshot\n\nMachine-managed snapshot generated by the OKF refresh pipeline. As of 2026-10-07.\n\n| Field | Value |\n|---|---|\n| New | 0 |\n| Used | 0 |\n| Total | 0 |\n| Google rating | 4.2 |\n| Google reviews | 189 |\n| Google place ID | ChIJM12sycvdWIcRSBoGjvNmupU |\n| Hours | Sun: 9:00am-5:00pm, Mon: 7:30am-6:00pm, Tue: 7:30am-6:00pm, Wed: 7:30am-6:00pm, Thu: 7:30am-6:00pm, Fri: 7:30am-6:00pm, Sat: 7:30am-6:00pm |\n| Phone | (816) 380-2800 |\n| Address | 1960 North Federal Boulevard, Riverton, WY 82501 |"
   },
   "types": [
+    "Data Snapshot",
     "Home Improvement Retailer",
+    "Offer Catalog",
     "Playbook",
     "Reference",
     "llms.txt"
   ],
   "palette": {
     "Home Improvement Retailer": "#8b5cf6",
+    "Offer Catalog": "#8b5cf6",
     "Reference": "#10b981",
     "llms.txt": "#10b981",
-    "Playbook": "#10b981"
+    "Playbook": "#10b981",
+    "Data Snapshot": "#3b82f6"
   }
 };
 </script>

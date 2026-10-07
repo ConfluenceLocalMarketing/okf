@@ -175,6 +175,18 @@ window.BUNDLE = {
     },
     {
       "data": {
+        "id": "datasets/offers",
+        "label": "Rural Nevada Development Corporation - Current Offers",
+        "type": "Offer Catalog",
+        "description": "Current I-80 Fund small business loan offer from Rural Nevada Development Corporation, as of 2026-10-07.",
+        "resource": "https://www.rndcnv.org/i-80-fund",
+        "tags": [],
+        "color": "#8b5cf6",
+        "size": 18
+      }
+    },
+    {
+      "data": {
         "id": "references/ai-discovery-page",
         "label": "AI Discovery Page - Rural Nevada Development Corporation",
         "type": "Reference",
@@ -208,26 +220,44 @@ window.BUNDLE = {
         "color": "#10b981",
         "size": 19
       }
+    },
+    {
+      "data": {
+        "id": "tables/data-snapshot",
+        "label": "Rndc Rural Nevada - Data Snapshot",
+        "type": "Data Snapshot",
+        "description": "Machine-managed PromptGraph data snapshot for rndc-rural-nevada, as of 2026-10-07.",
+        "resource": "",
+        "tags": [],
+        "color": "#3b82f6",
+        "size": 25
+      }
     }
   ],
   "edges": [],
   "bodies": {
     "datasets/company": "# Rural Nevada Development Corporation (RNDC)\n\nRural Nevada Development Corporation (RNDC) is a non-profit Community Development Financial Institution (CDFI) founded in 1992 to support business finance and community housing development across rural Nevada. The organization provides small business financing, down payment assistance, home rehabilitation, weatherization, and multi-family housing to low- and moderate-income families, with special focus on rural communities and Native American Tribes.\n\n## Location\n\n- **Address**: 1320 E. Aultman Street, Ely, NV 89301\n- **Phone**: (866) 404-5204\n- **Fax**: (775) 289-8214\n- **Email**: info@rndcnv.org\n- **Service Area**: Rural Nevada communities\n\n## Services\n\n### Business Services\n- **Small Business Lending**: Loans for rural entrepreneurs to grow their businesses\n- **I-80 Fund**: Low-interest loan program for small businesses along the I-80 corridor, established in partnership with Nevada Gold Mines\n\n### Housing Services\n- **Down Payment Assistance**: Help for low-income, first-time home buyers with purchasing residential properties meeting HUD Housing Quality Standards\n- **Homeowner Rehabilitation**: Repairs addressing accessibility needs, energy conservation, and home safety\n- **Weatherization**: Energy conservation measures to reduce utility bills\n\n### Multi-Family Projects\n- **John Marvel Senior Village**: Senior housing development\n- **Wells Golden Village**: Multi-family housing project\n\n## Features\n\n- Founded in 1992\n- Federally designated CDFI\n- Partners with federal, state, and local entities\n- Non-profit 501(c)(3) organization\n- Equal Opportunity Lender\n- Partners with Nevada Gold Mines",
+    "datasets/offers": "# Rural Nevada Development Corporation - Current Offers\n\nCurrent offers sourced from the Rural Nevada Development Corporation I-80 Fund page, as of 2026-10-07.\n\n| Offer | Details | Valid through | Source |\n|---|---|---|---|\n| I-80 Fund Small Business Loan | Small business loans from $5,000 to $250,000 at a fixed 2% interest rate that increases to 3.75% after two years; eligible businesses must be located in Humboldt, Lander, Eureka, or Elko counties. | see source | [link](https://www.rndcnv.org/i-80-fund) |",
     "references/ai-discovery-page": "# AI Discovery Page - Rural Nevada Development Corporation\n\n## Overview\nRNDC has no AI-specific discovery files. An llms.txt and prompts.md have been synthesized.\n\n## Discovery Channels\n- **Website**: https://rndcnv.org/\n- **Social**: Facebook\n\n## Recommendation\nHost `/llms.txt` at the domain for improved AI-driven discovery of loan programs and services.",
     "references/llms-txt": "# Rural Nevada Development Corporation\n\n> Non-profit CDFI serving rural Nevada since 1992.\n\n## Key Information\n- **Address**: 1320 E. Aultman Street, Ely, NV 89301\n- **Website**: https://rndcnv.org/\n- **Phone**: (866) 404-5204\n- **Email**: info@rndcnv.org\n\n## Business Services\nSmall Business Lending, I-80 Fund (with Nevada Gold Mines)\n\n## Housing Services\nDown Payment Assistance, Homeowner Rehabilitation, Weatherization\n\n## Multi-Family\nJohn Marvel Senior Village, Wells Golden Village",
-    "references/prompts": "# Rural Nevada Development Corporation - AI Prompts\n\n## Client Inquiries\n\n**Prompt**: Act as a loan officer at Rural Nevada Development Corporation. A small business owner in Ely, NV wants to apply for a small business loan. Describe the application process, eligibility requirements, and how RNDC supports rural entrepreneurs.\n\n**Prompt**: A prospective first-time home buyer in rural Nevada asks about down payment assistance programs. Explain the eligibility criteria, HUD requirements, and how to apply through RNDC.\n\n## Internal\n\n**Prompt**: Write a newsletter article about the I-80 Fund partnership between RNDC and Nevada Gold Mines. Highlight how low-interest loans are helping small businesses along the I-80 corridor."
+    "references/prompts": "# Rural Nevada Development Corporation - AI Prompts\n\n## Client Inquiries\n\n**Prompt**: Act as a loan officer at Rural Nevada Development Corporation. A small business owner in Ely, NV wants to apply for a small business loan. Describe the application process, eligibility requirements, and how RNDC supports rural entrepreneurs.\n\n**Prompt**: A prospective first-time home buyer in rural Nevada asks about down payment assistance programs. Explain the eligibility criteria, HUD requirements, and how to apply through RNDC.\n\n## Internal\n\n**Prompt**: Write a newsletter article about the I-80 Fund partnership between RNDC and Nevada Gold Mines. Highlight how low-interest loans are helping small businesses along the I-80 corridor.",
+    "tables/data-snapshot": "# Rndc Rural Nevada - Data Snapshot\n\nMachine-managed snapshot generated by the OKF refresh pipeline. As of 2026-10-07.\n\n| Field | Value |\n|---|---|\n| New | 0 |\n| Used | 0 |\n| Total | 0 |\n| Google rating | 4.9 |\n| Google reviews | 28 |\n| Google place ID | ChIJ7YkYb6OssYARk0aS_iKu2Zg |\n| Hours | Mon: 7:30am-12:00pm, 1:00pm-4:30pm, Tue: 7:30am-12:00pm, 1:00pm-4:30pm, Wed: 7:30am-12:00pm, 1:00pm-4:30pm, Thu: 7:30am-12:00pm, 1:00pm-4:30pm, Fri: 7:30am-12:00pm, 1:00pm-4:30pm |\n| Phone | (866) 404-5204 |\n| Address | 1320 Aultman Street, Ely, Nevada 89301-2513 |"
   },
   "types": [
     "Community Development Financial Institution",
+    "Data Snapshot",
+    "Offer Catalog",
     "Playbook",
     "Reference",
     "llms.txt"
   ],
   "palette": {
     "Community Development Financial Institution": "#8b5cf6",
+    "Offer Catalog": "#8b5cf6",
     "Reference": "#10b981",
     "llms.txt": "#10b981",
-    "Playbook": "#10b981"
+    "Playbook": "#10b981",
+    "Data Snapshot": "#3b82f6"
   }
 };
 </script>
