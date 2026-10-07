@@ -23,5 +23,4 @@ McLarty Nissan of Little Rock is a full-service Nissan dealership in Little Rock
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for mclarty-nissan-of-little-rock, as of 2026-10-07.

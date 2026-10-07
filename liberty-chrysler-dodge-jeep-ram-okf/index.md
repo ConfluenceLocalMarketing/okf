@@ -23,5 +23,4 @@ Liberty Chrysler Dodge Jeep Ram is a CDJR dealership in Libertyville, IL, servin
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for liberty-chrysler-dodge-jeep-ram, as of 2026-10-07.

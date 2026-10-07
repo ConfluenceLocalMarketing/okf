@@ -23,5 +23,4 @@ Frank Leta Buick GMC is a Buick and GMC dealership in Cape Girardeau, MO, part o
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for frank-leta-buick-gmc, as of 2026-10-07.

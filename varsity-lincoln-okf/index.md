@@ -27,6 +27,7 @@ OKF v0.1 bundle for Varsity Lincoln, the #1 Volume Lincoln Dealer in the World f
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/tables/model-comparison.md) - Lincoln model comparison across class, passengers, drivetrain, MSRP, and key features.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for varsity-lincoln, as of 2026-10-07.
 
 ## Relationships
 

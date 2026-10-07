@@ -2,3 +2,4 @@
 
 - [lodging-accommodations.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/tables/lodging-accommodations.md) - Hotel and lodging properties in West Yellowstone with room counts and property types.
 - [seasonal-activities.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/tables/seasonal-activities.md) - Year-round recreational activities available in and around West Yellowstone.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-yellowstone/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for west-yellowstone, as of 2026-10-07.

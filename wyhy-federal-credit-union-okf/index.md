@@ -19,3 +19,4 @@ OKF v0.1 bundle for WyHy Federal Credit Union - a member-owned, not-for-profit c
 ## Tables
 
 - [index.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/tables/index.md) - Table index (no standalone table concepts).
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for wyhy-federal-credit-union, as of 2026-10-07.

@@ -23,5 +23,4 @@ Mercedes-Benz of Caldwell is a distinguished luxury automotive dealership in Cal
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mercedes-benz-of-caldwell/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mercedes-benz-of-caldwell/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for mercedes-benz-of-caldwell, as of 2026-10-07.

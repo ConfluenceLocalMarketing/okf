@@ -23,5 +23,4 @@ Frank Leta Mitsubishi is a premier Mitsubishi dealership in Bridgeton, Missouri,
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for frank-leta-mitsubishi, as of 2026-10-07.

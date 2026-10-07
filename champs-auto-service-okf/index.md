@@ -21,5 +21,4 @@ Champs Auto Service (dba Champ Auto Repairs) is a family-oriented auto repair sh
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/champs-auto-service/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/champs-auto-service/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for champs-auto-service, as of 2026-10-07.

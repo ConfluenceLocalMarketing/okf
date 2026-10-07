@@ -24,6 +24,7 @@ okf_version: "0.1"
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/tables/model-comparison.md) - Side-by-side comparison of all new Mazda models including body type, drivetrain, seating, features, trims, and warranty
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for jake-sweeney-mazda-tri-county, as of 2026-10-07.
 
 ## Relationships
 

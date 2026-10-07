@@ -18,6 +18,7 @@ okf_version: "0.1"
 ## Tables
 
 - [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-university-city-mo/tables/coupons.md) - Current promotional offers, coupons, and financing options
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-university-city-mo/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for car-x-university-city-mo, as of 2026-10-07.
 
 ## Relationships
 

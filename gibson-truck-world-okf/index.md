@@ -25,3 +25,4 @@ This bundle documents Gibson Truck World, the largest used truck dealership in F
 ## Tables
 
 (No structured tables yet.)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/gibson-truck-world/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for gibson-truck-world, as of 2026-10-07.

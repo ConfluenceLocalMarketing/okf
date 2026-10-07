@@ -25,3 +25,4 @@ OKF v0.1 bundle for Leif Johnson Ford of Austin, a full-service Ford dealership 
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/tables/model-comparison.md) - Ford model comparison across body type, fuel options, passenger capacity, and competitors.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for leif-johnson-ford-austin, as of 2026-10-07.

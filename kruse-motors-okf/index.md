@@ -24,6 +24,7 @@ okf_version: "0.1"
 ## Tables
 
 - [brand-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/tables/brand-comparison.md) - Side-by-side comparison of the four automotive brands available at Kruse Motors - Ford, Lincoln, Buick, and GMC - covering positioning, popular models, key features, and target buyer.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for kruse-motors, as of 2026-10-07.
 
 ## Relationships
 
