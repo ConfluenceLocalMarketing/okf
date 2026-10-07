@@ -5,4 +5,3 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montclare-auto-repair/datasets/service-center.md) - Full-service auto repair facility with ASE Certified technicians, towing, and customer amenities.
 - [services.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montclare-auto-repair/datasets/services.md) - Full-service auto repair, maintenance, and towing with ASE Certified technicians.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montclare-auto-repair/datasets/staff.md) - Meet the team including ASE Certified technicians, service advisors, and support staff.
-- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montclare-auto-repair/datasets/offers.md) - Current purchase, lease, and finance offers for Montclare Auto Repair, as of 2026-10-07.

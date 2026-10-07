@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/datasets/service-center.md) - Multi-brand service centers across the West Hills Autoplex offering routine maintenance, diagnostics, major repairs, and genuine OEM parts
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and auto group operations
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/datasets/financing.md) - Vehicle financing and leasing options across the West Hills Autoplex including online credit application and trade-in valuation
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-auto-group/datasets/offers.md) - Current manufacturer cash, finance and lease incentives across Haselwood Auto Group brands
 
 ## References
 

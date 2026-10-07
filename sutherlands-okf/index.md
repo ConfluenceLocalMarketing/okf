@@ -9,6 +9,7 @@ This bundle documents Sutherlands Home Improvement, a family-owned retailer sinc
 ## Datasets
 
 - [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/sutherlands/datasets/company.md) - Full business profile: departments, building packages, services, history.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/sutherlands/datasets/offers.md) - Current credit card, financing, rewards and weekly promotions from Sutherlands Home Improvement.
 
 ## References
 

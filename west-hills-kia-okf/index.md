@@ -13,7 +13,6 @@ okf_version: "0.1"
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/datasets/service-center.md) - Kia-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Kia parts department
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators
-- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-kia/datasets/offers.md) - Current purchase, lease, and finance offers for West Hills Kia, as of 2026-10-07.
 
 ## References
 

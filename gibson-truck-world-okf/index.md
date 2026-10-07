@@ -15,6 +15,7 @@ This bundle documents Gibson Truck World, the largest used truck dealership in F
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/gibson-truck-world/datasets/service-center.md) - Full-service maintenance, repair, and custom lift installation by GTW Customs.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/gibson-truck-world/datasets/staff.md) - Truck sales, GTW Customs, service, and management in Sanford, FL.
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/gibson-truck-world/datasets/used-vehicles.md) - High-quality pre-owned trucks, cars, and SUVs with 135-point inspection.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/gibson-truck-world/datasets/offers.md) - Current warranty, exchange, financing and internet special offers from Gibson Truck World.
 
 ## References
 
