@@ -1,6 +1,7 @@
 import re
 
 _WS_RE = re.compile(r"\s+")
+_DATE_RE = re.compile(r"(\d{4}-\d{2}-\d{2})")
 _DASHES = {"\u2013": "-", "\u2014": "-", "\u2212": "-", "\u2010": "-", "\u2011": "-"}
 
 
@@ -39,6 +40,17 @@ def _date(iso):
     if not iso:
         return "see source"
     return iso[:10]
+
+
+def is_valid(offer, as_of):
+    match = _DATE_RE.search(offer.get("valid_through") or "")
+    if not match:
+        return True
+    return match.group(1) >= as_of
+
+
+def valid_offers(offers, as_of):
+    return [offer for offer in offers if is_valid(offer, as_of)]
 
 
 def render_offers(bundle_dir, name, slug, offers, as_of, source_url=None):

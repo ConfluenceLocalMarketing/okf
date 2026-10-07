@@ -46,6 +46,16 @@ class TestOffers(unittest.TestCase):
         md = offers.render_offers("acme-okf", "Acme", "acme", [], "2026-10-07")
         self.assertIn("| Offer | Details |", md)
 
+    def test_valid_offers_drops_expired_keeps_undated(self):
+        parsed = offers.parse_offers(PAYLOAD)
+        self.assertEqual(len(offers.valid_offers(parsed, "2026-10-07")), 1)
+        self.assertEqual(len(offers.valid_offers(parsed, "2026-12-01")), 0)
+
+    def test_is_valid_reads_date_from_text_cell(self):
+        offer = {"valid_through": "2026-03-31 (per source)"}
+        self.assertFalse(offers.is_valid(offer, "2026-10-07"))
+        self.assertTrue(offers.is_valid({"valid_through": "see source"}, "2026-10-07"))
+
 
 if __name__ == "__main__":
     unittest.main()
