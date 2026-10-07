@@ -15,6 +15,7 @@ Frank Leta Buick GMC is a Buick and GMC dealership in Cape Girardeau, MO, part o
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/datasets/service-center.md) - Certified service center with body shop
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/datasets/staff.md) - Key dealership staff members
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/used-vehicles.md) - Pre-owned vehicle inventory
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/datasets/offers.md) - Current purchase, lease, and finance offers for Frank Leta Buick GMC, as of 2026-10-07.
 
 ## References
 
@@ -23,5 +24,4 @@ Frank Leta Buick GMC is a Buick and GMC dealership in Cape Girardeau, MO, part o
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for frank-leta-buick-gmc, as of 2026-10-07.

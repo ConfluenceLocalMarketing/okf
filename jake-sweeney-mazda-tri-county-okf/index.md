@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/service-center.md) - Service center details, routine maintenance, diagnostics, major repairs, and parts department
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/datasets/offers.md) - Current purchase, lease, and finance offers for Jake Sweeney Mazda Tri-County, as of 2026-10-07.
 
 ## References
 
@@ -24,6 +25,7 @@ okf_version: "0.1"
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/tables/model-comparison.md) - Side-by-side comparison of all new Mazda models including body type, drivetrain, seating, features, trims, and warranty
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-mazda-tri-county/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for jake-sweeney-mazda-tri-county, as of 2026-10-07.
 
 ## Relationships
 

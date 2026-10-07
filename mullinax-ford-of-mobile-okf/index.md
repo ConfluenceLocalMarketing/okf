@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of Mobile, a
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/staff.md) - Staff directory covering sales, internet sales, finance, service, parts, and accounting departments with contact details.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/faq.md) - Common questions and answers about financing, no-dealer-fee pricing, and dealership operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/financing.md) - Vehicle financing options including online credit application, no-money-down programs, bad-credit financing, and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/offers.md) - Current purchase, lease, and finance offers for Mullinax Ford of Mobile | Dealership, as of 2026-10-07.
 
 ## References
 
@@ -28,6 +29,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of Mobile, a
 - [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/tables/contact.md) - Consolidated phone directory and address for sales, service, parts, financing, and general inquiries.
 - [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/tables/hours.md) - Sales, service, and parts operating hours.
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/tables/model-comparison.md) - Side-by-side comparison of key Ford models by body type, fuel options, seating, and typical buyer.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for mullinax-ford-of-mobile, as of 2026-10-07.
 
 ## Relationships
 

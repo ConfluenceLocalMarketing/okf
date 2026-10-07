@@ -7,3 +7,4 @@
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/staff.md) - Staff directory covering leadership, sales, service, collision, parts, and finance.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/faq.md) - Common questions about buying, financing, trading in, and servicing.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/financing.md) - No-hassle financing and leasing with Ford program offers.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/offers.md) - Current purchase, lease, and finance offers for Friendly Ford, as of 2026-10-07.

@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/service-center.md) - GM-certified service center
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/staff.md) - Key dealership team members
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/used-vehicles.md) - Certified pre-owned and quality used vehicles
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/offers.md) - Current purchase, lease, and finance offers for Willis Chevrolet Of Granger, as of 2026-10-07.

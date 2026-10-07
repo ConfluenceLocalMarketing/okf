@@ -15,6 +15,7 @@ Columbia Honda is a Honda dealership in Columbia, MO, serving Jefferson City, Mo
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/columbia-honda/datasets/service-center.md) - Honda-trained service center
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/columbia-honda/datasets/staff.md) - Key dealership staff members
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/columbia-honda/datasets/used-vehicles.md) - Pre-owned vehicle inventory and CPO program
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/columbia-honda/datasets/offers.md) - Current purchase, lease, and finance offers for Columbia Honda, as of 2026-10-07.
 
 ## References
 
@@ -23,5 +24,4 @@ Columbia Honda is a Honda dealership in Columbia, MO, serving Jefferson City, Mo
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/columbia-honda/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/columbia-honda/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for columbia-honda, as of 2026-10-07.

@@ -15,6 +15,7 @@ OKF v0.1 bundle for Leif Johnson Ford of Buda (formerly Truck City Ford), a full
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/staff.md) - 27 team members across management, sales, service, and parts.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/faq.md) - Common customer questions about vehicles, financing, service, and operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/datasets/financing.md) - Purchase financing, leasing, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-buda/datasets/offers.md) - Current purchase, lease, and finance offers for Leif Johnson Ford of Buda, as of 2026-10-07.
 
 ## References
 
@@ -25,3 +26,4 @@ OKF v0.1 bundle for Leif Johnson Ford of Buda (formerly Truck City Ford), a full
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/tables/model-comparison.md) - Ford model comparison across body type, fuel options, passenger capacity, and competitors.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-buda/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for leif-johnson-ford-buda, as of 2026-10-07.

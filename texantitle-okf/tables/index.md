@@ -1,2 +1,3 @@
 - [locations-matrix.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/tables/locations-matrix.md) - Comparison matrix of all 27 Texan Title offices organized by region with contact details.
 - [underwriters.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/tables/underwriters.md) - Comparison of 9 title insurance underwriters represented by Texan Title.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for texantitle, as of 2026-10-07.

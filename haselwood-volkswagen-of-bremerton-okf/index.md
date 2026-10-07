@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/datasets/staff.md) - Staff directory including management, sales consultants, service advisors, and finance team
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/datasets/service-center.md) - Volkswagen-certified service center details, routine maintenance, diagnostics, major repairs, and genuine VW parts department
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/datasets/offers.md) - Current purchase, lease, and finance offers for Haselwood Volkswagen, as of 2026-10-07.
 
 ## References
 
@@ -24,6 +25,7 @@ okf_version: "0.1"
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/tables/model-comparison.md) - Side-by-side comparison of all new Volkswagen models including body type, drivetrain, seating, features, trims, and towing
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-volkswagen-of-bremerton/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for haselwood-volkswagen-of-bremerton, as of 2026-10-07.
 
 ## Relationships
 

@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of Kissimmee
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/staff.md) - Staff and team directory for Mullinax Ford of Kissimmee.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/faq.md) - Common questions and answers about buying, ordering and financing at Mullinax Ford of Kissimmee.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/financing.md) - Auto financing and leasing at Mullinax Ford of Kissimmee, including online pre-approval, payment calculator and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/offers.md) - Current purchase, lease, and finance offers for Mullinax Ford of Kissimmee | Dealership, as of 2026-10-07.
 
 ## References
 
@@ -29,6 +30,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of Kissimmee
 - [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/hours.md) - Sales, service, parts, and Quick Lane operating hours.
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/model-comparison.md) - Side-by-side comparison of key Ford models by body type, fuel options, seating, and typical buyer.
 - [no-dealer-fee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/no-dealer-fee.md) - Dealer fee comparison showing Mullinax Ford of Kissimmee charges a $0 dealer fee while competitor dealerships across Florida charge $648 to $6,579.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for mullinax-ford-of-kissimmee, as of 2026-10-07.
 
 ## Relationships
 

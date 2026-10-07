@@ -7,3 +7,4 @@
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/staff.md) - Staff directory covering sales, internet sales, finance, service, parts, and accounting departments with contact details.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/faq.md) - Common questions and answers about financing, no-dealer-fee pricing, and dealership operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/financing.md) - Vehicle financing options including online credit application, no-money-down programs, bad-credit financing, and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-mobile/datasets/offers.md) - Current purchase, lease, and finance offers for Mullinax Ford of Mobile | Dealership, as of 2026-10-07.

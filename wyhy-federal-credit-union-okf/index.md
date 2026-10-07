@@ -9,6 +9,7 @@ OKF v0.1 bundle for WyHy Federal Credit Union - a member-owned, not-for-profit c
 ## Datasets
 
 - [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/datasets/company.md) - Member-owned credit union founded in 1953 serving Wyoming residents with personal and business banking, loans, mortgages, online banking, and community-focused financial services from branches in Cheyenne, Casper, Green River, Lyman, and Rock Springs.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/datasets/offers.md) - Current savings, certificate, credit card and referral offers from WyHy Federal Credit Union.
 
 ## References
 
@@ -19,3 +20,4 @@ OKF v0.1 bundle for WyHy Federal Credit Union - a member-owned, not-for-profit c
 ## Tables
 
 - [index.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/tables/index.md) - Table index (no standalone table concepts).
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/wyhy-federal-credit-union/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for wyhy-federal-credit-union, as of 2026-10-07.

@@ -19,3 +19,4 @@ This bundle documents Xcelerated Data, a consumer data platform delivering ident
 ## Tables
 
 (No structured tables yet.)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/xcelerated/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for xcelerated, as of 2026-10-07.

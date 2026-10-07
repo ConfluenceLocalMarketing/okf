@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/datasets/service-center.md) - Mazda-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Mazda parts department
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/datasets/offers.md) - Current purchase, lease, and finance offers for West Hills Mazda, as of 2026-10-07.
 
 ## References
 
@@ -24,6 +25,7 @@ okf_version: "0.1"
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/tables/model-comparison.md) - Side-by-side comparison of all new Mazda models including body type, drivetrain, seating, features, trims, towing, and warranty
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-mazda/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for west-hills-mazda, as of 2026-10-07.
 
 ## Relationships
 

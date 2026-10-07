@@ -34,6 +34,7 @@ Knowledge bundle for [Texan Title](https://texantitle.com/), an independent Texa
 |------|------|-------------|
 | [locations-matrix.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/tables/locations-matrix.md) | Tables and Datasets | 27-office comparison matrix by region |
 | [underwriters.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/tables/underwriters.md) | Tables and Datasets | 9 underwriter partners comparison |
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/texantitle/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for texantitle, as of 2026-10-07.
 
 ## Relationships
 

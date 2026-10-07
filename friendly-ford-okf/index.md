@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Friendly Ford, a Ford deal
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/staff.md) - Staff directory covering leadership, sales, service, collision, parts, and finance.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/faq.md) - Common questions about buying, financing, trading in, and servicing.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/financing.md) - No-hassle financing and leasing with Ford program offers.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/datasets/offers.md) - Current purchase, lease, and finance offers for Friendly Ford, as of 2026-10-07.
 
 ## References
 
@@ -28,6 +29,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Friendly Ford, a Ford deal
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/tables/model-comparison.md) - Comparison of the Ford lineup by segment and powertrain.
 - [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/tables/hours.md) - Operating hours for sales, service, and parts.
 - [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/tables/contact.md) - Consolidated phone directory, address, and website.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-ford/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for friendly-ford, as of 2026-10-07.
 
 ## Relationships
 

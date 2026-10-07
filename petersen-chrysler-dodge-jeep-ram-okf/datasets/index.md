@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/service-center.md) - Factory-trained Mopar service with Express Lane quick repairs.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/staff.md) - Sales, finance, service, and parts professionals in Nampa, ID.
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/used-vehicles.md) - Quality pre-owned vehicles and commercial work trucks in Nampa, ID.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/petersen-chrysler-dodge-jeep-ram/datasets/offers.md) - Current purchase, lease, and finance offers for Petersen Chrysler Dodge Jeep Ram, as of 2026-10-07.

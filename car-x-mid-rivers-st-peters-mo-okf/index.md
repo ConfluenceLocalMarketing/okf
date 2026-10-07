@@ -17,7 +17,9 @@ okf_version: "0.1"
 
 ## Tables
 
+- [specials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-mid-rivers-st-peters-mo/tables/specials.md) - Current service and parts specials and coupons for Car-X Tire & Auto in Mid Rivers St Peters, MO.
 - [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-mid-rivers-st-peters-mo/tables/coupons.md) - Current promotional offers, coupons, and financing options
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-mid-rivers-st-peters-mo/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for car-x-mid-rivers-st-peters-mo, as of 2026-10-07.
 
 ## Relationships
 

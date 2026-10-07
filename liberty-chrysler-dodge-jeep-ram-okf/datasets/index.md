@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/service-center.md) - Mopar-certified auto service and repair for all makes and models.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/staff.md) - Sales, finance, and service professionals in Libertyville, IL.
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/used-vehicles.md) - Quality used and certified pre-owned CDJR vehicles with competitive pricing.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/offers.md) - Current purchase, lease, and finance offers for Liberty Chrysler Dodge Jeep Ram, as of 2026-10-07.

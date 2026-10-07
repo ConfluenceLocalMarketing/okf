@@ -4,3 +4,4 @@
 - [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/hours.md) - Sales, service, parts, and Quick Lane operating hours.
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/model-comparison.md) - Side-by-side comparison of key Ford models by body type, fuel options, seating, and typical buyer.
 - [no-dealer-fee.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/no-dealer-fee.md) - Dealer fee comparison showing Mullinax Ford of Kissimmee charges a $0 dealer fee while competitor dealerships across Florida charge $648 to $6,579.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for mullinax-ford-of-kissimmee, as of 2026-10-07.

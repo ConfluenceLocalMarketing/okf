@@ -7,3 +7,4 @@
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 - [new-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/new-vehicles.md) - New vehicle access through the Jake Sweeney Automotive group of dealerships
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/financing.md) - Vehicle financing options including online applications, buy-here-pay-here programs, and trade-in valuation
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-used-car-superstore/datasets/offers.md) - Current purchase, lease, and finance offers for Jake Sweeney Used Car Superstore, as of 2026-10-07.

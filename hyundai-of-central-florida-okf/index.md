@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Hyundai of Central Florida
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-of-central-florida/datasets/staff.md) - Staff directory covering sales, internet sales, finance, service, and parts departments with contact details.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-of-central-florida/datasets/faq.md) - Common questions and answers about Up Front Pricing, financing, trade-in valuation, service, and online buying.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-of-central-florida/datasets/financing.md) - Vehicle financing options including a secure online credit application, Hyundai Motor Finance specials, leasing, and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-of-central-florida/datasets/offers.md) - Current purchase, lease, and finance offers for Hyundai of Central Florida | Dealership, as of 2026-10-07.
 
 ## References
 
@@ -28,6 +29,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Hyundai of Central Florida
 - [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-of-central-florida/tables/contact.md) - Consolidated phone directory and address for sales, service, parts, and general inquiries.
 - [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-of-central-florida/tables/hours.md) - Sales, service, and parts operating hours.
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-of-central-florida/tables/model-comparison.md) - Side-by-side comparison of key Hyundai models by body type, fuel options, seating, and typical buyer.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-of-central-florida/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for hyundai-of-central-florida, as of 2026-10-07.
 
 ## Relationships
 

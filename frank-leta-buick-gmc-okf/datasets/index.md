@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/datasets/service-center.md) - Certified service center with body shop
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/datasets/staff.md) - Key dealership staff members
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/datasets/used-vehicles.md) - Pre-owned vehicle inventory
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-buick-gmc/datasets/offers.md) - Current purchase, lease, and finance offers for Frank Leta Buick GMC, as of 2026-10-07.

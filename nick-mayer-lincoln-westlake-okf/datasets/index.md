@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/service-center.md) - Lincoln service center with Priority Service and valet amenities.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/faq.md) - Frequently asked questions about the dealership and Lincoln ownership.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-westlake/datasets/offers.md) - Current purchase, lease, and finance offers for Nick Mayer Lincoln Westlake, as of 2026-10-07.

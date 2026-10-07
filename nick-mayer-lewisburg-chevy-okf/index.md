@@ -15,6 +15,7 @@ This bundle documents **Nick Mayer Chevrolet Lewisburg**, a Chevrolet dealership
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-chevy/datasets/service-center.md) - Chevrolet factory-trained service center offering maintenance, repairs, and genuine OEM parts.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-chevy/datasets/faq.md) - Common questions about Chevrolet inventory, CarBravo, financing, and service at Nick Mayer Chevrolet Lewisburg.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-chevy/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/lewisburg-chevy/datasets/offers.md) - Current purchase, lease, and finance offers for Nick Mayer Chevrolet of Lewisburg, as of 2026-10-07.
 
 ## References
 
@@ -26,6 +27,7 @@ This bundle documents **Nick Mayer Chevrolet Lewisburg**, a Chevrolet dealership
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-chevy/tables/model-comparison.md) - Side-by-side comparison of Chevrolet models available at Nick Mayer Chevrolet Lewisburg.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-chevy/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for nick-mayer-lewisburg-chevy, as of 2026-10-07.
 
 ## Relationships
 

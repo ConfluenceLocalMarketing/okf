@@ -15,6 +15,7 @@ OKF v0.1 bundle for Leif Johnson Ford of Manor, a full-service Ford dealership i
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/staff.md) - 17 team members across management, sales, service, and parts.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/faq.md) - Common customer questions about vehicles, financing, service, and operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/financing.md) - Purchase financing, leasing, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-manor/datasets/offers.md) - Current purchase, lease, and finance offers for Leif Johnson Ford of Manor, as of 2026-10-07.
 
 ## References
 
@@ -25,3 +26,4 @@ OKF v0.1 bundle for Leif Johnson Ford of Manor, a full-service Ford dealership i
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/tables/model-comparison.md) - Ford model comparison across body type, fuel options, passenger capacity, and competitors.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for leif-johnson-ford-manor, as of 2026-10-07.

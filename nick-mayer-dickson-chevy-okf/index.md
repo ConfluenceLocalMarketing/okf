@@ -15,6 +15,7 @@ Chevrolet dealership in Dickson, TN serving the local community with new and pre
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-chevy/datasets/service-center.md) - Full-service automotive center with factory-trained technicians and genuine OEM parts.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-chevy/datasets/faq.md) - Frequently asked questions about the dealership, inventory, financing, and service.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-chevy/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/dickson-chevy/datasets/offers.md) - Current purchase, lease, and finance offers for Nick Mayer Chevrolet of Dickson, as of 2026-10-07.
 
 ## References
 
@@ -26,3 +27,4 @@ Chevrolet dealership in Dickson, TN serving the local community with new and pre
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-chevy/tables/model-comparison.md) - Comparison of Chevrolet model lines with specifications.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-chevy/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for nick-mayer-dickson-chevy, as of 2026-10-07.

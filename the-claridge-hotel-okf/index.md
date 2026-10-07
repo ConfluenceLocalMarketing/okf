@@ -9,6 +9,7 @@ This bundle documents The Claridge Hotel in Claremore, Oklahoma.
 ## Datasets
 
 - [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-claridge-hotel/datasets/company.md) - Historic boutique hotel with event spaces and accommodations.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-claridge-hotel/datasets/offers.md) - Current purchase, lease, and finance offers for The Claridge Hotel, as of 2026-10-07.
 
 ## References
 
@@ -19,3 +20,4 @@ This bundle documents The Claridge Hotel in Claremore, Oklahoma.
 ## Tables
 
 (No structured tables yet.)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-claridge-hotel/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for the-claridge-hotel, as of 2026-10-07.

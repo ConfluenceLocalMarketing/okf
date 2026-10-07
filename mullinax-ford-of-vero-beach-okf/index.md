@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of Vero Beac
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/staff.md) - Staff and team directory for Mullinax Ford of Vero Beach, including sales, finance, commercial, service, parts, body shop and Quick Lane.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/faq.md) - Common questions and answers about buying, ordering, pricing and financing at Mullinax Ford of Vero Beach.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/financing.md) - Auto financing and leasing at Mullinax Ford of Vero Beach, including online pre-approval, payment calculator and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/datasets/offers.md) - Current purchase, lease, and finance offers for Mullinax Ford of Vero Beach | Dealership, as of 2026-10-07.
 
 ## References
 
@@ -28,6 +29,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of Vero Beac
 - [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/contact.md) - Consolidated phone directory and address for sales, service, parts, body shop and general inquiries.
 - [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/hours.md) - Sales, service, parts, Quick Lane and body shop operating hours.
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/model-comparison.md) - Side-by-side comparison of key Ford models by body type, fuel options, seating, and typical buyer.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-vero-beach/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for mullinax-ford-of-vero-beach, as of 2026-10-07.
 
 ## Relationships
 

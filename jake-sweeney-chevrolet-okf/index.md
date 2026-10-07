@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/datasets/staff.md) - Staff directory including sales consultants, service advisors, and finance team compiled from customer reviews
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/datasets/service-center.md) - Service center details, routine maintenance, diagnostics, major repairs, and parts department
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/datasets/offers.md) - Current purchase, lease, and finance offers for Jake Sweeney Chevrolet, as of 2026-10-07.
 
 ## References
 
@@ -24,6 +25,7 @@ okf_version: "0.1"
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/tables/model-comparison.md) - Side-by-side comparison of all new Chevrolet models including body type, drivetrain, seating, features, trims, towing, and warranty
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/jake-sweeney-chevrolet/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for jake-sweeney-chevrolet, as of 2026-10-07.
 
 ## Relationships
 

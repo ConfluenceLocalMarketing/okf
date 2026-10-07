@@ -7,3 +7,4 @@
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/staff.md) - Team directory across management, sales, service, and parts departments.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/faq.md) - Common customer questions about Ford vehicles, financing, service, and dealership operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-manor/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-manor/datasets/offers.md) - Current purchase, lease, and finance offers for Leif Johnson Ford of Manor, as of 2026-10-07.

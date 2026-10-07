@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Friendly Lincoln, a Lincol
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/staff.md) - Staff directory covering management, sales, service, collision, parts, and office departments.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/faq.md) - Common questions about buying, financing, trading in, and servicing Lincoln vehicles.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/financing.md) - Financing and leasing through Lincoln Automotive Financial Services with online credit application.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/datasets/offers.md) - Current purchase, lease, and finance offers for Friendly Lincoln, as of 2026-10-07.
 
 ## References
 
@@ -28,6 +29,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Friendly Lincoln, a Lincol
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/tables/model-comparison.md) - Comparison of the Lincoln SUV lineup by body style, seating, and drivetrain.
 - [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/tables/hours.md) - Operating hours for sales, service, and parts departments.
 - [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/tables/contact.md) - Consolidated phone directory, address, and website.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/friendly-lincoln/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for friendly-lincoln, as of 2026-10-07.
 
 ## Relationships
 

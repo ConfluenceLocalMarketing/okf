@@ -8,3 +8,4 @@
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/staff.md) - Team directory across management, sales, service, and parts departments.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/faq.md) - Common customer questions about Lincoln vehicles, financing, service, and dealership operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/financing.md) - Vehicle financing and leasing options including online applications, pre-approval, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/offers.md) - Current purchase, lease, and finance offers for Varsity Lincoln, as of 2026-10-07.

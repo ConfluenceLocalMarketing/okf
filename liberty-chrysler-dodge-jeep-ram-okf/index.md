@@ -15,6 +15,7 @@ Liberty Chrysler Dodge Jeep Ram is a CDJR dealership in Libertyville, IL, servin
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/service-center.md) - Mopar-certified auto service and repair for all makes and models.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/staff.md) - Sales, finance, and service professionals in Libertyville, IL.
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/used-vehicles.md) - Quality used and certified pre-owned CDJR vehicles with competitive pricing.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/datasets/offers.md) - Current purchase, lease, and finance offers for Liberty Chrysler Dodge Jeep Ram, as of 2026-10-07.
 
 ## References
 
@@ -23,5 +24,4 @@ Liberty Chrysler Dodge Jeep Ram is a CDJR dealership in Libertyville, IL, servin
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/liberty-chrysler-dodge-jeep-ram/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for liberty-chrysler-dodge-jeep-ram, as of 2026-10-07.

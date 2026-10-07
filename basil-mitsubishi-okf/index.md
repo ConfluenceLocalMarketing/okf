@@ -9,6 +9,7 @@
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/financing.md) - Vehicle financing, leasing, trade-in, and payment calculator information at Basil Mitsubishi
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/staff.md) - Full staff directory including management, sales, service, and parts teams
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/service-center.md) - Service center details, routine maintenance, diagnostics, collision repair, parts department
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/datasets/offers.md) - Current purchase, lease, and finance offers for Basil Mitsubishi, as of 2026-10-07.
 
 ## References
 
@@ -20,6 +21,7 @@
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/tables/model-comparison.md) - Side-by-side comparison of all new Mitsubishi models including body type, drivetrain, seating, features, trims, and warranty
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-mitsubishi/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for basil-mitsubishi, as of 2026-10-07.
 
 ## Relationships
 

@@ -15,6 +15,7 @@ OKF v0.1 bundle for Leif Johnson Ford of Austin, a full-service Ford dealership 
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/staff.md) - Team across management, sales, service, and parts departments.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/faq.md) - Common customer questions about vehicles, financing, service, and operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/datasets/financing.md) - Purchase financing, leasing, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-austin/datasets/offers.md) - Current purchase, lease, and finance offers for Leif Johnson Ford of Austin, as of 2026-10-07.
 
 ## References
 
@@ -25,3 +26,4 @@ OKF v0.1 bundle for Leif Johnson Ford of Austin, a full-service Ford dealership 
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/tables/model-comparison.md) - Ford model comparison across body type, fuel options, passenger capacity, and competitors.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/leif-johnson-ford-austin/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for leif-johnson-ford-austin, as of 2026-10-07.

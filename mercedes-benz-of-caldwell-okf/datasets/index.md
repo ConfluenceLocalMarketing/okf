@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mercedes-benz-of-caldwell/datasets/service-center.md) - Factory-trained Mercedes-Benz service and collision center in Caldwell, NJ.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mercedes-benz-of-caldwell/datasets/staff.md) - Luxury automotive sales, finance, and service professionals in Caldwell, NJ.
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mercedes-benz-of-caldwell/datasets/used-vehicles.md) - Certified pre-owned and pre-owned Mercedes-Benz luxury vehicles with factory-backed warranty.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mercedes-benz-of-caldwell/datasets/offers.md) - Current purchase, lease, and finance offers for Mercedes-Benz of Caldwell - Mercedes Dealer, as of 2026-10-07.

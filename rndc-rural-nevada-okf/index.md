@@ -9,6 +9,7 @@ This bundle documents RNDC, a non-profit CDFI serving rural Nevada.
 ## Datasets
 
 - [company.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/rndc-rural-nevada/datasets/company.md) - Full profile: services, programs, service area.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/rndc-rural-nevada/datasets/offers.md) - Current I-80 Fund small business loan offer from Rural Nevada Development Corporation.
 
 ## References
 
@@ -19,3 +20,4 @@ This bundle documents RNDC, a non-profit CDFI serving rural Nevada.
 ## Tables
 
 (No structured tables yet.)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/rndc-rural-nevada/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for rndc-rural-nevada, as of 2026-10-07.

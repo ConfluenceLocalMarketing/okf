@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [west-hills-kia.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-kia.md) - Business profile, hours, contact, services, location, and Kia models for West Hills Kia in Bremerton, WA
 - [west-hills-mazda.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/west-hills-mazda.md) - Business profile, hours, contact, services, location, and Mazda models for West Hills Mazda in Bremerton, WA
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/faq.md) - Frequently asked questions about the West Hills Auto Plex group, member dealerships, inventory, financing, and service
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/datasets/offers.md) - Current purchase, lease, and finance offers for West Hills Autoplex, as of 2026-10-07.
 
 ## References
 
@@ -23,6 +24,7 @@ okf_version: "0.1"
 ## Tables
 
 - [dealership-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/tables/dealership-comparison.md) - Side-by-side comparison of all member dealerships including franchise, address, phone, service hours, and available models
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-autoplex/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for west-hills-autoplex, as of 2026-10-07.
 
 ## Relationships
 

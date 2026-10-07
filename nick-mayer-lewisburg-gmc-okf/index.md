@@ -15,6 +15,7 @@ This bundle documents **Nick Mayer GMC Lewisburg**, a GMC dealership at 861 N El
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/service-center.md) - GMC factory-trained service center offering maintenance, repairs, and genuine OEM parts.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/faq.md) - Common questions about GMC inventory, CarBravo, financing, and service at Nick Mayer GMC Lewisburg.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/lewisburg-gmc/datasets/offers.md) - Current purchase, lease, and finance offers for Nick Mayer GMC Lewisburg, as of 2026-10-07.
 
 ## References
 
@@ -26,6 +27,7 @@ This bundle documents **Nick Mayer GMC Lewisburg**, a GMC dealership at 861 N El
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/tables/model-comparison.md) - Side-by-side comparison of GMC models available at Nick Mayer GMC Lewisburg.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lewisburg-gmc/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for nick-mayer-lewisburg-gmc, as of 2026-10-07.
 
 ## Relationships
 

@@ -15,6 +15,7 @@ McLarty Nissan of Little Rock is a full-service Nissan dealership in Little Rock
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/datasets/service-center.md) - Certified Nissan auto service with free lifetime car washes and EV charging.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/datasets/staff.md) - Nissan sales, finance, and service professionals in Little Rock, AR.
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/datasets/used-vehicles.md) - Extensive used vehicle inventory and Nissan Certified Pre-Owned program.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/datasets/offers.md) - Current purchase, lease, and finance offers for McLarty Nissan of Little Rock, as of 2026-10-07.
 
 ## References
 
@@ -23,5 +24,4 @@ McLarty Nissan of Little Rock is a full-service Nissan dealership in Little Rock
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mclarty-nissan-of-little-rock/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for mclarty-nissan-of-little-rock, as of 2026-10-07.

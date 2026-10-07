@@ -15,6 +15,7 @@ Willis Chevrolet Of Granger is a full-service Chevrolet dealership in Granger, I
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/service-center.md) - GM-certified service center
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/staff.md) - Key dealership team members
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/used-vehicles.md) - Certified pre-owned and quality used vehicles
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/datasets/offers.md) - Current purchase, lease, and finance offers for Willis Chevrolet Of Granger, as of 2026-10-07.
 
 ## References
 
@@ -23,5 +24,4 @@ Willis Chevrolet Of Granger is a full-service Chevrolet dealership in Granger, I
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/willis-chevrolet-of-granger/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for willis-chevrolet-of-granger, as of 2026-10-07.

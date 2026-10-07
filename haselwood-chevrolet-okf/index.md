@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/datasets/service-center.md) - Chevrolet-certified service center details, routine maintenance, diagnostics, major repairs, and genuine OEM parts department
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/datasets/offers.md) - Current purchase, lease, and finance offers for Haselwood Chevrolet, as of 2026-10-07.
 
 ## References
 
@@ -24,6 +25,7 @@ okf_version: "0.1"
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/tables/model-comparison.md) - Side-by-side comparison of all new Chevrolet models including body type, drivetrain, seating, features, trims, towing, and warranty
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-chevrolet/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for haselwood-chevrolet, as of 2026-10-07.
 
 ## Relationships
 

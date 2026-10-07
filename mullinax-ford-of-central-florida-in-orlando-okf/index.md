@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of Central F
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/staff.md) - Staff directory covering sales management, sales consultants, internet sales, and commercial sales departments with contact details.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/faq.md) - Common questions and answers about Ford Protect plans, Installment Payment Plans, and dealership operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/financing.md) - Vehicle financing options including online credit application, leasing, bad-credit programs, trade-in valuation, and payment calculator.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/datasets/offers.md) - Current purchase, lease, and finance offers for Mullinax Ford of Central Florida | Dealership, as of 2026-10-07.
 
 ## References
 
@@ -28,6 +29,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of Central F
 - [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/contact.md) - Consolidated phone directory and address for sales, service, parts, Quick Lane, and general inquiries.
 - [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/hours.md) - Sales, service, parts, and Quick Lane operating hours.
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/model-comparison.md) - Side-by-side comparison of key Ford models by body type, fuel options, seating, and typical buyer.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-central-florida-in-orlando/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for mullinax-ford-of-central-florida-in-orlando, as of 2026-10-07.
 
 ## Relationships
 

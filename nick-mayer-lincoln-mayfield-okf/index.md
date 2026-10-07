@@ -15,6 +15,7 @@ Lincoln dealership in Mayfield Heights, OH serving Cleveland, Beachwood, Mentor,
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-mayfield/datasets/service-center.md) - Lincoln service center with Priority Service and valet amenities.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-mayfield/datasets/faq.md) - Frequently asked questions about the dealership and Lincoln ownership.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-mayfield/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-mayfield/datasets/offers.md) - Current purchase, lease, and finance offers for Nick Mayer Lincoln Mayfield, as of 2026-10-07.
 
 ## References
 
@@ -26,6 +27,7 @@ Lincoln dealership in Mayfield Heights, OH serving Cleveland, Beachwood, Mentor,
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-mayfield/tables/model-comparison.md) - Comparison table of Lincoln model specifications.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-lincoln-mayfield/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for nick-mayer-lincoln-mayfield, as of 2026-10-07.
 
 ## Relationships
 

@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-10-06T16:39:03.679Z",
+  "totalClients": 5,
+  "clients": [
+    {"id": "1", "name": "Acura of Springfield", "slug": "acura-of-springfield", "domain": "https://www.acuraofspringfield.com/", "status": "active", "clientType": "Dealers"},
+    {"id": "2", "name": "A Prospect", "slug": "prospect-biggers-chevrolet-3a450a", "domain": "x.com", "status": "active", "clientType": "Dealers"},
+    {"id": "3", "name": "Test Client", "slug": "test-client", "domain": "example.com", "status": "active", "clientType": "Non Dealers"},
+    {"id": "4", "name": "Old Store", "slug": "old-store", "domain": "old.com", "status": "inactive", "clientType": "Dealers"},
+    {"id": "5", "name": "A-Abel Roofing", "slug": "a-abel-roofing", "domain": "www.aabelroofing.com", "status": "active", "clientType": "Non Dealers"}
+  ]
+}

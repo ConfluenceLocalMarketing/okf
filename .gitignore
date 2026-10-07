@@ -6,3 +6,6 @@ docs
 build-viz.py
 opencode.jsonc
 Clients.pdf
+refresh/
+__pycache__/
+tests/**/__pycache__/

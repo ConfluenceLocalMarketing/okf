@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/financing.md) - Auto financing and leasing options including pre-qualification, online credit applications, student savings, lease specials, and flexible loan programs.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/staff.md) - Sales, service, and finance staff at Kruse Motors compiled from customer testimonials and reviews.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/faq.md) - Common questions and answers about inventory, financing, service, trade-ins, and dealership experience.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/offers.md) - Current purchase, lease, and finance offers for Kruse Motors Auto Group, as of 2026-10-07.
 
 ## References
 
@@ -24,6 +25,7 @@ okf_version: "0.1"
 ## Tables
 
 - [brand-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/tables/brand-comparison.md) - Side-by-side comparison of the four automotive brands available at Kruse Motors - Ford, Lincoln, Buick, and GMC - covering positioning, popular models, key features, and target buyer.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for kruse-motors, as of 2026-10-07.
 
 ## Relationships
 

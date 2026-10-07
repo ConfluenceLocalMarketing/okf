@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of West Palm
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/staff.md) - Staff and team directory for Mullinax Ford of West Palm Beach, including sales, finance, commercial, service, parts, Quick Lane and mobile service.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/faq.md) - Common questions and answers about buying, ordering, pricing and financing at Mullinax Ford of West Palm Beach.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/financing.md) - Auto financing and leasing at Mullinax Ford of West Palm Beach, including online credit application, pre-approval and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/offers.md) - Current purchase, lease, and finance offers for Mullinax Ford of West Palm Beach | Dealership, as of 2026-10-07.
 
 ## References
 
@@ -28,6 +29,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of West Palm
 - [contact.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/contact.md) - Consolidated phone directory and address for sales, service, parts, Quick Lane, mobile service and general inquiries.
 - [hours.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/hours.md) - Sales, service and Quick Lane operating hours.
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/model-comparison.md) - Side-by-side comparison of key Ford models by body type, fuel options, seating, and typical buyer.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for mullinax-ford-of-west-palm-beach, as of 2026-10-07.
 
 ## Relationships
 

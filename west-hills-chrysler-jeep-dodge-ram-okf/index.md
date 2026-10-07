@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/service-center.md) - Mopar-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Mopar parts department
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/datasets/offers.md) - Current purchase, lease, and finance offers for West Hills Chrysler Dodge Jeep Ram, as of 2026-10-07.
 
 ## References
 
@@ -24,6 +25,7 @@ okf_version: "0.1"
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/tables/model-comparison.md) - Side-by-side comparison of all new Chrysler, Jeep, Dodge, and RAM models including body type, drivetrain, seating, features, towing, and warranty
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-chrysler-jeep-dodge-ram/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for west-hills-chrysler-jeep-dodge-ram, as of 2026-10-07.
 
 ## Relationships
 

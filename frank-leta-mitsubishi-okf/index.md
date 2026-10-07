@@ -15,6 +15,7 @@ Frank Leta Mitsubishi is a premier Mitsubishi dealership in Bridgeton, Missouri,
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/datasets/service-center.md) - Certified auto repair and maintenance serving all makes and models.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/datasets/staff.md) - Sales, finance, and service professionals in Bridgeton, MO.
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/datasets/used-vehicles.md) - High-quality used cars, trucks, and SUVs with 150-point inspection.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/datasets/offers.md) - Current purchase, lease, and finance offers for Frank Leta Mitsubishi / Automotive Outlet, as of 2026-10-07.
 
 ## References
 
@@ -23,5 +24,4 @@ Frank Leta Mitsubishi is a premier Mitsubishi dealership in Bridgeton, Missouri,
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/frank-leta-mitsubishi/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for frank-leta-mitsubishi, as of 2026-10-07.

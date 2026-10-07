@@ -15,6 +15,7 @@ Buick and GMC dealership in Dickson, TN serving the local community with new and
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-bg/datasets/service-center.md) - Full-service automotive center with factory-trained technicians and genuine OEM parts.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-bg/datasets/faq.md) - Frequently asked questions about the dealership, inventory, financing, and service.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-bg/datasets/financing.md) - Vehicle financing and leasing options including online applications, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/dickson-bg/datasets/offers.md) - Current purchase, lease, and finance offers for Nick Mayer GMC Dickson, as of 2026-10-07.
 
 ## References
 
@@ -26,3 +27,4 @@ Buick and GMC dealership in Dickson, TN serving the local community with new and
 ## Tables
 
 - [model-comparison.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-bg/tables/model-comparison.md) - Comparison of Buick and GMC model lines with specifications.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-dickson-bg/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for nick-mayer-dickson-bg, as of 2026-10-07.

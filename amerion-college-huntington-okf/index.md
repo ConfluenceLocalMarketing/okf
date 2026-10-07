@@ -19,3 +19,4 @@ This bundle documents Amerion College's Huntington, WV campus.
 ## Tables
 
 (No structured tables yet.)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/amerion-college-huntington/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for amerion-college-huntington, as of 2026-10-07.

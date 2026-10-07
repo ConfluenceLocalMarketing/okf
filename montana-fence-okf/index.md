@@ -12,6 +12,7 @@ Locally owned and operated fence contractor serving Montana since 1977, providin
 
 - [montana-fence.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montana-fence/datasets/montana-fence.md) - Core business profile for Montana Fence.
 - [locations.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montana-fence/datasets/locations.md) - Physical locations and service area for Montana Fence.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montana-fence/datasets/offers.md) - Current 6-month and 12-month 0% financing offers from Montana Fence.
 
 ## References
 
@@ -20,3 +21,4 @@ Locally owned and operated fence contractor serving Montana since 1977, providin
 ## Tables
 
 - [services.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montana-fence/tables/services.md) - Fence types and services offered by Montana Fence.
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/montana-fence/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for montana-fence, as of 2026-10-07.

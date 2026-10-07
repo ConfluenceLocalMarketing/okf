@@ -23,5 +23,4 @@ Capital City CDJR is a Chrysler, Dodge, Jeep, and Ram dealership in Jefferson Ci
 - [ai-discovery-page.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/capital-city-cdjr/references/ai-discovery-page.md) - Structured business data for AI consumption
 
 ## Tables
-
-- (none)
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/capital-city-cdjr/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for capital-city-cdjr, as of 2026-10-07.

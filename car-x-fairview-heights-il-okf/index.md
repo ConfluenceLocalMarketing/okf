@@ -17,7 +17,9 @@ okf_version: "0.1"
 
 ## Tables
 
+- [specials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-fairview-heights-il/tables/specials.md) - Current service and parts specials and coupons for Car-X Tire & Auto in Fairview Heights, IL.
 - [coupons.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-fairview-heights-il/tables/coupons.md) - Current promotional offers, coupons, and financing options
+- [data-snapshot.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/car-x-fairview-heights-il/tables/data-snapshot.md) - Machine-managed PromptGraph data snapshot for car-x-fairview-heights-il, as of 2026-10-07.
 
 ## Relationships
 
