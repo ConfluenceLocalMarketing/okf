@@ -57,6 +57,35 @@ class TestFields(unittest.TestCase):
         payloads = {"business": {"sameAs": ["https://x/?q=place_id:ABC"]}, "gbp-context": {}}
         self.assertEqual(fields.extract_snapshot(payloads)["place_id"], "ABC")
 
+    def test_hours_from_dict_description(self):
+        payloads = {
+            "business": {
+                "openingHoursSpecification": {
+                    "@type": "OpeningHoursSpecification",
+                    "description": "Mon: 9:00am-7:00pm, Sat: 9:00am-6:00pm",
+                }
+            },
+            "gbp-context": {},
+        }
+        got = fields.extract_snapshot(payloads)["hours"]
+        self.assertEqual(got, "Mon: 9:00am-7:00pm, Sat: 9:00am-6:00pm")
+        self.assertNotIn("{", got)
+
+    def test_hours_from_list_of_descriptions(self):
+        payloads = {
+            "business": {
+                "openingHoursSpecification": [
+                    {"description": "Mon-Fri 9-6"},
+                    {"description": "Sat 9-3"},
+                ]
+            },
+            "gbp-context": {},
+        }
+        self.assertEqual(fields.extract_snapshot(payloads)["hours"], "Mon-Fri 9-6; Sat 9-3")
+
+    def test_hours_falls_back_to_gbp(self):
+        self.assertEqual(fields.extract_snapshot(PAYLOADS)["hours"], "Mon-Fri 9-8")
+
 
 if __name__ == "__main__":
     unittest.main()

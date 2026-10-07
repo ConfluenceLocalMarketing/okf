@@ -26,6 +26,31 @@ def _place_id(business, gbp):
     return UNKNOWN
 
 
+def _format_hours_spec(spec):
+    if isinstance(spec, str):
+        return spec.strip() or None
+    if isinstance(spec, dict):
+        return (spec.get("description") or "").strip() or None
+    if isinstance(spec, list):
+        parts = []
+        for item in spec:
+            if isinstance(item, dict):
+                desc = (item.get("description") or "").strip()
+                if desc:
+                    parts.append(desc)
+                    continue
+                days = item.get("dayOfWeek")
+                if isinstance(days, list):
+                    days = ", ".join(days)
+                opens, closes = item.get("opens"), item.get("closes")
+                if days or opens or closes:
+                    parts.append(" ".join(p for p in (days, opens, closes) if p))
+            elif isinstance(item, str) and item.strip():
+                parts.append(item.strip())
+        return "; ".join(parts) if parts else None
+    return None
+
+
 def _address(business, gbp):
     addr = business.get("address") or (gbp.get("business_info") or {}).get("address")
     if isinstance(addr, dict):
@@ -61,7 +86,11 @@ def extract_snapshot(payloads):
         (business.get("aggregateRating") or {}).get("reviewCount"),
         UNKNOWN,
     )
-    hours = _first(business.get("openingHoursSpecification"), info.get("hours"), UNKNOWN)
+    hours = _first(
+        _format_hours_spec(business.get("openingHoursSpecification")),
+        info.get("hours"),
+        UNKNOWN,
+    )
     phone = _first(business.get("telephone"), info.get("phone"), UNKNOWN)
 
     return {
