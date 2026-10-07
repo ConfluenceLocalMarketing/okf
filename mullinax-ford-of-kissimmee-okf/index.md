@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of Kissimmee
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/staff.md) - Staff and team directory for Mullinax Ford of Kissimmee.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/faq.md) - Common questions and answers about buying, ordering and financing at Mullinax Ford of Kissimmee.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/financing.md) - Auto financing and leasing at Mullinax Ford of Kissimmee, including online pre-approval, payment calculator and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-kissimmee/datasets/offers.md) - Current purchase, lease, and finance offers for Mullinax Ford of Kissimmee | Dealership, as of 2026-10-07.
 
 ## References
 

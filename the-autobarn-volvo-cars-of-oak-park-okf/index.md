@@ -15,6 +15,7 @@ The Autobarn Volvo Cars of Oak Park is a Volvo dealership in Oak Park, IL, servi
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-autobarn-volvo-cars-of-oak-park/datasets/service-center.md) - Factory-trained Volvo service center
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-autobarn-volvo-cars-of-oak-park/datasets/staff.md) - Key dealership team members
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-autobarn-volvo-cars-of-oak-park/datasets/used-vehicles.md) - Certified pre-owned and pre-owned vehicles
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/the-autobarn-volvo-cars-of-oak-park/datasets/offers.md) - Current purchase, lease, and finance offers for Autobarn Volvo Cars Oak Park, as of 2026-10-07.
 
 ## References
 

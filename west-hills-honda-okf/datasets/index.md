@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-honda/datasets/service-center.md) - Honda-certified service center details, routine maintenance, diagnostics, major repairs, genuine Honda parts, and Honda Express Service
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-honda/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-honda/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-honda/datasets/offers.md) - Current purchase, lease, and finance offers for West Hills Honda, as of 2026-10-07.

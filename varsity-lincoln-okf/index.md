@@ -16,6 +16,7 @@ OKF v0.1 bundle for Varsity Lincoln, the #1 Volume Lincoln Dealer in the World f
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/staff.md) - Team members across management, sales, service, and parts departments.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/faq.md) - Common customer questions about vehicles, financing, service, and operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/financing.md) - Purchase financing, luxury leasing, pre-approval, trade-in valuation, and payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/varsity-lincoln/datasets/offers.md) - Current purchase, lease, and finance offers for Varsity Lincoln, as of 2026-10-07.
 
 ## References
 

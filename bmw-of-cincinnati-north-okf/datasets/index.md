@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/service-center.md) - BMW-certified service center details, routine maintenance, diagnostics, major repairs, and OEM parts
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/financing.md) - BMW Financial Services financing, leasing, trade-in, and special programs at BMW of Cincinnati North
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/bmw-of-cincinnati-north/datasets/offers.md) - Current purchase, lease, and finance offers for BMW of Cincinnati North, as of 2026-10-07.

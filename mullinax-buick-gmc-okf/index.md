@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Buick GMC, a Buic
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-buick-gmc/datasets/staff.md) - Staff directory covering management, sales, finance, service, parts, and office departments with contact details.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-buick-gmc/datasets/faq.md) - Common questions and answers about financing, no-dealer-fee pricing, and dealership operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-buick-gmc/datasets/financing.md) - Vehicle financing options including online credit application, leasing, trade-in valuation, and a payment calculator.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-buick-gmc/datasets/offers.md) - Current purchase, lease, and finance offers for Mullinax Buick GMC | Dealership, as of 2026-10-07.
 
 ## References
 

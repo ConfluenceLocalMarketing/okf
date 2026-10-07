@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/capital-city-cdjr/datasets/service-center.md) - Mopar-certified service center
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/capital-city-cdjr/datasets/staff.md) - Key dealership staff members
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/capital-city-cdjr/datasets/used-vehicles.md) - Pre-owned vehicle inventory and CPO program
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/capital-city-cdjr/datasets/offers.md) - Current purchase, lease, and finance offers for Capital City CDJR, as of 2026-10-07.

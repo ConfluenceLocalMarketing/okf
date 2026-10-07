@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/datasets/staff.md) - Staff directory including management, sales consultants, service advisors, finance team, and parts team
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/datasets/service-center.md) - GMC-certified service center details, routine maintenance, diagnostics, major repairs, and genuine GMC parts department
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/haselwood-gmc/datasets/offers.md) - Current purchase, lease, and finance offers for Haselwood GMC, as of 2026-10-07.
 
 ## References
 

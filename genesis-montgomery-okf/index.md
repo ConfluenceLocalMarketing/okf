@@ -15,6 +15,7 @@ Open Knowledge Format bundle for Genesis Montgomery, an authorized Genesis deale
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/staff.md) - Sales, management, and service team roster at Genesis Montgomery as published on the dealership's meet-the-team page.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/faq.md) - Common questions and answers about buying, financing, and servicing vehicles at Genesis Montgomery (synthesized from the dealership's published prompt set and website content).
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/financing.md) - Financing, leasing, and special offers at Genesis Montgomery, including online credit application, loans up to 72 months, payment calculator, and national APR and lease programs.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-montgomery/datasets/offers.md) - Current purchase, lease, and finance offers for Genesis Montgomery | Dealership, as of 2026-10-07.
 
 ## References
 

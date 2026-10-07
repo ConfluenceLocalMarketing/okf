@@ -15,6 +15,7 @@ OKF v0.1 bundle documenting Nick Mayer Ford West, a Ford dealership located in A
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/service-center.md) - Ford-certified service center in Avon Lake, OH offering routine maintenance, diagnostics, major repairs, and genuine Ford OEM parts.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/faq.md) - Common questions about Nick Mayer Ford West's inventory, financing, service, and dealership operations in Avon Lake, OH.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/financing.md) - Vehicle financing and leasing options including online applications, second-chance financing, and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford-west/datasets/offers.md) - Current purchase, lease, and finance offers for Nick Mayer Ford Avon Lake, as of 2026-10-07.
 
 ## References
 

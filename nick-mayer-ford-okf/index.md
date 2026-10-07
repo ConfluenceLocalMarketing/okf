@@ -15,6 +15,7 @@ OKF v0.1 bundle documenting Nick Mayer Ford, a Ford dealership located in Mayfie
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/service-center.md) - Ford-certified service center in Mayfield Heights, OH offering routine maintenance, diagnostics, major repairs, and genuine Ford OEM parts.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/faq.md) - Common questions about Nick Mayer Ford's inventory, financing, service, and dealership operations in Mayfield Heights, OH.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/financing.md) - Vehicle financing and leasing options including online applications, second-chance financing, and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/nick-mayer-ford/datasets/offers.md) - Current purchase, lease, and finance offers for Nick Mayer Ford, as of 2026-10-07.
 
 ## References
 

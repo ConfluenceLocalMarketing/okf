@@ -9,3 +9,4 @@ Core knowledge concepts about Kruse Motors and its operations.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/financing.md) - Auto financing, leasing, pre-qualification, and special programs
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/staff.md) - Staff directory including sales, service, and finance professionals
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/offers.md) - Current purchase, lease, and finance offers for Kruse Motors Auto Group, as of 2026-10-07.

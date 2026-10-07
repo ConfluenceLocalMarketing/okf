@@ -15,6 +15,7 @@ Acura of Springfield is a full-service Acura dealership in Springfield, MO, offe
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/acura-of-springfield/datasets/service-center.md) - Certified Acura service center
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/acura-of-springfield/datasets/staff.md) - Key dealership staff members
 - [used-vehicles.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/acura-of-springfield/datasets/used-vehicles.md) - Certified pre-owned and used vehicle inventory
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/acura-of-springfield/datasets/offers.md) - Current purchase, lease, and finance offers for Acura of Springfield, as of 2026-10-07.
 
 ## References
 

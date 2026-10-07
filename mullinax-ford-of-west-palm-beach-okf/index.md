@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Mullinax Ford of West Palm
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/staff.md) - Staff and team directory for Mullinax Ford of West Palm Beach, including sales, finance, commercial, service, parts, Quick Lane and mobile service.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/faq.md) - Common questions and answers about buying, ordering, pricing and financing at Mullinax Ford of West Palm Beach.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/financing.md) - Auto financing and leasing at Mullinax Ford of West Palm Beach, including online credit application, pre-approval and trade-in valuation.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/mullinax-ford-of-west-palm-beach/datasets/offers.md) - Current purchase, lease, and finance offers for Mullinax Ford of West Palm Beach | Dealership, as of 2026-10-07.
 
 ## References
 

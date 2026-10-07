@@ -7,3 +7,4 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-ford/datasets/service-center.md) - Ford-certified service center details, routine maintenance, diagnostics, major repairs, and genuine Ford parts department
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-ford/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-ford/datasets/financing.md) - Financing and leasing options, trade-in valuation, and online payment calculators.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/west-hills-ford/datasets/offers.md) - Current purchase, lease, and finance offers for West Hills Ford, as of 2026-10-07.

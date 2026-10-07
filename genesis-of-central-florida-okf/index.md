@@ -15,6 +15,7 @@ An Open Knowledge Format (OKF) v0.1 bundle describing Genesis of Central Florida
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/staff.md) - Departmental staff overview covering sales, service, parts, and finance teams; individual staff names are not published on the website (synthesized).
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/faq.md) - Frequently asked questions about no-dealer-fee pricing, Up Front Pricing, veteran ownership, online buying, financing, service valet, and the Genesis model lineup.
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/financing.md) - Vehicle financing and leasing including online credit application, flexible loan terms, lease offers, trade-in valuation, payment calculator, and special programs.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/genesis-of-central-florida/datasets/offers.md) - Current purchase, lease, and finance offers for Genesis of Central Florida | Dealership, as of 2026-10-07.
 
 ## References
 

@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [financing.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/financing.md) - Auto financing and leasing options including pre-qualification, online credit applications, student savings, lease specials, and flexible loan programs.
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/staff.md) - Sales, service, and finance staff at Kruse Motors compiled from customer testimonials and reviews.
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/faq.md) - Common questions and answers about inventory, financing, service, trade-ins, and dealership experience.
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/kruse-motors/datasets/offers.md) - Current purchase, lease, and finance offers for Kruse Motors Auto Group, as of 2026-10-07.
 
 ## References
 

@@ -11,6 +11,7 @@
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/service-center.md) - Service and collision center with diagnostics, alignment, and parts
 - [commercial-trucks.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/commercial-trucks.md) - Dedicated commercial truck and work vehicle inventory
 - [testimonials.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale/datasets/testimonials.md) - Customer reviews with 4.5 rating from 2,579 reviews
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/basil-resale-sheridan/datasets/offers.md) - Current purchase, lease, and finance offers for Basil Resale Sheridan, as of 2026-10-07.
 
 ## References
 

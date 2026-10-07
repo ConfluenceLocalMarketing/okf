@@ -13,6 +13,7 @@ okf_version: "0.1"
 - [staff.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/staff.md) - Staff directory including sales consultants, service representatives, and finance team compiled from customer reviews
 - [service-center.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/service-center.md) - Hyundai-certified service center details, routine maintenance, diagnostics, major repairs, genuine Hyundai OEM parts, and current service specials
 - [faq.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/faq.md) - Frequently asked questions about inventory, financing, service, and dealership
+- [offers.md](https://promptgraph.nyc3.cdn.digitaloceanspaces.com/OKF/hyundai-montgomery/datasets/offers.md) - Current purchase, lease, and finance offers for Hyundai Montgomery | Dealership, as of 2026-10-07.
 
 ## References
 
